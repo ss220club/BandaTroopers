@@ -270,7 +270,7 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 	if(istype(C))
 		owner = C
 		if(!IsGuestKey(C.key))
-			unlock_content = C.IsByondMember()
+			// unlock_content = C.IsByondMember()  // SS220 EDIT - Compile Fix - чтобы линтер не ругался
 			load_path(C.ckey)
 			if(load_preferences())
 				if(load_character())

@@ -560,7 +560,7 @@ GLOBAL_LIST_INIT(whitelisted_client_procs, list(
 	return P
 
 /proc/save_player_entities()
-	for(var/key_ref in GLOB.player_entities)
+	// for(var/key_ref in GLOB.player_entities) // SS220 EDIT - Compile Fix - закомментили чтобы линтер не ругался
 		// var/datum/entity/player_entity/P = player_entities["[key_ref]"]
 		// P.save_statistics()
 	log_debug("STATISTICS: Statistics saving complete.")
