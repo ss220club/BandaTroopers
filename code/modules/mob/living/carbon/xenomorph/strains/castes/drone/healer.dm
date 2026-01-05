@@ -33,7 +33,6 @@
 	drone.selected_fruit = /obj/effect/alien/resin/fruit
 
 	drone.recalculate_everything()
-	//drone.update_icons() // SS220 FIX Unit Test
 
 /*
 	Improved Plasma Transfer
