@@ -14,18 +14,18 @@
 	if(stat == UNCONSCIOUS)
 		return //Unconscious? Nope.
 
-	var/prefix = copytext(message, 1, 2)
+	var/prefix = copytext_char(message, 1, 2) // SS220 EDIT - RU fix
 	if(prefix == "*")
 		if(!findtext(message, "*", 2)) //Second asterisk means it is markup for *bold*, not an *emote.
-			return emote(lowertext(copytext(message, 2)), intentional = TRUE)
+			return emote(lowertext(copytext_char(message, 2)), intentional = TRUE) // SS220 EDIT - RU fix
 
 	var/hivemind_speak = FALSE
 
 	if(prefix == ";")
-		message = capitalize(trim_left(copytext(message, 2)))
+		message = capitalize(trim_left(copytext_char(message, 2))) // SS220 EDIT - RU fix
 		hivemind_speak = TRUE
 	else if(prefix == "." || prefix == "#" || prefix == ":" || prefix == ",")
-		message = capitalize(trim_left(copytext(message, 3)))
+		message = capitalize(trim_left(copytext_char(message, 3))) // SS220 EDIT - RU fix
 		hivemind_speak = TRUE
 
 	if(!message)
@@ -34,7 +34,7 @@
 	if(hivemind_speak && can_hivemind_speak)
 		// Automatic punctuation
 		if(client?.prefs?.toggle_prefs & TOGGLE_AUTOMATIC_PUNCTUATION)
-			if(!(copytext(message, -1) in ENDING_PUNCT))
+			if(!(copytext_char(message, -1) in ENDING_PUNCT)) // SS220 EDIT - RU fix
 				message += "."
 
 		hivemind_talk(message)
@@ -43,7 +43,7 @@
 	var/datum/language/speaking = parse_language(message)
 	if(speaking)
 		verb = speaking.speech_verb
-		message = capitalize(trim_left(copytext(message, 3)))
+		message = capitalize(trim_left(copytext_char(message, 3))) // SS220 EDIT - RU fix
 	else
 		speaking = get_default_language()
 		verb = speaking.speech_verb
@@ -61,7 +61,7 @@
 
 	// Automatic punctuation
 	if(client?.prefs?.toggle_prefs & TOGGLE_AUTOMATIC_PUNCTUATION)
-		if(!(copytext(message, -1) in ENDING_PUNCT))
+		if(!(copytext_char(message, -1) in ENDING_PUNCT)) // SS220 EDIT - RU fix
 			message += "."
 	if((speaking.flags & HIVEMIND) && can_hivemind_speak)
 		hivemind_talk(message)

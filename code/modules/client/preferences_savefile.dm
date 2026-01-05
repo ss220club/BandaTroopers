@@ -746,6 +746,11 @@
 	if(!faction)  faction =  "None"
 	if(!religion) religion = RELIGION_AGNOSTICISM
 	if(!preferred_squad) preferred_squad = "None"
+	// =================================
+	// SS220 EDIT - TTS
+	if(SStts220.is_enabled)
+		S["tts_seed"] >> tts_seed
+	// =================================
 
 	return 1
 
@@ -843,6 +848,12 @@
 	S["ds_name"] << dropship_name
 
 	S["personal_weapon"] << personal_weapon
+
+	// =================================
+	// SS220 EDIT - TTS
+	if(SStts220.is_enabled)
+		S["tts_seed"] << tts_seed
+	// =================================
 
 	S.Unlock()
 

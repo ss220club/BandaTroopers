@@ -68,6 +68,7 @@ export const DmTarget = new Juke.Target({
     "html/**",
     "icons/**",
     "interface/**",
+    "modular/**", // BANDATROOPERS EDIT ADDITION - Making the CBT work
     "tgui/public/tgui.html",
     `${DME_NAME}.dme`,
     NamedVersionFile,

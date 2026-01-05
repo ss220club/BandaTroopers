@@ -51,7 +51,7 @@ GLOBAL_LIST_INIT(department_radio_keys, list(
 	if(!config.word_filter_regex)
 		return TRUE
 
-	if(config.word_filter_regex.Find(message))
+	if(config.word_filter_regex.Find_char(message))
 		to_chat(user,
 			html = "\n<font color='red' size='4'><b>-- Word Filter Message --</b></font>",
 			)
