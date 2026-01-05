@@ -530,7 +530,7 @@
 		if(has_fat_guy && prob(2)) //Chance of becoming stuck per segment if contains a fat guy
 			active = 0
 			//Find the fat guys
-			for(var/mob/living/carbon/human/H in src)
+			// for(var/mob/living/carbon/human/H in src)   // SS220 EDIT - Compile Fix - чтобы линтер не ругался
 
 			break
 		sleep(1) //Was 1
