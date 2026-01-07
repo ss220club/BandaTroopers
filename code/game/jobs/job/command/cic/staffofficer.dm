@@ -59,8 +59,8 @@ OverrideTimelock(/datum/job/command/bridge, list(
 	job = /datum/job/command/bridge
 
 /datum/job/command/bridge/ai
-	total_positions = 1
-	spawn_positions = 1
+	total_positions = 4 // SS220 EDIT
+	spawn_positions = 4 // SS220 EDIT
 	prime_priority = TRUE
 
 /datum/job/command/bridge/ai/set_spawn_positions(count)

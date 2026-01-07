@@ -157,8 +157,8 @@
 
 /datum/squad/marine/alpha
 	name = SQUAD_MARINE_1
-	equipment_color = "#4148c8"
-	chat_color = "#828cff"
+	equipment_color = "#db1d1d" // SS220 EDIT
+	chat_color = "#db1d1d" // SS220 EDIT
 	access = list(ACCESS_MARINE_ALPHA)
 	radio_freq = ALPHA_FREQ
 	minimap_color = MINIMAP_SQUAD_ALPHA
@@ -214,7 +214,10 @@
 	radio_freq = BRAVO_FREQ
 	use_stripe_overlay = FALSE
 	minimap_color = MINIMAP_SQUAD_BRAVO
-	usable = FALSE
+	usable = TRUE // SS220 EDIT
+	roundstart = TRUE // SS220 EDIT
+	active = TRUE // SS220 EDIT
+	squad_type = "Section" // SS220 EDIT
 
 /datum/squad/marine/charlie
 	name = SQUAD_MARINE_3
@@ -223,6 +226,10 @@
 	access = list(ACCESS_MARINE_CHARLIE)
 	radio_freq = CHARLIE_FREQ
 	minimap_color = MINIMAP_SQUAD_CHARLIE
+	usable = TRUE // SS220 EDIT
+	roundstart = TRUE // SS220 EDIT
+	active = TRUE // SS220 EDIT
+	squad_type = "Section" // SS220 EDIT
 
 /datum/squad/marine/delta
 	name = SQUAD_MARINE_4
@@ -231,6 +238,10 @@
 	access = list(ACCESS_MARINE_DELTA)
 	radio_freq = DELTA_FREQ
 	minimap_color = MINIMAP_SQUAD_DELTA
+	usable = TRUE // SS220 EDIT
+	roundstart = TRUE // SS220 EDIT
+	active = TRUE // SS220 EDIT
+	squad_type = "Section" // SS220 EDIT
 
 /datum/squad/marine/echo
 	name = SQUAD_MARINE_5
