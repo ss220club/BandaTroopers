@@ -72,7 +72,7 @@
 	screen_loc = "LEFT,TOP-3"
 	letters_per_update = 1
 	fade_out_delay = 1 SECONDS
-	style_open = "<span style='font-size:15pt; text-align:center; color: #c0f7ff; font-family: \"VCR OSD Mono\"' valign='top'>"
+	style_open = "<span class='langchat_notification' style='text-align:center; color: #c0f7ff;' valign='top'>" //SS220 Fonts
 	style_close = "</span>"
 
 /atom/movable/screen/text/screen_text/hypersleep_status/Initialize(mapload)
@@ -83,7 +83,7 @@
 	layer = INTRO_LAYER
 	plane = INTRO_PLANE
 	screen_loc = "WEST:6,1:5"
-	style_open = "<span class='langchat' style=font-size:20pt;text-align:left valign='top'>"
+	style_open = "<span class='langchat_notification' style=text-align:left valign='top'>" //SS220 Fonts
 	style_close = "</span>"
 	maptext_x = 32
 
@@ -97,7 +97,7 @@
 	fade_out_delay = 10 SECONDS
 	layer = INTRO_LAYER
 	plane = INTRO_PLANE
-	style_open = "<span class='langchat' style=font-size:20pt;text-align:left valign='top'>"
+	style_open = "<span class='langchat_notification' style=text-align:left valign='top'>" //SS220 Fonts
 	style_close = "</span>"
 
 /atom/movable/screen/text/screen_text/potrait/Initialize(mapload, datum/hud/hud_owner, name, icon_to_use, image_to_play)

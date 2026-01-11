@@ -71,8 +71,8 @@
 	alert_receivers += GLOB.observer_list
 	for(var/mob/mob_receiver in alert_receivers)
 		if(alert_type == "Standard")
-			mob_receiver.play_screen_text("<span class='langchat' style=font-size:16pt;text-align:center valign='top'><u>[uppertext(title)]</u></span><br>" + text, /atom/movable/screen/text/screen_text/command_order)
+			mob_receiver.play_screen_text("<span class='langchat_notification' style=text-align:center valign='top'><u>[uppertext(title)]</u></span><br>" + text, /atom/movable/screen/text/screen_text/command_order) //SS220 Fonts
 		else
-			mob_receiver.play_screen_text("<span class='langchat' style=font-size:24pt;text-align:left valign='top'><u>[uppertext(title)]</u></span><br>" + text, new /atom/movable/screen/text/screen_text/potrait(null, null, name, icon_choice, icon_choice_state))
+			mob_receiver.play_screen_text("<span class='langchat_notification' style=text-align:left valign='top'><u>[uppertext(title)]</u></span><br>" + text, new /atom/movable/screen/text/screen_text/potrait(null, null, name, icon_choice, icon_choice_state)) //SS220 Fonts
 	message_admins("[key_name_admin(src)] has made an admin screen alert.")
 	log_admin("[key_name_admin(src)] made an admin screen alert: [text]")

@@ -9,12 +9,12 @@
 
 	letters_per_update = 2
 	fade_out_delay = 6 SECONDS
-	style_open = "<span class='langchat' style=font-size:24pt;text-align:center valign='top'>"
+	style_open = "<span class='langchat_notification' style=text-align:center valign='top'>" //SS220 Fonts
 	style_close = "</span>"
 
 /atom/movable/screen/text/screen_text/command_order/automated
 	fade_out_delay = 3 SECONDS
-	style_open = "<span class='langchat' style=font-size:20pt;text-align:center valign='top'>"
+	style_open = "<span class='langchat_notification' style=text-align:center valign='top'>" //SS220 Fonts
 
 /datum/action/innate/message_squad
 	name = "Send Order"
@@ -82,7 +82,7 @@
 		text = stars(text, GLOB.radio_communication_clarity)
 	for(var/mob/mob_receiver in alert_receivers)
 		playsound_client(mob_receiver.client, sound_alert, 35, channel = CHANNEL_ANNOUNCEMENTS)
-		mob_receiver.play_screen_text("<span class='langchat' style=font-size:24pt;text-align:left valign='top'><u>[uppertext(announcement_title)]:</u></span><br>" + text, new /atom/movable/screen/text/screen_text/picture/potrait_custom_mugshot(null, null, owner), override_color)
+		mob_receiver.play_screen_text("<span class='langchat_notification' style=text-align:left valign='top'><u>[uppertext(announcement_title)]:</u></span><br>" + text, new /atom/movable/screen/text/screen_text/picture/potrait_custom_mugshot(null, null, owner), override_color) // SS220 Fonts
 
 /atom/movable/screen/text/screen_text/command_order/tutorial
 	letters_per_update = 4 // overall, pretty fast while not immediately popping in
