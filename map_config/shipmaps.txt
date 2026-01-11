@@ -41,3 +41,7 @@ endmap
 
 map hms_brynhild
 endmap
+#SS220 EDIT
+map blue_ridge
+endmap
+
