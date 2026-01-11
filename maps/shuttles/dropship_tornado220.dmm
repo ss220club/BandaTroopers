@@ -175,8 +175,7 @@
 /area/shuttle/tornado)
 "jH" = (
 /turf/closed/shuttle/dropship3/tornado{
-	icon_state = "89a";
-	opacity = 0
+	icon_state = "89a"
 	},
 /area/shuttle/tornado)
 "jK" = (
@@ -229,8 +228,7 @@
 /area/shuttle/tornado)
 "mN" = (
 /turf/closed/shuttle/dropship3/tornado{
-	icon_state = "86a";
-	opacity = 0
+	icon_state = "86a"
 	},
 /area/shuttle/tornado)
 "mU" = (
@@ -330,14 +328,12 @@
 /area/shuttle/tornado)
 "uI" = (
 /turf/closed/shuttle/dropship3/tornado{
-	icon_state = "89b";
-	opacity = 0
+	icon_state = "89b"
 	},
 /area/shuttle/tornado)
 "vc" = (
 /turf/closed/shuttle/dropship3/tornado{
-	icon_state = "97a";
-	opacity = 0
+	icon_state = "97a"
 	},
 /area/shuttle/tornado)
 "vh" = (
@@ -645,8 +641,7 @@
 /area/shuttle/tornado)
 "Sd" = (
 /turf/closed/shuttle/dropship3/tornado{
-	icon_state = "86b";
-	opacity = 0
+	icon_state = "86b"
 	},
 /area/shuttle/tornado)
 "Sf" = (

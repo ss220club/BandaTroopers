@@ -172,6 +172,9 @@
 /obj/item/tool/kitchen/knife{
 	pixel_x = 9
 	},
+/obj/structure/sign/poster/io{
+	pixel_y = -28
+	},
 /turf/open/floor/almayer/dark_sterile,
 /area/golden_arrow/cryo_cells)
 "aar" = (
@@ -1015,7 +1018,7 @@
 "acX" = (
 /obj/structure/machinery/door_control/brbutton{
 	pixel_y = 28;
-	id = "squadblastdoor";
+	id = "squadblastdoorecho";
 	name = "hangar blast door control";
 	req_one_access_txt = "19;12"
 	},
@@ -1311,10 +1314,11 @@
 /turf/open/floor/almayer/edge/smooth/endcap_right/west,
 /area/golden_arrow/cryo_cells)
 "aea" = (
-/turf/closed/wall/almayer/outer{
-	opacity = 0
+/obj/structure/sign/poster/hero/voteno{
+	pixel_x = -31
 	},
-/area/golden_arrow/dorms)
+/turf/open/floor/almayer,
+/area/golden_arrow/platoonprep)
 "aeb" = (
 /obj/structure/machinery/vending/snack{
 	density = 0;
@@ -1540,9 +1544,7 @@
 	icon_state = "SE-out";
 	pixel_x = 1
 	},
-/turf/closed/wall/almayer/outer{
-	opacity = 0
-	},
+/turf/closed/wall/almayer/outer,
 /area/golden_arrow/hangar)
 "aeT" = (
 /obj/structure/platform,
@@ -1877,6 +1879,7 @@
 	layer = 3.5;
 	pixel_y = 16
 	},
+/obj/structure/blocker/invisible_wall,
 /turf/open/floor/almayer,
 /area/golden_arrow/supply)
 "agh" = (
@@ -2211,13 +2214,11 @@
 /turf/open/floor/plating/plating_catwalk,
 /area/golden_arrow/lower_cargo)
 "ahR" = (
-/obj/structure/largecrate/supply/supplies/flares{
-	layer = 3.1;
-	pixel_y = 37;
-	pixel_x = -19
+/obj/structure/sign/banners/colonial_marines_flag_worn{
+	pixel_y = 62
 	},
-/turf/open/floor/almayer,
-/area/golden_arrow/supply)
+/turf/open/floor/almayer/orange/north,
+/area/golden_arrow/dorms)
 "ahT" = (
 /obj/structure/bed/chair,
 /turf/open/floor/almayer,
@@ -3075,11 +3076,11 @@
 /area/golden_arrow/hangar)
 "alz" = (
 /obj/structure/machinery/door/poddoor/almayer/locked{
-	name = "Medical Bay";
+	name = "\improper Hangar Lockdown Blast Door";
 	id = "cargolockswest";
 	dir = 4
 	},
-/turf/open/space/basic,
+/turf/open/floor/almayer/test_floor4,
 /area/golden_arrow/hangar)
 "alA" = (
 /obj/structure/surface/table/reinforced/almayer_B,
@@ -3318,7 +3319,7 @@
 	},
 /obj/structure/cargo_container/uscm/right{
 	pixel_x = 21;
-	layer = 3.3;
+	layer = 4.1;
 	pixel_y = 20
 	},
 /obj/structure/cargo_container/uscm/micor/left{
@@ -3344,23 +3345,10 @@
 /turf/open/floor/plating,
 /area/golden_arrow/hangar)
 "amu" = (
-/obj/structure/closet/secure_closet{
-	pixel_x = -9;
-	pixel_y = 0
+/turf/closed/wall/almayer{
+	opacity = 0
 	},
-/obj/structure/closet/secure_closet{
-	pixel_x = 5;
-	pixel_y = 0
-	},
-/obj/structure/barricade/handrail{
-	dir = 4
-	},
-/obj/structure/sign/banners/usa_flag{
-	pixel_x = -15;
-	pixel_y = 32
-	},
-/turf/open/floor/almayer/plate,
-/area/golden_arrow/dorms)
+/area/golden_arrow/platoon_commander_rooms)
 "amw" = (
 /obj/structure/cable/heavyduty{
 	icon_state = "4-8"
@@ -3885,20 +3873,16 @@
 /turf/open/floor/almayer/sterile_green_side/west,
 /area/golden_arrow/medical)
 "aoq" = (
-/obj/structure/fence,
 /obj/structure/machinery/door/firedoor/border_only/almayer{
 	layer = 1.9
 	},
-/obj/structure/machinery/door/poddoor/almayer/open{
-	dir = 4;
-	name = "First Platoon Ready Bay Blast Door";
-	closed_layer = 3.3;
-	layer = 3.3;
-	open_layer = 3.3;
-	id = "squadblastdoor"
-	},
 /obj/structure/blocker/forcefield/vehicles{
 	layer = 5
+	},
+/obj/structure/machinery/door/poddoor/almayer/locked{
+	name = "\improper Echo Platoon Blast Door";
+	id = "squadblastdoorecho";
+	dir = 4
 	},
 /turf/open/floor/almayer/test_floor4,
 /area/golden_arrow/hangar)
@@ -4281,10 +4265,11 @@
 /turf/open/floor/almayer/edge/smooth/endcap_left/east,
 /area/golden_arrow/cryo_cells)
 "aqf" = (
-/turf/closed/wall/almayer/outer{
-	opacity = 0
+/obj/structure/sign/poster/propaganda{
+	pixel_x = -31
 	},
-/area/golden_arrow/supply)
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/platoonprep)
 "aqg" = (
 /turf/open/floor/almayer/orange/west,
 /area/golden_arrow/platoon_commander_rooms)
@@ -5583,9 +5568,7 @@
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
 	},
-/turf/closed/wall/almayer/outer{
-	opacity = 0
-	},
+/turf/closed/wall/almayer/outer,
 /area/golden_arrow/supply)
 "awa" = (
 /obj/structure/platform{
@@ -6282,19 +6265,16 @@
 /obj/structure/machinery/door/firedoor/border_only/almayer{
 	layer = 1.9
 	},
-/obj/structure/machinery/door/poddoor/almayer/open{
-	dir = 4;
-	name = "First Platoon Ready Bay Blast Door";
-	closed_layer = 3.3;
-	layer = 3.3;
-	open_layer = 3.3;
-	id = "squadblastdoor"
-	},
 /obj/structure/blocker/forcefield/vehicles{
 	layer = 5
 	},
 /obj/structure/cable/heavyduty{
 	icon_state = "4-8"
+	},
+/obj/structure/machinery/door/poddoor/almayer/locked{
+	name = "\improper Echo Platoon Blast Door";
+	id = "squadblastdoorecho";
+	dir = 4
 	},
 /turf/open/floor/almayer/test_floor4,
 /area/golden_arrow/hangar)
@@ -6385,23 +6365,6 @@
 /obj/item/mortar_shell/incendiary,
 /turf/open/floor/almayer/cargo,
 /area/golden_arrow/supply)
-"ayZ" = (
-/obj/structure/closet/secure_closet{
-	pixel_x = -5;
-	pixel_y = 0
-	},
-/obj/structure/closet/secure_closet{
-	pixel_x = 9;
-	pixel_y = 0
-	},
-/obj/structure/barricade/handrail{
-	dir = 8
-	},
-/obj/structure/sign/banners/colonial_marines_flag_worn{
-	pixel_y = 31
-	},
-/turf/open/floor/almayer/plate,
-/area/golden_arrow/dorms)
 "azb" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "E";
@@ -9108,11 +9071,6 @@
 	},
 /turf/open/floor/almayer/test_floor4,
 /area/golden_arrow/dorms)
-"aJg" = (
-/turf/closed/wall/almayer/outer{
-	opacity = 0
-	},
-/area/golden_arrow/hangar)
 "aJi" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "E";
@@ -9485,11 +9443,6 @@
 /turf/open/floor/almayer/test_floor4,
 /area/golden_arrow/hangar)
 "aKL" = (
-/obj/structure/machinery/door/airlock/almayer/secure{
-	dir = 2;
-	name = "\improper Shared Office";
-	req_access = null
-	},
 /obj/structure/machinery/door/airlock/almayer/secure{
 	dir = 2;
 	name = "\improper Shared Office";
@@ -10677,6 +10630,7 @@
 	pixel_y = 1;
 	pixel_x = -14
 	},
+/obj/structure/blocker/invisible_wall,
 /turf/open/floor/almayer,
 /area/golden_arrow/supply)
 "aQf" = (
@@ -11061,7 +11015,7 @@
 "aRB" = (
 /obj/structure/machinery/vending/coffee{
 	density = 0;
-	pixel_y = 18;
+	pixel_y = 17;
 	pixel_x = -16
 	},
 /obj/structure/machinery/vending/cola{
@@ -11612,9 +11566,7 @@
 	pixel_y = -31;
 	pixel_x = 2
 	},
-/turf/closed/wall/almayer/outer{
-	opacity = 0
-	},
+/turf/closed/wall/almayer/outer,
 /area/golden_arrow/supply)
 "aTp" = (
 /obj/structure/machinery/camera/autoname/golden_arrow{
@@ -11822,10 +11774,14 @@
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/dorms)
 "aUo" = (
-/turf/closed/wall/almayer/outer{
-	opacity = 0
+/obj/structure/prop/invuln/lattice_prop{
+	icon_state = "lattice3";
+	pixel_y = 6;
+	layer = 5.2
 	},
-/area/golden_arrow/platoonarmory)
+/obj/structure/blocker/invisible_wall,
+/turf/open/floor/almayer,
+/area/golden_arrow/supply)
 "aUq" = (
 /turf/open/floor/almayer_hull/outerhull_dir/northeast,
 /area/golden_arrow/platoon_commander_rooms)
@@ -14172,8 +14128,10 @@
 /turf/open/floor/almayer/bluecorner,
 /area/golden_arrow/dorms)
 "djz" = (
-/obj/structure/sign/poster/music,
-/turf/closed/wall/almayer,
+/obj/structure/sign/poster/music{
+	pixel_y = -26
+	},
+/turf/open/floor/almayer,
 /area/golden_arrow/cryo_cells)
 "dld" = (
 /obj/structure/machinery/light/double/blue/golden_arrow{
@@ -14261,10 +14219,6 @@
 	},
 /turf/open/floor/almayer/silver/east,
 /area/golden_arrow/prep_hallway)
-"dyx" = (
-/obj/item/trash/popcorn,
-/turf/open/floor/almayer,
-/area/golden_arrow/platoonprep)
 "dyP" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "SW-out";
@@ -14810,11 +14764,9 @@
 /turf/open/floor/almayer/cargo_arrow/north,
 /area/golden_arrow/lower_cargo)
 "eyB" = (
-/obj/structure/blocker/forcefield/vehicles{
-	layer = 5
-	},
-/turf/open/floor/plating,
-/area/golden_arrow/platoonarmory)
+/obj/structure/blocker/invisible_wall,
+/turf/open/floor/almayer,
+/area/golden_arrow/supply)
 "ezh" = (
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
@@ -16085,9 +16037,12 @@
 /turf/open/floor/almayer/edge/smooth/corner/north,
 /area/golden_arrow/hangar)
 "hkv" = (
-/obj/structure/sign/poster/io,
-/turf/closed/wall/almayer,
-/area/golden_arrow/shared_office)
+/obj/structure/sign/banners/usa_flag{
+	pixel_x = -15;
+	pixel_y = 64
+	},
+/turf/open/floor/almayer/blue/north,
+/area/golden_arrow/dorms)
 "hlD" = (
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
@@ -16204,10 +16159,6 @@
 "hCn" = (
 /turf/open/floor/almayer/edge/smooth/endcap_right/east,
 /area/golden_arrow/platoonprep)
-"hCz" = (
-/obj/structure/sign/poster,
-/turf/closed/wall/almayer/outer,
-/area/golden_arrow/cryo_cells)
 "hEO" = (
 /obj/structure/cable/heavyduty{
 	icon_state = "1-2"
@@ -18334,9 +18285,14 @@
 /turf/open/floor/plating/plating_catwalk,
 /area/golden_arrow/engineering)
 "mlD" = (
-/obj/structure/sign/poster/propaganda,
-/turf/closed/wall/almayer,
-/area/golden_arrow/supply)
+/obj/structure/bed/chair{
+	dir = 16
+	},
+/obj/structure/sign/poster/safety{
+	pixel_y = 31
+	},
+/turf/open/floor/almayer,
+/area/golden_arrow/prep_hallway)
 "mmm" = (
 /turf/open/floor/almayer/edge/smooth/west,
 /area/golden_arrow/lower_cargo)
@@ -18855,7 +18811,8 @@
 /area/golden_arrow/supplydrop)
 "nmO" = (
 /obj/structure/machinery/cm_vending/clothing/medic{
-	pixel_y = -20
+	pixel_y = -20;
+	can_block_movement = 0
 	},
 /obj/effect/decal/warning_stripes{
 	icon_state = "door_warning";
@@ -18996,9 +18953,13 @@
 /turf/open/floor/almayer/orange/north,
 /area/golden_arrow/platoonarmory)
 "nAJ" = (
-/obj/structure/sign/poster/safety,
-/turf/closed/wall/almayer,
-/area/golden_arrow/shared_office)
+/obj/structure/machinery/door/poddoor/almayer/locked{
+	name = "\improper Hangar Lockdown Blast Door";
+	id = "squadblastdoorecho";
+	dir = 4
+	},
+/turf/open/floor/almayer/test_floor4,
+/area/golden_arrow/hangar)
 "nBF" = (
 /obj/structure/cable/heavyduty{
 	icon_state = "1-2"
@@ -20900,10 +20861,6 @@
 	},
 /turf/open/floor/almayer/edge/smooth/endcap_right/west,
 /area/golden_arrow/platoonprep)
-"rNs" = (
-/obj/structure/sign/poster/hero/voteno,
-/turf/closed/wall/almayer,
-/area/golden_arrow/cryo_cells)
 "rOB" = (
 /turf/open/floor/corsat,
 /area/golden_arrow/motor_pool)
@@ -22485,6 +22442,10 @@
 	pixel_y = 13;
 	pixel_x = -5
 	},
+/obj/item/device/lightreplacer{
+	pixel_y = 12;
+	pixel_x = 10
+	},
 /turf/open/floor/almayer/silver/southwest,
 /area/golden_arrow/dorms)
 "vcV" = (
@@ -22770,9 +22731,6 @@
 /area/golden_arrow/supply)
 "vNW" = (
 /obj/structure/surface/table/reinforced/almayer_B,
-/obj/structure/sign/banners/maximumeffort{
-	pixel_y = 30
-	},
 /obj/item/storage/box/guncase/heavy/motiondetectors{
 	pixel_y = 2;
 	pixel_x = 0
@@ -22780,6 +22738,9 @@
 /obj/item/storage/box/guncase/heavy/fuel{
 	pixel_y = 10;
 	pixel_x = 0
+	},
+/obj/structure/sign/banners/maximumeffort{
+	pixel_y = 30
 	},
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/platoonarmory)
@@ -23682,9 +23643,7 @@
 	id = "cargolockswest";
 	dir = 4
 	},
-/turf/closed/wall/almayer/outer{
-	opacity = 0
-	},
+/turf/closed/wall/almayer/outer,
 /area/golden_arrow/hangar)
 "xTZ" = (
 /obj/structure/machinery/light/double/blue/golden_arrow{
@@ -28472,17 +28431,17 @@ aEG
 aEG
 aEG
 aEG
-kuk
-kuk
-kuk
-kuk
-kuk
-kuk
-kuk
-kuk
-kuk
-kuk
-kuk
+aEG
+aEG
+aEG
+aEG
+aEG
+aEG
+aEG
+aEG
+aEG
+aEG
+aEG
 aEG
 aEG
 aEG
@@ -28649,7 +28608,7 @@ aEG
 aEG
 aEG
 aEG
-kuk
+aEG
 aEG
 aEG
 aEG
@@ -28826,7 +28785,7 @@ aEG
 aEG
 aEG
 aEG
-kuk
+aEG
 aEG
 aEG
 aEG
@@ -29003,20 +28962,20 @@ aEG
 aEG
 aEG
 aEG
+aEG
+aEG
+kuk
+kuk
+kuk
+kuk
+kuk
+kuk
+kuk
+kuk
+kuk
 kuk
 aEG
-aEG
-aEG
-aEG
-aEG
-aEG
-aEG
-aEG
-aEG
-aEG
-aEG
-aEG
-aqf
+ahl
 abl
 aDj
 ahl
@@ -29050,7 +29009,7 @@ ahl
 aRI
 aRI
 aRI
-hCz
+aWh
 aSR
 awW
 apm
@@ -29180,9 +29139,9 @@ aEG
 aEG
 aEG
 aEG
+aEG
+aEG
 kuk
-aEG
-aEG
 bBB
 bBB
 bBB
@@ -29357,9 +29316,9 @@ aEG
 aEG
 aEG
 aEG
+aEG
+aEG
 kuk
-aEG
-aEG
 ife
 aEK
 aEK
@@ -29534,9 +29493,9 @@ aEG
 aEG
 aEG
 aEG
+aEG
+aEG
 kuk
-aEG
-aEG
 cUo
 aEK
 aEK
@@ -29711,9 +29670,9 @@ aEG
 aEG
 aEG
 aEG
+aEG
+aEG
 kuk
-aEG
-aEG
 bBB
 aEK
 aEK
@@ -29747,7 +29706,7 @@ asw
 axx
 lHh
 aQc
-afz
+eyB
 afP
 aIN
 aVO
@@ -29888,9 +29847,9 @@ aEG
 aEG
 aEG
 aEG
+aEG
+aEG
 kuk
-aEG
-aEG
 bBB
 aEK
 aEK
@@ -29925,7 +29884,7 @@ acz
 ada
 aQe
 agf
-aPw
+aUo
 aPw
 aCz
 aqS
@@ -30065,9 +30024,9 @@ aEG
 aEG
 aEG
 aEG
+aEG
+aEG
 kuk
-aEG
-aEG
 bBB
 aEK
 aEK
@@ -30242,9 +30201,9 @@ aEG
 aEG
 aEG
 aEG
+aEG
+aEG
 kuk
-aEG
-aEG
 bBB
 aEK
 aEK
@@ -30262,8 +30221,8 @@ aJZ
 afz
 afz
 oIL
-aqf
-aqf
+ahl
+ahl
 avY
 aCj
 aHh
@@ -30419,9 +30378,9 @@ aEG
 aEG
 aEG
 aEG
+aEG
+aEG
 kuk
-aEG
-aEG
 bBB
 aEK
 aEK
@@ -30439,7 +30398,7 @@ afz
 tNo
 aum
 syZ
-aqf
+ahl
 arY
 avY
 aeo
@@ -30487,8 +30446,8 @@ aKk
 ahK
 aNn
 wQN
-aBk
 djz
+aog
 aog
 aog
 aog
@@ -30596,9 +30555,9 @@ aEG
 aEG
 aEG
 aEG
+aEG
+aEG
 kuk
-aEG
-aEG
 ife
 aEK
 aEK
@@ -30616,8 +30575,8 @@ aum
 aum
 uJn
 avs
-aqf
-aqf
+ahl
+ahl
 aTo
 aum
 aOd
@@ -30773,9 +30732,9 @@ aEG
 aEG
 aEG
 aEG
+aEG
+aEG
 kuk
-aEG
-aEG
 bBB
 bBB
 bBB
@@ -30950,9 +30909,9 @@ aEG
 aEG
 aEG
 aEG
-kuk
 aEG
 aEG
+eNJ
 aEG
 aEG
 aEG
@@ -31127,12 +31086,12 @@ aEG
 aEG
 aEG
 aEG
+aEG
+aEG
+eNJ
 kuk
-kuk
-kuk
-kuk
-kuk
-kuk
+aEG
+aEG
 aEG
 aEG
 aEG
@@ -31152,7 +31111,7 @@ ekn
 afz
 eTc
 aoE
-ahR
+afz
 afz
 auD
 acD
@@ -31306,10 +31265,10 @@ aEG
 aEG
 aEG
 aEG
+eNJ
+kuk
 aEG
-kuk
-kuk
-kuk
+aEG
 aEG
 aEG
 aEG
@@ -31483,7 +31442,7 @@ aEG
 aEG
 aEG
 aEG
-aEG
+kuk
 kuk
 aDh
 aDh
@@ -31660,7 +31619,7 @@ aEG
 aEG
 aEG
 aEG
-aEG
+kuk
 kuk
 aDh
 aDh
@@ -31755,8 +31714,8 @@ kNp
 axE
 aOQ
 afv
-ayZ
-aBo
+aOQ
+ahR
 kNp
 rRA
 aDz
@@ -31911,8 +31870,8 @@ ayo
 anz
 vbQ
 afv
-amu
-arG
+aGg
+hkv
 aZV
 agV
 aNh
@@ -32421,7 +32380,7 @@ acr
 anW
 aNz
 aaq
-hkv
+agE
 aWI
 oIf
 aZG
@@ -32584,7 +32543,7 @@ uJn
 oFX
 oFX
 oFX
-mlD
+uJn
 uJn
 ahl
 ahl
@@ -32595,15 +32554,15 @@ aWh
 aog
 aog
 aog
-rNs
+aog
 aog
 aiU
 agE
+aTr
+aTr
+aTr
 agE
-aTr
-aTr
-nAJ
-idk
+mlD
 mKN
 aGt
 wPI
@@ -32648,7 +32607,7 @@ ahk
 afv
 afv
 arC
-aea
+arC
 aEG
 aEG
 aEG
@@ -32761,7 +32720,7 @@ aLe
 ueB
 byz
 dYR
-aLe
+aqf
 aRC
 uLh
 hhk
@@ -32770,8 +32729,8 @@ aRC
 aQf
 aQf
 aAO
-dyx
 aAO
+aea
 jqB
 aAO
 kIR
@@ -32825,7 +32784,7 @@ aWo
 huB
 apZ
 aJf
-aea
+arC
 aEG
 aEG
 aEG
@@ -33002,7 +32961,7 @@ anZ
 fwp
 aJf
 aJf
-aea
+arC
 aEG
 aEG
 aEG
@@ -33071,7 +33030,7 @@ aeT
 aoT
 aOi
 aty
-tmN
+amu
 ecj
 aIh
 aWZ
@@ -33179,7 +33138,7 @@ hcJ
 gvG
 aJf
 aJf
-aea
+arC
 aEG
 aEG
 aEG
@@ -33356,7 +33315,7 @@ aTC
 arC
 arC
 arC
-aea
+arC
 aEG
 aEG
 aEG
@@ -33779,7 +33738,7 @@ aeT
 ulq
 amd
 efN
-tmN
+amu
 aCx
 wBE
 aWZ
@@ -34154,7 +34113,7 @@ tmN
 ivm
 bMS
 nXt
-eyB
+sru
 aaR
 act
 oWU
@@ -34172,11 +34131,11 @@ act
 nXt
 sru
 dTR
-aUo
+act
 oWU
 oWU
 oWU
-aUo
+act
 jOP
 aGm
 nXt
@@ -34535,7 +34494,7 @@ nnZ
 aBt
 aGl
 act
-aUo
+act
 act
 ozg
 aRQ
@@ -34689,7 +34648,7 @@ aDf
 azv
 lPm
 avc
-aUo
+act
 pcZ
 lPm
 aZH
@@ -34705,7 +34664,7 @@ moW
 axW
 lPm
 avc
-aUo
+act
 pcZ
 lPm
 alf
@@ -34713,7 +34672,7 @@ aDf
 aSv
 lPm
 adl
-aUo
+act
 ozg
 ozg
 adB
@@ -34866,7 +34825,7 @@ aBt
 xLU
 lPm
 nfP
-aUo
+act
 mtK
 lPm
 cZT
@@ -34882,7 +34841,7 @@ aBt
 ati
 lPm
 nfP
-aUo
+act
 mtK
 lPm
 xLU
@@ -34890,7 +34849,7 @@ aBt
 ati
 lPm
 aDg
-aUo
+act
 ozg
 ozg
 ozg
@@ -35043,7 +35002,7 @@ aMK
 aDL
 lPm
 gzS
-aUo
+act
 syi
 lPm
 aBt
@@ -35059,7 +35018,7 @@ aBt
 pJV
 lPm
 gzS
-aUo
+act
 syi
 lPm
 nAF
@@ -35067,7 +35026,7 @@ aBt
 agS
 act
 act
-aUo
+act
 amI
 amI
 ozg
@@ -35220,7 +35179,7 @@ aBt
 xLU
 lPm
 tBI
-aUo
+act
 rhq
 lPm
 ati
@@ -35236,7 +35195,7 @@ aBt
 ati
 lPm
 tBI
-aUo
+act
 rhq
 lPm
 xLU
@@ -35244,7 +35203,7 @@ aMK
 ati
 lPm
 aOt
-aUo
+act
 amI
 amI
 ozg
@@ -35397,7 +35356,7 @@ aDf
 aTh
 lPm
 dBq
-aUo
+act
 dAo
 lPm
 avO
@@ -35413,7 +35372,7 @@ aOp
 aiQ
 lPm
 dBq
-aUo
+act
 dAo
 lPm
 amw
@@ -35421,14 +35380,14 @@ moW
 aUv
 lPm
 aur
-aUo
-aJg
-aJg
-aJg
-aJg
-aJg
-aJg
-aJg
+act
+adz
+adz
+adz
+adz
+adz
+adz
+adz
 ozg
 ozg
 ozg
@@ -35567,7 +35526,7 @@ aEG
 aEG
 aEG
 act
-aUo
+act
 act
 app
 ati
@@ -35598,14 +35557,14 @@ pFz
 moi
 act
 act
-aUo
+act
 hbe
 qkt
 jsW
 qkt
 jsW
-aJg
-aJg
+adz
+adz
 ozg
 apO
 aOL
@@ -35775,14 +35734,14 @@ ati
 aHZ
 lPm
 aoc
-aUo
+act
 vRh
 cWj
 jsW
 qkt
 jsW
-aJg
-aJg
+adz
+adz
 ozg
 aHQ
 aca
@@ -35952,14 +35911,14 @@ aBt
 tnV
 lPm
 ojW
-aUo
+act
 vRh
 xTB
 jsW
 qkt
 jsW
-aJg
-aJg
+adz
+adz
 ozg
 aVa
 vPN
@@ -36129,14 +36088,14 @@ aBt
 aHZ
 lPm
 ojW
-aUo
+act
 mZK
 mce
 uGY
 qkt
 jsW
-aJg
-aJg
+adz
+adz
 ozg
 aKl
 ahB
@@ -36306,14 +36265,14 @@ ati
 tnV
 lPm
 ojW
-aUo
+act
 vyF
 aWa
 aWa
 aWa
 voH
-aJg
-aJg
+adz
+adz
 ozg
 ozg
 ozg
@@ -36489,7 +36448,7 @@ afN
 afN
 afN
 adz
-aJg
+adz
 adz
 aOR
 aOR
@@ -36835,7 +36794,7 @@ act
 aCw
 rhh
 bhu
-aUo
+act
 act
 act
 adz
@@ -36861,22 +36820,22 @@ ozg
 aEG
 adz
 alz
-aAp
-aAp
-aAp
-aAp
+nAJ
+alz
+alz
+alz
 adz
 aFS
 aFS
 adz
 adz
-aAp
-aAp
-aAp
-aAp
-aAp
-aAp
-aAp
+alz
+alz
+alz
+alz
+alz
+alz
+alz
 adz
 aFS
 aFS
@@ -38221,9 +38180,9 @@ aEG
 aEG
 aEG
 aEG
-aJg
-aJg
-aJg
+adz
+adz
+adz
 aHu
 joW
 pyZ
@@ -38398,9 +38357,9 @@ aEG
 aEG
 aEG
 aEG
-aJg
-aJg
-aJg
+adz
+adz
+adz
 wDg
 iIx
 rPX
@@ -38575,9 +38534,9 @@ aEG
 aEG
 aEG
 aEG
-aJg
-aJg
-aJg
+adz
+adz
+adz
 pEI
 jff
 hQq
@@ -39637,9 +39596,9 @@ aEG
 aEG
 aEG
 aEG
-aJg
-aJg
-aJg
+adz
+adz
+adz
 aWa
 abb
 sTs
@@ -39814,9 +39773,9 @@ aEG
 aEG
 aEG
 aEG
-aJg
-aJg
-aJg
+adz
+adz
+adz
 aDG
 aWa
 sTs
@@ -39991,9 +39950,9 @@ aEG
 aEG
 aEG
 aEG
-aJg
-aJg
-aJg
+adz
+adz
+adz
 abJ
 aUD
 kFI
@@ -41053,9 +41012,9 @@ aEG
 aEG
 aEG
 aEG
-aJg
-aJg
-aJg
+adz
+adz
+adz
 aun
 aun
 uXG
@@ -41230,9 +41189,9 @@ aEG
 aEG
 aEG
 aEG
-aJg
-aJg
-aJg
+adz
+adz
+adz
 aoq
 aoq
 ayJ
@@ -41407,9 +41366,9 @@ aEG
 aEG
 aEG
 aEG
-aJg
-aJg
-aJg
+adz
+adz
+adz
 acX
 lOc
 gRZ
@@ -41431,22 +41390,22 @@ aEG
 aEG
 aEG
 adz
-aAp
-aAp
-aAp
-aAp
-aAp
+alz
+alz
+alz
+alz
+alz
 adz
 aEG
 aEG
 aEG
 aEG
 adz
-aAp
-aAp
-aAp
-aAp
-aAp
+alz
+alz
+alz
+alz
+alz
 adz
 aEG
 aEG
@@ -41584,8 +41543,8 @@ aEG
 aEG
 aEG
 aEG
-aEG
-aEG
+adz
+adz
 aeR
 aVl
 adP
@@ -41761,8 +41720,8 @@ aEG
 aEG
 aEG
 aEG
-aJg
-aJg
+adz
+aKD
 afy
 alE
 aVD
@@ -41938,7 +41897,7 @@ aEG
 aEG
 aEG
 aEG
-aJg
+adz
 aKD
 aNS
 aiV
@@ -42115,7 +42074,7 @@ aEG
 aEG
 aEG
 aEG
-aJg
+adz
 aKD
 aiz
 aVD
@@ -42292,7 +42251,7 @@ aEG
 aEG
 aEG
 aEG
-aJg
+adz
 aKD
 afy
 aVD
@@ -42469,8 +42428,8 @@ aEG
 aEG
 aEG
 aEG
-aJg
-aKD
+adz
+aCt
 afy
 aVD
 alE
@@ -42646,8 +42605,8 @@ aEG
 aEG
 aEG
 aEG
-aJg
-aCt
+adz
+akG
 afy
 afB
 aVF
@@ -42823,8 +42782,8 @@ aEG
 aEG
 aEG
 aEG
-aJg
-akG
+adz
+aOM
 auB
 alE
 aVD
@@ -43000,9 +42959,9 @@ aEG
 aEG
 aEG
 aEG
-aJg
-aOM
-aJg
+adz
+adz
+adz
 irm
 aiH
 gHn
@@ -43177,9 +43136,9 @@ aEG
 aEG
 aEG
 aEG
-aJg
-aJg
-aJg
+aEG
+aEG
+adz
 xTE
 avl
 arX
