@@ -6,7 +6,7 @@
 	letters_per_update = 1
 	fade_out_delay = 5 SECONDS
 	screen_loc = "WEST:6,1:5"
-	style_open = "<span class='langchat' style=font-size:20pt;text-align:left valign='top'>"
+	style_open = "<span class='langchat_notification' style=text-align:left valign='top'>" //ss220... fonts...
 	style_close = "</span>"
 	layer = INTRO_LAYER
 	plane = INTRO_PLANE
