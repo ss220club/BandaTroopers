@@ -32,7 +32,7 @@
 		"operator",
 		"vip",
 		"woman_fleet",
-		"pmc_bald",
+		//"pmc_bald", SS220 edit
 		)
 	var/portrait_color
 	var/name
