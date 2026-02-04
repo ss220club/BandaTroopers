@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USCM - Cryo Wake-up Sequence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Share Tech Mono', 'Courier New', monospace !important;
+        }
+        
+        :root {
+            --primary-color: #00ff41;
+            --primary-rgb: 0, 255, 65;
+            --monitor-glow: rgba(0, 255, 65, 0.15);
+        }
+
+        body {
+            overflow: hidden;
+            background: #000;
+            color: var(--primary-color);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .monitor-frame {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+
+        .screen-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            background: radial-gradient(circle at center, #001a05 0%, #000 100%);
+            border: 2px solid #111;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
+            z-index: 10;
+            opacity: 0;
+        }
+
+        .screen-content::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: radial-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 100%), 
+                        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 100;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .crt-vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.4) 100%);
+            pointer-events: none;
+            z-index: 101;
+        }
+
+        .scanlines {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+            background-size: 100% 4px;
+            z-index: 102;
+            pointer-events: none;
+        }
+
+        .glow-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, var(--monitor-glow) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes crt-flicker {
+            0% { opacity: 0.95; }
+            5% { opacity: 0.88; }
+            10% { opacity: 0.95; }
+            15% { opacity: 0.9; }
+            30% { opacity: 0.95; }
+            50% { opacity: 0.92; }
+            80% { opacity: 0.95; }
+            100% { opacity: 0.99; }
+        }
+        .flicker { animation: crt-flicker 0.1s infinite; }
+
+        .terminal-header {
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 700;
+            text-shadow: 0 0 10px var(--primary-color);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .terminal-footer {
+            border-top: 1px solid var(--primary-color);
+            padding-top: 10px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .main-display {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .uscm-logo-ascii {
+            font-family: 'Courier New', monospace !important;
+            font-size: 14px;
+            line-height: 1;
+            margin-bottom: 30px;
+            white-space: pre;
+            text-align: center;
+            text-shadow: 0 0 15px var(--primary-color);
+            letter-spacing: 0;
+            font-weight: 700;
+        }
+
+        .data-grid {
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid var(--primary-color);
+            padding: 20px;
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            min-height: 24px;
+        }
+
+        .btn-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 200;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 3px 8px;
+            cursor: pointer;
+            font-size: 8px;
+            letter-spacing: 1px;
+        }
+        .btn:hover { background: rgba(0, 255, 65, 0.2); }
+
+        .barrel-distort {
+            transform: perspective(1000px) rotateX(1deg) scale(1.02);
+            transform-origin: center;
+        }
+
+        @keyframes turn-on {
+            0% { transform: scale(1, 0.01); opacity: 0; filter: brightness(10); }
+            40% { transform: scale(1, 0.01); opacity: 1; filter: brightness(10); }
+            100% { transform: scale(1, 1); opacity: 1; filter: brightness(1); }
+        }
+        .monitor-turn-on { animation: turn-on 0.8s ease-out forwards; }
+
+        @keyframes turn-off {
+            0% { transform: scale(1, 1); opacity: 1; filter: brightness(1); }
+            40% { transform: scale(1, 0.002); opacity: 1; filter: brightness(5); }
+            70% { transform: scale(0.002, 0.002); opacity: 1; filter: brightness(20); }
+            100% { transform: scale(0, 0); opacity: 0; }
+        }
+        .monitor-turn-off { animation: turn-off 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+
+        @keyframes screen-glitch {
+            0% { transform: translateX(0); opacity: 1; }
+            10% { transform: translateX(-3px) skewX(5deg); opacity: 0.8; }
+            20% { transform: translateX(3px) skewX(-5deg); opacity: 0.9; }
+            30% { transform: translateX(-10px) scaleY(1.2); opacity: 0.4; filter: invert(1); }
+            40% { transform: translateX(5px) scaleY(0.8); opacity: 0.7; filter: none; }
+            50% { transform: translateX(0); opacity: 1; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+        .screen-glitch-anim { animation: screen-glitch 0.4s steps(2) forwards; }
+    </style>
+</head>
+<body>
+    <div class="crt-vignette"></div>
+    <div class="btn-panel" style="top: 12px; left: 12px; right: auto; bottom: auto;">
+        <button class="btn" onclick="toggleSound()">ЗВУК: <span id="snd-stat">ВКЛ</span></button>
+    </div>
+
+    <div class="monitor-frame">
+        <div class="screen-content barrel-distort flicker" id="main-screen">
+            <div class="scanlines"></div>
+            <div class="glow-overlay"></div>
+            
+            <div class="terminal-header">
+                <div>USCM-TERMINAL-7.02</div>
+                <div>КРИО-ОТСЕК 04. СЕКТОР B.</div>
+            </div>
+
+            <div class="main-display" id="display-1">
+                <div class="uscm-logo-ascii" id="logo">
+██╗   ██╗███████╗███╗   ███╗ ██████╗
+██║   ██║██╔════╝████╗ ████║██╔════╝
+██║   ██║███████╗██╔████╔██║██║     
+██║   ██║╚════██║██║╚██╔╝██║██║     
+╚██████╔╝███████║██║ ╚═╝ ██║╚██████╗
+ ╚═════╝ ╚══════╝╚═╝     ╚═╝ ╚═════╝
+
+UNITED STATES COLONIAL MARINE CORPS
+</div>
+
+                <div class="data-grid" id="status-grid">
+                    <div class="data-row"><span class="label" data-text="СИСТЕМА:"></span><span class="value" data-text="ОК"></span></div>
+                    <div class="data-row"><span class="label" data-text="КРИО-СТАТУС:"></span><span class="value" data-text="ВЫХОД"></span></div>
+                    <div class="data-row"><span class="label" data-text="ТЕМПЕРАТУРА ТЕЛА:"></span><span class="value" id="vital-temp" data-text="36.6 °C"></span></div>
+                    <div class="data-row"><span class="label" data-text="ЧСС:"></span><span class="value" id="vital-hr" data-text="72 УД/МИН"></span></div>
+                    <div class="data-row" style="margin-top: 20px;"><span class="label" style="width:100%" data-text="> ИНИЦИАЛИЗАЦИЯ ПРОБУЖДЕНИЯ..."></span></div>
+                </div>
+            </div>
+
+            <div class="main-display" id="display-2" style="display: none;">
+                <div style="font-size: 24px; margin-bottom: 40px; text-shadow: 0 0 10px var(--primary-color);" data-type="header">ЛИЧНОЕ ДЕЛО</div>
+                <div class="data-grid" style="max-width: 720px;">
+                    <div class="data-row"><span class="label" data-text="ИМЯ:"></span><span class="value" id="disp-name"></span></div>
+                    <div class="data-row"><span class="label" data-text="ЗВАНИЕ:"></span><span class="value" id="disp-rank"></span></div>
+                    <div class="data-row"><span class="label" data-text="ОТРЯД:"></span><span class="value" id="disp-squad"></span></div>
+                    <div class="data-row"><span class="label" data-text="СПЕЦИАЛЬНОСТЬ:"></span><span class="value" id="disp-role"></span></div>
+                    <div class="data-row"><span class="label" data-text="СТАТУС:"></span><span class="value" data-text="АКТИВЕН"></span></div>
+                    <div class="data-row" style="margin-top: 18px;"><span class="label" style="width:100%" data-text="> ВЫХОД ИЗ КРИО-СНА:"></span></div>
+                    <div id="squad-list-container" style="width: 100%;"></div>
+                </div>
+            </div>
+
+            <div class="terminal-footer" style="display:flex; justify-content:space-between; gap:12px;">
+                <div>© 2180 UNITED STATES COLONIAL MARINE CORPS. ВСЕ ПРАВА ЗАЩИЩЕНЫ.</div>
+                <div style="text-align:right; opacity:0.8;">BANDA TROOPERS CUR-S. E. 220</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let soundEnabled = true;
+
+        // Пытаемся получить данные от SS13, иначе используем тестовые
+        const characterData = window.ss13Data || {
+            rank: "РЯДОВОЙ",
+            name: "ДЖЕЙМС РАМИРЕЗ",
+            role: "СТРЕЛОК",
+            squad: "АЛЬФА",
+            squadmates: [
+                { rank: "ОРУЖ. СЕРЖАНТ", name: "ЭЙПРИЛ ВЕЙЛАНД", role: "КОМАНДИР ОТРЯДА" },
+                { rank: "ШТАБ-СЕРЖАНТ", name: "МАЙКЛ О'БРАЙЕН", role: "ЗАМ. КОМАНДИРА" },
+                { rank: "СЕРЖАНТ", name: "ДЭВИД МИЛЛЕР", role: "ПОЛЕВОЙ САНИТАР" },
+                { rank: "СЕРЖАНТ", name: "РОБЕРТ ХИКС", role: "ОРУЖ. СПЕЦИАЛИСТ" },
+                { rank: "КАПРАЛ", name: "ДЖОН УИЛЬЯМС", role: "ИНЖЕНЕР" },
+                { rank: "КАПРАЛ", name: "КРИСТОФЕР БРАУН", role: "ПОЛЕВОЙ САНИТАР" },
+                { rank: "КАПРАЛ", name: "ДЭНИЕЛ ДЭВИС", role: "ОРУЖ. СПЕЦИАЛИСТ" },
+                { rank: "СПЕЦ. 1 КЛАССА", name: "МЭТТЬЮ ГАРСИЯ", role: "ИНЖЕНЕР" },
+                { rank: "СПЕЦ. 1 КЛАССА", name: "ЭНТОНИ РОДРИГЕС", role: "СТРЕЛОК" },
+                { rank: "РЯДОВОЙ", name: "МАРК УИЛСОН", role: "СТРЕЛОК" },
+                { rank: "РЯДОВОЙ", name: "ДОНАЛЬД МУР", role: "СТРЕЛОК" },
+                { rank: "РЯДОВОЙ", name: "РИЧАРД ТЕЙЛОР", role: "СТРЕЛОК" },
+                { rank: "РЯДОВОЙ", name: "ДЖОЗЕФ АНДЕРСОН", role: "СТРЕЛОК" },
+                { rank: "РЯДОВОЙ", name: "ЧАРЛЬЗ ДЖЕКСОН", role: "СТРЕЛОК" }
+            ]
+        };
+
+        function createNoiseBuffer() {
+            const bufferSize = audioContext.sampleRate * 2;
+            const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+            return buffer;
+        }
+        const noiseBuffer = createNoiseBuffer();
+
+        let vitalsTimer = null;
+        let currentBpm = 72;
+        let currentTemp = 36.6;
+
+        function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+        function startVitals() {
+            stopVitals();
+            const hrEl = document.getElementById('vital-hr');
+            const tempEl = document.getElementById('vital-temp');
+            if (!hrEl || !tempEl) return;
+            vitalsTimer = setInterval(() => {
+                currentBpm = clamp(currentBpm + (Math.random() - 0.5) * 8, 60, 100);
+                currentTemp = clamp(currentTemp + (Math.random() - 0.5) * 0.1, 36.5, 37.5);
+                hrEl.textContent = `${Math.round(currentBpm)} УД/МИН`;
+                tempEl.textContent = `${currentTemp.toFixed(1)} °C`;
+                hrEl.style.textShadow = '0 0 10px var(--primary-color)';
+                setTimeout(() => hrEl.style.textShadow = '', 300);
+            }, 600);
+        }
+
+        function stopVitals() {
+            if (vitalsTimer) { clearInterval(vitalsTimer); vitalsTimer = null; }
+        }
+
+        let lastTypeTime = 0;
+        function playTypingSound() {
+            if (!soundEnabled) return;
+            const now = audioContext.currentTime;
+            if (now - lastTypeTime < 0.05) return;
+            lastTypeTime = now;
+
+            // MU-TH-UR terminal key thunk
+            const thunk = audioContext.createOscillator();
+            thunk.type = 'triangle';
+            thunk.frequency.setValueAtTime(90, now);
+            thunk.frequency.exponentialRampToValueAtTime(40, now + 0.07);
+
+            const thunkGain = audioContext.createGain();
+            thunkGain.gain.setValueAtTime(0.18, now);
+            thunkGain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+            const thunkFilter = audioContext.createBiquadFilter();
+            thunkFilter.type = 'lowpass';
+            thunkFilter.frequency.setValueAtTime(220, now);
+            thunkFilter.Q.setValueAtTime(1.2, now);
+
+            thunk.connect(thunkFilter);
+            thunkFilter.connect(thunkGain);
+            thunkGain.connect(audioContext.destination);
+            thunk.start(now);
+            thunk.stop(now + 0.09);
+
+            // Subtle electrostatic click
+            const tick = audioContext.createBufferSource();
+            tick.buffer = noiseBuffer;
+
+            const tickFilter = audioContext.createBiquadFilter();
+            tickFilter.type = 'bandpass';
+            tickFilter.frequency.setValueAtTime(1200, now);
+            tickFilter.Q.setValueAtTime(0.9, now);
+
+            const tickGain = audioContext.createGain();
+            tickGain.gain.setValueAtTime(0.05, now);
+            tickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+
+            tick.connect(tickFilter);
+            tickFilter.connect(tickGain);
+            tickGain.connect(audioContext.destination);
+            tick.start(now);
+            tick.stop(now + 0.03);
+        }
+
+        function playBootSound() {
+            if (!soundEnabled) return;
+            const now = audioContext.currentTime;
+
+            // MU-TH-UR power line hum
+            const hum = audioContext.createOscillator();
+            hum.type = 'sine';
+            hum.frequency.setValueAtTime(45, now);
+
+            const humGain = audioContext.createGain();
+            humGain.gain.setValueAtTime(0, now);
+            humGain.gain.linearRampToValueAtTime(0.12, now + 0.35);
+            humGain.gain.linearRampToValueAtTime(0.05, now + 1.0);
+            humGain.gain.linearRampToValueAtTime(0, now + 1.4);
+
+            hum.connect(humGain);
+            humGain.connect(audioContext.destination);
+            hum.start(now);
+            hum.stop(now + 1.4);
+
+            // Relay latch click
+            setTimeout(() => {
+                if (!soundEnabled) return;
+                const clickTime = audioContext.currentTime;
+                const relay = audioContext.createOscillator();
+                relay.type = 'square';
+                relay.frequency.setValueAtTime(70, clickTime);
+                relay.frequency.exponentialRampToValueAtTime(28, clickTime + 0.06);
+
+                const relayGain = audioContext.createGain();
+                relayGain.gain.setValueAtTime(0.08, clickTime);
+                relayGain.gain.exponentialRampToValueAtTime(0.001, clickTime + 0.09);
+
+                const relayFilter = audioContext.createBiquadFilter();
+                relayFilter.type = 'lowpass';
+                relayFilter.frequency.setValueAtTime(240, clickTime);
+
+                relay.connect(relayFilter);
+                relayFilter.connect(relayGain);
+                relayGain.connect(audioContext.destination);
+                relay.start(clickTime);
+                relay.stop(clickTime + 0.09);
+            }, 120);
+
+            // CRT charge whine
+            const whine = audioContext.createOscillator();
+            whine.type = 'sine';
+            whine.frequency.setValueAtTime(15500, now + 0.3);
+
+            const whineGain = audioContext.createGain();
+            whineGain.gain.setValueAtTime(0, now);
+            whineGain.gain.linearRampToValueAtTime(0.004, now + 0.55);
+            whineGain.gain.linearRampToValueAtTime(0.002, now + 1.1);
+            whineGain.gain.linearRampToValueAtTime(0, now + 1.6);
+
+            whine.connect(whineGain);
+            whineGain.connect(audioContext.destination);
+            whine.start(now);
+            whine.stop(now + 1.6);
+        }
+
+        function playTransitionSound() {
+            if (!soundEnabled) return;
+            const now = audioContext.currentTime;
+
+            // Heavy contactor thud
+            const thud = audioContext.createOscillator();
+            thud.type = 'sine';
+            thud.frequency.setValueAtTime(55, now);
+            thud.frequency.exponentialRampToValueAtTime(24, now + 0.1);
+
+            const thudGain = audioContext.createGain();
+            thudGain.gain.setValueAtTime(0.22, now);
+            thudGain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+
+            const thudFilter = audioContext.createBiquadFilter();
+            thudFilter.type = 'lowpass';
+            thudFilter.frequency.setValueAtTime(140, now);
+
+            thud.connect(thudFilter);
+            thudFilter.connect(thudGain);
+            thudGain.connect(audioContext.destination);
+            thud.start(now);
+            thud.stop(now + 0.16);
+
+            // Data burst sweep
+            const sweep = audioContext.createOscillator();
+            sweep.type = 'sawtooth';
+            sweep.frequency.setValueAtTime(900, now);
+            sweep.frequency.exponentialRampToValueAtTime(220, now + 0.08);
+
+            const sweepGain = audioContext.createGain();
+            sweepGain.gain.setValueAtTime(0.06, now);
+            sweepGain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+
+            const sweepFilter = audioContext.createBiquadFilter();
+            sweepFilter.type = 'bandpass';
+            sweepFilter.frequency.setValueAtTime(600, now);
+            sweepFilter.Q.setValueAtTime(0.7, now);
+
+            sweep.connect(sweepFilter);
+            sweepFilter.connect(sweepGain);
+            sweepGain.connect(audioContext.destination);
+            sweep.start(now);
+            sweep.stop(now + 0.1);
+
+            // Soft static burst
+            const staticNoise = audioContext.createBufferSource();
+            staticNoise.buffer = noiseBuffer;
+
+            const staticFilter = audioContext.createBiquadFilter();
+            staticFilter.type = 'bandpass';
+            staticFilter.frequency.setValueAtTime(1100, now);
+            staticFilter.Q.setValueAtTime(0.4, now);
+
+            const staticGain = audioContext.createGain();
+            staticGain.gain.setValueAtTime(0.06, now);
+            staticGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+            staticNoise.connect(staticFilter);
+            staticFilter.connect(staticGain);
+            staticGain.connect(audioContext.destination);
+            staticNoise.start(now);
+            staticNoise.stop(now + 0.12);
+        }
+
+        function playShutdownSound() {
+            if (!soundEnabled) return;
+            const now = audioContext.currentTime;
+
+            // Power discharge
+            const discharge = audioContext.createOscillator();
+            discharge.type = 'sine';
+            discharge.frequency.setValueAtTime(110, now);
+            discharge.frequency.exponentialRampToValueAtTime(28, now + 0.45);
+
+            const dischargeGain = audioContext.createGain();
+            dischargeGain.gain.setValueAtTime(0.08, now);
+            dischargeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+            const dischargeFilter = audioContext.createBiquadFilter();
+            dischargeFilter.type = 'lowpass';
+            dischargeFilter.frequency.setValueAtTime(180, now);
+            dischargeFilter.frequency.exponentialRampToValueAtTime(60, now + 0.45);
+
+            discharge.connect(dischargeFilter);
+            dischargeFilter.connect(dischargeGain);
+            dischargeGain.connect(audioContext.destination);
+            discharge.start(now);
+            discharge.stop(now + 0.5);
+
+            // Final relay tick
+            const tick = audioContext.createOscillator();
+            tick.type = 'square';
+            tick.frequency.setValueAtTime(60, now + 0.05);
+            tick.frequency.exponentialRampToValueAtTime(25, now + 0.1);
+
+            const tickGain = audioContext.createGain();
+            tickGain.gain.setValueAtTime(0, now);
+            tickGain.gain.setValueAtTime(0.05, now + 0.05);
+            tickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+            const tickFilter = audioContext.createBiquadFilter();
+            tickFilter.type = 'lowpass';
+            tickFilter.frequency.setValueAtTime(280, now);
+
+            tick.connect(tickFilter);
+            tickFilter.connect(tickGain);
+            tickGain.connect(audioContext.destination);
+            tick.start(now);
+            tick.stop(now + 0.12);
+        }
+
+        async function typeText(element, text, speed = 40) {
+            element.innerHTML = "";
+            for (let char of text) {
+                element.innerHTML += char;
+                if (char !== " ") playTypingSound();
+                element.style.textShadow = "0 0 14px rgba(0, 255, 65, 0.9)";
+                setTimeout(() => element.style.textShadow = "", 40);
+                await new Promise(r => setTimeout(r, speed + Math.random() * 25));
+            }
+        }
+
+        async function runScreen1() {
+            await new Promise(r => setTimeout(r, 1500));
+            const rows = document.querySelectorAll('#status-grid .data-row');
+            for (let row of rows) {
+                const label = row.querySelector('.label');
+                const value = row.querySelector('.value');
+                if (label && label.dataset.text) await typeText(label, label.dataset.text);
+                if (value && value.dataset.text) await typeText(value, value.dataset.text);
+                await new Promise(r => setTimeout(r, 200));
+            }
+            startVitals();
+            setTimeout(switchToScreen2, 4000); // 4 секунды на чтение
+        }
+
+        async function runScreen2() {
+            const screen = document.getElementById('main-screen');
+            // Убираем класс включения чтобы не было повторной анимации
+            screen.classList.remove('monitor-turn-on'); 
+            
+            playTransitionSound();
+            screen.classList.add('screen-glitch-anim');
+
+            await new Promise(r => setTimeout(r, 150));
+            document.getElementById('display-1').style.display = 'none';
+            document.getElementById('display-2').style.display = 'flex';
+            setTimeout(() => screen.classList.remove('screen-glitch-anim'), 400);
+
+            const header = document.querySelector('#display-2 [data-type="header"]');
+            await typeText(header, "ЛИЧНОЕ ДЕЛО", 60);
+
+            const rows = document.querySelectorAll('#display-2 .data-row');
+            const setIf = (id, text) => { const el = document.getElementById(id); if (el) el.dataset.fill = text; };
+            setIf('disp-name', characterData.name);
+            setIf('disp-rank', characterData.rank);
+            setIf('disp-role', characterData.role);
+            setIf('disp-squad', characterData.squad);
+
+            const squadContainer = document.getElementById('squad-list-container');
+            const allMembers = [
+                { rank: characterData.rank, name: characterData.name, role: characterData.role, isPlayer: true },
+                ...characterData.squadmates.map(m => ({ ...m, isPlayer: false }))
+            ];
+            const rankOrder = { "ОРУЖ. СЕРЖАНТ": 1, "ШТАБ-СЕРЖАНТ": 2, "СЕРЖАНТ": 3, "КАПРАЛ": 4, "СПЕЦ. 1 КЛАССА": 5, "РЯДОВОЙ": 6 };
+            allMembers.sort((a, b) => (rankOrder[a.rank] || 99) - (rankOrder[b.rank] || 99));
+            const displayMembers = allMembers.slice(0, 15);
+
+            displayMembers.forEach((member, i) => {
+                const div = document.createElement('div');
+                div.className = 'data-row';
+                div.style.minHeight = '18px';
+                div.style.marginBottom = '2px';
+                const span = document.createElement('span');
+                span.className = 'value';
+                span.style.width = '100%';
+                span.style.fontSize = '12px';
+                span.id = `squad-dynamic-${i}`;
+                const playerMark = member.isPlayer ? " [ВЫ]" : "";
+                span.dataset.fill = `${member.rank} ${member.name} — ${member.role}${playerMark}`;
+                div.appendChild(span);
+                squadContainer.appendChild(div);
+            });
+
+            for (let i = 0; i < rows.length; i++) {
+                if (rows[i].id === 'squad-list-container') continue;
+                if (rows[i].closest('#squad-list-container')) continue;
+                const label = rows[i].querySelector('.label');
+                const value = rows[i].querySelector('.value');
+                if (label?.dataset?.text) await typeText(label, label.dataset.text, 20);
+                if (value) {
+                    const fill = value.dataset.fill || value.dataset.text || "";
+                    if (fill) await typeText(value, fill, 20);
+                }
+                await new Promise(r => setTimeout(r, 50));
+            }
+
+            const squadRows = squadContainer.querySelectorAll('.value');
+            for (let span of squadRows) {
+                if (span.dataset.fill) await typeText(span, span.dataset.fill, 25);
+            }
+
+            setTimeout(closeSequence, 7500); // 7.5 секунд на чтение
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('snd-stat').innerText = soundEnabled ? 'ВКЛ' : 'ВЫКЛ';
+        }
+
+        function switchToScreen2() {
+            stopVitals();
+            runScreen2();
+        }
+
+        function closeSequence() {
+            stopVitals();
+            playShutdownSound();
+            const screen = document.getElementById('main-screen');
+            screen.classList.add('monitor-turn-off');
+            setTimeout(() => { document.body.innerHTML = ''; }, 700);
+        }
+
+        window.onload = () => {
+            const screen = document.getElementById('main-screen');
+            screen.classList.add('monitor-turn-on');
+            playBootSound();
+            runScreen1();
+        };
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') location.reload();
+        });
+    </script>
+</body>
+</html>

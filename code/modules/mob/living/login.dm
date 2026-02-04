@@ -12,3 +12,6 @@
 			remove_ventcrawl()
 			update_pipe_icons(A)
 
+// Показываем интро при входе
+	if(SHOW_CRYO_INTRO)
+		addtimer(CALLBACK(GLOBAL_PROC, /proc/show_cryo_intro, src), 1 SECOND)

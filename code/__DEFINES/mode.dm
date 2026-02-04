@@ -343,3 +343,5 @@ DEFINE_BITFIELD(whitelist_status, list(
 GLOBAL_VAR(last_ares_callout)
 
 GLOBAL_VAR(last_qm_callout)
+
+#define SHOW_CRYO_INTRO 1  // Включить показ интро при входе
