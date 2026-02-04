@@ -1657,72 +1657,88 @@
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living/carbon/human, update_hair))
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living/carbon/human, play_opening_sequence))
 
-/mob/living/carbon/human/proc/play_opening_sequence()
-	if(SSticker.intro_sequence)
-		sleeping = 11
-		addtimer(CALLBACK(src, PROC_REF(play_screen_text), "HYPERSLEEP MONITOR<br><br>SYSTEM STATUS<br>LIFE SUPPORT:ONLINE<br>THAWING SYSTEMS:ONLINE<br>IMMUNIZATION:COMPLETE<br>OCCUPANT REM:NOMINAL", /atom/movable/screen/text/screen_text/hypersleep_status), 1.25 SECONDS)
-		addtimer(CALLBACK(src, PROC_REF(play_manifest)), 13 SECONDS)
-		overlay_fullscreen_timer(13 SECONDS, 10, "roundstart1", /atom/movable/screen/fullscreen/black)
-		overlay_fullscreen_timer(13 SECONDS, 10, "roundstartcrt1", /atom/movable/screen/fullscreen/crt)
-		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), src.client, 'sound/effects/cryo_intro.ogg', src, 90), 12 SECONDS)
+// =====================================================
+// MU-TH-UR 6000 — КАНОНИЧНАЯ ЗАСТАВКА CM-SS13
+// ЧЁРНЫЙ ФОН | РУССКИЙ ЯЗЫК | БРУТАЛЬНЫЙ ВИД
+// =====================================================
 
-/mob/living/carbon/human/proc/play_manifest()
-	var/human_manifest
-	var/time_to_remove = 5 SECONDS
-	for(var/mob/living/carbon/human/human as anything in GLOB.alive_human_list)
-		if(human.z != ZTRAIT_GROUND)
-			if(human.faction == faction)
-				time_to_remove += 2.5 SECONDS
-				var/obj/item/card/id/card = human.get_idcard()
-				var/datum/paygrade/account_paygrade = "UNKWN"
-				if(card)
-					account_paygrade = GLOB.paygrades[card.paygrade]
-				human_manifest += "[human.name]...[account_paygrade.prefix]/A[rand(01,99)]/TQ[rand(0,10)].0.[rand(100000,999999)]<br>"
-	sleeping = (time_to_remove - 2 SECONDS)/10
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), src.client, 'sound/effects/cryo_beep.ogg', src, 80), time_to_remove - 2 SECONDS)
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), src.client, 'sound/effects/cryo_opening.ogg', src, 80), time_to_remove)
-	overlay_fullscreen_timer(time_to_remove, 10, "roundstart2", /atom/movable/screen/fullscreen/black)
-	overlay_fullscreen_timer(time_to_remove, 10, "roundstartcrt2", /atom/movable/screen/fullscreen/crt)
-	overlay_fullscreen_timer(time_to_remove + 2 SECONDS, 20, "roundstart_fade", /atom/movable/screen/fullscreen/spawning_in)
-	var/alert_type = /atom/movable/screen/text/screen_text/picture/starting
-	var/platoon = "3rd Bat. 'Solar Devils"
+var/global/mu_thur_shown = 0 // Флаг против повторного показа
+
+/mob/living/carbon/human/proc/play_opening_sequence()
+	set waitfor = FALSE
+
+	// Показываем только один раз за раунд
+	if(mu_thur_shown || !client)
+		return
+	mu_thur_shown = 1
+
+	// === ЧЁРНЫЙ ФОН НА ВСЁ ВРЕМЯ ===
+	overlay_fullscreen("mu_black", /atom/movable/screen/fullscreen/black)
+
+	// === ЗВУК БОРТОВОГО КОМПЬЮТЕРА ===
+	playsound_client(client, 'sound/machines/tcomms_on.ogg', src, 100)
+
+	var/time_show = 8 SECONDS
+	var/human_manifest = ""
+
+	// === СОБИРАЕМ СОСТАВ (максимум 8 человек) ===
+	for(var/mob/living/carbon/human/H in GLOB.alive_human_list)
+		if(H.faction == faction && length(human_manifest) < 180)
+			var/rank = "RCT"
+			var/obj/item/card/id/card = H.get_idcard()
+			if(card && card.paygrade)
+				var/datum/paygrade/pg = GLOB.paygrades[card.paygrade]
+				if(pg && pg.prefix)
+					rank = pg.prefix
+
+			human_manifest += "[rank] [uppertext(H.real_name)]<br>"
+
+	// === УСЫПЛЯЕМ ===
+	sleeping = time_show / 8
+	src.stat = UNCONSCIOUS
+
+	// === НАЗВАНИЕ ПОДРАЗДЕЛЕНИЯ ===
+	var/platoon_name = "КМП ООН // 3-Й БАТАЛЬОН"
 	switch(faction)
 		if(FACTION_MARINE)
-			alert_type = /atom/movable/screen/text/screen_text/picture/starting
 			if(assigned_squad && assigned_squad.name == SQUAD_LRRP)
-				platoon = "Snake Eaters"
-			else
-				platoon = "3rd Bat. 'Solar Devils"
+				platoon_name = "СПЕЦГРУППА // 'ЗМЕЕДЫ'"
 		if(FACTION_UPP)
-			alert_type = /atom/movable/screen/text/screen_text/picture/starting/upp
-			platoon = "Red Dawn"
+			platoon_name = "УПП // 'КРАСНЫЙ РАССВЕТ'"
 		if(FACTION_PMC)
-			alert_type = /atom/movable/screen/text/screen_text/picture/starting/wy
-			platoon = "Azure-15"
-		if(FACTION_TWE)
-			alert_type = /atom/movable/screen/text/screen_text/picture/starting/twe
-			platoon = "Gamma Troop"
-	play_screen_text("<u>[SSmapping.configs[SHIP_MAP].map_name]<br></u>" + "[platoon]<br><br>" + human_manifest, alert_type)
+			platoon_name = "WEYLAND-YUTANI // PMCPF 'ЛАЗУРЬ-15'"
 
-/mob/living/carbon/human/point_to_atom(atom/A, turf/T)
-	if(isitem(A))
-		var/obj/item/item = A
-		if(item == get_active_hand() || item == get_inactive_hand())
-			item.showoff(src)
-			return TRUE
-	return ..()
+	// === КАНОНИЧНЫЙ ТЕКСТ (всё на русском) ===
+	var/map_display = "LV-426"
+	if(SSmapping && SSmapping.configs && SSmapping.configs[SHIP_MAP])
+		map_display = uppertext(SSmapping.configs[SHIP_MAP].map_name)
 
-/mob/living/carbon/human/on_knockedout_trait_gain(datum/source)
-	. = ..()
+	var/final_text = ""
+	final_text += "<center>"
+	final_text += "<font face='Courier New' color='#00ff00' size='1'>"
+	final_text += "<b>════════════════════════════════════</b><br>"
+	final_text += "<b>MU-TH-UR 6000</b><br>"
+	final_text += "<b>БОРТОВОЙ КОМПЬЮТЕР</b><br>"
+	final_text += "<b>WEYLAND-YUTANI CORPORATION</b><br>"
+	final_text += "<b>════════════════════════════════════</b><br><br>"
+	final_text += "&gt; ОПЕРАЦИЯ: <b>[map_display]</b><br>"
+	final_text += "&gt; ПОДРАЗДЕЛЕНИЕ: <b>[platoon_name]</b><br><br>"
+	final_text += "<b>────────────────────────────────────</b><br>"
+	final_text += "&gt; СИСТЕМА КРИОСНА: <font color='#00ff00'>ОТКЛЮЧЕНА</font><br>"
+	final_text += "&gt; УРОВЕНЬ КИСЛОРОДА: <font color='#00ff00'>НОРМА</font><br><br>"
+	final_text += "<b>────────────────────────────────────</b><br>"
+	final_text += "&gt; ЛИЧНЫЙ СОСТАВ:<br><br>"
+	final_text += human_manifest
+	final_text += "<b>────────────────────────────────────</b><br>"
+	final_text += "<font color='#ffff00'><b>&gt; ПРОБУЖДЕНИЕ ЭКИПАЖА...</b></font><br>"
+	final_text += "<b>════════════════════════════════════</b>"
+	final_text += "</font>"
+	final_text += "</center>"
 
-	update_execute_hud()
+	// === ПОКАЗЫВАЕМ ТЕКСТ ===
+	spawn(0.7)
+		if(client)
+			play_screen_text(final_text, /atom/movable/screen/text/screen_text/picture/starting)
 
-	return .
-
-/mob/living/carbon/human/on_knockedout_trait_loss(datum/source)
-	. = ..()
-
-	update_execute_hud()
-
-	return .
-
+	// === ОЧИСТКА ЭКРАНА ===
+	addtimer(CALLBACK(src, TYPE_PROC_REF(/mob, clear_fullscreen), "mu_black"), time_show + 1 SECONDS)
