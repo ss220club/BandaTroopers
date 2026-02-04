@@ -1682,16 +1682,19 @@ var/global/mu_thur_shown = 0 // Флаг против повторного по�
 	var/human_manifest = ""
 
 	// === СОБИРАЕМ СОСТАВ (максимум 8 человек) ===
-	for(var/mob/living/carbon/human/H in GLOB.alive_human_list)
-		if(H.faction == faction && length(human_manifest) < 180)
-			var/rank = "RCT"
-			var/obj/item/card/id/card = H.get_idcard()
-			if(card && card.paygrade)
-				var/datum/paygrade/pg = GLOB.paygrades[card.paygrade]
-				if(pg && pg.prefix)
-					rank = pg.prefix
-
-			human_manifest += "[rank] [uppertext(H.real_name)]<br>"
+	var/manifest_count = 0
+    for(var/mob/living/carbon/human/H in GLOB.alive_human_list)
+        if(manifest_count >= 8)
+            break
+        if(H.faction == faction)
+            manifest_count++
+            var/rank = "RCT"
+            var/obj/item/card/id/card = H.get_idcard()
+            if(card && card.paygrade)
+                var/datum/paygrade/pg = GLOB.paygrades[card.paygrade]
+                if(pg && pg.prefix)
+                    rank = pg.prefix
+            human_manifest += "[rank] [uppertext(H.real_name)]<br>"
 
 	// === УСЫПЛЯЕМ ===
 	sleeping = time_show / 8
@@ -1700,13 +1703,15 @@ var/global/mu_thur_shown = 0 // Флаг против повторного по�
 	// === НАЗВАНИЕ ПОДРАЗДЕЛЕНИЯ ===
 	var/platoon_name = "КМП ООН // 3-Й БАТАЛЬОН"
 	switch(faction)
-		if(FACTION_MARINE)
-			if(assigned_squad && assigned_squad.name == SQUAD_LRRP)
-				platoon_name = "СПЕЦГРУППА // 'ЗМЕЕДЫ'"
-		if(FACTION_UPP)
-			platoon_name = "УПП // 'КРАСНЫЙ РАССВЕТ'"
-		if(FACTION_PMC)
-			platoon_name = "WEYLAND-YUTANI // PMCPF 'ЛАЗУРЬ-15'"
+        if(FACTION_MARINE)
+            if(assigned_squad && assigned_squad.name == SQUAD_LRRP)
+                platoon_name = "СПЕЦГРУППА // 'ЗМЕЕДЫ'"
+        if(FACTION_UPP)
+            platoon_name = "УПП // 'КРАСНЫЙ РАССВЕТ'"
+        if(FACTION_PMC)
+            platoon_name = "WEYLAND-YUTANI // PMCPF 'ЛАЗУРЬ-15'"
+        if(FACTION_TWE)
+            platoon_name = "TWE // 'ГАММА-ОТРЯД'"
 
 	// === КАНОНИЧНЫЙ ТЕКСТ (всё на русском) ===
 	var/map_display = "LV-426"
