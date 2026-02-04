@@ -12,6 +12,7 @@
 			remove_ventcrawl()
 			update_pipe_icons(A)
 
-// Показываем интро при входе
-	if(SHOW_CRYO_INTRO)
-		addtimer(CALLBACK(GLOBAL_PROC, /proc/show_cryo_intro, src), 1 SECOND)
+/mob/living/carbon/human/Login()
+	. = ..()
+	if(client)
+		src.handle_cryo_intro() // Просто вызываем прок, задержка уже внутри него

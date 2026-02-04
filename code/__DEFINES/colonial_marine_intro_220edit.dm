@@ -2,103 +2,80 @@
 // Интро система пробуждения из крио-капсулы для Colonial Marines
 // Помещать в: code/modules/colonial_marines/ или любой другой модуль
 
-/datum/controller/cryo_intro
-	var/shown_players = list()
+// Исправленная версия для Colonial Marines SS13
+// Помещать в: code/modules/colonial_marines/
 
 /proc/show_cryo_intro(mob/living/carbon/human/player)
 	if(!player || !player.client)
 		return
-	
-	// Получаем данные персонажа (названия переменных могут отличаться в вашем билде)
-	var/rank = player.military_rank ? player.military_rank : "РЯДОВОЙ"
+
+	// Безопасное получение данных (совместимость с разными билдами)
+	var/rank = "РЯДОВОЙ"
+	if(player.vars["military_rank"])
+		rank = player.vars["military_rank"]
+
 	var/name = player.real_name ? player.real_name : "НЕИЗВЕСТНО"
-	var/squad = "АЛЬФА" // Если есть переменная squad, используйте player.squad
-	var/role = player.job ? player.job : "СТРЕЛОК"
-	
-	// Собираем список отряда (другие игроки в том же отряде)
+	var/squad = "АЛЬФА" // В CM обычно player.squad.name
+
+	var/role = "СТРЕЛОК"
+	if(player.vars["job"])
+		role = player.vars["job"]
+	else if(player.mind && player.mind.assigned_role)
+		role = player.mind.assigned_role
+
+	// Собираем список отряда
 	var/list/squad_data = list()
+	var/count = 0
 	for(var/mob/living/carbon/human/H in world)
-		if(H.client && H.stat != DEAD && H != player)
-			// Здесь можно добавить проверку на один и тот же отряд (например H.squad == player.squad)
+		if(count >= 14) break // Ограничение списка
+		if(H.client && H != player && H.stat != 2) // 2 - DEAD
 			var/list/mate = list(
-				"rank" = H.military_rank ? H.military_rank : "РЯДОВОЙ",
+				"rank" = (H.vars["military_rank"] ? H.vars["military_rank"] : "РЯДОВОЙ"),
 				"name" = H.real_name,
-				"role" = H.job ? H.job : "СТРЕЛОК"
+				"role" = (H.vars["job"] ? H.vars["job"] : "СТРЕЛОК")
 			)
 			squad_data += list(mate)
+			count++
 
-	// Сериализация данных в JS-объект
-	var/data_to_send = list(
+	var/list/data_to_send = list(
 		"rank" = rank,
 		"name" = name,
 		"role" = role,
 		"squad" = squad,
 		"squadmates" = squad_data
 	)
-	
+
 	var/json = json_encode(data_to_send)
-	
-	// Подготавливаем HTML (вставляем данные прямо в скрипт)
 	var/html_content = file2text("html/colonial_marine_intro.html")
+
 	if(!html_content)
 		return
-	
-	// Инъекция данных через замену метки или вставку перед основным скриптом
+
+	// Вставка данных
 	html_content = replacetext(html_content, "window.ss13Data || {", "[json] || {")
-	
-	// Показ окна (используем стандартный браузер BYOND)
+
+	// Показ окна
 	player.client << browse(html_content, "window=cryo_intro;size=1000x800;border=0;can_close=0;can_resize=0;titlebar=0")
 
-// Хук при заходе (может потребоваться интеграция в вашу систему логина)
+// Прок для вызова из Login()
 /mob/living/carbon/human/proc/handle_cryo_intro()
 	if(client)
-		// Небольшая задержка, чтобы игрок успел "прогрузиться"
-		addtimer(CALLBACK(GLOBAL_PROC, /proc/show_cryo_intro, src), 10)
+		var/mob/living/carbon/human/H = src
+		spawn(10) // Замена addtimer
+			if(H && H.client)
+				show_cryo_intro(H)
 
-/mob/living/carbon/human/on_cryo_wakeup()
-	// Вызывается при пробуждении из крио
-	if(client)
-		show_cryo_intro(src)
-
-// HOOK для запуска интро при присоединении игрока
-/proc/on_player_login()
-	var/mob/living/carbon/human/player = mob
-	if(!player)
-		return
-	
-	// Даем небольшую задержку для инициализации всех данных
-	addtimer(CALLBACK(GLOBAL_PROC, /proc/show_cryo_intro, player), 1 SECOND)
-
-// Добавляем хук при спавне игрока
+// Интеграция в Login()
+// Поместите этот вызов в ваш основной файл login.dm внутри /mob/living/carbon/human/Login()
+/*
 /mob/living/carbon/human/Login()
 	. = ..()
-	
-	// Проверяем, в крио ли игрок
-	if(stat == UNCONSCIOUS || location_is_cryopod(src))
-		addtimer(CALLBACK(GLOBAL_PROC, /proc/show_cryo_intro, src), 0.5 SECOND)
+	if(client)
+		src.handle_cryo_intro()
+*/
 
-/proc/location_is_cryopod(mob/living/M)
-	// Проверяет, находится ли моб в крио-капсуле
-	if(!M || !M.loc)
-		return FALSE
-	
-	var/obj/structure/machinery/cryo_cell/cryo = M.loc
-	if(istype(cryo))
-		return TRUE
-	
-	return FALSE
-
-// Альтернативный вариант: показывать интро при входе в игру
-/mob/living/carbon/human/Life()
-	. = ..()
-	
-	if(client && !shown_intro)
-		shown_intro = TRUE
-		show_cryo_intro(src)
-
-// Для отслеживания показа интро
-/mob/living/carbon/human
-	var/shown_intro = FALSE
+/mob/living/carbon/human/proc/on_cryo_wakeup()
+	src.handle_cryo_intro()
 
 // ===== ИНТЕГРАЦИЯ С СУЩЕСТВУЮЩЕЙ СИСТЕМОЙ SS13 =====
 // Добавьте эту линию в файл __DEFINES/game.dm или подобный:
