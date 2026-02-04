@@ -2,46 +2,66 @@
 // Интро система пробуждения из крио-капсулы для Colonial Marines
 // Помещать в: code/modules/colonial_marines/ или любой другой модуль
 
-// Исправленная версия для Colonial Marines SS13
-// Помещать в: code/modules/colonial_marines/
+// Финальная "безопасная" версия для Colonial Marines
+// Этот код использует динамический поиск переменных, чтобы избежать ошибок компиляции
 
 /proc/show_cryo_intro(mob/living/carbon/human/player)
 	if(!player || !player.client)
 		return
 
-	// Безопасное получение данных (совместимость с разными билдами)
+	// Безопасное получение Звания
 	var/rank = "РЯДОВОЙ"
-	if(player.vars["military_rank"])
+	if("military_rank" in player.vars)
 		rank = player.vars["military_rank"]
 
+	// Безопасное получение Имени
 	var/name = player.real_name ? player.real_name : "НЕИЗВЕСТНО"
-	var/squad = "АЛЬФА" // В CM обычно player.squad.name
 
+	// Безопасное получение Отряда
+	var/squad_name = "АЛЬФА"
+	if("squad" in player.vars)
+		var/datum/S = player.vars["squad"]
+		if(S && ("name" in S.vars))
+			squad_name = S.vars["name"]
+
+	// Безопасное получение Роли (Специальности)
 	var/role = "СТРЕЛОК"
-	if(player.vars["job"])
+	if("job" in player.vars)
 		role = player.vars["job"]
-	else if(player.mind && player.mind.assigned_role)
-		role = player.mind.assigned_role
+	else if("mind" in player.vars)
+		var/datum/M = player.vars["mind"]
+		if(M && ("assigned_role" in M.vars))
+			role = M.vars["assigned_role"]
+		else if(M && ("assigned_job" in M.vars)) // Попытка альтернативного имени переменной
+			role = M.vars["assigned_job"]
 
-	// Собираем список отряда
+	// Собираем список отряда (макс 14 человек + игрок)
 	var/list/squad_data = list()
-	var/count = 0
-	for(var/mob/living/carbon/human/H in world)
-		if(count >= 14) break // Ограничение списка
+	var/list/all_mobs = world.contents
+	var/found_count = 0
+
+	for(var/mob/living/carbon/human/H in all_mobs)
+		if(found_count >= 14) break
 		if(H.client && H != player && H.stat != 2) // 2 - DEAD
+			var/m_rank = "РЯДОВОЙ"
+			if("military_rank" in H.vars) m_rank = H.vars["military_rank"]
+
+			var/m_role = "СТРЕЛОК"
+			if("job" in H.vars) m_role = H.vars["job"]
+
 			var/list/mate = list(
-				"rank" = (H.vars["military_rank"] ? H.vars["military_rank"] : "РЯДОВОЙ"),
+				"rank" = m_rank,
 				"name" = H.real_name,
-				"role" = (H.vars["job"] ? H.vars["job"] : "СТРЕЛОК")
+				"role" = m_role
 			)
 			squad_data += list(mate)
-			count++
+			found_count++
 
 	var/list/data_to_send = list(
 		"rank" = rank,
 		"name" = name,
 		"role" = role,
-		"squad" = squad,
+		"squad" = squad_name,
 		"squadmates" = squad_data
 	)
 
@@ -51,36 +71,16 @@
 	if(!html_content)
 		return
 
-	// Вставка данных
+	// Вставка данных в HTML
 	html_content = replacetext(html_content, "window.ss13Data || {", "[json] || {")
 
-	// Показ окна
+	// Показ окна браузера
 	player.client << browse(html_content, "window=cryo_intro;size=1000x800;border=0;can_close=0;can_resize=0;titlebar=0")
 
-// Прок для вызова из Login()
+// Прок для вызова из моба
 /mob/living/carbon/human/proc/handle_cryo_intro()
-	if(client)
-		var/mob/living/carbon/human/H = src
-		spawn(10) // Замена addtimer
-			if(H && H.client)
-				show_cryo_intro(H)
-
-// Интеграция в Login()
-// Поместите этот вызов в ваш основной файл login.dm внутри /mob/living/carbon/human/Login()
-/*
-/mob/living/carbon/human/Login()
-	. = ..()
-	if(client)
-		src.handle_cryo_intro()
-*/
-
-/mob/living/carbon/human/proc/on_cryo_wakeup()
-	src.handle_cryo_intro()
-
-// ===== ИНТЕГРАЦИЯ С СУЩЕСТВУЮЩЕЙ СИСТЕМОЙ SS13 =====
-// Добавьте эту линию в файл __DEFINES/game.dm или подобный:
-// #define SHOW_CRYO_INTRO 1
-
-// Добавьте в /mob/living/carbon/human/Initialize() или подобный файл инициализации:
-// if(SHOW_CRYO_INTRO)
-//     addtimer(CALLBACK(GLOBAL_PROC, /proc/show_cryo_intro, src), 2 SECOND)
+	if(!client) return
+	var/mob/living/carbon/human/H = src
+	spawn(10) // Задержка в 1 секунду перед показом
+		if(H && H.client)
+			show_cryo_intro(H)

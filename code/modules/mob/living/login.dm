@@ -12,7 +12,3 @@
 			remove_ventcrawl()
 			update_pipe_icons(A)
 
-/mob/living/carbon/human/Login()
-	. = ..()
-	if(client)
-		src.handle_cryo_intro() // Просто вызываем прок, задержка уже внутри него
