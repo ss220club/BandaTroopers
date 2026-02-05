@@ -1670,18 +1670,16 @@ var/global/mu_thur_shown = 0
 		return
 	mu_thur_shown = 1
 
-	// === ЖЁСТКАЯ БЛОКИРОВКА ИГРОКА ===
-	// Игрок будет спать 4.5 секунды (время заставки)
+	// === ИГРОК БЕЗ СОЗНАНИЯ ===
 	stat = UNCONSCIOUS
-	sleeping = 45 // 4.5 секунды
 	anchored = TRUE
 
-	// === ЗВУК ===
-	playsound_client(client, 'sound/machines/tcomms_on.ogg', src, 90)
+	// Звук
+	playsound_client(client, 'sound/ambience/shipambience.ogg', src, 20)
 
-	sleep(5) // Ждём инициализации
+	sleep(5)
 
-	// === ДАННЫЕ ПЕРСОНАЖА ===
+	// Данные персонажа
 	var/obj/item/card/id/ID = get_idcard()
 	var/zvanie = "PRIVATE"
 	var/specialnost = "UNKNOWN"
@@ -1695,17 +1693,17 @@ var/global/mu_thur_shown = 0
 				if(JOB_SQUAD_MARINE) specialnost = "RIFLEMAN"
 				if(JOB_SQUAD_ENGI) specialnost = "ENGINEER"
 				if(JOB_SQUAD_MEDIC) specialnost = "MEDIC"
-				if(JOB_SQUAD_SMARTGUN) specialnost = "SG"
+				if(JOB_SQUAD_SMARTGUN) specialnost = "SMARTGUNNER"
 				if(JOB_SQUAD_SPECIALIST) specialnost = "SPECIALIST"
-				if(JOB_SQUAD_TEAM_LEADER) specialnost = "FTL"
-				if(JOB_SQUAD_LEADER) specialnost = "SL"
+				if(JOB_SQUAD_TEAM_LEADER) specialnost = "FIRETEAM LEADER"
+				if(JOB_SQUAD_LEADER) specialnost = "SQUAD LEADER"
 				if(JOB_SQUAD_RTO) specialnost = "RTO"
 				else specialnost = ID.rank
 
 	if(assigned_squad)
 		otryad = uppertext(assigned_squad.name)
 
-	// === СЛАЙД 1 — 1.5 СЕКУНДЫ ===
+	// === СЛАЙД 1 (1.5 сек) ===
 	var/slide1 = {"MU-TH-UR 6000
 CYTOGENIC REVIVAL SYSTEM
 CRYOGENIC UNIT: #[rand(100,999)]
@@ -1717,11 +1715,11 @@ CRYOGENIC SEQUENCE COMPLETE
 "}
 
 	play_screen_text(slide1, /atom/movable/screen/text/screen_text/picture/starting)
-	sleep(15) // 1.5 сек
+	sleep(15) // 1.5 секунды
 
 	if(!client) return
 
-	// === СЛАЙД 2 — 2.5 СЕКУНДЫ ===
+	// === СЛАЙД 2 (2.5 сек) ===
 	var/squad_manifest = ""
 	if(assigned_squad)
 		var/count = 0
@@ -1748,14 +1746,16 @@ DEPLOYMENT IMMINENT
 "}
 
 	play_screen_text(slide2, /atom/movable/screen/text/screen_text/picture/starting)
-	sleep(25) // 2.5 сек
+	sleep(25) // 2.5 секунды
 
-	// === ЗАВЕРШЕНИЕ ===
-	if(client)
-		play_screen_text("", null) // Очищаем текст
-		playsound_client(client, 'sound/effects/cryo_opening.ogg', src, 90)
-
-	// === ПРОБУЖДЕНИЕ ИГРОКА ===
+	// === ПРОБУЖДЕНИЕ ===
+	play_screen_text("", null) // Убираем текст
 	stat = CONSCIOUS
-	sleeping = 0
 	anchored = FALSE
+	playsound_client(client, 'sound/effects/cryo_opening.ogg', src, 90)
+
+/mob/living/carbon/human/Login()
+	. = ..()
+	if(stat == UNCONSCIOUS && istype(loc, /obj/structure/machinery/cryopod))
+		spawn(10)
+			play_opening_sequence()
