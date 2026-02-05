@@ -1657,9 +1657,9 @@
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living/carbon/human, update_hair))
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living/carbon/human, play_opening_sequence))
 
-// ========== MU-TH-UR 6000 ЗАСТАВКА ==========
-// УДАЛИ ВСЕ ПРЕДЫДУЩИЕ ВЕРСИИ И ВСТАВЬ ТОЛЬКО ЭТОТ КОД ОДИН РАЗ
-// ==========
+// =====================================================
+// MU-TH-UR 6000
+// =====================================================
 
 var/global/mu_thur_shown = 0
 
@@ -1670,87 +1670,92 @@ var/global/mu_thur_shown = 0
 		return
 	mu_thur_shown = 1
 
-	overlay_fullscreen("mu_black", /atom/movable/screen/fullscreen/black)
-	overlay_fullscreen("mu_crt", /atom/movable/screen/fullscreen/crt)
-
-	playsound_client(client, 'sound/ambience/shipambience.ogg', src, 20)
-
-	var/time_total = 3 SECONDS
-	sleeping = time_total / 10
+	// === ЖЁСТКАЯ БЛОКИРОВКА ИГРОКА ===
+	// Игрок будет спать 4.5 секунды (время заставки)
 	stat = UNCONSCIOUS
+	sleeping = 45 // 4.5 секунды
+	anchored = TRUE
 
-	sleep(1) // Ждём полной загрузки персонажа
+	// === ЗВУК ===
+	playsound_client(client, 'sound/machines/tcomms_on.ogg', src, 90)
 
-	// === ДАННЫЕ ПЕРСОНАЖА (КАК В squad_info.dm) ===
+	sleep(5) // Ждём инициализации
+
+	// === ДАННЫЕ ПЕРСОНАЖА ===
 	var/obj/item/card/id/ID = get_idcard()
-
-	var/zvanie = "UNKNOWN"
+	var/zvanie = "PRIVATE"
 	var/specialnost = "UNKNOWN"
 	var/otryad = "NONE"
 
 	if(ID)
-		// Звание (используем get_paygrades как в оригинале)
 		if(ID.paygrade)
-			zvanie = get_paygrades(ID.paygrade, TRUE) // TRUE = полное название
-
-		// Специальность (как в squad_info.dm)
+			zvanie = get_paygrades(ID.paygrade, TRUE)
 		if(ID.rank)
-			var/rank = ID.rank
-			switch(rank)
-				if(JOB_SQUAD_MARINE)
-					specialnost = "RIFLEMAN"
-				if(JOB_SQUAD_ENGI)
-					specialnost = "ENGINEER"
-				if(JOB_SQUAD_MEDIC)
-					specialnost = "HOSPITAL CORPSMAN"
-				if(JOB_SQUAD_SMARTGUN)
-					specialnost = "SMARTGUNNER"
-				if(JOB_SQUAD_SPECIALIST)
-					specialnost = "SPECIALIST"
-				if(JOB_SQUAD_TEAM_LEADER)
-					specialnost = "FIRETEAM LEADER"
-				if(JOB_SQUAD_LEADER)
-					specialnost = "SQUAD LEADER"
-				if(JOB_SQUAD_RTO)
-					specialnost = "RTO"
-				else
-					specialnost = rank
+			switch(ID.rank)
+				if(JOB_SQUAD_MARINE) specialnost = "RIFLEMAN"
+				if(JOB_SQUAD_ENGI) specialnost = "ENGINEER"
+				if(JOB_SQUAD_MEDIC) specialnost = "MEDIC"
+				if(JOB_SQUAD_SMARTGUN) specialnost = "SG"
+				if(JOB_SQUAD_SPECIALIST) specialnost = "SPECIALIST"
+				if(JOB_SQUAD_TEAM_LEADER) specialnost = "FTL"
+				if(JOB_SQUAD_LEADER) specialnost = "SL"
+				if(JOB_SQUAD_RTO) specialnost = "RTO"
+				else specialnost = ID.rank
 
-	// Отряд
 	if(assigned_squad)
-		otryad = uppertext(assigned_squad.name) // "ALPHA", "BRAVO" и т.д.
+		otryad = uppertext(assigned_squad.name)
 
-	// === СОСТАВ ОТРЯДА (КАК В squad_info.dm) ===
+	// === СЛАЙД 1 — 1.5 СЕКУНДЫ ===
+	var/slide1 = {"MU-TH-UR 6000
+CYTOGENIC REVIVAL SYSTEM
+CRYOGENIC UNIT: #[rand(100,999)]
+SUBJECT: [uppertext(real_name)]
+STATUS: THAWING IN PROGRESS...
+OXYGEN: 21% | TEMP: 36.6 C
+HEART RATE: 72 BPM
+CRYOGENIC SEQUENCE COMPLETE
+"}
+
+	play_screen_text(slide1, /atom/movable/screen/text/screen_text/picture/starting)
+	sleep(15) // 1.5 сек
+
+	if(!client) return
+
+	// === СЛАЙД 2 — 2.5 СЕКУНДЫ ===
 	var/squad_manifest = ""
 	if(assigned_squad)
+		var/count = 0
 		for(var/mob/living/carbon/human/H in assigned_squad.marines_list)
-			if(length(squad_manifest) > 200)
+			count++
+			if(count > 10)
+				squad_manifest += "...<br>"
 				break
 			var/obj/item/card/id/HID = H.get_idcard()
 			var/rn = "RCT"
 			if(HID && HID.paygrade)
-				rn = get_paygrades(HID.paygrade, FALSE) // FALSE = короткое звание (PFC, CPL)
+				rn = get_paygrades(HID.paygrade, FALSE)
 			squad_manifest += "[rn] [uppertext(H.real_name)]<br>"
 
-	var/color = "#00ff00"
+	var/slide2 = {"MU-TH-UR 6000
+UNIT PERSONNEL FILE
+NAME: [uppertext(real_name)]
+RANK: [zvanie]
+ROLE: [specialnost]
+SQUAD: [otryad]
+SQUAD MANIFEST:
+[squad_manifest]
+DEPLOYMENT IMMINENT
+"}
 
-	var/final_text = ""
-	final_text += "<center><font face='Courier New' color='[color]' size='1'>"
-	final_text += "════════════════════════════════════<br>"
-	final_text += "MU-TH-UR 6000 / WEYLAND-YUTANI<br>"
-	final_text += "════════════════════════════════════<br><br>"
-	final_text += "UNIT: [uppertext(real_name)]<br>"
-	final_text += "RANK: [zvanie]<br>"
-	final_text += "ROLE: [specialnost]<br>"
-	final_text += "SQUAD: [otryad]<br><br>"
-	final_text += "<b>SQUAD MANIFEST:</b><br>"
-	final_text += squad_manifest
-	final_text += "<br><b>DEPLOYMENT IMMINENT</b>"
-	final_text += "</font></center>"
+	play_screen_text(slide2, /atom/movable/screen/text/screen_text/picture/starting)
+	sleep(25) // 2.5 сек
 
-	spawn(0.3)
-		play_screen_text(final_text, /atom/movable/screen/text/screen_text/picture/starting)
+	// === ЗАВЕРШЕНИЕ ===
+	if(client)
+		play_screen_text("", null) // Очищаем текст
+		playsound_client(client, 'sound/effects/cryo_opening.ogg', src, 90)
 
-	addtimer(CALLBACK(src, TYPE_PROC_REF(/mob, clear_fullscreen), "mu_black"), time_total)
-	addtimer(CALLBACK(src, TYPE_PROC_REF(/mob, clear_fullscreen), "mu_crt"), time_total)
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), client, 'sound/effects/cryo_opening.ogg', src, 80), time_total - 0.5 SECONDS)
+	// === ПРОБУЖДЕНИЕ ИГРОКА ===
+	stat = CONSCIOUS
+	sleeping = 0
+	anchored = FALSE

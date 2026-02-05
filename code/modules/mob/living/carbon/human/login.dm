@@ -1,7 +1,6 @@
-// ========== ВЫЗОВ С ЗАДЕРЖКОЙ ==========
+// ========== ВЫЗОВ ==========
 /mob/living/carbon/human/Login()
 	. = ..()
-	if(stat == UNCONSCIOUS)
-		// ВАЖНО: Ждём 5 секунд, пока SSticker назначит отряды!
-		spawn(5 SECONDS)
+	if(stat == UNCONSCIOUS && istype(loc, /obj/structure/machinery/cryopod))
+		spawn(10)
 			play_opening_sequence()
