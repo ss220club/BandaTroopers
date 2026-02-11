@@ -66,6 +66,8 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 	var/toggles_sound = TOGGLES_SOUND_DEFAULT
 	var/toggles_flashing = TOGGLES_FLASHING_DEFAULT
 	var/toggles_ert = TOGGLES_ERT_DEFAULT
+	var/list/volume_preferences = list(1, 0.5, 1, 0.6,//Game, music, admin midis, lobby music
+	1, 0.5, 0.5) //Local, Radio,  Announces - SS220 TTS EDIT
 	var/chat_display_preferences = CHAT_TYPE_ALL
 	var/item_animation_pref_level = SHOW_ITEM_ANIMATIONS_ALL
 	var/pain_overlay_pref_level = PAIN_OVERLAY_BLURRY
@@ -456,7 +458,7 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 				dat += "<b>You are banned from using character records.</b><br>"
 			else
 				dat += "<b>Records:</b> <a href=\"byond://?src=\ref[user];preference=records;record=1\"><b>Character Records</b></a><br>"
-			
+
 			// SS220 ADDITION START - TTS220
 			if((SStts220.is_enabled))
 				dat += {"
