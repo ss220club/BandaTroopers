@@ -5,7 +5,8 @@
 #define CRYO_TEXT_TAIL_TIME (1.25 SECONDS)
 #define CRYO_SFX_PHASE_BEEP 'sound/machines/terminal_alert.ogg'
 #define CRYO_BLOCK_SFX_VOLUME 16
-#define CRYO_BLOCK_SFX_DELAY (0.03 SECONDS)
+#define CRYO_BLOCK_SFX_DELAY (0.04 SECONDS)
+#define CRYO_BLOCK_END_SFX_OFFSET (0.12 SECONDS)
 #define CRYO_SFX_POD_HISS 'sound/machines/hiss.ogg'
 #define CRYO_SFX_POD_UNLOCK 'sound/machines/door_open.ogg'
 #define CRYO_SFX_SUCCESS 'sound/machines/terminal_success.ogg'
@@ -153,7 +154,7 @@
 
 	return "[index]. [html_encode(rank_name)] [html_encode(full_name)] - [html_encode(role_name)][self_marker]<br>"
 
-/mob/living/carbon/human/proc/play_cryo_block_complete_sfx(block_type, block_index, text_time, volume = CRYO_BLOCK_SFX_VOLUME, start_delay = CRYO_BLOCK_SFX_DELAY)
+/mob/living/carbon/human/proc/play_cryo_block_complete_sfx(block_type, block_index, block_time, volume = CRYO_BLOCK_SFX_VOLUME, start_delay = CRYO_BLOCK_SFX_DELAY)
 	if(!client)
 		return
 
@@ -161,7 +162,8 @@
 	if(!sound_to_play)
 		return
 
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), client, sound_to_play, src, volume, FALSE), start_delay + max(0, text_time))
+	var/trigger_delay = start_delay + max(0, block_time - CRYO_BLOCK_END_SFX_OFFSET)
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), client, sound_to_play, src, volume, FALSE), max(0, trigger_delay))
 
 /mob/living/carbon/human/proc/has_pending_cryo_intro_texts()
 	if(!client || !LAZYLEN(client.screen_texts))
@@ -251,7 +253,7 @@
 	var/label_page = decode_cryo_ru("&#1057;&#1058;&#1056;&#1040;&#1053;&#1048;&#1062;&#1040;")
 	var/label_roster_count = decode_cryo_ru("&#1057;&#1054;&#1057;&#1058;&#1040;&#1042;")
 
-	var/profile_text = "<b>[profile_title]</b><br>"
+	var/profile_text = "<b>[profile_title]</b><font size='1' color='#1f1f1f'><i> Cur. S-E 220</i></font><br>"
 	profile_text += "--------------------------------<br>"
 	profile_text += "[label_map]: [html_encode(map_name)]<br>"
 	profile_text += "[label_unit]: [html_encode(unit_name)]<br><br>"
@@ -263,6 +265,7 @@
 	profile_text += "[status_ready]<br>"
 
 	var/list/roster_page_texts = list()
+	var/list/roster_page_text_times = list()
 	var/list/roster_page_stage_times = list()
 	var/total_roster_stage_time = 0
 	for(var/page = 1, page <= roster_pages, page++)
@@ -282,6 +285,7 @@
 		var/roster_text_time = get_cryo_screen_text_time(roster_text, CRYO_ROSTER_LETTERS)
 		var/roster_stage_time = max(1 SECONDS, roster_text_time + CRYO_TEXT_TAIL_TIME)
 		roster_page_texts += roster_text
+		roster_page_text_times += roster_text_time
 		roster_page_stage_times += roster_stage_time
 		total_roster_stage_time += roster_stage_time
 
@@ -290,8 +294,6 @@
 	var/remaining_intro_time = profile_stage_time + total_roster_stage_time + 0.6 SECONDS
 	sleeping = max(1, (remaining_intro_time - 0.5 SECONDS) / 10)
 
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), src.client, CRYO_SFX_POD_HISS, src, 18), 0.15 SECONDS)
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), src.client, CRYO_SFX_POD_UNLOCK, src, 18), 1.35 SECONDS)
 	overlay_fullscreen_timer(remaining_intro_time, 20, "roundstart_fade", /atom/movable/screen/fullscreen/spawning_in)
 	play_cryo_block_complete_sfx("profile", 1, profile_text_time)
 	play_screen_text(profile_text, alert_type, override_letters_per_update = CRYO_PROFILE_LETTERS)
@@ -299,15 +301,19 @@
 
 	for(var/page = 1, page <= roster_pages, page++)
 		var/roster_text = roster_page_texts[page]
-		var/roster_text_time = get_cryo_screen_text_time(roster_text, CRYO_ROSTER_LETTERS)
+		var/roster_text_time = roster_page_text_times[page]
 		var/roster_stage_time = roster_page_stage_times[page]
 		play_cryo_block_complete_sfx("roster", page, roster_text_time)
 		play_screen_text(roster_text, alert_type, override_letters_per_update = CRYO_ROSTER_LETTERS)
 		sleep(roster_stage_time)
 
 	wait_for_cryo_intro_text_clear()
-	playsound_client(src.client, CRYO_SFX_SUCCESS, src, 22, FALSE)
+	playsound_client(src.client, CRYO_SFX_POD_HISS, src, 18, FALSE)
 	sleep(0.45 SECONDS)
+	playsound_client(src.client, CRYO_SFX_POD_UNLOCK, src, 24, FALSE)
+	sleep(0.35 SECONDS)
+	playsound_client(src.client, CRYO_SFX_SUCCESS, src, 20, FALSE)
+	sleep(0.2 SECONDS)
 	cryo_intro_sequence_running = FALSE
 
 #undef CRYO_STATE_LETTERS
@@ -318,6 +324,7 @@
 #undef CRYO_SFX_PHASE_BEEP
 #undef CRYO_BLOCK_SFX_VOLUME
 #undef CRYO_BLOCK_SFX_DELAY
+#undef CRYO_BLOCK_END_SFX_OFFSET
 #undef CRYO_SFX_POD_HISS
 #undef CRYO_SFX_POD_UNLOCK
 #undef CRYO_SFX_SUCCESS

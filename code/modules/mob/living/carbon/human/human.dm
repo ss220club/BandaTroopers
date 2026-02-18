@@ -1748,15 +1748,17 @@
 		cryo_intro_sequence_running = TRUE
 		var/opening_text = html_decode("USCMC // &#1050;&#1054;&#1053;&#1057;&#1054;&#1051;&#1068; &#1042;&#1067;&#1061;&#1054;&#1044;&#1040; &#1048;&#1047; &#1050;&#1056;&#1048;&#1054;&#1057;&#1053;&#1040;<br><br>&#1057;&#1054;&#1057;&#1058;&#1054;&#1071;&#1053;&#1048;&#1045; &#1057;&#1048;&#1057;&#1058;&#1045;&#1052;: &#1053;&#1054;&#1056;&#1052;&#1040;<br>&#1046;&#1048;&#1047;&#1053;&#1045;&#1054;&#1041;&#1045;&#1057;&#1055;&#1045;&#1063;&#1045;&#1053;&#1048;&#1045;: &#1057;&#1058;&#1040;&#1041;&#1048;&#1051;&#1068;&#1053;&#1054;<br>&#1062;&#1048;&#1050;&#1051; &#1056;&#1040;&#1047;&#1052;&#1054;&#1056;&#1054;&#1047;&#1050;&#1048;: &#1040;&#1050;&#1058;&#1048;&#1042;&#1045;&#1053;<br>&#1053;&#1045;&#1049;&#1056;&#1054;&#1055;&#1056;&#1054;&#1042;&#1045;&#1056;&#1050;&#1040;: &#1055;&#1056;&#1054;&#1049;&#1044;&#1045;&#1053;&#1040;<br>&#1057;&#1054;&#1057;&#1058;&#1054;&#1071;&#1053;&#1048;&#1045; &#1041;&#1054;&#1049;&#1062;&#1040;: &#1043;&#1054;&#1058;&#1054;&#1042; &#1050; &#1041;&#1054;&#1070;")
 		var/opening_start_delay = 0.2 SECONDS
-		var/opening_text_time = get_cryo_screen_text_time(opening_text, 8)
+		var/opening_letters_per_update = 8
+		var/opening_text_time = get_cryo_screen_text_time(opening_text, opening_letters_per_update)
+		var/opening_sound_delay = opening_start_delay + max(0, opening_text_time - 0.15 SECONDS)
 		var/intro_delay = opening_start_delay + opening_text_time + 1.7 SECONDS
 		sleeping = max(1, (intro_delay + 2.5 SECONDS - 1 SECONDS) / 10)
 		start_cryo_intro_hud_lock()
-		addtimer(CALLBACK(src, PROC_REF(play_screen_text), opening_text, /atom/movable/screen/text/screen_text/hypersleep_status/cm_brutal, "#FFFFFF", 8), opening_start_delay)
+		addtimer(CALLBACK(src, PROC_REF(play_screen_text), opening_text, /atom/movable/screen/text/screen_text/hypersleep_status/cm_brutal, "#FFFFFF", opening_letters_per_update), opening_start_delay)
+		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), src.client, 'sound/machines/terminal_on.ogg', src, 22), opening_sound_delay)
 		addtimer(CALLBACK(src, PROC_REF(play_cryo_manifest_intro)), intro_delay)
 		overlay_fullscreen_timer(intro_delay, 10, "roundstart1", /atom/movable/screen/fullscreen/black)
 		overlay_fullscreen_timer(intro_delay, 10, "roundstartcrt1", /atom/movable/screen/fullscreen/crt)
-		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), src.client, 'sound/machines/terminal_on.ogg', src, 22), max(0, intro_delay - 0.35 SECONDS))
 
 /mob/living/carbon/human/proc/play_manifest()
 	var/human_manifest
