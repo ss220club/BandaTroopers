@@ -105,7 +105,10 @@
 /mob/proc/handle_add_action(datum/action/action)
 	LAZYADD(actions, action)
 	if(client)
-		client.add_to_screen(action.button)
+		if(hud_used?.hud_version == HUD_STYLE_NOHUD)
+			action.button.screen_loc = null
+		else
+			client.add_to_screen(action.button)
 	update_action_buttons()
 
 /proc/remove_action(mob/L, action_path)
@@ -227,6 +230,17 @@
 		create_hud()
 
 	if(hud_used.hud_version == HUD_STYLE_NOHUD)
+		for(var/datum/action/A in actions)
+			if(!A?.button)
+				continue
+			A.button.screen_loc = null
+			if(reload_screen)
+				client.remove_from_screen(A.button)
+
+		if(hud_used.hide_actions_toggle)
+			hud_used.hide_actions_toggle.screen_loc = null
+			if(reload_screen)
+				client.remove_from_screen(hud_used.hide_actions_toggle)
 		return
 
 	var/button_number = 0
@@ -257,4 +271,3 @@
 
 	if(reload_screen)
 		client.add_to_screen(hud_used.hide_actions_toggle)
-

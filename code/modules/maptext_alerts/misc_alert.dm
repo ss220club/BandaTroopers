@@ -64,6 +64,26 @@
 /atom/movable/screen/text/screen_text/picture/starting/twe
 	image_to_play = "twe"
 
+/atom/movable/screen/text/screen_text/picture/starting/cm_brutal
+	maptext_height = 480
+	maptext_width = 340
+	maptext_x = 150
+	maptext_y = -396
+	style_open = "<span style='font-size:11pt; text-align:left; color: #A9E8FF; font-family: \"VCR OSD Mono\", \"Tahoma\", \"Arial\", sans-serif; -dm-text-outline: 1 #00141C;' valign='top'>"
+
+/atom/movable/screen/text/screen_text/picture/starting/cm_brutal/Initialize(mapload, datum/hud/hud_owner)
+	. = ..()
+	add_filter("text_glow", 2, drop_shadow_filter(x = 0, y = 0, size = 4, color = "#5EAAC9"))
+
+/atom/movable/screen/text/screen_text/picture/starting/cm_brutal/wy
+	image_to_play = "wy"
+
+/atom/movable/screen/text/screen_text/picture/starting/cm_brutal/upp
+	image_to_play = "upp"
+
+/atom/movable/screen/text/screen_text/picture/starting/cm_brutal/twe
+	image_to_play = "twe"
+
 /atom/movable/screen/text/screen_text/hypersleep_status
 	maptext_height = 480
 	maptext_width = 480
@@ -78,6 +98,17 @@
 /atom/movable/screen/text/screen_text/hypersleep_status/Initialize(mapload)
 	. = ..()
 	add_filter("text_glow", 2, drop_shadow_filter(x = 0, y = 0, size = 3, color = "#70D5E9"))
+
+/atom/movable/screen/text/screen_text/hypersleep_status/cm_brutal
+	maptext_height = 480
+	maptext_width = 340
+	maptext_x = 150
+	maptext_y = -486
+	style_open = "<span style='font-size:11pt; text-align:left; color: #D5F7FF; font-family: \"Tahoma\", \"Arial\", sans-serif; -dm-text-outline: 1 #00141C;' valign='top'>"
+
+/atom/movable/screen/text/screen_text/hypersleep_status/cm_brutal/Initialize(mapload)
+	. = ..()
+	add_filter("text_glow", 2, drop_shadow_filter(x = 0, y = 0, size = 4, color = "#5EAAC9"))
 
 /atom/movable/screen/text/screen_text/directed_by
 	layer = INTRO_LAYER
