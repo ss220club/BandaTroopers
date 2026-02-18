@@ -3,13 +3,11 @@
 #define CRYO_ROSTER_LETTERS 12
 #define CRYO_ROSTER_PER_PAGE 6
 #define CRYO_TEXT_TAIL_TIME (1.25 SECONDS)
-#define CRYO_SFX_PHASE_BEEP 'sound/machines/terminal_alert.ogg'
-#define CRYO_BLOCK_SFX_VOLUME 16
+#define CRYO_SFX_BLOCK_COMPLETE 'sound/effects/cryo_beep.ogg'
+#define CRYO_BLOCK_SFX_VOLUME 55
 #define CRYO_BLOCK_SFX_DELAY (0.04 SECONDS)
 #define CRYO_BLOCK_END_SFX_OFFSET (0.12 SECONDS)
-#define CRYO_SFX_POD_HISS 'sound/machines/hiss.ogg'
-#define CRYO_SFX_POD_UNLOCK 'sound/machines/door_open.ogg'
-#define CRYO_SFX_SUCCESS 'sound/machines/terminal_success.ogg'
+#define CRYO_SFX_POD_UNLOCK 'sound/effects/cryo_opening.ogg'
 
 /proc/decode_cryo_ru(entity_text)
 	return html_decode(entity_text)
@@ -39,22 +37,22 @@
 	switch(block_type)
 		if("state")
 			var/list/state_sounds = list(
-				'sound/machines/terminal_prompt_confirm.ogg',
-				'sound/machines/terminal_select.ogg',
-				'sound/machines/twobeep.ogg'
+				CRYO_SFX_BLOCK_COMPLETE,
+				CRYO_SFX_BLOCK_COMPLETE,
+				CRYO_SFX_BLOCK_COMPLETE
 			)
 			return state_sounds[((block_index - 1) % length(state_sounds)) + 1]
 		if("profile")
-			return 'sound/machines/terminal_prompt_confirm.ogg'
+			return CRYO_SFX_BLOCK_COMPLETE
 		if("roster")
 			var/list/roster_sounds = list(
-				'sound/machines/terminal_select.ogg',
-				'sound/machines/terminal_prompt_confirm.ogg',
-				'sound/machines/twobeep.ogg'
+				CRYO_SFX_BLOCK_COMPLETE,
+				CRYO_SFX_BLOCK_COMPLETE,
+				CRYO_SFX_BLOCK_COMPLETE
 			)
 			return roster_sounds[((block_index - 1) % length(roster_sounds)) + 1]
 
-	return 'sound/machines/terminal_prompt_confirm.ogg'
+	return CRYO_SFX_BLOCK_COMPLETE
 
 /proc/get_cryo_rank_weight(mob/living/carbon/human/H)
 	if(!istype(H))
@@ -198,8 +196,6 @@
 		var/recovery_text_time = get_cryo_screen_text_time(recovery_text, CRYO_STATE_LETTERS)
 		var/recovery_stage_time = max(1 SECONDS, recovery_text_time + CRYO_TEXT_TAIL_TIME)
 		sleeping = max(1, (recovery_stage_time - 0.5 SECONDS) / 10)
-		if(recovery_stage_index == 1)
-			addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), src.client, CRYO_SFX_PHASE_BEEP, src, 20), 0.05 SECONDS)
 		play_cryo_block_complete_sfx("state", recovery_stage_index, recovery_text_time)
 		play_screen_text(recovery_text, state_alert_type, override_letters_per_update = CRYO_STATE_LETTERS)
 		sleep(recovery_stage_time)
@@ -308,12 +304,8 @@
 		sleep(roster_stage_time)
 
 	wait_for_cryo_intro_text_clear()
-	playsound_client(src.client, CRYO_SFX_POD_HISS, src, 18, FALSE)
-	sleep(0.45 SECONDS)
-	playsound_client(src.client, CRYO_SFX_POD_UNLOCK, src, 24, FALSE)
+	playsound_client(src.client, CRYO_SFX_POD_UNLOCK, src, 60, FALSE)
 	sleep(0.35 SECONDS)
-	playsound_client(src.client, CRYO_SFX_SUCCESS, src, 20, FALSE)
-	sleep(0.2 SECONDS)
 	cryo_intro_sequence_running = FALSE
 
 #undef CRYO_STATE_LETTERS
@@ -321,10 +313,8 @@
 #undef CRYO_ROSTER_LETTERS
 #undef CRYO_ROSTER_PER_PAGE
 #undef CRYO_TEXT_TAIL_TIME
-#undef CRYO_SFX_PHASE_BEEP
+#undef CRYO_SFX_BLOCK_COMPLETE
 #undef CRYO_BLOCK_SFX_VOLUME
 #undef CRYO_BLOCK_SFX_DELAY
 #undef CRYO_BLOCK_END_SFX_OFFSET
-#undef CRYO_SFX_POD_HISS
 #undef CRYO_SFX_POD_UNLOCK
-#undef CRYO_SFX_SUCCESS

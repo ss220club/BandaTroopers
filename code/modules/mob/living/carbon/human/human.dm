@@ -1750,12 +1750,12 @@
 		var/opening_start_delay = 0.2 SECONDS
 		var/opening_letters_per_update = 8
 		var/opening_text_time = get_cryo_screen_text_time(opening_text, opening_letters_per_update)
-		var/opening_sound_delay = opening_start_delay + max(0, opening_text_time - 0.15 SECONDS)
+		var/opening_sound_delay = opening_start_delay + 0.05 SECONDS
 		var/intro_delay = opening_start_delay + opening_text_time + 1.7 SECONDS
 		sleeping = max(1, (intro_delay + 2.5 SECONDS - 1 SECONDS) / 10)
 		start_cryo_intro_hud_lock()
 		addtimer(CALLBACK(src, PROC_REF(play_screen_text), opening_text, /atom/movable/screen/text/screen_text/hypersleep_status/cm_brutal, "#FFFFFF", opening_letters_per_update), opening_start_delay)
-		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), src.client, 'sound/machines/terminal_on.ogg', src, 22), opening_sound_delay)
+		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), src.client, 'sound/effects/cryo_intro.ogg', src, 65), opening_sound_delay)
 		addtimer(CALLBACK(src, PROC_REF(play_cryo_manifest_intro)), intro_delay)
 		overlay_fullscreen_timer(intro_delay, 10, "roundstart1", /atom/movable/screen/fullscreen/black)
 		overlay_fullscreen_timer(intro_delay, 10, "roundstartcrt1", /atom/movable/screen/fullscreen/crt)
