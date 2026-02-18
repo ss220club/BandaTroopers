@@ -236,7 +236,7 @@
 	var/alert_type = get_cryo_intro_alert_type()
 	var/unit_name = get_cryo_intro_unit()
 	var/profile_title = decode_cryo_ru("&#1051;&#1048;&#1063;&#1053;&#1054;&#1045; &#1044;&#1045;&#1051;&#1054; USCMC")
-	var/label_map = decode_cryo_ru("&#1050;&#1040;&#1056;&#1058;&#1040;")
+	var/label_map = decode_cryo_ru("&#1044;&#1048;&#1057;&#1051;&#1054;&#1050;&#1040;&#1062;&#1048;&#1071;")
 	var/label_unit = decode_cryo_ru("&#1055;&#1054;&#1044;&#1056;&#1040;&#1047;&#1044;&#1045;&#1051;&#1045;&#1053;&#1048;&#1045;")
 	var/label_first_name = decode_cryo_ru("&#1048;&#1052;&#1071;")
 	var/label_last_name = decode_cryo_ru("&#1060;&#1040;&#1052;&#1048;&#1051;&#1048;&#1071;")
