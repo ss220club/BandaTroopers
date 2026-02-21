@@ -80,7 +80,7 @@
 	// S.volume *= USER_VOLUME(src, CHANNEL_GENERAL)
 	// if(channel)
 	// 	S.volume *= USER_VOLUME(src, channel)
-	S.volume *= client.volume_preferences[VOLUME_TTS_LOCAL]
+	S.volume *= client.prefs.volume_preferences[VOLUME_TTS_LOCAL]
 
 	SEND_SOUND(src, S)
 

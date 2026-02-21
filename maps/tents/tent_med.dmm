@@ -49,9 +49,9 @@
 /obj/structure/blocker/tent{
 	dir = 8
 	},
+/obj/structure/tent_curtain,
 /obj/structure/tent/med,
 /obj/structure/machinery/iv_drip,
-/obj/structure/tent_curtain,
 /turf/template_noop,
 /area/template_noop)
 

@@ -53,8 +53,8 @@ OverrideTimelock(/datum/job/marine/leader, list(
 	squad = SQUAD_MARINE_4
 
 /datum/job/marine/leader/ai
-	total_positions = 4 // SS220 EDIT
-	spawn_positions = 4 // SS220 EDIT
+	total_positions = 1
+	spawn_positions = 1
 	prime_priority = TRUE
 
 /datum/job/marine/leader/ai/upp

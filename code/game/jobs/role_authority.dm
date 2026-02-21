@@ -404,6 +404,20 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 				else
 					to_chat(user, "There are no [J.title] slots occupied in [sq.name] Squad.")
 					return
+			// SS220 EDIT - START
+			if(JOB_SQUAD_MARINE)
+				if(sq.num_riflemen > 0)
+					sq.num_riflemen--
+				else
+					to_chat(user, "There are no [J.title] slots occupied in [sq.name] Squad.")
+					return
+			if(JOB_SQUAD_RTO)
+				if(sq.num_rto > 0)
+					sq.num_rto--
+				else
+					to_chat(user, "There are no [J.title] slots occupied in [sq.name] Squad.")
+					return
+			// SS220 EDIT - END
 	J.current_positions--
 	message_admins("[key_name(user)] freed the [J.title] job slot[sq ? " in [sq.name] Squad" : ""].")
 	return 1
@@ -596,7 +610,7 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 	//Non-standards are distributed regardless of squad population.
 	//If the number of available positions for the job are more than max_whatever, it will break.
 	//Ie. 8 squad medic jobs should be available, and total medics in squads should be 8.
-	if(H.job != JOB_SQUAD_MARINE && H.job != "Reinforcements")
+	if(/*H.job != JOB_SQUAD_MARINE &&*/ H.job != "Reinforcements") // SS220 EDIT - SQUADS - Марины тоже ограничены
 		var/pref_squad_name
 		if(H && H.client && H.client.prefs.preferred_squad && H.client.prefs.preferred_squad != "None")
 			pref_squad_name = H.client.prefs.preferred_squad
@@ -685,12 +699,31 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 			if(JOB_SQUAD_RTO)
 				for(var/datum/squad/S in mixed_squads)
 					if(S.usable && S.roundstart)
+						if(!skip_limit && S.num_rto >= S.max_rto) continue // SS220 EDIT
 						if(pref_squad_name && S.name == pref_squad_name)
 							S.put_marine_in_squad(H) //fav squad has a spot for us.
 							return
 
 						if(!lowest)
 							lowest = S
+						else if(S.num_rto < lowest.num_rto) // SS220 EDIT
+							lowest = S
+
+			// SS220 EDIT - START - SQUADS - Марины тоже ограничены
+			if(JOB_SQUAD_MARINE)
+				for(var/datum/squad/S in mixed_squads)
+					if(S.usable && S.roundstart)
+						if(!skip_limit && S.num_riflemen >= S.max_riflemen) continue
+						if(pref_squad_name && S.name == pref_squad_name)
+							S.put_marine_in_squad(H) //fav squad has a spot for us.
+							return
+
+						if(!lowest)
+							lowest = S
+						else if(S.num_riflemen < lowest.num_riflemen)
+							lowest = S
+			// SS220 EDIT - END - SQUADS - Марины тоже ограничены
+
 		if(!lowest)
 			var/ranpick = rand(1,4)
 			lowest = mixed_squads[ranpick]
@@ -756,6 +789,12 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 			M = /mob/living/carbon/xenomorph/king
 		if(RUNNER_ACIDER)
 			M = /mob/living/carbon/xenomorph/runner/acider
+		// SS220 ADDITION Start - Arachnid
+		if(ARACHNID_CASTE_WARRIOR)
+			M = /mob/living/carbon/xenomorph/arachnid
+		if(ARACHNID_CASTE_BOMBARDIER)
+			M = /mob/living/carbon/xenomorph/arachnid/bombardier
+		// SS220 ADDITION End - Arachnid
 	return M
 
 

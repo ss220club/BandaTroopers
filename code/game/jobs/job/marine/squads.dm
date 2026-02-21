@@ -12,7 +12,7 @@
 
 /datum/squad_type/marine_squad
 	name = "Section"
-	lead_name = "Section Sergeant"
+	lead_name = "Squad Leader" // SS220 EDIT
 	lead_icon = "leader"
 	sub_squad = "Squad"
 	sub_leader = "Squad NCO"
@@ -157,8 +157,8 @@
 
 /datum/squad/marine/alpha
 	name = SQUAD_MARINE_1
-	equipment_color = "#db1d1d" // SS220 EDIT
-	chat_color = "#db1d1d" // SS220 EDIT
+	equipment_color = "#828cff"
+	chat_color = "#828cff"
 	access = list(ACCESS_MARINE_ALPHA)
 	radio_freq = ALPHA_FREQ
 	minimap_color = MINIMAP_SQUAD_ALPHA
@@ -214,10 +214,6 @@
 	radio_freq = BRAVO_FREQ
 	use_stripe_overlay = FALSE
 	minimap_color = MINIMAP_SQUAD_BRAVO
-	usable = TRUE // SS220 EDIT
-	roundstart = TRUE // SS220 EDIT
-	active = TRUE // SS220 EDIT
-	squad_type = "Section" // SS220 EDIT
 
 /datum/squad/marine/charlie
 	name = SQUAD_MARINE_3
@@ -226,10 +222,6 @@
 	access = list(ACCESS_MARINE_CHARLIE)
 	radio_freq = CHARLIE_FREQ
 	minimap_color = MINIMAP_SQUAD_CHARLIE
-	usable = TRUE // SS220 EDIT
-	roundstart = TRUE // SS220 EDIT
-	active = TRUE // SS220 EDIT
-	squad_type = "Section" // SS220 EDIT
 
 /datum/squad/marine/delta
 	name = SQUAD_MARINE_4
@@ -238,10 +230,6 @@
 	access = list(ACCESS_MARINE_DELTA)
 	radio_freq = DELTA_FREQ
 	minimap_color = MINIMAP_SQUAD_DELTA
-	usable = TRUE // SS220 EDIT
-	roundstart = TRUE // SS220 EDIT
-	active = TRUE // SS220 EDIT
-	squad_type = "Section" // SS220 EDIT
 
 /datum/squad/marine/echo
 	name = SQUAD_MARINE_5
@@ -709,6 +697,7 @@
 				num_leaders++
 		if(JOB_SQUAD_RTO)
 			assignment = JOB_SQUAD_RTO
+			num_rto++ // SS220 EDIT
 
 		if(JOB_MARINE_RAIDER)
 			assignment = JOB_MARINE_RAIDER

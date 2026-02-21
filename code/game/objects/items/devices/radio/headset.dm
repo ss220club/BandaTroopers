@@ -674,7 +674,7 @@
 	initial_keys = list(/obj/item/device/encryptionkey/squadlead)
 
 /obj/item/device/radio/headset/almayer/marine/solardevils/pltco
-	initial_keys = list(/obj/item/device/encryptionkey/bravo, /obj/item/device/encryptionkey/squadlead)
+	initial_keys = list(/obj/item/device/encryptionkey/mcom/alt/squads, /obj/item/device/encryptionkey/squadlead) // SS220 EDIT - squads
 
 /obj/item/device/radio/headset/almayer/marine/solardevils/forecon
 	name = "USCM SOF headset"

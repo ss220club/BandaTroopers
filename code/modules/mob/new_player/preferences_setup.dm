@@ -297,7 +297,7 @@
 		if(JOB_SQUAD_MEDIC_FORECON)
 			return /datum/equipment_preset/uscm/forecon/tech //Not making corpsman & RTO equipped presets purely for this when the tech & rifleman work to convey them respectively as-is
 		if(JOB_SQUAD_RTO)
-			return /datum/equipment_preset/uscm/forecon/standard
+			return /datum/equipment_preset/uscm/rto/equipped // SS220 EDIT
 		if(JOB_SQUAD_MARINE_FORECON)
 			return /datum/equipment_preset/uscm/forecon/standard
 		if(JOB_SQUAD_SMARTGUN_FORECON)

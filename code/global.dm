@@ -5,9 +5,9 @@
 
 #define MAIN_SHIP_PLATOON text2path(SSmapping.get_main_ship_platoon())
 #define MAIN_SHIP_DEFAULT_PLATOON "/datum/squad/marine/alpha"
-#define USCM_BRAVO_PLATOON new /datum/squad/marine/bravo // SS220 EDIT
-#define USCM_CHARLIE_PLATOON new /datum/squad/marine/charlie // SS220 EDIT
-#define USCM_DELTA_PLATOON new /datum/squad/marine/delta // SS220 EDIT
+#define USCM_AUXILIARY_PLATOON new /datum/squad/marine/bravo
+#define USCM_AUXILIARY_SECOND_PLATOON new /datum/squad/marine/charlie // SS220 EDIT
+#define USCM_AUXILIARY_THIRD_PLATOON new /datum/squad/marine/delta // SS220 EDIT
 #define FORECON_AUXILIARY_PLATOON new /datum/squad/marine/sof/forecon
 #define UPP_AUXILIARY_PLATOON new /datum/squad/marine/upp/secondary
 #define PMC_AUXILIARY_PLATOON new /datum/squad/marine/pmc/secondary

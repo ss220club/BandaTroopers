@@ -43,7 +43,7 @@
 			GLOB.main_platoon_name = sq.name
 			GLOB.main_platoon_initial_name = sq.name
 
-	squad_limit += USCM_BRAVO_PLATOON // SS220 EDIT
+	squad_limit += USCM_AUXILIARY_PLATOON // SS220 EDIT
 	squad_limit += FORECON_AUXILIARY_PLATOON
 	squad_limit += UPP_AUXILIARY_PLATOON
 	squad_limit += PMC_AUXILIARY_PLATOON
@@ -54,13 +54,15 @@
 		GLOB.RoleAuthority.squads -= squad
 		GLOB.RoleAuthority.squads_by_type -= squad.type
 
-	GLOB.RoleAuthority.squads += USCM_BRAVO_PLATOON // SS220 EDIT
-	GLOB.RoleAuthority.squads += USCM_CHARLIE_PLATOON // SS220 EDIT
-	GLOB.RoleAuthority.squads += USCM_DELTA_PLATOON // SS220 EDIT
+	GLOB.RoleAuthority.squads += USCM_AUXILIARY_PLATOON
+	GLOB.RoleAuthority.squads += USCM_AUXILIARY_SECOND_PLATOON // SS220 EDIT
+	GLOB.RoleAuthority.squads += USCM_AUXILIARY_THIRD_PLATOON // SS220 EDIT
 	GLOB.RoleAuthority.squads += FORECON_AUXILIARY_PLATOON
 	GLOB.RoleAuthority.squads += UPP_AUXILIARY_PLATOON
 	GLOB.RoleAuthority.squads += PMC_AUXILIARY_PLATOON
-	GLOB.RoleAuthority.squads_by_type += USCM_BRAVO_PLATOON // SS220 EDIT
+	GLOB.RoleAuthority.squads_by_type += USCM_AUXILIARY_PLATOON
+	GLOB.RoleAuthority.squads_by_type += USCM_AUXILIARY_SECOND_PLATOON // SS220 EDIT
+	GLOB.RoleAuthority.squads_by_type += USCM_AUXILIARY_THIRD_PLATOON // SS220 EDIT
 	GLOB.RoleAuthority.squads_by_type += FORECON_AUXILIARY_PLATOON
 	GLOB.RoleAuthority.squads_by_type += UPP_AUXILIARY_PLATOON
 	GLOB.RoleAuthority.squads_by_type += PMC_AUXILIARY_PLATOON

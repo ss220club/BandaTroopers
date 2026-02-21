@@ -1,14 +1,14 @@
 /client/proc/admin_marine_announcement()
 	set name = "Command Announcement"
-	set category = "Game Master.Extras"
+	set category = "Game Master.Extras Screen Alert" // SS220 EDIT
 
 	if(!check_rights(R_ADMIN))
 		return
 
-	var/body = tgui_input_text(src, "Enter the body text for the announcement.", title = "Announcement Body", multiline = TRUE, encode = FALSE)
+	var/body = tgui_input_text(src, "Введите основной текст объявления.", title = "Announcement Body", multiline = TRUE, encode = FALSE)
 	if(!body)
 		return
-	var/title = tgui_input_text(src, "Enter the title of the announcement. Leave blank for the default title.", title = "Announcement Title")
+	var/title = tgui_input_text(src, "Введите заголовок объявления. Оставьте поле пустым для заголовка по умолчанию.", title = "Announcement Title")
 	if(!title)
 		title = COMMAND_ANNOUNCE
 	marine_announcement(body, "[title]")

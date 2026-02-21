@@ -67,8 +67,8 @@
 	var/datum/squad/auto_squad = get_squad_by_name(auto_squad_name)
 	if(auto_squad)
 		transfer_marine_to_squad(new_human, auto_squad, new_human.assigned_squad, ID)
-	if(!ert_squad && !auto_squad.active)
-		auto_squad.engage_squad(FALSE)
+	if(!ert_squad && !auto_squad?.active) // SS220 EDIT FIX
+		auto_squad?.engage_squad(FALSE) // SS220 EDIT FIX
 
 	if(!auto_squad)
 		transfer_marine_to_squad(new_human, pick(GLOB.RoleAuthority.squads), new_human.assigned_squad, new_human.wear_id)

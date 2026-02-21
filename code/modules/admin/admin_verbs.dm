@@ -364,6 +364,14 @@ GLOBAL_LIST_INIT(roundstart_mod_verbs, list(
 		add_verb(src, /client/proc/toggle_join_xeno)
 		add_verb(src, /client/proc/admin_marine_announcement)
 		add_verb(src, /client/proc/screen_alert_menu)
+		//SS220 EDIT - START
+		add_verb(src, /client/proc/screen_alert_menu_save_1)
+		add_verb(src, /client/proc/screen_alert_menu_save_2)
+		add_verb(src, /client/proc/screen_alert_menu_save_3)
+		add_verb(src, /client/proc/screen_alert_menu_save_4)
+		add_verb(src, /client/proc/screen_alert_menu_save_5)
+		add_verb(src, /client/proc/screen_alert_menu_save_6)
+		//SS220 EDIT - END
 		add_verb(src, /client/proc/enable_fire_support)
 		add_verb(src, /client/proc/disable_fire_support)
 		add_verb(src, /client/proc/set_fire_support_points)
@@ -413,6 +421,14 @@ GLOBAL_LIST_INIT(roundstart_mod_verbs, list(
 		/client/proc/toggle_fire_support_menu,
 		/client/proc/admin_marine_announcement,
 		/client/proc/screen_alert_menu,
+		//SS220 EDIT - START
+		/client/proc/screen_alert_menu_save_1,
+		/client/proc/screen_alert_menu_save_2,
+		/client/proc/screen_alert_menu_save_3,
+		/client/proc/screen_alert_menu_save_4,
+		/client/proc/screen_alert_menu_save_5,
+		/client/proc/screen_alert_menu_save_6,
+		//SS220 EDIT - END
 		/client/proc/enable_fire_support,
 		/client/proc/set_fire_support_points,
 		/client/proc/change_callsign,

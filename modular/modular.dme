@@ -9,5 +9,8 @@
 
 #include "speech_filter/_speech_filter.dme"
 #include "text_to_speech/_tts.dme"
+#include "game_master/_game_master.dme"
 #include "fullscreen/_fullscreen.dme"
 #include "squads/_squads.dme"
+#include "arachnid/_arachnid.dme"
+#include "cyrillic_fixes/_cyrillic_fixes.dme"

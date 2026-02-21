@@ -993,12 +993,12 @@
 	icon_state = "alphadrop"
 	squad = SQUAD_MARINE_1
 
-/obj/structure/supply_drop/alpha/Initialize(mapload, ...)
+/obj/structure/supply_drop/Initialize(mapload, ...) // SS220 EDIT - Squad Rename
 	. = ..()
 
 	RegisterSignal(SSdcs, COMSIG_GLOB_PLATOON_NAME_CHANGE, PROC_REF(rename_platoon))
 
-/obj/structure/supply_drop/alpha/proc/rename_platoon(datum/source, new_name, old_name)
+/obj/structure/supply_drop/proc/rename_platoon(datum/source, new_name, old_name) // SS220 EDIT - Squad Rename
 	SIGNAL_HANDLER
 
 	squad = new_name

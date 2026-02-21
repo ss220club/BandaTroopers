@@ -23,7 +23,6 @@
 "bf" = (
 /obj/structure/shuttle/part/tornado/transparent{
 	icon_state = "3";
-	density = 0;
 	layer = 4.2
 	},
 /turf/template_noop,
@@ -126,7 +125,6 @@
 "eq" = (
 /obj/structure/shuttle/part/tornado/transparent{
 	icon_state = "4";
-	density = 0;
 	layer = 4.2
 	},
 /turf/template_noop,

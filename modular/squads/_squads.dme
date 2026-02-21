@@ -1,3 +1,10 @@
 #include "_squads.dm"
 
+#include "code/encryptionkey.dm"
 #include "code/closets/marine_personal.dm"
+#include "code/closets/squad_closets.dm"
+#include "code/job/squads.dm"
+#include "code/job/squads_name.dm"
+#include "code/job/squads_setup.dm"
+#include "code/job/marine/equipment_preset.dm"
+#include "code/job/marine/squad/marine_standart.dm"
