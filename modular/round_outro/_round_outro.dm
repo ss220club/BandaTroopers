@@ -2,12 +2,3 @@
 	name = "round outro modpack"
 	desc = "Round-end outro with tactical credits and player status. 220edit"
 	author = "Fifso"
-
-/datum/modpack/round_outro/pre_initialize()
-	. = ..()
-
-/datum/modpack/round_outro/initialize()
-	. = ..()
-
-/datum/modpack/round_outro/post_initialize()
-	. = ..()

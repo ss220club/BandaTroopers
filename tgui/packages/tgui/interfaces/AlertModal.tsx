@@ -94,9 +94,15 @@ export function AlertModal(props) {
             <Stack.Item grow>
               {!!autofocus && <Autofocus />}
               {isVerbose ? (
-                <VerticalButtons decodedButtons={decodedButtons} selected={selected} />
+                <VerticalButtons
+                  decodedButtons={decodedButtons}
+                  selected={selected}
+                />
               ) : (
-                <HorizontalButtons decodedButtons={decodedButtons} selected={selected} />
+                <HorizontalButtons
+                  decodedButtons={decodedButtons}
+                  selected={selected}
+                />
               )}
             </Stack.Item>
           </Stack>

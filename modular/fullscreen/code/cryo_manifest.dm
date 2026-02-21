@@ -33,27 +33,6 @@
 	// /atom/movable/screen/text/screen_text/play_delay default is 0.5 deciseconds.
 	return updates_needed * 0.5
 
-/proc/get_cryo_block_complete_sfx(block_type, block_index = 1)
-	switch(block_type)
-		if("state")
-			var/list/state_sounds = list(
-				CRYO_SFX_BLOCK_COMPLETE,
-				CRYO_SFX_BLOCK_COMPLETE,
-				CRYO_SFX_BLOCK_COMPLETE
-			)
-			return state_sounds[((block_index - 1) % length(state_sounds)) + 1]
-		if("profile")
-			return CRYO_SFX_BLOCK_COMPLETE
-		if("roster")
-			var/list/roster_sounds = list(
-				CRYO_SFX_BLOCK_COMPLETE,
-				CRYO_SFX_BLOCK_COMPLETE,
-				CRYO_SFX_BLOCK_COMPLETE
-			)
-			return roster_sounds[((block_index - 1) % length(roster_sounds)) + 1]
-
-	return CRYO_SFX_BLOCK_COMPLETE
-
 /proc/get_cryo_rank_weight(mob/living/carbon/human/H)
 	if(!istype(H))
 		return 0
@@ -152,16 +131,12 @@
 
 	return "[index]. [html_encode(rank_name)] [html_encode(full_name)] - [html_encode(role_name)][self_marker]<br>"
 
-/mob/living/carbon/human/proc/play_cryo_block_complete_sfx(block_type, block_index, block_time, volume = CRYO_BLOCK_SFX_VOLUME, start_delay = CRYO_BLOCK_SFX_DELAY)
+/mob/living/carbon/human/proc/play_cryo_block_complete_sfx(block_time, volume = CRYO_BLOCK_SFX_VOLUME, start_delay = CRYO_BLOCK_SFX_DELAY)
 	if(!client)
 		return
 
-	var/sound_to_play = get_cryo_block_complete_sfx(block_type, block_index)
-	if(!sound_to_play)
-		return
-
 	var/trigger_delay = start_delay + max(0, block_time - CRYO_BLOCK_END_SFX_OFFSET)
-	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), client, sound_to_play, src, volume, FALSE), max(0, trigger_delay))
+	addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), client, CRYO_SFX_BLOCK_COMPLETE, src, volume, FALSE), max(0, trigger_delay))
 
 /mob/living/carbon/human/proc/has_pending_cryo_intro_texts()
 	if(!client || !LAZYLEN(client.screen_texts))
@@ -191,15 +166,13 @@
 		decode_cryo_ru("USCMC // &#1042;&#1067;&#1061;&#1054;&#1044; &#1048;&#1047; &#1050;&#1056;&#1048;&#1054;&#1057;&#1053;&#1040; // &#1060;&#1040;&#1047;&#1040; 3/3<br><br>&#1057;&#1045;&#1056;&#1044;&#1045;&#1063;&#1053;&#1067;&#1049; &#1056;&#1048;&#1058;&#1052;: &#1057;&#1058;&#1040;&#1041;&#1048;&#1051;&#1045;&#1053;<br>&#1060;&#1054;&#1050;&#1059;&#1057; &#1047;&#1056;&#1045;&#1053;&#1048;&#1071;: &#1042;&#1054;&#1057;&#1057;&#1058;&#1040;&#1053;&#1054;&#1042;&#1051;&#1045;&#1053;<br>&#1043;&#1045;&#1056;&#1052;&#1054;&#1047;&#1040;&#1052;&#1050;&#1048; &#1050;&#1040;&#1055;&#1057;&#1059;&#1051;&#1067;: &#1057;&#1053;&#1071;&#1058;&#1067;")
 	)
 
-	var/recovery_stage_index = 1
 	for(var/recovery_text as anything in recovery_states)
 		var/recovery_text_time = get_cryo_screen_text_time(recovery_text, CRYO_STATE_LETTERS)
 		var/recovery_stage_time = max(1 SECONDS, recovery_text_time + CRYO_TEXT_TAIL_TIME)
 		sleeping = max(1, (recovery_stage_time - 0.5 SECONDS) / 10)
-		play_cryo_block_complete_sfx("state", recovery_stage_index, recovery_text_time)
+		play_cryo_block_complete_sfx(recovery_text_time)
 		play_screen_text(recovery_text, state_alert_type, override_letters_per_update = CRYO_STATE_LETTERS)
 		sleep(recovery_stage_time)
-		recovery_stage_index++
 
 	var/full_name = real_name || name || "UNKNOWN"
 	var/first_name = full_name
@@ -291,7 +264,7 @@
 	sleeping = max(1, (remaining_intro_time - 0.5 SECONDS) / 10)
 
 	overlay_fullscreen_timer(remaining_intro_time, 20, "roundstart_fade", /atom/movable/screen/fullscreen/spawning_in)
-	play_cryo_block_complete_sfx("profile", 1, profile_text_time)
+	play_cryo_block_complete_sfx(profile_text_time)
 	play_screen_text(profile_text, alert_type, override_letters_per_update = CRYO_PROFILE_LETTERS)
 	sleep(profile_stage_time)
 
@@ -299,7 +272,7 @@
 		var/roster_text = roster_page_texts[page]
 		var/roster_text_time = roster_page_text_times[page]
 		var/roster_stage_time = roster_page_stage_times[page]
-		play_cryo_block_complete_sfx("roster", page, roster_text_time)
+		play_cryo_block_complete_sfx(roster_text_time)
 		play_screen_text(roster_text, alert_type, override_letters_per_update = CRYO_ROSTER_LETTERS)
 		sleep(roster_stage_time)
 
