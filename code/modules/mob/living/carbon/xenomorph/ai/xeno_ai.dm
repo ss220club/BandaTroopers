@@ -32,6 +32,10 @@
 
 	var/ai_active_intent = INTENT_HARM
 	var/target_unconscious = FALSE
+	/// When TRUE, legacy process_ai will skip override component handling.
+	var/v2_skip_override_handling = FALSE
+	/// When TRUE, legacy process_ai will skip movement handling (delegated to v2 movement plugins).
+	var/v2_skip_movement_handling = FALSE
 
 /mob/living/carbon/xenomorph/proc/init_movement_handler()
 	return new /datum/xeno_ai_movement(src)
@@ -64,14 +68,14 @@
 	if(!hive || !get_turf(src))
 		return TRUE
 
-	var/datum/component/ai_behavior_override/behavior_override = check_overrides()
-
 	if(is_mob_incapacitated(TRUE)) ///If they are incapacitated, the rest doesn't matter.
 		current_path = null
 		return TRUE
 
-	if(behavior_override?.process_override_behavior(src, delta_time))
-		return TRUE
+	if(!v2_skip_override_handling)
+		var/datum/component/ai_behavior_override/behavior_override = check_overrides()
+		if(behavior_override?.process_override_behavior(src, delta_time))
+			return TRUE
 
 	if(QDELETED(current_target) || !current_target.ai_check_stat(src) || get_dist(current_target, src) > ai_range || COOLDOWN_FINISHED(src, forced_retarget_cooldown))
 		current_target = get_target(ai_range)
@@ -87,10 +91,11 @@
 	a_intent = ai_active_intent
 
 	if(!current_target)
-		ai_move_idle(delta_time)
+		if(!v2_skip_movement_handling)
+			ai_move_idle(delta_time)
 		return TRUE
 
-	if(ai_move_target(delta_time))
+	if(!v2_skip_movement_handling && ai_move_target(delta_time))
 		return TRUE
 
 	for(var/x in registered_ai_abilities)
@@ -238,7 +243,7 @@
 	var/atom/movable/closest_target
 	var/smallest_distance = INFINITY
 
-	var/list/valid_targets = SSxeno_ai.get_valid_targets(src)
+	var/list/valid_targets = get_xeno_ai_valid_targets(src)
 
 	for(var/atom/movable/potential_target as anything in valid_targets)
 		if(z != potential_target.z)
@@ -274,7 +279,7 @@
 	SHOULD_CALL_PARENT(TRUE)
 	create_hud()
 	if(!client)
-		SSxeno_ai.add_ai(src)
+		refresh_xeno_ai_runtime_state()
 
 	if(!ai_movement_handler)
 		set_movement_handler(init_movement_handler())
@@ -289,7 +294,136 @@
 
 /mob/living/carbon/xenomorph/proc/remove_ai()
 	SHOULD_CALL_PARENT(TRUE)
-	SSxeno_ai.remove_ai(src)
+	var/removed_v2_component = FALSE
+	var/v2_component_type = text2path("/datum/component/xeno_ai_v2")
+	if(v2_component_type)
+		var/datum/component/v2_component = GetComponent(v2_component_type)
+		if(v2_component)
+			removed_v2_component = TRUE
+			qdel(v2_component)
+
+	if(removed_v2_component)
+		unregister_xeno_ai_runtime_agent_soft(src)
+		return
+
+	unregister_xeno_ai_runtime_agent(src)
+
+/// Refreshes xeno AI runtime ownership after feature-flag or control-state changes.
+/// Returns TRUE if runtime ownership changed, FALSE otherwise.
+/mob/living/carbon/xenomorph/proc/refresh_xeno_ai_runtime_state()
+	var/state_changed = FALSE
+
+	var/v2_component_type = text2path("/datum/component/xeno_ai_v2")
+	var/datum/component/v2_component = null
+	if(v2_component_type)
+		v2_component = GetComponent(v2_component_type)
+
+	if(client || !GLOB.npc_ai_v2_xeno_enabled)
+		if(v2_component)
+			qdel(v2_component)
+			state_changed = TRUE
+
+		if(mob_flags & AI_CONTROLLED)
+			state_changed = TRUE
+		unregister_xeno_ai_runtime_agent(src)
+		return state_changed
+
+	if(v2_component_type)
+		var/datum/npc_ai_controller/xeno/xeno_controller = get_xeno_ai_runtime_controller()
+		var/was_registered = FALSE
+		if(xeno_controller)
+			was_registered = !!xeno_controller.agents?.Find(src)
+		var/was_ai_controlled = !!(mob_flags & AI_CONTROLLED)
+
+		if(!v2_component)
+			AddComponent(v2_component_type)
+			state_changed = TRUE
+		else
+			var/datum/component/xeno_ai_v2/v2_runtime_component = v2_component
+			v2_runtime_component.register_with_npc_ai()
+
+		if(!was_ai_controlled && (mob_flags & AI_CONTROLLED))
+			state_changed = TRUE
+		if(xeno_controller && !was_registered && xeno_controller.agents?.Find(src))
+			state_changed = TRUE
+		return state_changed
+
+	var/was_ai_controlled = !!(mob_flags & AI_CONTROLLED)
+	register_xeno_ai_runtime_agent(src)
+	if(!was_ai_controlled && (mob_flags & AI_CONTROLLED))
+		state_changed = TRUE
+	return state_changed
+
+/// Returns the active xeno AI component path for staged rollout.
+/proc/get_xeno_ai_component_type()
+	if(GLOB.npc_ai_v2_xeno_enabled)
+		var/component_path = text2path("/datum/component/xeno_ai_v2")
+		if(component_path)
+			return component_path
+	return null
+
+/proc/get_xeno_ai_runtime_controller()
+	RETURN_TYPE(/datum/npc_ai_controller/xeno)
+	if(!SSnpc_ai)
+		return null
+
+	var/datum/npc_ai_controller/xeno/xeno_controller = SSnpc_ai.get_controller(/datum/npc_ai_controller/xeno)
+	if(!xeno_controller || QDELETED(xeno_controller))
+		return null
+	return xeno_controller
+
+/proc/register_xeno_ai_runtime_agent(mob/living/carbon/xenomorph/xeno)
+	if(!istype(xeno))
+		return
+
+	var/datum/npc_ai_controller/xeno/xeno_controller = get_xeno_ai_runtime_controller()
+	if(!xeno_controller)
+		return
+
+	xeno_controller.register_agent(xeno)
+	xeno.mob_flags |= AI_CONTROLLED
+
+/proc/unregister_xeno_ai_runtime_agent(mob/living/carbon/xenomorph/xeno)
+	if(!istype(xeno))
+		return
+
+	var/datum/npc_ai_controller/xeno/xeno_controller = get_xeno_ai_runtime_controller()
+	if(xeno_controller)
+		xeno_controller.unregister_agent(xeno)
+	xeno.mob_flags &= ~AI_CONTROLLED
+
+/proc/unregister_xeno_ai_runtime_agent_soft(mob/living/carbon/xenomorph/xeno)
+	if(!istype(xeno))
+		return
+
+	var/datum/npc_ai_controller/xeno/xeno_controller = get_xeno_ai_runtime_controller()
+	if(!xeno_controller)
+		return
+
+	xeno_controller.agents -= xeno
+
+/proc/refresh_all_xeno_ai_runtime_state()
+	var/updated_agents = 0
+	for(var/mob/living/carbon/xenomorph/xeno as anything in GLOB.living_xeno_list)
+		if(!istype(xeno))
+			continue
+		if(xeno.refresh_xeno_ai_runtime_state())
+			updated_agents++
+	return updated_agents
+
+/proc/get_xeno_ai_valid_targets(mob/living/carbon/xenomorph/xeno)
+	RETURN_TYPE(/list)
+	if(!istype(xeno))
+		return list()
+
+	var/datum/npc_ai_controller/xeno/xeno_controller = get_xeno_ai_runtime_controller()
+	if(!xeno_controller || !xeno_controller.is_enabled())
+		return list()
+
+	var/list/targets = xeno_controller.get_valid_targets(xeno)
+	if(!islist(targets))
+		return list()
+	return targets
 
 /mob/living/carbon/xenomorph/proc/get_multitile_turfs_to_check()
 	var/angle = Get_Angle(current_target, src)

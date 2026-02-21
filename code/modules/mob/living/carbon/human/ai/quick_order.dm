@@ -88,13 +88,21 @@
 
 /datum/human_ai_quick_order/approach/do_order(mob/user, params, atom/object)
 	var/list/modifiers = params2list(params)
+	var/turf/order_turf = get_turf(object)
+	if(!order_turf)
+		return
+
 	for(var/datum/human_ai_brain/brain as anything in ai_humans_selected)
+		if(!brain || QDELETED(brain))
+			continue
+
 		brain.hold_position = FALSE
 		if(LAZYACCESS(modifiers, ALT_CLICK))
-			brain.quick_approach = get_turf(object)
+			brain.quick_approach = order_turf
 		else
 			brain.quick_approach = null
-			brain.target_turf = get_turf(object)
+			brain.target_turf = order_turf
+		brain.tied_human?.request_human_ai_v2_reconcile(item_search = FALSE, fire_line = TRUE, cover_scan = TRUE, wake_now = TRUE)
 
 	to_chat(holder, SPAN_BOLDNOTICE("Order sent."))
 
@@ -119,13 +127,15 @@
 
 /datum/human_ai_quick_order/hold_position/do_order(mob/user, params, atom/object)
 	var/list/modifiers = params2list(params)
+	var/set_holding = !!LAZYACCESS(modifiers, ALT_CLICK)
 	for(var/datum/human_ai_brain/brain as anything in ai_humans_selected)
-		if(LAZYACCESS(modifiers, ALT_CLICK))
-			brain.hold_position = TRUE
-		else
-			brain.hold_position = FALSE
+		if(!brain || QDELETED(brain))
+			continue
 
-	if(LAZYACCESS(modifiers, ALT_CLICK))
+		brain.hold_position = set_holding
+		brain.tied_human?.request_human_ai_v2_reconcile(item_search = FALSE, fire_line = TRUE, cover_scan = FALSE, wake_now = TRUE)
+
+	if(set_holding)
 		to_chat(holder, SPAN_BOLDNOTICE("Selected AI now holding position."))
 	else
 		to_chat(holder, SPAN_BOLDNOTICE("Selected AI now no longer holding position."))

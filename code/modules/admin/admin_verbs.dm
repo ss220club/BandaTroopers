@@ -244,6 +244,12 @@ GLOBAL_LIST_INIT(admin_verbs_debug, list(
 	/client/proc/admin_blurb,
 	/datum/admins/proc/open_shuttlepanel,
 	/client/proc/allow_browser_inspect,
+	/datum/admins/proc/toggle_npc_ai_v2_human,
+	/datum/admins/proc/toggle_npc_ai_v2_xeno,
+	/datum/admins/proc/toggle_npc_ai_v2_squad,
+	/datum/admins/proc/toggle_npc_ai_v2_director,
+	/datum/admins/proc/set_npc_ai_v2_director_mood,
+	/datum/admins/proc/set_npc_ai_v2_director_pressure_bias,
 ))
 
 GLOBAL_LIST_INIT(admin_verbs_debug_advanced, list(

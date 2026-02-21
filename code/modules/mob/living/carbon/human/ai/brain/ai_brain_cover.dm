@@ -47,7 +47,7 @@
 	if(!squad_id)
 		return
 
-	var/datum/human_ai_squad/squad = SShuman_ai.squad_id_dict["[squad_id]"]
+	var/datum/human_ai_squad/squad = get_human_ai_runtime_squad("[squad_id]")
 	if(!squad)
 		return
 
@@ -65,65 +65,76 @@
 
 		brain.cover_processing(turf_dict, TRUE)
 
-/// Recursively searches each tile nearby (up to 198 tiles, nearly BYOND's recursion limit) and determines how suitable it is as cover, giving it a numerical score and adding it to turf_dict
+/// Iteratively scans nearby tiles (up to 198) and determines cover suitability.
+/// Kept under the original proc name for compatibility with existing callsites.
 /datum/human_ai_brain/proc/recursive_turf_cover_scan(turf/scan_turf, list/turf_dict, cover_dir, first_iteration = TRUE)
-	if(length(turf_dict) > 198) // Slightly lower than byond recursion limit (200)
-		return FALSE // abort if the room is too large
+	if(!scan_turf || !islist(turf_dict))
+		return FALSE
 
-	if(scan_turf in turf_dict)
-		return TRUE // abort if we've already been scanned
+	var/list/related_cover_dirs = get_related_directions(cover_dir)
+	var/list/scan_queue = list(scan_turf)
+	var/queue_index = 1
 
-	turf_dict[scan_turf] = 0
+	while(queue_index <= length(scan_queue))
+		var/turf/current_scan_turf = scan_queue[queue_index]
+		queue_index++
 
-	for(var/atom/movable/thing as anything in scan_turf.contents)
-		if(thing.density && !istype(thing, /obj/structure/barricade))
-			turf_dict[scan_turf] -= 1000
-			if(first_iteration)
-				break // We don't wanna end our cover search on self
-			return TRUE // If it has something dense on it, don't bother
-
-	var/obj/structure/barricade/cade = locate() in scan_turf.contents
-	if(cade?.density && (cade?.dir in get_related_directions(cover_dir)))
-		turf_dict[scan_turf] += cade.projectile_coverage / 2
-
-	var/obj/item/explosive/mine/mine = locate() in scan_turf.contents
-	if(mine)
-		if(!faction_check(mine.iff_signal))
-			turf_dict[scan_turf] -= 50
-		else
-			turf_dict[scan_turf] -= 5 // even if it's our mine, we don't really want to stand on it
-
-	turf_dict[scan_turf] -= get_dist(tied_human, scan_turf)
-	if(current_target) // Might be smarter to hide in a different direction
-		turf_dict[scan_turf] += get_dist(current_target, scan_turf) * 0.5
-
-		if(get_dir(current_target, scan_turf) in get_related_directions(cover_dir))
-			turf_dict[scan_turf] -= 20
-
-	for(var/cardinal in shuffle(GLOB.cardinals))
-		var/turf/nearby_turf = get_step(scan_turf, cardinal)
-		if(!nearby_turf)
+		if(current_scan_turf in turf_dict)
 			continue
 
-		if(istype(nearby_turf, /turf/closed))
-			turf_dict[scan_turf] += 2 // Near a wall is a bit safer
-			if(cardinal in get_related_directions(cover_dir))
-				turf_dict[scan_turf] += 8
-			continue
-
-		var/obj/structure/reagent_dispensers/fueltank/tank = locate() in nearby_turf.contents
-		if(tank)
-			turf_dict[scan_turf] -= 10 // ideally not near any highly explosive fuel tanks if we can help it
-
-#ifdef TESTING
-		scan_turf.maptext = "<h2>[turf_dict[scan_turf]]</h2>"
-#endif
-
-		if(!recursive_turf_cover_scan(nearby_turf, turf_dict, cover_dir, FALSE))
+		if(length(turf_dict) > 198)
 			return FALSE
 
+		turf_dict[current_scan_turf] = 0
+
+		var/current_is_first_tile = (current_scan_turf == scan_turf) && first_iteration
+		var/should_expand = TRUE
+
+		for(var/atom/movable/thing as anything in current_scan_turf.contents)
+			if(thing.density && !istype(thing, /obj/structure/barricade))
+				turf_dict[current_scan_turf] -= 1000
+				if(!current_is_first_tile)
+					should_expand = FALSE
+				break
+
+		if(should_expand)
+			var/obj/structure/barricade/cade = locate() in current_scan_turf.contents
+			if(cade?.density && (cade?.dir in related_cover_dirs))
+				turf_dict[current_scan_turf] += cade.projectile_coverage / 2
+
+			var/obj/item/explosive/mine/mine = locate() in current_scan_turf.contents
+			if(mine)
+				if(!faction_check(mine.iff_signal))
+					turf_dict[current_scan_turf] -= 50
+				else
+					turf_dict[current_scan_turf] -= 5 // even if it's our mine, we don't really want to stand on it
+
+			turf_dict[current_scan_turf] -= get_dist(tied_human, current_scan_turf)
+			if(current_target) // Might be smarter to hide in a different direction
+				turf_dict[current_scan_turf] += get_dist(current_target, current_scan_turf) * 0.5
+				if(get_dir(current_target, current_scan_turf) in related_cover_dirs)
+					turf_dict[current_scan_turf] -= 20
+
+			for(var/cardinal in shuffle(GLOB.cardinals))
+				var/turf/nearby_turf = get_step(current_scan_turf, cardinal)
+				if(!nearby_turf)
+					continue
+
+				if(istype(nearby_turf, /turf/closed))
+					turf_dict[current_scan_turf] += 2 // Near a wall is a bit safer
+					if(cardinal in related_cover_dirs)
+						turf_dict[current_scan_turf] += 8
+					continue
+
+				var/obj/structure/reagent_dispensers/fueltank/tank = locate() in nearby_turf.contents
+				if(tank)
+					turf_dict[current_scan_turf] -= 10 // ideally not near any highly explosive fuel tanks if we can help it
+
+				if(!(nearby_turf in turf_dict))
+					scan_queue += nearby_turf
+
 #ifdef TESTING
-	scan_turf.maptext = "<h2>[turf_dict[scan_turf]]</h2>"
+		current_scan_turf.maptext = "<h2>[turf_dict[current_scan_turf]]</h2>"
 #endif
 
 	return TRUE

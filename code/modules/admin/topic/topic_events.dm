@@ -228,8 +228,8 @@
 			if(free_the_humans)
 				owner.free_for_ghosts(spawned_human)
 			if(make_hai)
-				spawned_human.AddComponent(/datum/component/human_ai)
-				spawned_human.get_ai_brain().appraise_inventory(armor = TRUE)
+				spawned_human.AddComponent(get_human_ai_component_type())
+				spawned_human.refresh_human_ai_runtime_state(armor = TRUE)
 			if(paradropping)
 				spawn_turf.ceiling_debris_check(2)
 				spawned_human.handle_paradrop(spawn_turf)
@@ -238,7 +238,7 @@
 				spawned_human.equip_to_slot_or_del(to_move, WEAR_R_HAND)
 				spawned_human.equip_to_slot_or_del(new /obj/item/parachute(spawned_human), WEAR_BACK)
 				if(make_hai) //have to do this again because slot swapping fucks with hAI
-					spawned_human.get_ai_brain().appraise_inventory(armor = TRUE)
+					spawned_human.refresh_human_ai_runtime_state(armor = TRUE)
 
 			humans += spawned_human
 

@@ -16,4 +16,7 @@
 
 #define HUMAN_AI_MAX_PATHFINDING_RANGE 45
 
+/// Emitted by /datum/human_ai_brain when a friendly enters watched firing-line turfs
+#define COMSIG_HUMAN_AI_FRIENDLY_IN_FIRING_LINE "human_ai_friendly_in_firing_line"
+
 GLOBAL_LIST_EMPTY(ai_humans)

@@ -233,7 +233,7 @@ const HumanAIReadout = (props) => {
                 tooltip="Assign AI to selected squad"
                 onClick={() =>
                   act('assign_to_squad', {
-                    ai: human.brain_ref,
+                    ai: human.ref,
                     squad: selectedSquad,
                   })
                 }
@@ -252,7 +252,7 @@ const HumanAIReadout = (props) => {
                 tooltip="Set this AI to be the squad leader of its squad."
                 onClick={() =>
                   act('assign_sl', {
-                    ai: human.brain_ref,
+                    ai: human.ref,
                     squad: selectedSquad,
                   })
                 }

@@ -5,6 +5,7 @@
 /datum/ai_action/throw_back_nade
 	name = "Throw Back Grenade"
 	action_flags = ACTION_USING_HANDS | ACTION_USING_LEGS
+	var/throw_ready_time = 0
 
 /datum/ai_action/throw_back_nade/get_weight(datum/human_ai_brain/brain)
 	if(QDELETED(brain.active_grenade_found))
@@ -17,22 +18,33 @@
 
 /datum/ai_action/throw_back_nade/Destroy(force, ...)
 	brain.active_grenade_found = null // Mr. Grenade is not our friend now
+	throw_ready_time = 0
 	return ..()
 
 /datum/ai_action/throw_back_nade/trigger_action()
 	. = ..()
 
 	var/atom/active_grenade_found = brain.active_grenade_found
-	if(QDELETED(active_grenade_found) || !isturf(active_grenade_found.loc))
+	if(QDELETED(active_grenade_found) || (!isturf(active_grenade_found.loc) && active_grenade_found.loc != brain.tied_human))
+		throw_ready_time = 0
 		return ONGOING_ACTION_COMPLETED
 
 	var/mob/living/carbon/human/tied_human = brain.tied_human
-	if(get_dist(active_grenade_found, tied_human) > 1)
-		if(!brain.move_to_next_turf(get_turf(active_grenade_found)))
-			return ONGOING_ACTION_COMPLETED
-
+	if(active_grenade_found.loc != tied_human)
 		if(get_dist(active_grenade_found, tied_human) > 1)
-			return ONGOING_ACTION_UNFINISHED
+			if(!brain.move_to_next_turf(get_turf(active_grenade_found)))
+				return ONGOING_ACTION_COMPLETED
+
+			if(get_dist(active_grenade_found, tied_human) > 1)
+				return ONGOING_ACTION_UNFINISHED
+
+		brain.clear_main_hand()
+		tied_human.put_in_active_hand(active_grenade_found)
+		throw_ready_time = world.time + 1 SECONDS // Тут задается задержка броска тупо добавлением 1 секунды к текщему времени игры
+		return ONGOING_ACTION_UNFINISHED
+
+	if(world.time < throw_ready_time)
+		return ONGOING_ACTION_UNFINISHED
 
 	var/view_distance = brain.view_distance
 	var/list/possible_targets = list()
@@ -87,12 +99,10 @@
 			// There's friendlies all around us, apparently. Just uh. Die ig.
 			return ONGOING_ACTION_COMPLETED
 
-	brain.clear_main_hand()
-	tied_human.put_in_active_hand(active_grenade_found)
-
 	tied_human.toggle_throw_mode(THROW_MODE_NORMAL)
 	INVOKE_ASYNC(tied_human, TYPE_PROC_REF(/mob, throw_item), place_to_throw)
 
 	tied_human.face_atom(place_to_throw)
 	brain.to_pickup -= active_grenade_found // Do NOT play fetch. Please.
+	throw_ready_time = 0
 	return ONGOING_ACTION_COMPLETED

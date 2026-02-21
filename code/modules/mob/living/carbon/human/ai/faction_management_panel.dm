@@ -17,8 +17,9 @@
 	data["datumless_factions"] = FACTION_LIST_HUMANOID + FACTION_LIST_XENOMORPH
 
 	data["factions"] = list()
-	for(var/faction_name in SShuman_ai.human_ai_factions)
-		var/datum/human_ai_faction/ai_faction = SShuman_ai.human_ai_factions[faction_name]
+	var/list/runtime_factions = get_human_ai_runtime_factions()
+	for(var/faction_name in runtime_factions)
+		var/datum/human_ai_faction/ai_faction = runtime_factions[faction_name]
 		data["factions"] += list(list(
 			"name" = ai_faction.faction,
 			"shoot_to_kill" = ai_faction.get_shoot_to_kill(),
@@ -47,88 +48,100 @@
 			if(!params["faction"])
 				return
 
+			var/list/runtime_factions = get_human_ai_runtime_factions()
 			var/gotten_faction = params["faction"]
-			if(gotten_faction in SShuman_ai.human_ai_factions)
+			if(gotten_faction in runtime_factions)
 				return
 
 			var/datum/human_ai_faction/new_faction = new()
 			new_faction.faction = gotten_faction
-			SShuman_ai.human_ai_factions[new_faction.faction] = new_faction
+			runtime_factions[new_faction.faction] = new_faction
+			npc_ai_v2_refresh_human_faction_relation_matrix(TRUE)
 			return TRUE
 
 		if("set_shoot_to_kill")
 			if(!params["new_value"] || !params["faction_name"])
 				return
 
+			var/list/runtime_factions = get_human_ai_runtime_factions()
 			var/gotten_faction = params["faction_name"]
-			if(!(gotten_faction in SShuman_ai.human_ai_factions))
+			if(!(gotten_faction in runtime_factions))
 				return
 
-			var/datum/human_ai_faction/faction_obj = SShuman_ai.human_ai_factions[gotten_faction]
+			var/datum/human_ai_faction/faction_obj = runtime_factions[gotten_faction]
 			faction_obj.set_shoot_to_kill(text2num(params["new_value"]))
+			npc_ai_v2_refresh_human_faction_relation_matrix(TRUE)
 			return TRUE
 
 		if("remove_neutral_faction")
 			if(!params["faction"])
 				return
 
+			var/list/runtime_factions = get_human_ai_runtime_factions()
 			var/gotten_faction = params["faction"]
-			if(!(gotten_faction in SShuman_ai.human_ai_factions))
+			if(!(gotten_faction in runtime_factions))
 				return
 
-			var/datum/human_ai_faction/faction_obj = SShuman_ai.human_ai_factions[gotten_faction]
+			var/datum/human_ai_faction/faction_obj = runtime_factions[gotten_faction]
 			var/gotten_input = tgui_input_list(ui.user, "Remove which faction being neutral to [gotten_faction]?", "Remove Neutral Faction", faction_obj.get_neutral_factions())
 			if(!gotten_input)
 				return
 
 			faction_obj.remove_neutral_faction(gotten_input)
+			npc_ai_v2_refresh_human_faction_relation_matrix(TRUE)
 			return TRUE
 
 		if("remove_friendly_faction")
 			if(!params["faction"])
 				return
 
+			var/list/runtime_factions = get_human_ai_runtime_factions()
 			var/gotten_faction = params["faction"]
-			if(!(gotten_faction in SShuman_ai.human_ai_factions))
+			if(!(gotten_faction in runtime_factions))
 				return
 
-			var/datum/human_ai_faction/faction_obj = SShuman_ai.human_ai_factions[gotten_faction]
+			var/datum/human_ai_faction/faction_obj = runtime_factions[gotten_faction]
 			var/gotten_input = tgui_input_list(ui.user, "Remove which faction being friendly to [gotten_faction]?", "Remove Friendly Faction", faction_obj.get_friendly_factions())
 			if(!gotten_input)
 				return
 
 			faction_obj.remove_friendly_faction(gotten_input)
+			npc_ai_v2_refresh_human_faction_relation_matrix(TRUE)
 			return TRUE
 
 		if("add_neutral_faction")
 			if(!params["faction"])
 				return
 
+			var/list/runtime_factions = get_human_ai_runtime_factions()
 			var/gotten_faction = params["faction"]
-			if(!(gotten_faction in SShuman_ai.human_ai_factions))
+			if(!(gotten_faction in runtime_factions))
 				return
 
-			var/datum/human_ai_faction/faction_obj = SShuman_ai.human_ai_factions[gotten_faction]
+			var/datum/human_ai_faction/faction_obj = runtime_factions[gotten_faction]
 			var/gotten_input = tgui_input_list(ui.user, "Set which faction being neutral to [gotten_faction]?", "Add Neutral Faction", (FACTION_LIST_HUMANOID + FACTION_LIST_XENOMORPH) - faction_obj.get_neutral_factions() - faction_obj.faction)
 			if(!gotten_input)
 				return
 
 			faction_obj.add_neutral_faction(gotten_input)
+			npc_ai_v2_refresh_human_faction_relation_matrix(TRUE)
 
 		if("add_friendly_faction")
 			if(!params["faction"])
 				return
 
+			var/list/runtime_factions = get_human_ai_runtime_factions()
 			var/gotten_faction = params["faction"]
-			if(!(gotten_faction in SShuman_ai.human_ai_factions))
+			if(!(gotten_faction in runtime_factions))
 				return
 
-			var/datum/human_ai_faction/faction_obj = SShuman_ai.human_ai_factions[gotten_faction]
+			var/datum/human_ai_faction/faction_obj = runtime_factions[gotten_faction]
 			var/gotten_input = tgui_input_list(ui.user, "Set which faction being friendly to [gotten_faction]?", "Add Friendly Faction", (FACTION_LIST_HUMANOID + FACTION_LIST_XENOMORPH) - faction_obj.get_friendly_factions() - faction_obj.faction)
 			if(!gotten_input)
 				return
 
 			faction_obj.add_friendly_faction(gotten_input)
+			npc_ai_v2_refresh_human_faction_relation_matrix(TRUE)
 
 /client/proc/open_human_faction_management_panel()
 	set name = "Human Faction Management Panel"

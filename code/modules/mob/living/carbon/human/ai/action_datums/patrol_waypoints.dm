@@ -31,7 +31,7 @@
 
 	var/turf/current_waypoint = current_order.current_waypoint
 	if(QDELETED(current_waypoint))
-		var/datum/human_ai_squad/squad = SShuman_ai.squad_id_dict["[brain.squad_id]"]
+		var/datum/human_ai_squad/squad = get_human_ai_runtime_squad("[brain.squad_id]")
 		if(squad)
 			squad.remove_current_order() // Our brain is included
 		else

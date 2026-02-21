@@ -20,9 +20,55 @@
 
 	/// The time interval between calculating new paths if we cannot find a path
 	var/no_path_found_period = (2.5 SECONDS)
+	/// Max cooldown cap for no-path backoff.
+	var/no_path_found_period_max = (10 SECONDS)
+	/// Prevents duplicate path requests with identical signatures in a short window.
+	var/path_request_dedupe_window = 2
+	/// Time window for retarget throttling.
+	var/path_retarget_window = (1 SECONDS)
+	/// Hard cap of retargets within one retarget window.
+	var/path_retarget_hard_cap = 4
+	/// Current retarget count inside active retarget window.
+	var/path_retargets_in_window = 0
+	/// World time when current retarget window started.
+	var/path_retarget_window_started = 0
+	/// Last submitted path request signature for dedupe.
+	var/last_path_request_signature = null
+	/// World time when last path request signature was submitted.
+	var/last_path_request_at = 0
 
 	/// Cooldown declaration for delaying finding a new path if no path was found
 	COOLDOWN_DECLARE(no_path_found_cooldown)
+
+/datum/human_ai_brain/proc/build_path_request_signature(turf/T, max_range, list/ignore)
+	if(!T)
+		return null
+
+	var/list/chunks = list("[REF(tied_human)]", "[REF(T)]", "[max_range]")
+	if(islist(ignore) && length(ignore))
+		for(var/entry as anything in ignore)
+			if(isnull(entry))
+				chunks += "null"
+				continue
+			if(isatom(entry))
+				chunks += REF(entry)
+				continue
+			chunks += "[entry]"
+	return jointext(chunks, "|")
+
+/datum/human_ai_brain/proc/can_retarget_path(turf/new_target)
+	if(current_path_target == new_target)
+		return TRUE
+
+	if((world.time - path_retarget_window_started) >= path_retarget_window)
+		path_retarget_window_started = world.time
+		path_retargets_in_window = 0
+
+	if(path_retargets_in_window >= path_retarget_hard_cap)
+		return FALSE
+
+	path_retargets_in_window++
+	return TRUE
 
 /datum/human_ai_brain/proc/can_move_and_apply_move_delay()
 	// Unable to move, try next time.
@@ -42,18 +88,28 @@
 		return FALSE
 
 	if(no_path_found)
-		if(no_path_found_amount > 0)
-			COOLDOWN_START(src, no_path_found_cooldown, no_path_found_period)
+		var/failure_streak = max(1, no_path_found_amount + 1)
+		var/backoff_duration = min(no_path_found_period * (1 << (failure_streak - 1)), no_path_found_period_max)
+		COOLDOWN_START(src, no_path_found_cooldown, backoff_duration)
 		no_path_found = FALSE
-		no_path_found_amount++
+		no_path_found_amount = failure_streak
 		return FALSE
 
-	no_path_found_amount = 0
-
 	if((!current_path || (next_path_generation < world.time && current_path_target != T)) && COOLDOWN_FINISHED(src, no_path_found_cooldown))
-		if(!CALCULATING_PATH(tied_human) || current_path_target != T)
-			SSpathfinding.calculate_path(tied_human, T, max_range, tied_human, CALLBACK(src, PROC_REF(set_path)), list(tied_human, current_target))
-			current_path_target = T
+		if(!can_retarget_path(T))
+			next_path_generation = world.time + path_update_period
+		else
+			var/list/path_ignore = list(tied_human, current_target)
+			var/request_signature = build_path_request_signature(T, max_range, path_ignore)
+			var/is_duplicate_request = request_signature && (request_signature == last_path_request_signature) && ((world.time - last_path_request_at) < path_request_dedupe_window)
+			if(!is_duplicate_request && (!CALCULATING_PATH(tied_human) || current_path_target != T))
+				var/datum/npc_ai_controller/human/human_controller = get_npc_ai_v2_controller()
+				if(human_controller)
+					human_controller.record_path_request()
+				SSpathfinding.calculate_path(tied_human, T, max_range, tied_human, CALLBACK(src, PROC_REF(set_path)), path_ignore)
+				last_path_request_signature = request_signature
+				last_path_request_at = world.time
+				current_path_target = T
 		next_path_generation = world.time + path_update_period
 
 	if(CALCULATING_PATH(tied_human))
@@ -94,5 +150,13 @@
 
 /datum/human_ai_brain/proc/set_path(list/path)
 	current_path = path
+	var/datum/npc_ai_controller/human/human_controller = get_npc_ai_v2_controller()
 	if(!path)
 		no_path_found = TRUE
+		if(human_controller)
+			human_controller.record_path_failure()
+		return
+
+	no_path_found_amount = 0
+	if(human_controller)
+		human_controller.record_path_hit()

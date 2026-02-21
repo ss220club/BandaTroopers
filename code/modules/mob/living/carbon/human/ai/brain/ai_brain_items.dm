@@ -171,7 +171,7 @@
 /datum/human_ai_brain/proc/appraise_inventory(belt = TRUE, back = TRUE, pocket_l = TRUE, pocket_r = TRUE, armor = TRUE, uniform = TRUE)
 	if(previous_faction != tied_human.faction)
 		previous_faction = tied_human.faction
-		var/datum/human_ai_faction/our_faction = SShuman_ai.human_ai_factions[tied_human.faction]
+		var/datum/human_ai_faction/our_faction = get_human_ai_runtime_faction(tied_human.faction)
 		our_faction?.apply_faction_data(src)
 
 	/*if(tied_human.shoes && !primary_melee) // snowflake bootknife check

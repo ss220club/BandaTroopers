@@ -99,16 +99,19 @@ GLOBAL_LIST_EMPTY(human_ai_squad_presets)
 	if(!length(viable_turfs))
 		return
 
-	var/datum/human_ai_squad/new_squad = SShuman_ai.create_new_squad()
+	var/datum/human_ai_squad/new_squad = create_human_ai_runtime_squad()
 
 	var/squad_leader_selected = FALSE
 	for(var/datum/equipment_preset/ai_equipment as anything in ai_to_spawn)
 		for(var/i in 1 to ai_to_spawn[ai_equipment])
 			var/mob/living/carbon/human/ai_human = new(pick(viable_turfs))
-			var/datum/component/human_ai/ai_comp = ai_human.AddComponent(/datum/component/human_ai)
+			ai_human.AddComponent(get_human_ai_component_type())
+			var/datum/human_ai_brain/ai_brain = ai_human.get_ai_brain()
+			if(!ai_brain)
+				continue
 			arm_equipment(ai_human, ai_equipment, TRUE)
-			new_squad.add_to_squad(ai_comp.ai_brain)
+			ai_human.refresh_human_ai_runtime_state(armor = TRUE)
+			new_squad.add_to_squad(ai_brain)
 			if(!squad_leader_selected)
-				new_squad.set_squad_leader(ai_comp.ai_brain)
+				new_squad.set_squad_leader(ai_brain)
 				squad_leader_selected = TRUE
-

@@ -16,7 +16,7 @@
 	if(length(brain.to_pickup))
 		return 0
 
-	var/datum/human_ai_squad/squad = SShuman_ai.squad_id_dict["[brain.squad_id]"]
+	var/datum/human_ai_squad/squad = get_human_ai_runtime_squad("[brain.squad_id]")
 	if(!squad)
 		return 0
 
@@ -33,7 +33,9 @@
 	if(!brain.squad_id)
 		return
 
-	var/datum/human_ai_squad/squad = SShuman_ai.squad_id_dict["[brain.squad_id]"]
+	var/datum/human_ai_squad/squad = get_human_ai_runtime_squad("[brain.squad_id]")
+	if(!squad)
+		return
 	follow_distance = 1 + length(squad.ai_in_squad) / 2
 
 /datum/ai_action/follow_leader/trigger_action()
@@ -42,8 +44,12 @@
 	if(brain.in_combat || length(brain.to_pickup))
 		return ONGOING_ACTION_COMPLETED
 
-	var/datum/human_ai_squad/squad = SShuman_ai.squad_id_dict["[brain.squad_id]"]
+	var/datum/human_ai_squad/squad = get_human_ai_runtime_squad("[brain.squad_id]")
+	if(!squad)
+		return ONGOING_ACTION_COMPLETED
 	var/mob/squad_leader = squad.squad_leader?.tied_human
+	if(!squad_leader)
+		return ONGOING_ACTION_COMPLETED
 
 	var/mob/tied_human = brain.tied_human
 	if(get_dist(tied_human, squad_leader) > follow_distance)

@@ -15,7 +15,7 @@
 	var/list/data = list()
 
 	data["orders"] = list()
-	for(var/datum/ai_order/order as anything in SShuman_ai.existing_orders)
+	for(var/datum/ai_order/order as anything in get_human_ai_runtime_orders())
 		data["orders"] += list(list(
 			"name" = order.name,
 			"type" = order.type,
@@ -42,7 +42,7 @@
 		))
 
 	data["squads"] = list()
-	for(var/datum/human_ai_squad/squad as anything in SShuman_ai.squads)
+	for(var/datum/human_ai_squad/squad as anything in get_human_ai_runtime_squads())
 		var/list/name_list = list()
 		for(var/datum/human_ai_brain/brain as anything in squad.ai_in_squad)
 			name_list += brain.tied_human?.real_name
@@ -61,6 +61,66 @@
 	var/list/data = list()
 
 	return data
+
+/datum/human_ai_management_menu/proc/resolve_human_ai_brain(brain_or_human_ref)
+	RETURN_TYPE(/datum/human_ai_brain)
+	if(!brain_or_human_ref)
+		return null
+
+	var/datum/human_ai_brain/brain = locate(brain_or_human_ref)
+	if(istype(brain))
+		return brain
+
+	var/mob/living/carbon/human/ai_human = locate(brain_or_human_ref)
+	if(!istype(ai_human))
+		return null
+	return ai_human.get_ai_brain()
+
+/datum/human_ai_management_menu/proc/resolve_human_ai_squad(squad_id)
+	RETURN_TYPE(/datum/human_ai_squad)
+	if(isnull(squad_id))
+		return null
+	return get_human_ai_runtime_squad("[squad_id]")
+
+/datum/human_ai_management_menu/proc/assign_human_ai_to_squad(brain_or_human_ref, squad_id)
+	var/datum/human_ai_squad/squad = resolve_human_ai_squad(squad_id)
+	if(!squad)
+		return FALSE
+
+	var/datum/human_ai_brain/brain = resolve_human_ai_brain(brain_or_human_ref)
+	if(!brain || !brain.can_assign_squad)
+		return FALSE
+
+	brain.add_to_squad(squad.id)
+	brain.tied_human?.refresh_human_ai_runtime_state()
+	return brain.squad_id == squad.id
+
+/datum/human_ai_management_menu/proc/assign_order_to_squad(order_ref, squad_id)
+	var/datum/human_ai_squad/squad = resolve_human_ai_squad(squad_id)
+	if(!squad)
+		return FALSE
+
+	var/datum/ai_order/order = locate(order_ref)
+	if(!istype(order))
+		return FALSE
+
+	squad.set_current_order(order)
+	for(var/datum/human_ai_brain/brain as anything in squad.ai_in_squad)
+		brain.tied_human?.refresh_human_ai_runtime_state()
+	return squad.current_order == order
+
+/datum/human_ai_management_menu/proc/assign_squad_leader(brain_or_human_ref, squad_id)
+	var/datum/human_ai_squad/squad = resolve_human_ai_squad(squad_id)
+	if(!squad)
+		return FALSE
+
+	var/datum/human_ai_brain/brain = resolve_human_ai_brain(brain_or_human_ref)
+	if(!brain || brain.squad_id != squad.id)
+		return FALSE
+
+	squad.set_squad_leader(brain)
+	brain.tied_human?.refresh_human_ai_runtime_state()
+	return squad.squad_leader == brain
 
 /datum/human_ai_management_menu/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()
@@ -92,43 +152,45 @@
 			return TRUE
 
 		if("create_squad")
-			SShuman_ai.create_new_squad()
+			create_human_ai_runtime_squad()
 			return TRUE
 
 		if("rename_squad")
 			if(!params["squad"])
 				return
 
-			var/datum/human_ai_squad/squad = SShuman_ai.get_squad("[params["squad"]]")
-			squad.name = tgui_input_text(ui.user, "Input new squad name", "Input")
+			var/datum/human_ai_squad/squad = resolve_human_ai_squad(params["squad"])
+			if(!squad)
+				return TRUE
+
+			var/new_squad_name = tgui_input_text(ui.user, "Input new squad name", "Input")
+			if(isnull(new_squad_name))
+				return TRUE
+			new_squad_name = trim(new_squad_name)
+			if(!length(new_squad_name))
+				return TRUE
+			squad.name = new_squad_name
 			return TRUE
 
 		if("assign_to_squad")
 			if(!params["squad"] || !params["ai"])
 				return
 
-			var/datum/human_ai_brain/brain = locate(params["ai"])
-			if(!brain.can_assign_squad)
-				return TRUE
-
-			brain.add_to_squad(params["squad"])
+			assign_human_ai_to_squad(params["ai"], params["squad"])
 			return TRUE
 
 		if("assign_order")
 			if(!params["squad"] || !params["order"])
 				return
 
-			var/datum/human_ai_squad/squad = SShuman_ai.get_squad("[params["squad"]]")
-			squad.set_current_order(locate(params["order"]))
+			assign_order_to_squad(params["order"], params["squad"])
 			return TRUE
 
 		if("assign_sl")
 			if(!params["squad"] || !params["ai"])
 				return
 
-			var/datum/brain = locate(params["ai"])
-			var/datum/human_ai_squad/squad = SShuman_ai.get_squad("[params["squad"]]")
-			squad.set_squad_leader(brain)
+			assign_squad_leader(params["ai"], params["squad"])
 			return TRUE
 
 		if("delete_object") // This UI is fully GM-only so I'm not worried about someone abusing this
@@ -165,7 +227,7 @@
 		return
 
 	var/mob/living/carbon/human/ai_human = new()
-	ai_human.AddComponent(/datum/component/human_ai)
+	ai_human.AddComponent(get_human_ai_component_type())
 
 	if(!cmd_admin_dress_human(ai_human, randomize = TRUE))
 		qdel(ai_human)
@@ -173,7 +235,7 @@
 
 	ai_human.face_dir(mob.dir)
 	ai_human.forceMove(get_turf(mob))
-	ai_human.get_ai_brain().appraise_inventory(armor = TRUE)
+	ai_human.refresh_human_ai_runtime_state(armor = TRUE)
 
 /client/proc/make_human_ai(mob/living/carbon/human/mob in GLOB.human_mob_list)
 	set name = "Make AI"
@@ -186,15 +248,15 @@
 	if(QDELETED(mob))
 		return
 
-	if(mob.GetComponent(/datum/component/human_ai))
+	if(mob.get_ai_brain())
 		to_chat(usr, SPAN_WARNING("[mob] already has an assigned AI."))
 		return
 
 	if(mob.ckey && tgui_alert(mob, "This mob is being controlled by [mob.ckey]. Are you sure you wish to add AI to it?","Make AI", list("Yes","No")) != "Yes")
 		return
 
-	mob.AddComponent(/datum/component/human_ai)
-	mob.get_ai_brain().appraise_inventory()
+	mob.AddComponent(get_human_ai_component_type())
+	mob.refresh_human_ai_runtime_state()
 
 	message_admins("[key_name_admin(usr)] assigned an AI component to [mob.real_name].")
 

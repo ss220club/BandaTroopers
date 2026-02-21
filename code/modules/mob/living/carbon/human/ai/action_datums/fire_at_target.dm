@@ -4,6 +4,8 @@
 	var/rounds_burst_fired = 0
 	var/currently_firing
 
+#define AI_MIN_TIMER_DELAY(delay) max((delay), world.tick_lag)
+
 /datum/ai_action/fire_at_target/get_weight(datum/human_ai_brain/brain)
 	if(!brain.in_combat)
 		return 0
@@ -25,7 +27,7 @@
 	if((get_dist(brain.tied_human, brain.target_turf) > brain.view_distance) && !should_fire_offscreen)
 		return 0
 
-	if(!firing_line_check(brain, brain.target_turf))
+	if(!brain.firing_line_check(brain, brain.target_turf))
 		return 0
 
 	if(brain.should_reload())
@@ -33,16 +35,27 @@
 
 	return 10
 
+/datum/ai_action/fire_at_target/Added()
+	. = ..()
+	RegisterSignal(brain, COMSIG_HUMAN_AI_FRIENDLY_IN_FIRING_LINE, PROC_REF(on_friendly_in_firing_line))
+
 /datum/ai_action/fire_at_target/Destroy(force, ...)
+	if(brain)
+		UnregisterSignal(brain, COMSIG_HUMAN_AI_FRIENDLY_IN_FIRING_LINE)
 	stop_firing(brain)
 	return ..()
 
 /datum/ai_action/fire_at_target/proc/stop_firing(datum/human_ai_brain/brain)
+	if(!brain)
+		return
 	currently_firing = FALSE
 	rounds_burst_fired = 0
+	brain.clear_watched_turfs()
 
 	UnregisterSignal(brain.tied_human, COMSIG_MOB_FIRED_GUN)
 	brain.primary_weapon?.set_target(null)
+
+
 
 /datum/ai_action/fire_at_target/trigger_action()
 	. = ..()
@@ -73,6 +86,9 @@
 	if((get_dist(tied_human, target_turf) > gun_data.maximum_range) && !should_fire_offscreen)
 		return ONGOING_ACTION_COMPLETED
 
+	if(!brain.firing_line_check(brain, target_turf))
+		return ONGOING_ACTION_COMPLETED
+
 	tied_human.face_atom(target_turf)
 	tied_human.a_intent_change(INTENT_HARM)
 
@@ -90,37 +106,14 @@
 	primary_weapon?.start_fire(object = target_turf, bypass_checks = TRUE)
 	return ONGOING_ACTION_UNFINISHED
 
-/datum/ai_action/fire_at_target/proc/firing_line_check(datum/human_ai_brain/brain, atom/target)
-	var/mob/living/carbon/tied_human = brain.tied_human
-	var/list/turf_list = get_line(get_turf(tied_human), get_turf(target))
-	for(var/turf/tile in turf_list)
-		var/tile_dist = get_dist(tied_human, tile)
-		if(tile_dist > brain.view_distance)
-			continue
 
-		if(tile.density)
-			return FALSE
 
-		for(var/obj/thing in tile)
-			if(!thing.unacidable || !thing.density)
-				continue
-
-			if((tile_dist <= 3) && (thing.projectile_coverage >= PROJECTILE_COVERAGE_HIGH)) // short range we allow for higher projectile coverage to be shot over
-				return FALSE
-			else if((tile_dist > 3) && thing.projectile_coverage >= PROJECTILE_COVERAGE_MEDIUM)
-				return FALSE
-
-		for(var/mob/living/carbon/human/possible_friendly in tile)
-			if(possible_friendly == tied_human)
-				continue
-
-			if(possible_friendly.body_position == LYING_DOWN)
-				continue
-
-			if(brain.faction_check(possible_friendly))
-				return FALSE
-
-	return TRUE
+/datum/ai_action/fire_at_target/proc/on_friendly_in_firing_line(datum/source, mob/living/friendly)
+	SIGNAL_HANDLER
+	if(!brain)
+		return
+	stop_firing(brain)
+	qdel(src)
 
 /datum/ai_action/fire_at_target/proc/on_gun_fire(datum/source, obj/item/weapon/gun/fired)
 	SIGNAL_HANDLER
@@ -188,55 +181,68 @@
 		currently_firing = FALSE
 		return
 
-	if(!firing_line_check(brain, shoot_next))
+	if(!brain.firing_line_check(brain, shoot_next, listen = TRUE))
 		stop_firing(brain)
+		qdel(src)
+		return
+
+	var/obj/item/weapon/gun/next_weapon = brain.primary_weapon
+	if(QDELETED(next_weapon))
+		stop_firing(brain)
+		qdel(src)
 		return
 
 	if(istype(brain.primary_weapon, /obj/item/weapon/gun/shotgun))
 		currently_firing = FALSE
 		if(istype(brain.primary_weapon, /obj/item/weapon/gun/shotgun/pump))
-			var/obj/item/weapon/gun/shotgun/pump/shotgun = brain.primary_weapon
-			addtimer(CALLBACK(shotgun, TYPE_PROC_REF(/obj/item/weapon/gun/shotgun/pump, pump_shotgun), tied_human), shotgun.pump_delay)
-			COOLDOWN_START(brain, stop_fire_cooldown, max(shotgun.pump_delay, shotgun.get_fire_delay()) + 1)
+			var/obj/item/weapon/gun/shotgun/pump/shotgun = next_weapon
+			var/pump_delay = AI_MIN_TIMER_DELAY(shotgun.pump_delay)
+			addtimer(CALLBACK(shotgun, TYPE_PROC_REF(/obj/item/weapon/gun/shotgun/pump, pump_shotgun), tied_human), pump_delay)
+			COOLDOWN_START(brain, stop_fire_cooldown, max(pump_delay, shotgun.get_fire_delay()) + 1)
 			stop_firing(brain)
 			qdel(src)
 			return
 		else
-			var/obj/item/weapon/gun/shotgun/autoshotty = brain.primary_weapon
-			addtimer(CALLBACK(autoshotty, TYPE_PROC_REF(/obj/item/weapon/gun/shotgun, start_fire), tied_human), autoshotty.get_fire_delay()*3)
-			COOLDOWN_START(brain, stop_fire_cooldown, max(autoshotty.get_fire_delay()) + 3)
+			var/obj/item/weapon/gun/shotgun/autoshotty = next_weapon
+			var/autoshotty_delay = AI_MIN_TIMER_DELAY(autoshotty.get_fire_delay() * 3)
+			addtimer(CALLBACK(autoshotty, TYPE_PROC_REF(/obj/item/weapon/gun/shotgun, start_fire), tied_human), autoshotty_delay)
+			COOLDOWN_START(brain, stop_fire_cooldown, max(autoshotty_delay, autoshotty.get_fire_delay()) + 3)
 			stop_firing(brain)
 			qdel(src)
 			return
 
 	else if(istype(brain.primary_weapon, /obj/item/weapon/gun/rifle/xm51))
 		currently_firing = FALSE
-		var/obj/item/weapon/gun/rifle/xm51/scattergun = brain.primary_weapon
-		addtimer(CALLBACK(scattergun, TYPE_PROC_REF(/obj/item/weapon/gun/rifle/xm51, unique_action), tied_human), scattergun.pump_delay)
-		COOLDOWN_START(brain, stop_fire_cooldown, max(scattergun.pump_delay, scattergun.get_fire_delay()) + 1)
+		var/obj/item/weapon/gun/rifle/xm51/scattergun = next_weapon
+		var/scattergun_pump_delay = AI_MIN_TIMER_DELAY(scattergun.pump_delay)
+		addtimer(CALLBACK(scattergun, TYPE_PROC_REF(/obj/item/weapon/gun/rifle/xm51, unique_action), tied_human), scattergun_pump_delay)
+		COOLDOWN_START(brain, stop_fire_cooldown, max(scattergun_pump_delay, scattergun.get_fire_delay()) + 1)
 		stop_firing(brain)
 		qdel(src)
 		return
 
 	else if(istype(brain.primary_weapon, /obj/item/weapon/gun/boltaction))
-		var/obj/item/weapon/gun/boltaction/bolt = brain.primary_weapon
+		var/obj/item/weapon/gun/boltaction/bolt = next_weapon
 		currently_firing = FALSE
-		addtimer(CALLBACK(bolt, TYPE_PROC_REF(/obj/item/weapon/gun/boltaction, unique_action), tied_human), 1)
-		addtimer(CALLBACK(bolt, TYPE_PROC_REF(/obj/item/weapon/gun/boltaction, unique_action), tied_human), bolt.bolt_delay + 1)
-		COOLDOWN_START(brain, stop_fire_cooldown, max(bolt.bolt_delay * 2, bolt.get_fire_delay()) + 1)
+		addtimer(CALLBACK(bolt, TYPE_PROC_REF(/obj/item/weapon/gun/boltaction, unique_action), tied_human), AI_MIN_TIMER_DELAY(1))
+		var/bolt_delay = AI_MIN_TIMER_DELAY(bolt.bolt_delay + 1)
+		addtimer(CALLBACK(bolt, TYPE_PROC_REF(/obj/item/weapon/gun/boltaction, unique_action), tied_human), bolt_delay)
+		COOLDOWN_START(brain, stop_fire_cooldown, max(bolt_delay, bolt.get_fire_delay()) + 1)
 		stop_firing(brain)
 		qdel(src)
 		return
 
 	else if(brain.primary_weapon.gun_firemode == GUN_FIREMODE_SEMIAUTO)
 		currently_firing = FALSE
-		addtimer(CALLBACK(brain.primary_weapon, TYPE_PROC_REF(/obj/item/weapon/gun, start_fire), null, brain.current_target, null, null, null, TRUE), brain.primary_weapon.get_fire_delay())
+		addtimer(CALLBACK(next_weapon, TYPE_PROC_REF(/obj/item/weapon/gun, start_fire), null, brain.current_target, null, null, null, TRUE), AI_MIN_TIMER_DELAY(next_weapon.get_fire_delay()))
 
 	else if(brain.primary_weapon.gun_firemode == GUN_FIREMODE_AUTOMATIC)
 		rounds_burst_fired++
 
 	else if(brain.primary_weapon.gun_firemode == GUN_FIREMODE_BURSTFIRE)
 		currently_firing = FALSE
-		addtimer(CALLBACK(brain.primary_weapon, TYPE_PROC_REF(/obj/item/weapon/gun, start_fire), null, brain.current_target, null, null, null, TRUE), brain.primary_weapon.get_burst_fire_delay())
+		addtimer(CALLBACK(next_weapon, TYPE_PROC_REF(/obj/item/weapon/gun, start_fire), null, brain.current_target, null, null, null, TRUE), AI_MIN_TIMER_DELAY(next_weapon.get_burst_fire_delay()))
 
-	brain.primary_weapon?.set_target(shoot_next)
+	next_weapon?.set_target(shoot_next)
+
+#undef AI_MIN_TIMER_DELAY

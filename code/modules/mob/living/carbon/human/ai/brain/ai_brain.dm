@@ -257,13 +257,13 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 		if(length(neutral_factions))
 			if(ismob(bullet.firer))
 				var/mob/mob_firer = bullet.firer
-				if(mob_firer.faction in neutral_factions)
+				if(faction_list_has(neutral_factions, mob_firer.faction))
 					on_neutral_faction_betray(mob_firer.faction)
 
 			else if(isdefenses(bullet.firer))
 				var/obj/structure/machinery/defenses/defense_firer = bullet.firer
 				for(var/faction in defense_firer.faction_group)
-					if(faction in neutral_factions)
+					if(faction_list_has(neutral_factions, faction))
 						on_neutral_faction_betray(faction)
 
 		if(faction_check(bullet.firer))
@@ -286,7 +286,7 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 /datum/human_ai_brain/proc/enter_combat()
 	SIGNAL_HANDLER
 	if(squad_id) // call for help
-		var/datum/human_ai_squad/squad = SShuman_ai.squad_id_dict["[squad_id]"]
+		var/datum/human_ai_squad/squad = get_human_ai_runtime_squad("[squad_id]")
 		for(var/datum/human_ai_brain/squaddie as anything in squad.ai_in_squad)
 			if(squaddie.target_turf)
 				continue
@@ -307,7 +307,7 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 
 	in_combat = TRUE
 	addtimer(CALLBACK(src, PROC_REF(exit_combat)), rand(combat_decay_time_min, combat_decay_time_max), TIMER_UNIQUE | TIMER_NO_HASH_WAIT | TIMER_OVERRIDE)
-	SShuman_ai.combat_ever_started = TRUE
+	mark_human_ai_runtime_combat_started()
 
 /datum/human_ai_brain/proc/exit_combat()
 	if(tied_human.client)
@@ -340,13 +340,13 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 	if(length(neutral_factions))
 		if(ismob(bullet.firer))
 			var/mob/mob_firer = bullet.firer
-			if(mob_firer.faction in neutral_factions)
+			if(faction_list_has(neutral_factions, mob_firer.faction))
 				on_neutral_faction_betray(mob_firer.faction)
 
 		else if(isdefenses(bullet.firer))
 			var/obj/structure/machinery/defenses/defense_firer = bullet.firer
 			for(var/faction in defense_firer.faction_group)
-				if(faction in neutral_factions)
+				if(faction_list_has(neutral_factions, faction))
 					on_neutral_faction_betray(faction)
 
 	if(faction_check(bullet.firer))

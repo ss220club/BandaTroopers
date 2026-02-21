@@ -116,7 +116,11 @@
 		return
 
 	var/mob/living/carbon/human/ai_human = new()
-	var/datum/component/human_ai/ai_comp = ai_human.AddComponent(/datum/component/human_ai)
+	ai_human.AddComponent(get_human_ai_component_type())
+	var/datum/human_ai_brain/ai_brain = ai_human.get_ai_brain()
+	if(!ai_brain)
+		qdel(ai_human)
+		return
 	var/chosen_equipment_name = tgui_input_list(usr, "Select machinegunner equipment.", "machinegunner Equipment", machinegunner_equipment_presets)
 	if(!chosen_equipment_name)
 		qdel(ai_human)
@@ -124,8 +128,8 @@
 	arm_equipment(ai_human, machinegunner_equipment_presets[chosen_equipment_name], TRUE)
 
 	ai_human.forceMove(home_turf)
-	ai_comp.ai_brain.machinegunner_home = home_turf
-	ai_comp.ai_brain.machinegunner_dir = get_cardinal_dir(home_turf, target_turf)
+	ai_human.refresh_human_ai_runtime_state(armor = TRUE)
+	ai_brain.machinegunner_home = home_turf
+	ai_brain.machinegunner_dir = get_cardinal_dir(home_turf, target_turf)
 
 	to_chat(usr, SPAN_NOTICE("machinegunner has been created."))
-

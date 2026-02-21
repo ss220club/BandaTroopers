@@ -6,10 +6,10 @@
 
 /datum/ai_order/New(list/arguments)
 	. = ..()
-	SShuman_ai.existing_orders += src
+	register_human_ai_runtime_order(src)
 
 /datum/ai_order/Destroy(force, ...)
-	SShuman_ai.existing_orders -= src
+	unregister_human_ai_runtime_order(src)
 	return ..()
 
 /datum/ai_order/proc/tgui_data()
