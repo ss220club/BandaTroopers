@@ -450,7 +450,7 @@ GLOBAL_LIST_INIT(frozen_items, list(SQUAD_MARINE_1 = list(), SQUAD_MARINE_2 = li
 
 	if(show_warning && H.cryo_intro_exit_warn_cooldown <= world.time)
 		H.cryo_intro_exit_warn_cooldown = world.time + 10
-		to_chat(H, SPAN_WARNING("Wake-up cycle in progress. Wait for the intro sequence to finish."))
+		to_chat(H, SPAN_WARNING("Цикл пробуждения еще не завершен. Дождитесь окончания заставки."))
 		playsound(src, 'sound/machines/buzz-two.ogg', 15, FALSE)
 
 	return TRUE
@@ -547,7 +547,7 @@ GLOBAL_LIST_INIT(frozen_items, list(SQUAD_MARINE_1 = list(), SQUAD_MARINE_2 = li
 	if(!occupant)
 		return
 	if(is_cryo_intro_exit_locked(occupant, FALSE))
-		return FALSE
+		return
 	occupant.forceMove(get_turf(src))
 	occupant = null
 	stop_processing()

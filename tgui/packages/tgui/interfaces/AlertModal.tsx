@@ -94,9 +94,15 @@ export function AlertModal(props) {
             <Stack.Item grow>
               {!!autofocus && <Autofocus />}
               {isVerbose ? (
-                <VerticalButtons selected={selected} />
+                <VerticalButtons
+                  decodedButtons={decodedButtons}
+                  selected={selected}
+                />
               ) : (
-                <HorizontalButtons selected={selected} />
+                <HorizontalButtons
+                  decodedButtons={decodedButtons}
+                  selected={selected}
+                />
               )}
             </Stack.Item>
           </Stack>
@@ -107,6 +113,7 @@ export function AlertModal(props) {
 }
 
 type ButtonDisplayProps = {
+  readonly decodedButtons: string[];
   readonly selected: number;
 };
 
@@ -116,7 +123,7 @@ type ButtonDisplayProps = {
 function HorizontalButtons(props: ButtonDisplayProps) {
   const { act, data } = useBackend<Data>();
   const { buttons = [], large_buttons, swapped_buttons } = data;
-  const { selected } = props;
+  const { decodedButtons, selected } = props;
 
   return (
     <Stack fill justify="space-around" reverse={!swapped_buttons}>
@@ -133,8 +140,8 @@ function HorizontalButtons(props: ButtonDisplayProps) {
             textAlign="center"
           >
             {!large_buttons
-              ? decodeHtmlEntities(button)
-              : decodeHtmlEntities(button).toUpperCase()}
+              ? (decodedButtons[index] ?? button)
+              : (decodedButtons[index] ?? button).toUpperCase()}
           </Button>
         </Stack.Item>
       ))}
@@ -149,7 +156,7 @@ function HorizontalButtons(props: ButtonDisplayProps) {
 function VerticalButtons(props: ButtonDisplayProps) {
   const { act, data } = useBackend<Data>();
   const { buttons = [], large_buttons, swapped_buttons } = data;
-  const { selected } = props;
+  const { decodedButtons, selected } = props;
 
   return (
     <Stack
@@ -177,8 +184,8 @@ function VerticalButtons(props: ButtonDisplayProps) {
             textAlign="center"
           >
             {!large_buttons
-              ? decodeHtmlEntities(button)
-              : decodeHtmlEntities(button).toUpperCase()}
+              ? (decodedButtons[index] ?? button)
+              : (decodedButtons[index] ?? button).toUpperCase()}
           </Button>
         </Stack.Item>
       ))}

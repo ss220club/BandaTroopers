@@ -288,17 +288,33 @@
 		return "неуточненное боевое воздействие"
 
 	var/lower_cause = lowertext(cause_text)
-	if(findtext(lower_cause, "explosion") || findtext(lower_cause, "rocket") || findtext(lower_cause, "grenade") || findtext(lower_cause, "bomb") || findtext(lower_cause, "mortar") || findtext(lower_cause, "strike"))
+	var/static/list/explosion_keywords = list("explosion", "rocket", "grenade", "bomb", "mortar", "strike")
+	var/static/list/bullet_keywords = list("bullet", "rifle", "pistol", "shotgun", "smg", "gauss", "railgun")
+	var/static/list/fire_keywords = list("flame", "fire", "burn", "napalm", "incendiary")
+	var/static/list/xeno_keywords = list("acid", "xeno", "facehugger", "chestburst", "headbite", "queen")
+	var/static/list/impact_keywords = list("fall", "crash", "roadkill", "squash")
+
+	if(modular_round_outro_contains_any_keyword(lower_cause, explosion_keywords))
 		return "взрывная травма"
-	if(findtext(lower_cause, "bullet") || findtext(lower_cause, "rifle") || findtext(lower_cause, "pistol") || findtext(lower_cause, "shotgun") || findtext(lower_cause, "smg") || findtext(lower_cause, "gauss") || findtext(lower_cause, "railgun"))
+	if(modular_round_outro_contains_any_keyword(lower_cause, bullet_keywords))
 		return "огнестрельное поражение"
-	if(findtext(lower_cause, "flame") || findtext(lower_cause, "fire") || findtext(lower_cause, "burn") || findtext(lower_cause, "napalm") || findtext(lower_cause, "incendiary"))
+	if(modular_round_outro_contains_any_keyword(lower_cause, fire_keywords))
 		return "термическое поражение"
-	if(findtext(lower_cause, "acid") || findtext(lower_cause, "xeno") || findtext(lower_cause, "facehugger") || findtext(lower_cause, "chestburst") || findtext(lower_cause, "headbite") || findtext(lower_cause, "queen"))
+	if(modular_round_outro_contains_any_keyword(lower_cause, xeno_keywords))
 		return "поражение ксеноморфной биоформой"
-	if(findtext(lower_cause, "fall") || findtext(lower_cause, "crash") || findtext(lower_cause, "roadkill") || findtext(lower_cause, "squash"))
+	if(modular_round_outro_contains_any_keyword(lower_cause, impact_keywords))
 		return "травма при ударе/падении"
 	return "неуточненное боевое воздействие"
+
+/datum/game_mode/colonialmarines/proc/modular_round_outro_contains_any_keyword(text, list/keywords)
+	if(!text || !islist(keywords))
+		return FALSE
+
+	for(var/keyword in keywords)
+		if(findtext(text, "[keyword]"))
+			return TRUE
+
+	return FALSE
 
 /datum/game_mode/colonialmarines/proc/modular_round_outro_is_critical(mob/status_mob)
 	if(!isliving(status_mob) || status_mob.stat == DEAD)
