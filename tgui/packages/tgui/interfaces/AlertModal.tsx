@@ -1,6 +1,6 @@
 import { KEY } from 'common/keys';
-import { decodeHtmlEntities } from 'common/string';
 import { BooleanLike } from 'common/react';
+import { decodeHtmlEntities } from 'common/string';
 import { KeyboardEvent, useState } from 'react';
 
 import { useBackend } from '../backend';
