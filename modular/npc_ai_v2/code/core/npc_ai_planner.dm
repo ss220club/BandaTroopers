@@ -1,5 +1,5 @@
 /datum/npc_ai_planner
-	/// Р С™Р С•Р В»Р С‘РЎвЂЎР ВµРЎРѓРЎвЂљР Р†Р С• Р В»РЎС“РЎвЂЎРЎв‚¬Р С‘РЎвЂ¦ Р С—Р С• score РЎвЂљР В°РЎРѓР С”Р С•Р Р†, РЎР‚Р В°РЎРѓРЎРѓР СР В°РЎвЂљРЎР‚Р С‘Р Р†Р В°Р ВµР СРЎвЂ№РЎвЂ¦ Р С” Р С‘РЎРѓР С—Р С•Р В»Р Р…Р ВµР Р…Р С‘РЎР‹ Р В·Р В° think-РЎвЂ Р С‘Р С”Р В».
+	/// Maximum number of tasks selected per planning cycle (top-k by score).
 	var/top_k = 3
 
 /// RU: Строит итоговый план: фильтрует task registry по тегам, считает score и выбирает top_k задач без conflict_mask пересечений. EN: Builds final plan: filters task registry by tags, computes score, and picks top_k tasks without conflict_mask overlap.

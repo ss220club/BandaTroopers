@@ -1,4 +1,4 @@
-/// Р В¤Р С‘РЎвЂЎР В°-РЎвЂћР В»Р В°Р С–Р С‘ Р Т‘Р В»РЎРЏ Р С—Р С•РЎРЊРЎвЂљР В°Р С—Р Р…Р С•Р С–Р С• rollout NPC AI v2.
+/// Feature flags for staged NPC AI v2 rollout.
 GLOBAL_VAR_INIT(npc_ai_v2_human_enabled, TRUE)
 GLOBAL_VAR_INIT(npc_ai_v2_xeno_enabled, TRUE)
 GLOBAL_VAR_INIT(npc_ai_v2_squad_enabled, FALSE)

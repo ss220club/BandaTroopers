@@ -1,9 +1,9 @@
 /datum/npc_ai_blackboard
-	/// Р РЋР Р…Р С‘Р СР С•Р С” РЎРѓР С•РЎРѓРЎвЂљР С•РЎРЏР Р…Р С‘РЎРЏ РЎвЂљР ВµР С”РЎС“РЎвЂ°Р ВµР С–Р С• Р В°Р С–Р ВµР Р…РЎвЂљР В° Р Р† РЎвЂћР С•РЎР‚Р СР В°РЎвЂљР Вµ Р С”Р В»РЎР‹РЎвЂЎ/Р В·Р Р…Р В°РЎвЂЎР ВµР Р…Р С‘Р Вµ.
+	/// Agent state map: key/value runtime context used by sensors/tasks/actions.
 	var/list/state = list()
-	/// Dirty-РЎвЂћР В»Р В°Р С–Р С‘ Р Т‘Р В»РЎРЏ Р С‘Р Р…Р Р†Р В°Р В»Р С‘Р Т‘Р С‘РЎР‚Р С•Р Р†Р В°Р Р…Р С‘РЎРЏ Р В·Р В°Р Р†Р С‘РЎРѓР С‘Р СР С•Р С–Р С• Р С”Р ВµРЎв‚¬Р В° РЎРѓР ВµР Р…РЎРѓР С•РЎР‚Р С•Р Р†/РЎвЂљР В°РЎРѓР С”Р С•Р Р†.
+	/// Dirty flags used for lazy cache invalidation between sensor/task stages.
 	var/list/dirty_flags = list()
-	/// Р С™Р ВµРЎв‚¬ РЎвЂљРЎРЏР В¶РЎвЂР В»РЎвЂ№РЎвЂ¦ Р Р†РЎвЂ№РЎвЂЎР С‘РЎРѓР В»Р ВµР Р…Р С‘Р в„–, Р С‘Р Р…Р Т‘Р ВµР С”РЎРѓР С‘РЎР‚РЎС“Р ВµР СРЎвЂ№Р в„– Р С—РЎР‚Р С•Р С‘Р В·Р Р†Р С•Р В»РЎРЉР Р…РЎвЂ№Р СР С‘ Р С”Р В»РЎР‹РЎвЂЎР В°Р СР С‘.
+	/// Query cache for expensive derived values keyed by deterministic query id.
 	var/list/cached_queries = list()
 
 /// RU: Записывает значение ключа в blackboard и возвращает сохраненное значение для цепочки вызовов. EN: Writes a blackboard key and returns stored value for call chaining.

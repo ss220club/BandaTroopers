@@ -4,12 +4,12 @@ SUBSYSTEM_DEF(npc_ai)
 	priority = SS_PRIORITY_NPC_AI
 	wait = 0.1 SECONDS
 	flags = SS_KEEP_TIMING
-	/// Р В Р ВµР ВµРЎРѓРЎвЂљРЎР‚ Р С”Р С•Р Р…РЎвЂљРЎР‚Р С•Р В»Р В»Р ВµРЎР‚Р С•Р Р† (human, xeno Р С‘ Р В±РЎС“Р Т‘РЎС“РЎвЂ°Р С‘Р Вµ plugin-Р С”Р С•Р Р…РЎвЂљРЎР‚Р С•Р В»Р В»Р ВµРЎР‚РЎвЂ№).
+	/// Registry of active controllers (human, xeno, and optional plugin controllers).
 	var/list/datum/npc_ai_controller/controllers = list()
-	/// Р С™Р ВµРЎв‚¬-Р С”Р С•Р С—Р С‘РЎРЏ Р Р…Р В°Р В±Р С•РЎР‚Р В° Р Р…Р В° Р С•Р В±РЎР‚Р В°Р В±Р С•РЎвЂљР С”РЎС“ Р Т‘Р В»РЎРЏ pause/resume РЎвЂЎР ВµРЎР‚Р ВµР В· MC.
+	/// Work queue snapshot used across pause/resume boundaries in MC.
 	var/list/datum/npc_ai_controller/current_run = list()
 
-	/// Р РЋРЎвЂЎРЎвЂРЎвЂљРЎвЂЎР С‘Р С”Р С‘ Р Р…Р В°Р В±Р В»РЎР‹Р Т‘Р В°Р ВµР СР С•РЎРѓРЎвЂљР С‘.
+	/// Observability counters.
 	var/processed_npc = 0
 	var/yielded_ticks = 0
 	var/path_requests = 0
@@ -21,7 +21,7 @@ SUBSYSTEM_DEF(npc_ai)
 	var/avg_think_cost_ms = 0
 	var/p95_think_cost_ms = 0
 
-	/// Р СџР В°РЎР‚Р В°Р СР ВµРЎвЂљРЎР‚РЎвЂ№ Р С‘ runtime-РЎРѓР С•РЎРѓРЎвЂљР С•РЎРЏР Р…Р С‘Р Вµ benchmark РЎР‚Р ВµР В¶Р С‘Р СР В°.
+	/// Benchmark parameters and runtime state.
 	var/benchmark_enabled = FALSE
 	var/benchmark_running = FALSE
 	var/benchmark_completed = FALSE
@@ -610,7 +610,7 @@ SUBSYSTEM_DEF(npc_ai)
 	)
 
 	var/payload_json = json_encode(benchmark_payload)
-	// Р С’Р В»РЎРЉРЎвЂљР ВµРЎР‚Р Р…Р В°РЎвЂљР С‘Р Р†Р Р…РЎвЂ№Р в„– Р С”Р В°Р Р…Р В°Р В» Р В»Р С•Р С–Р С‘РЎР‚Р С•Р Р†Р В°Р Р…Р С‘РЎРЏ Р Т‘Р В»РЎРЏ CI/runner: РЎвЂЎР С‘РЎвЂљР В°Р ВµР С Р С‘Р В· dd.log Р С—Р С• Р СР В°РЎР‚Р С”Р ВµРЎР‚РЎС“.
+	// Alternative CI/runner output channel: emit JSON to world log and parse from dd.log.
 	log_world("NPC_AI_V2_BENCHMARK_JSON [payload_json]")
 
 	var/output_path = benchmark_output_path

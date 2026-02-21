@@ -15,7 +15,7 @@
 	/// Round-robin cursor for fairness when quotas cut due queues.
 	var/list/tier_round_robin_cursor = list("0" = 1, "1" = 1, "2" = 1, "3" = 1)
 
-	/// Р РЋРЎвЂЎРЎвЂРЎвЂљРЎвЂЎР С‘Р С”Р С‘ pathfinding Р В·Р В° Р С•Р Т‘Р С‘Р Р… process; Р С—Р С•Р Т‘РЎРѓР С‘РЎРѓРЎвЂљР ВµР СР В° Р В°Р С–РЎР‚Р ВµР С–Р С‘РЎР‚РЎС“Р ВµРЎвЂљ Р С‘РЎвЂ¦ Р Р† Р С”Р В°Р В¶Р Т‘Р С•Р С fire.
+	/// Pathfinding counters per fire/process pass for observability snapshots.
 	var/path_requests_since_process = 0
 	var/path_hits_since_process = 0
 	var/path_failures_since_process = 0
@@ -464,4 +464,3 @@
 /// RU: Проверяет условие в контроллере xeno AI v2 (этап: is enabled) и возвращает булево значение для выбора следующего шага. EN: Checks condition in the xeno AI v2 controller (step: is enabled) and returns a boolean used to choose the next step.
 /datum/npc_ai_controller/xeno/is_enabled()
 	return GLOB.npc_ai_v2_xeno_enabled && !ai_kill
-

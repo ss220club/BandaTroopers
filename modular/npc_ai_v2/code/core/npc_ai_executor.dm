@@ -1,5 +1,5 @@
 /datum/npc_ai_executor
-	/// Р С’РЎРѓРЎРѓР С•РЎвЂ Р С‘Р В°РЎвЂљР С‘Р Р†Р Р…РЎвЂ№Р в„– РЎРѓР С—Р С‘РЎРѓР С•Р С”: agent -> РЎРѓР С—Р С‘РЎРѓР С•Р С” Р В°Р С”РЎвЂљР С‘Р Р†Р Р…РЎвЂ№РЎвЂ¦ task datum-Р С•Р Р†.
+	/// Active task map: agent -> list of currently running task datums.
 	var/list/active_tasks_by_agent = list()
 
 /// RU: Исполняет план для агента: стартует новые задачи, тикает активные и снимает complete/failed задачи из active map. EN: Executes plan for agent: starts new tasks, ticks active ones, and removes complete/failed tasks from active map.

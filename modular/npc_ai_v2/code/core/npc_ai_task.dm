@@ -1,8 +1,8 @@
 /datum/npc_ai_task
 	var/name = "npc_ai_task"
-	/// Р вЂР С‘РЎвЂљР СР В°РЎРѓР С”Р В° Р Т‘Р В»РЎРЏ Р В·Р В°Р С—РЎР‚Р ВµРЎвЂљР В° Р Р…Р ВµРЎРѓР С•Р Р†Р СР ВµРЎРѓРЎвЂљР С‘Р СРЎвЂ№РЎвЂ¦ РЎвЂљР В°РЎРѓР С”Р С•Р Р† Р Р† Р С•Р Т‘Р Р…Р С•Р С РЎвЂљР С‘Р С”Р Вµ.
+	/// Bitmask that blocks incompatible tasks from running in the same tick.
 	var/conflict_mask = NONE
-	/// Р СњР ВµР С•Р В±РЎРЏР В·Р В°РЎвЂљР ВµР В»РЎРЉР Р…РЎвЂ№Р Вµ РЎвЂљР ВµР С–Р С‘, Р Р…РЎС“Р В¶Р Р…РЎвЂ№Р Вµ Р Т‘Р В»РЎРЏ РЎР‚Р В°РЎРѓРЎРѓР СР С•РЎвЂљРЎР‚Р ВµР Р…Р С‘РЎРЏ РЎвЂљР В°РЎРѓР С”Р В° Р Р…Р В° РЎРЊРЎвЂљР В°Р С—Р Вµ Р С—Р В»Р В°Р Р…Р С‘РЎР‚Р С•Р Р†Р В°Р Р…Р С‘РЎРЏ.
+	/// Required state tags that must be present for planner selection.
 	var/list/required_tags = list()
 
 /// RU: Выполняет служебный этап в задачах AI v2 (этап: matches tags) для согласования состояния между подсистемами AI v2. EN: Executes an internal stage in AI v2 tasks (step: matches tags) to coordinate state between AI v2 subsystems.
