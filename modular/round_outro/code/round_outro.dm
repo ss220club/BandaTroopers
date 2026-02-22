@@ -1,28 +1,26 @@
 #define MODULAR_ROUND_OUTRO_BG_FADE_IN_TIME (2.5 SECONDS)
 #define MODULAR_ROUND_OUTRO_TEXT_FADE_IN_TIME (2.2 SECONDS)
-#define MODULAR_ROUND_OUTRO_SCROLL_START_DELAY (1.5 SECONDS)
-#define MODULAR_ROUND_OUTRO_MIN_SCROLL_TIME (16 SECONDS)
-#define MODULAR_ROUND_OUTRO_MAX_SCROLL_TIME (46 SECONDS)
-#define MODULAR_ROUND_OUTRO_SCROLL_TIME_PER_LINE (1.1 SECONDS)
+#define MODULAR_ROUND_OUTRO_PAGE_SHOW_MIN_TIME (8 SECONDS)
+#define MODULAR_ROUND_OUTRO_PAGE_SHOW_MAX_TIME (16 SECONDS)
+#define MODULAR_ROUND_OUTRO_PAGE_SHOW_TIME_PER_LINE (0.35 SECONDS)
 #define MODULAR_ROUND_OUTRO_FADE_TIME (2 SECONDS)
 #define MODULAR_ROUND_OUTRO_PAGE_OVERHEAD_TIME (1 SECONDS)
-#define MODULAR_ROUND_OUTRO_PAGE_PLAYER_LINES 22
+#define MODULAR_ROUND_OUTRO_PAGE_PLAYER_LINES 6
 #define MODULAR_ROUND_OUTRO_TEXT_WIDTH 620
 #define MODULAR_ROUND_OUTRO_BASE_HEIGHT 460
 #define MODULAR_ROUND_OUTRO_LINE_HEIGHT 16
-#define MODULAR_ROUND_OUTRO_PIXEL_PADDING 220
 
-/proc/modular_round_outro_get_scroll_time_for_lines(line_count)
+/proc/modular_round_outro_get_page_show_time_for_lines(line_count)
 	if(!isnum(line_count))
 		line_count = 1
 
 	line_count = max(1, line_count)
-	var/scroll_time = round(line_count * MODULAR_ROUND_OUTRO_SCROLL_TIME_PER_LINE)
-	scroll_time = max(MODULAR_ROUND_OUTRO_MIN_SCROLL_TIME, min(scroll_time, MODULAR_ROUND_OUTRO_MAX_SCROLL_TIME))
-	return scroll_time
+	var/page_show_time = round(line_count * MODULAR_ROUND_OUTRO_PAGE_SHOW_TIME_PER_LINE)
+	page_show_time = max(MODULAR_ROUND_OUTRO_PAGE_SHOW_MIN_TIME, min(page_show_time, MODULAR_ROUND_OUTRO_PAGE_SHOW_MAX_TIME))
+	return page_show_time
 
 /proc/modular_round_outro_get_total_page_time(line_count)
-	return MODULAR_ROUND_OUTRO_SCROLL_START_DELAY + modular_round_outro_get_scroll_time_for_lines(line_count) + MODULAR_ROUND_OUTRO_FADE_TIME + MODULAR_ROUND_OUTRO_PAGE_OVERHEAD_TIME
+	return modular_round_outro_get_page_show_time_for_lines(line_count) + MODULAR_ROUND_OUTRO_FADE_TIME + MODULAR_ROUND_OUTRO_PAGE_OVERHEAD_TIME
 
 /mob
 	var/tmp/modular_round_outro_hud_hidden = FALSE
@@ -127,11 +125,9 @@
 	fade_out_delay = 0
 	fade_out_time = MODULAR_ROUND_OUTRO_FADE_TIME
 	style_open = "<span style='font-size:11pt; text-align:left; color:#C9FFE9; font-family:Tahoma, Arial, sans-serif; -dm-text-outline: 1 #00120B;' valign='top'>"
-	var/scroll_target_pixel_y = 0
-	var/scroll_time = MODULAR_ROUND_OUTRO_MIN_SCROLL_TIME
+	var/page_show_time = MODULAR_ROUND_OUTRO_PAGE_SHOW_MIN_TIME
 	var/layout_base_height = MODULAR_ROUND_OUTRO_BASE_HEIGHT
 	var/layout_line_height = MODULAR_ROUND_OUTRO_LINE_HEIGHT
-	var/layout_pixel_padding = MODULAR_ROUND_OUTRO_PIXEL_PADDING
 
 /atom/movable/screen/text/screen_text/modular_round_outro/proc/modular_update_layout_for_client()
 	if(!player)
@@ -149,16 +145,13 @@
 	maptext_width = new_width
 	maptext_x = -round(maptext_width * 0.5)
 
-	layout_base_height = round(view_px_h * 0.70)
-	layout_base_height = max(320, min(layout_base_height, 760))
-
-	layout_pixel_padding = round(view_px_h * 0.28)
-	layout_pixel_padding = max(160, min(layout_pixel_padding, 360))
+	layout_base_height = round(view_px_h * 0.82)
+	layout_base_height = max(360, min(layout_base_height, 820))
 
 	var/font_size = round(view_px_w / 90)
 	font_size = max(9, min(font_size, 13))
 	layout_line_height = round(font_size * 2)
-	layout_line_height = max(16, min(layout_line_height, 28))
+	layout_line_height = max(16, min(layout_line_height, 24))
 	style_open = "<span style='font-size:[font_size]pt; text-align:left; color:#C9FFE9; font-family:Tahoma, Arial, sans-serif; -dm-text-outline: 1 #00120B;' valign='top'>"
 
 /atom/movable/screen/text/screen_text/modular_round_outro/play_to_client()
@@ -171,24 +164,15 @@
 
 	var/list/message_lines = splittext(text_to_play, "<br>")
 	var/line_count = max(1, length(message_lines))
-	scroll_time = modular_round_outro_get_scroll_time_for_lines(line_count)
-	maptext_height = max(layout_base_height, (line_count * layout_line_height) + 180)
+	page_show_time = modular_round_outro_get_page_show_time_for_lines(line_count)
+	maptext_height = layout_base_height
 	maptext_y = -round(maptext_height * 0.5)
-	pixel_y = -round((maptext_height * 0.5) + layout_pixel_padding)
-	scroll_target_pixel_y = round((maptext_height * 0.5) + layout_pixel_padding)
+	pixel_y = 0
 	alpha = 0
 	maptext = "[style_open][text_to_play][style_close]"
 
 	animate(src, alpha = 255, time = MODULAR_ROUND_OUTRO_TEXT_FADE_IN_TIME)
-	addtimer(CALLBACK(src, PROC_REF(begin_scroll)), MODULAR_ROUND_OUTRO_SCROLL_START_DELAY)
-
-/atom/movable/screen/text/screen_text/modular_round_outro/proc/begin_scroll()
-	if(!player || QDELETED(src))
-		qdel(src)
-		return
-
-	animate(src, pixel_y = scroll_target_pixel_y, time = scroll_time, easing = LINEAR_EASING)
-	addtimer(CALLBACK(src, PROC_REF(after_play)), scroll_time)
+	addtimer(CALLBACK(src, PROC_REF(after_play)), page_show_time)
 
 /datum/game_mode/colonialmarines
 	/// Guard to avoid double-sending outro in unusual round-end paths.
@@ -240,7 +224,7 @@
 			var/list/page_lines = splittext("[page_text]", "<br>")
 			var/page_line_count = max(1, length(page_lines))
 			var/atom/movable/screen/text/screen_text/modular_round_outro/page_text_box = new
-			page_text_box.scroll_time = modular_round_outro_get_scroll_time_for_lines(page_line_count)
+			page_text_box.page_show_time = modular_round_outro_get_page_show_time_for_lines(page_line_count)
 			player_mob.play_screen_text(page_text, page_text_box, "#FFFFFF", 9999)
 
 /datum/game_mode/colonialmarines/proc/modular_build_round_outro_text()
@@ -330,7 +314,18 @@
 		page_chunks += list(list())
 
 	for(var/page_index = 1 to total_pages)
-		var/list/page_lines = outro_lines.Copy()
+		var/list/page_lines
+		if(page_index == 1)
+			page_lines = outro_lines.Copy()
+		else
+			page_lines = list(
+				outro_lines[1],
+				outro_lines[2],
+				"",
+				outro_lines[12],
+				""
+			)
+
 		if(total_pages > 1)
 			var/page_marker = html_decode("&#1051;&#1048;&#1057;&#1058;")
 			page_lines += "---------- [page_marker] [page_index]/[total_pages] ----------"
@@ -475,14 +470,12 @@
 
 #undef MODULAR_ROUND_OUTRO_BG_FADE_IN_TIME
 #undef MODULAR_ROUND_OUTRO_TEXT_FADE_IN_TIME
-#undef MODULAR_ROUND_OUTRO_SCROLL_START_DELAY
-#undef MODULAR_ROUND_OUTRO_MIN_SCROLL_TIME
-#undef MODULAR_ROUND_OUTRO_MAX_SCROLL_TIME
-#undef MODULAR_ROUND_OUTRO_SCROLL_TIME_PER_LINE
+#undef MODULAR_ROUND_OUTRO_PAGE_SHOW_MIN_TIME
+#undef MODULAR_ROUND_OUTRO_PAGE_SHOW_MAX_TIME
+#undef MODULAR_ROUND_OUTRO_PAGE_SHOW_TIME_PER_LINE
 #undef MODULAR_ROUND_OUTRO_FADE_TIME
 #undef MODULAR_ROUND_OUTRO_PAGE_OVERHEAD_TIME
 #undef MODULAR_ROUND_OUTRO_PAGE_PLAYER_LINES
 #undef MODULAR_ROUND_OUTRO_TEXT_WIDTH
 #undef MODULAR_ROUND_OUTRO_BASE_HEIGHT
 #undef MODULAR_ROUND_OUTRO_LINE_HEIGHT
-#undef MODULAR_ROUND_OUTRO_PIXEL_PADDING
