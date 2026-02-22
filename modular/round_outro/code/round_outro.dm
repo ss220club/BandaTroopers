@@ -1,13 +1,112 @@
 #define MODULAR_ROUND_OUTRO_BG_FADE_IN_TIME (2.5 SECONDS)
 #define MODULAR_ROUND_OUTRO_TEXT_FADE_IN_TIME (2.2 SECONDS)
 #define MODULAR_ROUND_OUTRO_SCROLL_START_DELAY (1.5 SECONDS)
-#define MODULAR_ROUND_OUTRO_SCROLL_TIME (34 SECONDS)
+#define MODULAR_ROUND_OUTRO_MIN_SCROLL_TIME (16 SECONDS)
+#define MODULAR_ROUND_OUTRO_MAX_SCROLL_TIME (46 SECONDS)
+#define MODULAR_ROUND_OUTRO_SCROLL_TIME_PER_LINE (1.1 SECONDS)
 #define MODULAR_ROUND_OUTRO_FADE_TIME (2 SECONDS)
-#define MODULAR_ROUND_OUTRO_TOTAL_TIME (MODULAR_ROUND_OUTRO_SCROLL_START_DELAY + MODULAR_ROUND_OUTRO_SCROLL_TIME + MODULAR_ROUND_OUTRO_FADE_TIME + 1 SECONDS)
+#define MODULAR_ROUND_OUTRO_PAGE_OVERHEAD_TIME (1 SECONDS)
+#define MODULAR_ROUND_OUTRO_PAGE_PLAYER_LINES 22
 #define MODULAR_ROUND_OUTRO_TEXT_WIDTH 620
 #define MODULAR_ROUND_OUTRO_BASE_HEIGHT 460
 #define MODULAR_ROUND_OUTRO_LINE_HEIGHT 16
 #define MODULAR_ROUND_OUTRO_PIXEL_PADDING 220
+
+/proc/modular_round_outro_get_scroll_time_for_lines(line_count)
+	if(!isnum(line_count))
+		line_count = 1
+
+	line_count = max(1, line_count)
+	var/scroll_time = round(line_count * MODULAR_ROUND_OUTRO_SCROLL_TIME_PER_LINE)
+	scroll_time = max(MODULAR_ROUND_OUTRO_MIN_SCROLL_TIME, min(scroll_time, MODULAR_ROUND_OUTRO_MAX_SCROLL_TIME))
+	return scroll_time
+
+/proc/modular_round_outro_get_total_page_time(line_count)
+	return MODULAR_ROUND_OUTRO_SCROLL_START_DELAY + modular_round_outro_get_scroll_time_for_lines(line_count) + MODULAR_ROUND_OUTRO_FADE_TIME + MODULAR_ROUND_OUTRO_PAGE_OVERHEAD_TIME
+
+/mob
+	var/tmp/modular_round_outro_hud_hidden = FALSE
+	var/tmp/modular_round_outro_hud_restore_style = HUD_STYLE_STANDARD
+	var/tmp/modular_round_outro_hud_monitor_running = FALSE
+
+/mob/proc/modular_start_round_outro_hud_lock(lock_duration = 0)
+	if(!client)
+		return
+
+	if(lock_duration > 0)
+		addtimer(CALLBACK(src, PROC_REF(modular_finish_round_outro_hud_lock)), lock_duration)
+
+	if(!modular_round_outro_hud_hidden)
+		if(!hud_used)
+			create_hud()
+		if(hud_used)
+			modular_round_outro_hud_restore_style = hud_used.hud_version
+			if(!modular_round_outro_hud_restore_style)
+				modular_round_outro_hud_restore_style = HUD_STYLE_STANDARD
+			hud_used.show_hud(HUD_STYLE_NOHUD)
+		modular_round_outro_hud_hidden = TRUE
+
+	modular_enforce_round_outro_hud_lock()
+	if(!modular_round_outro_hud_monitor_running)
+		modular_round_outro_hud_monitor_running = TRUE
+		INVOKE_ASYNC(src, PROC_REF(modular_wait_for_round_outro_hud_unlock))
+
+/mob/proc/modular_is_round_outro_screen_allowed(thing)
+	if(istype(thing, /obj/render_plane_relay))
+		return TRUE
+
+	if(!istype(thing, /atom/movable/screen))
+		return FALSE
+
+	if(istype(thing, /atom/movable/screen/fullscreen))
+		return TRUE
+	if(istype(thing, /atom/movable/screen/text))
+		return TRUE
+	if(istype(thing, /atom/movable/screen/plane_master))
+		return TRUE
+	if(istype(thing, /atom/movable/screen/click_catcher))
+		return TRUE
+
+	return FALSE
+
+/mob/proc/modular_enforce_round_outro_hud_lock()
+	if(!client || !modular_round_outro_hud_hidden)
+		return
+
+	for(var/thing as anything in client.screen.Copy())
+		if(modular_is_round_outro_screen_allowed(thing))
+			continue
+		client.remove_from_screen(thing)
+
+	for(var/datum/action/A as anything in actions)
+		if(A?.button)
+			A.button.screen_loc = null
+
+	if(hud_used?.hide_actions_toggle)
+		hud_used.hide_actions_toggle.screen_loc = null
+
+/mob/proc/modular_wait_for_round_outro_hud_unlock()
+	while(modular_round_outro_hud_hidden)
+		if(QDELETED(src) || !client)
+			modular_round_outro_hud_monitor_running = FALSE
+			return
+
+		if(hud_used && hud_used.hud_version != HUD_STYLE_NOHUD)
+			hud_used.show_hud(HUD_STYLE_NOHUD)
+		modular_enforce_round_outro_hud_lock()
+		sleep(1)
+
+	modular_round_outro_hud_monitor_running = FALSE
+
+/mob/proc/modular_finish_round_outro_hud_lock()
+	if(!modular_round_outro_hud_hidden)
+		return
+
+	modular_round_outro_hud_hidden = FALSE
+	if(!client || !hud_used)
+		return
+
+	hud_used.show_hud(modular_round_outro_hud_restore_style)
 
 /atom/movable/screen/fullscreen/black/modular_round_outro
 	show_when_dead = TRUE
@@ -29,6 +128,7 @@
 	fade_out_time = MODULAR_ROUND_OUTRO_FADE_TIME
 	style_open = "<span style='font-size:11pt; text-align:left; color:#C9FFE9; font-family:Tahoma, Arial, sans-serif; -dm-text-outline: 1 #00120B;' valign='top'>"
 	var/scroll_target_pixel_y = 0
+	var/scroll_time = MODULAR_ROUND_OUTRO_MIN_SCROLL_TIME
 	var/layout_base_height = MODULAR_ROUND_OUTRO_BASE_HEIGHT
 	var/layout_line_height = MODULAR_ROUND_OUTRO_LINE_HEIGHT
 	var/layout_pixel_padding = MODULAR_ROUND_OUTRO_PIXEL_PADDING
@@ -71,6 +171,7 @@
 
 	var/list/message_lines = splittext(text_to_play, "<br>")
 	var/line_count = max(1, length(message_lines))
+	scroll_time = modular_round_outro_get_scroll_time_for_lines(line_count)
 	maptext_height = max(layout_base_height, (line_count * layout_line_height) + 180)
 	maptext_y = -round(maptext_height * 0.5)
 	pixel_y = -round((maptext_height * 0.5) + layout_pixel_padding)
@@ -86,8 +187,8 @@
 		qdel(src)
 		return
 
-	animate(src, pixel_y = scroll_target_pixel_y, time = MODULAR_ROUND_OUTRO_SCROLL_TIME, easing = LINEAR_EASING)
-	addtimer(CALLBACK(src, PROC_REF(after_play)), MODULAR_ROUND_OUTRO_SCROLL_TIME)
+	animate(src, pixel_y = scroll_target_pixel_y, time = scroll_time, easing = LINEAR_EASING)
+	addtimer(CALLBACK(src, PROC_REF(after_play)), scroll_time)
 
 /datum/game_mode/colonialmarines
 	/// Guard to avoid double-sending outro in unusual round-end paths.
@@ -108,14 +209,21 @@
 
 	modular_prompt_round_outro_result_override()
 
-	var/outro_text = modular_build_round_outro_text()
-	if(!outro_text)
+	var/list/outro_pages = modular_build_round_outro_pages()
+	if(!length(outro_pages))
 		return
+
+	var/total_outro_time = MODULAR_ROUND_OUTRO_BG_FADE_IN_TIME
+	for(var/page_text as anything in outro_pages)
+		var/list/page_lines = splittext("[page_text]", "<br>")
+		total_outro_time += modular_round_outro_get_total_page_time(length(page_lines))
 
 	for(var/client/player_client as anything in sortTim(GLOB.clients, GLOBAL_PROC_REF(cmp_ckey_asc)))
 		var/mob/player_mob = player_client.mob
 		if(!player_mob)
 			continue
+
+		player_mob.modular_start_round_outro_hud_lock(total_outro_time)
 
 		var/atom/movable/screen/fullscreen/black/modular_round_outro/black_overlay = player_mob.overlay_fullscreen("modular_round_outro", /atom/movable/screen/fullscreen/black/modular_round_outro)
 		if(black_overlay)
@@ -125,11 +233,23 @@
 		if(crt_overlay)
 			animate(crt_overlay, alpha = 85, time = MODULAR_ROUND_OUTRO_BG_FADE_IN_TIME)
 
-		addtimer(CALLBACK(player_mob, TYPE_PROC_REF(/mob, clear_fullscreen), "modular_round_outro", 10), MODULAR_ROUND_OUTRO_TOTAL_TIME)
-		addtimer(CALLBACK(player_mob, TYPE_PROC_REF(/mob, clear_fullscreen), "modular_round_outro_crt", 10), MODULAR_ROUND_OUTRO_TOTAL_TIME)
-		player_mob.play_screen_text(outro_text, /atom/movable/screen/text/screen_text/modular_round_outro, "#FFFFFF", 9999)
+		addtimer(CALLBACK(player_mob, TYPE_PROC_REF(/mob, clear_fullscreen), "modular_round_outro", 10), total_outro_time)
+		addtimer(CALLBACK(player_mob, TYPE_PROC_REF(/mob, clear_fullscreen), "modular_round_outro_crt", 10), total_outro_time)
+
+		for(var/page_text as anything in outro_pages)
+			var/list/page_lines = splittext("[page_text]", "<br>")
+			var/page_line_count = max(1, length(page_lines))
+			var/atom/movable/screen/text/screen_text/modular_round_outro/page_text_box = new
+			page_text_box.scroll_time = modular_round_outro_get_scroll_time_for_lines(page_line_count)
+			player_mob.play_screen_text(page_text, page_text_box, "#FFFFFF", 9999)
 
 /datum/game_mode/colonialmarines/proc/modular_build_round_outro_text()
+	var/list/outro_pages = modular_build_round_outro_pages()
+	if(!length(outro_pages))
+		return null
+	return outro_pages[1]
+
+/datum/game_mode/colonialmarines/proc/modular_build_round_outro_pages()
 	var/list/player_lines = list()
 	var/list/seen_ckeys = list()
 
@@ -165,7 +285,7 @@
 		player_lines += "&nbsp;&nbsp;&nbsp;[reason_label]: [death_cause]"
 
 	if(!length(player_lines))
-		return null
+		return list()
 
 	var/tactical_success = modular_round_outro_is_victory()
 	var/safe_round_result = modular_round_outro_localize_result()
@@ -195,8 +315,34 @@
 		""
 	)
 
-	outro_lines += player_lines
-	return jointext(outro_lines, "<br>")
+	var/list/page_chunks = list()
+	var/player_lines_len = length(player_lines)
+	var/chunk_start = 1
+	while(chunk_start <= player_lines_len)
+		var/chunk_end = min(chunk_start + MODULAR_ROUND_OUTRO_PAGE_PLAYER_LINES - 1, player_lines_len)
+		page_chunks += list(player_lines.Copy(chunk_start, chunk_end + 1))
+		chunk_start = chunk_end + 1
+
+	var/list/outro_pages = list()
+	var/total_pages = length(page_chunks)
+	if(!total_pages)
+		total_pages = 1
+		page_chunks += list(list())
+
+	for(var/page_index = 1 to total_pages)
+		var/list/page_lines = outro_lines.Copy()
+		if(total_pages > 1)
+			var/page_marker = html_decode("&#1051;&#1048;&#1057;&#1058;")
+			page_lines += "---------- [page_marker] [page_index]/[total_pages] ----------"
+			page_lines += ""
+
+		var/list/page_chunk = page_chunks[page_index]
+		if(length(page_chunk))
+			page_lines += page_chunk
+
+		outro_pages += jointext(page_lines, "<br>")
+
+	return outro_pages
 
 /datum/game_mode/colonialmarines/proc/modular_round_outro_is_victory()
 	if(!isnull(modular_round_outro_forced_marine_win))
@@ -330,9 +476,12 @@
 #undef MODULAR_ROUND_OUTRO_BG_FADE_IN_TIME
 #undef MODULAR_ROUND_OUTRO_TEXT_FADE_IN_TIME
 #undef MODULAR_ROUND_OUTRO_SCROLL_START_DELAY
-#undef MODULAR_ROUND_OUTRO_SCROLL_TIME
+#undef MODULAR_ROUND_OUTRO_MIN_SCROLL_TIME
+#undef MODULAR_ROUND_OUTRO_MAX_SCROLL_TIME
+#undef MODULAR_ROUND_OUTRO_SCROLL_TIME_PER_LINE
 #undef MODULAR_ROUND_OUTRO_FADE_TIME
-#undef MODULAR_ROUND_OUTRO_TOTAL_TIME
+#undef MODULAR_ROUND_OUTRO_PAGE_OVERHEAD_TIME
+#undef MODULAR_ROUND_OUTRO_PAGE_PLAYER_LINES
 #undef MODULAR_ROUND_OUTRO_TEXT_WIDTH
 #undef MODULAR_ROUND_OUTRO_BASE_HEIGHT
 #undef MODULAR_ROUND_OUTRO_LINE_HEIGHT
