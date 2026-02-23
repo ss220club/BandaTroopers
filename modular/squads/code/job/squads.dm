@@ -22,10 +22,12 @@
 // В проке идет проверка, но нет пехоты для корректного удаления из отряда.
 /datum/squad/forget_marine_in_squad(mob/living/carbon/human/M)
 	. = ..()
-	if(GET_DEFAULT_ROLE(M.job) == JOB_SQUAD_MARINE)
-		num_riflemen--
-
-/datum/squad/proc/try_usable_squad()
+	var/default_role = GET_DEFAULT_ROLE(M?.job)
+	switch(default_role)
+		if(JOB_SQUAD_MARINE)
+			num_riflemen = max(0, num_riflemen - 1)
+		if(JOB_SQUAD_RTO)
+			num_rto = max(0, num_rto - 1)
 
 /datum/squad/marine/alpha
 	equipment_color = "#db1d1d"

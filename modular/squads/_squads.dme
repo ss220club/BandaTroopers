@@ -3,6 +3,8 @@
 #include "code/encryptionkey.dm"
 #include "code/closets/marine_personal.dm"
 #include "code/closets/squad_closets.dm"
+#include "code/overrides/latejoin_cryo_fix.dm"
+#include "code/overrides/personal_locker_fix.dm"
 #include "code/job/squads.dm"
 #include "code/job/squads_name.dm"
 #include "code/job/squads_setup.dm"
