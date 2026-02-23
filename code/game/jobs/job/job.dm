@@ -297,6 +297,13 @@
 			join_turf = get_turf(pick(GLOB.latejoin))
 		human.forceMove(join_turf)
 
+		/* SS220 REMOVE (e64bb63898, 2f8015c1f1, dac4758021)
+		for(var/cardinal in GLOB.cardinals)
+			var/obj/structure/machinery/cryopod/pod = locate() in get_step(human, cardinal)
+			if(pod)
+				pod.go_in_cryopod(human, TRUE)
+				break
+		*/
 		human.try_enter_nearby_free_cryopod() // SS220 EDIT
 
 		human.sec_hud_set_ID()

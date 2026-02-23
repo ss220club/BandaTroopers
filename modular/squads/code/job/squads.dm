@@ -20,15 +20,13 @@
 	var/platoon_associated_type
 
 // В проке идет проверка, но нет пехоты для корректного удаления из отряда.
-/datum/squad/forget_marine_in_squad(mob/living/carbon/human/M)
-	. = ..()
+/datum/squad/marine/apply_modular_forget_role_counters(mob/living/carbon/human/M)
 	var/default_role = GET_DEFAULT_ROLE(M?.job)
 	switch(default_role)
 		if(JOB_SQUAD_MARINE)
 			num_riflemen = max(0, num_riflemen - 1)
 		if(JOB_SQUAD_RTO)
 			num_rto = max(0, num_rto - 1)
-
 
 // Основные отряды. Основная численность - 9 человек. У поздних отрядов - больше.
 /datum/squad/marine/alpha

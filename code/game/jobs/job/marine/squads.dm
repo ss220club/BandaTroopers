@@ -851,6 +851,11 @@
 		if(JOB_SQUAD_LEADER)
 			num_leaders--
 
+	apply_modular_forget_role_counters(M) // SS220 EDIT
+
+/datum/squad/proc/apply_modular_forget_role_counters(mob/living/carbon/human/M)
+	return
+
 //proc for demoting current Squad Leader
 /datum/squad/proc/demote_squad_leader(leader_killed)
 	var/mob/living/carbon/human/old_lead = squad_leader

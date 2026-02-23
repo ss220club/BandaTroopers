@@ -506,6 +506,13 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 			join_turf = get_turf(pick(GLOB.latejoin))
 		new_human.forceMove(join_turf)
 
+	/* SS220 REMOVE (e64bb63898, 2f8015c1f1, dac4758021)
+	for(var/cardinal in GLOB.cardinals)
+		var/obj/structure/machinery/cryopod/pod = locate() in get_step(new_human, cardinal)
+		if(pod)
+			pod.go_in_cryopod(new_human, silent = TRUE)
+			break
+	*/
 	new_human.try_enter_nearby_free_cryopod() // SS220 EDIT
 
 	new_human.sec_hud_set_ID()
