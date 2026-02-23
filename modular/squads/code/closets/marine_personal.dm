@@ -17,6 +17,45 @@
 			return TRUE
 	return FALSE
 
+/obj/structure/closet/secure_closet/marine_personal/proc/matches_player_for_personal_locker(mob/living/carbon/human/human)
+	if(!human)
+		return FALSE
+
+	var/turf/human_turf = get_turf(human)
+	if(linked_spawn_turf)
+		if(human_turf != linked_spawn_turf)
+			return FALSE
+	else if(human.job != job)
+		return FALSE
+
+	return is_correct_squad(human)
+
+/obj/structure/closet/secure_closet/marine_personal/proc/is_abandoned_for_personal_locker(list/alive_human_names)
+	if(!owner || !islist(alive_human_names))
+		return FALSE
+
+	return !alive_human_names[owner]
+
+/obj/structure/closet/secure_closet/marine_personal/proc/reinitialize_for_personal_locker_reuse()
+	// Закрываем шкаф вручную, чтобы не затронуть предметы на полу через close().
+	if(opened)
+		opened = FALSE
+		density = TRUE
+
+	welded = FALSE
+
+	// Очищаем только внутреннее содержимое шкафа.
+	for(var/atom/movable/movable as anything in contents)
+		if(ismob(movable))
+			movable.forceMove(get_turf(src))
+			continue
+		qdel(movable)
+
+	broken = FALSE
+	locked = TRUE
+	update_icon()
+	spawn_gear()
+
 
 // Пехотинец
 /obj/structure/closet/secure_closet/marine_personal/rifleman
