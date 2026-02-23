@@ -28,7 +28,7 @@
 		if(JOB_SQUAD_RTO)
 			num_rto = max(0, num_rto - 1)
 
-// Основные отряды. Основная численность - 9 человек. У поздних отрядов - больше.
+// Основные отряды. Фактическая численность определяется суммой ролевых лимитов max_*.
 /datum/squad/marine/alpha
 	equipment_color = "#db1d1d"
 	chat_color = "#db1d1d"

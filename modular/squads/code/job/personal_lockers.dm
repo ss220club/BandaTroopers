@@ -88,7 +88,7 @@
 	if(real_client?.player_data?.id)
 		for(var/datum/view_record/medal_view/medal as anything in DB_VIEW(/datum/view_record/medal_view, DB_COMP("player_id", DB_EQUALS, real_client.player_data.id)))
 			if(!medal)
-				return
+				continue
 			if(medal.recipient_name != new_human.real_name)
 				continue
 			if(medal.recipient_role != new_human.job)
@@ -105,7 +105,7 @@
 				if(MARINE_HEROISM_MEDAL)
 					given_medal = new /obj/item/clothing/accessory/medal/gold/heroism(locker)
 				else
-					return FALSE
+					continue
 
 			given_medal.recipient_name = medal.recipient_name
 			given_medal.recipient_rank = medal.recipient_role
