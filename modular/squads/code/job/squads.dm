@@ -29,10 +29,12 @@
 		if(JOB_SQUAD_RTO)
 			num_rto = max(0, num_rto - 1)
 
+
+// Основные отряды. Основная численность - 9 человек. У поздних отрядов - больше.
 /datum/squad/marine/alpha
 	equipment_color = "#db1d1d"
 	chat_color = "#db1d1d"
-	max_riflemen = 6
+	max_riflemen = 2
 	max_engineers = 0
 	max_medics = 2
 	max_specialists = 1
@@ -53,14 +55,14 @@
 	active = TRUE
 	squad_type = "Section"
 	usable = FALSE // Включается при ready_players_usable готовых игроков
-	ready_players_usable = 10
+	ready_players_usable = 8
 	platoon_associated_type = /datum/squad/marine/alpha
-	max_riflemen = 4
+	max_riflemen = 2
 	max_engineers = 4
 	max_medics = 0
 	max_specialists = 0
 	max_tl = 2
-	max_smartgun = 2
+	max_smartgun = 1
 	max_leaders = 1
 	max_rto = 1
 	
@@ -75,14 +77,14 @@
 	active = TRUE
 	squad_type = "Section"
 	usable = FALSE // Включается при ready_players_usable готовых игроков
-	ready_players_usable = 28 // Поменяли с дельта, т.к. дельта приоритет выше, т.к. пехотный отряд.
+	ready_players_usable = 24 // Поменяли с дельта, т.к. дельта приоритет выше, т.к. пехотный отряд.
 	platoon_associated_type = /datum/squad/marine/alpha
-	max_riflemen = 4
+	max_riflemen = 2
 	max_engineers = 0
 	max_medics = 4
 	max_specialists = 0
 	max_tl = 2
-	max_smartgun = 2
+	max_smartgun = 1
 	max_leaders = 1
 	max_rto = 1
 
@@ -97,9 +99,9 @@
 	active = TRUE
 	squad_type = "Section"
 	usable = FALSE // Включается при ready_players_usable готовых игроков
-	ready_players_usable = 20
+	ready_players_usable = 16
 	platoon_associated_type = /datum/squad/marine/alpha
-	max_riflemen = 8
+	max_riflemen = 4
 	max_engineers = 0
 	max_medics = 2
 	max_specialists = 1
