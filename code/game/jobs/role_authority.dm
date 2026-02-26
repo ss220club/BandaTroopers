@@ -539,9 +539,10 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 
 	var/datum/squad/lowest = pick(mixed_squads)
 
-	var/datum/pref_squad_name
+	var/pref_squad_name // SS220 EDIT
 	if(H && H.client && H.client.prefs.preferred_squad && H.client.prefs.preferred_squad != "None")
 		pref_squad_name = H.client.prefs.preferred_squad
+		pref_squad_name = squad_name_get_runtime(pref_squad_name) // SS220 EDIT
 
 	for(var/datum/squad/L in mixed_squads)
 		if(L.usable)
@@ -617,6 +618,7 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 		var/pref_squad_name
 		if(H && H.client && H.client.prefs.preferred_squad && H.client.prefs.preferred_squad != "None")
 			pref_squad_name = H.client.prefs.preferred_squad
+			pref_squad_name = squad_name_get_runtime(pref_squad_name) // SS220 EDIT
 
 		var/datum/squad/lowest
 

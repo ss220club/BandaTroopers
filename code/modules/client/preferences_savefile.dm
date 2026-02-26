@@ -679,6 +679,10 @@
 
 	S["ds_camo"] >> dropship_camo
 	S["plat_name"] >> platoon_name
+	S["squad_name_alpha_pref"] >> squad_name_alpha_pref // SS220 EDIT
+	S["squad_name_bravo_pref"] >> squad_name_bravo_pref // SS220 EDIT
+	S["squad_name_charlie_pref"] >> squad_name_charlie_pref // SS220 EDIT
+	S["squad_name_delta_pref"] >> squad_name_delta_pref // SS220 EDIT
 	S["ds_name"] >> dropship_name
 
 	S["personal_weapon"] >> personal_weapon
@@ -734,6 +738,18 @@
 	//b_type = sanitize_text(b_type, initial(b_type))
 
 	platoon_name = platoon_name ? sanitize_text(platoon_name, initial(platoon_name)) : "Sun Riders"
+	squad_name_alpha_pref = squad_name_alpha_pref ? sanitize_text(squad_name_alpha_pref, initial(squad_name_alpha_pref)) : "Assault A-Sct" // SS220 EDIT
+	squad_name_bravo_pref = squad_name_bravo_pref ? sanitize_text(squad_name_bravo_pref, initial(squad_name_bravo_pref)) : "Auxiliary Eng. B-Sct" // SS220 EDIT
+	squad_name_charlie_pref = squad_name_charlie_pref ? sanitize_text(squad_name_charlie_pref, initial(squad_name_charlie_pref)) : "Auxiliary Med. C-Sct" // SS220 EDIT
+	squad_name_delta_pref = squad_name_delta_pref ? sanitize_text(squad_name_delta_pref, initial(squad_name_delta_pref)) : "Assault D-Sct" // SS220 EDIT
+	if(length_char(squad_name_alpha_pref) > 32) // SS220 EDIT
+		squad_name_alpha_pref = "Assault A-Sct"
+	if(length_char(squad_name_bravo_pref) > 32) // SS220 EDIT
+		squad_name_bravo_pref = "Auxiliary Eng. B-Sct"
+	if(length_char(squad_name_charlie_pref) > 32) // SS220 EDIT
+		squad_name_charlie_pref = "Auxiliary Med. C-Sct"
+	if(length_char(squad_name_delta_pref) > 32) // SS220 EDIT
+		squad_name_delta_pref = "Assault D-Sct"
 	dropship_camo = sanitize_inlist(dropship_camo, GLOB.dropship_camos, initial(dropship_camo))
 	dropship_name = dropship_name ? sanitize_text(dropship_name, initial(dropship_name)) : "Midway"
 
@@ -859,6 +875,10 @@
 
 	S["ds_camo"] << dropship_camo
 	S["plat_name"] << platoon_name
+	S["squad_name_alpha_pref"] << squad_name_alpha_pref // SS220 EDIT
+	S["squad_name_bravo_pref"] << squad_name_bravo_pref // SS220 EDIT
+	S["squad_name_charlie_pref"] << squad_name_charlie_pref // SS220 EDIT
+	S["squad_name_delta_pref"] << squad_name_delta_pref // SS220 EDIT
 	S["ds_name"] << dropship_name
 
 	S["personal_weapon"] << personal_weapon

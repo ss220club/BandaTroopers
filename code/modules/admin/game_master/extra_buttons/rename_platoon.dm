@@ -4,7 +4,7 @@ GLOBAL_VAR_INIT(main_platoon_initial_name, GLOB.main_platoon_name)
 
 /// Ability to rename the platoon
 /client/proc/game_master_rename_platoon()
-	set name = "Rename Platoon Override"
+	set name = "Rename Squad Override" // SS220 EDIT
 	set category = "Game Master.Extras"
 
 	if(!admin_holder || !check_rights(R_MOD, FALSE))
@@ -16,54 +16,61 @@ GLOBAL_VAR_INIT(main_platoon_initial_name, GLOB.main_platoon_name)
 	set name = "Rename Platoon"
 	set category = "OOC.Commander"
 
-	if(GLOB.main_platoon_name != GLOB.main_platoon_initial_name)
-		to_chat(src, SPAN_NOTICE("The platoon has already been renamed this round."))
-		return
-
-	rename_platoon()
+	to_chat(src, SPAN_NOTICE("Squad rename by Staff Officers is disabled. The first Squad Leader applies each squad name from preferences.")) // SS220 EDIT
 
 /// Actually renames the platoon
 /client/proc/rename_platoon()
-	var/new_name = tgui_input_text(mob, "New platoon name?", "Platoon Name", GLOB.main_platoon_name)
+	if(!GLOB.squad_name_manager) // SS220 EDIT
+		to_chat(src, SPAN_WARNING("Squad rename manager is unavailable."))
+		return
+
+	var/alpha_option = "Alpha ([squad_name_get_runtime(SQUAD_MARINE_1)])"
+	var/bravo_option = "Bravo ([squad_name_get_runtime(SQUAD_MARINE_2)])"
+	var/charlie_option = "Charlie ([squad_name_get_runtime(SQUAD_MARINE_3)])"
+	var/delta_option = "Delta ([squad_name_get_runtime(SQUAD_MARINE_4)])"
+	var/chosen_option = tgui_input_list(mob, "Choose squad to rename", "Squad Rename", list(alpha_option, bravo_option, charlie_option, delta_option))
+	if(!chosen_option)
+		return
+
+	var/static_name
+	switch(chosen_option)
+		if(alpha_option)
+			static_name = SQUAD_MARINE_1
+		if(bravo_option)
+			static_name = SQUAD_MARINE_2
+		if(charlie_option)
+			static_name = SQUAD_MARINE_3
+		if(delta_option)
+			static_name = SQUAD_MARINE_4
+	if(!static_name)
+		return
+
+	var/datum/squad/target_squad = GLOB.squad_name_manager.get_squad_by_static(static_name)
+	if(!target_squad)
+		to_chat(src, SPAN_WARNING("Failed to find selected squad datum."))
+		return
+
+	var/new_name = tgui_input_text(mob, "New squad name?", "Squad Name", target_squad.name)
 	if(!new_name || !istext(new_name))
 		return
 
-	if(length(new_name) > 16)
-		to_chat(src, SPAN_NOTICE("The platoon name should be 16 characters or less."))
+	var/rename_result = GLOB.squad_name_manager.rename_squad(target_squad, new_name, mob, "admin_override", TRUE)
+	if(rename_result != TRUE)
+		to_chat(src, SPAN_WARNING("[rename_result]"))
 		return
 
-	do_rename_platoon(new_name, mob)
+	to_chat(src, SPAN_NOTICE("Renamed [static_name] to [target_squad.name]."))
 
 /proc/do_rename_platoon(name, mob/renamer)
-	var/old_name = GLOB.main_platoon_name
+	// SS220 EDIT - legacy wrapper for alpha only
+	if(!GLOB.squad_name_manager)
+		return
 
-	var/channel = GLOB.radiochannels[old_name]
-	GLOB.radiochannels -= old_name
+	var/datum/squad/alpha_squad = GLOB.squad_name_manager.get_squad_by_static(SQUAD_MARINE_1)
+	if(!alpha_squad)
+		return
 
-	GLOB.radiochannels[name] = channel
-
-	var/list/keys_to_readd = list()
-
-	for(var/key in GLOB.department_radio_keys)
-		if(GLOB.department_radio_keys[key] == old_name)
-			keys_to_readd += key
-			GLOB.department_radio_keys -= key
-
-	for(var/key in keys_to_readd)
-		GLOB.department_radio_keys[key] = name
-
-	GLOB.ROLES_SQUAD_ALL -= old_name
-	GLOB.ROLES_SQUAD_ALL += name
-
-	var/list/copy_frozen_platoon_items = GLOB.frozen_items[old_name]
-	GLOB.frozen_items -= old_name
-	GLOB.frozen_items[name] = copy_frozen_platoon_items
-
-	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_PLATOON_NAME_CHANGE, name, old_name)
-
-	log_admin("[key_name(renamer)] has renamed the platoon from [GLOB.main_platoon_name] to [name].")
-
-	GLOB.main_platoon_name = name
+	GLOB.squad_name_manager.rename_squad(alpha_squad, name, renamer, "legacy_do_rename_platoon", TRUE)
 
 
 /proc/change_dropship_camo(camo, mob/renamer)

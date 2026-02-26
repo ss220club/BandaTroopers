@@ -997,9 +997,21 @@
 	. = ..()
 
 	RegisterSignal(SSdcs, COMSIG_GLOB_PLATOON_NAME_CHANGE, PROC_REF(rename_platoon))
+	RegisterSignal(SSdcs, COMSIG_GLOB_SQUAD_NAME_CHANGE, PROC_REF(rename_squad_name)) // SS220 EDIT
 
 /obj/structure/supply_drop/proc/rename_platoon(datum/source, new_name, old_name) // SS220 EDIT - Squad Rename
 	SIGNAL_HANDLER
+
+	if(squad != old_name) // SS220 EDIT
+		return
+
+	squad = new_name
+
+/obj/structure/supply_drop/proc/rename_squad_name(datum/source, datum/squad/target_squad, new_name, old_name) // SS220 EDIT - Squad Rename
+	SIGNAL_HANDLER
+
+	if(squad != old_name)
+		return
 
 	squad = new_name
 

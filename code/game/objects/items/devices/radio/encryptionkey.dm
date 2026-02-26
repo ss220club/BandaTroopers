@@ -15,9 +15,12 @@
 	. = ..()
 
 	RegisterSignal(SSdcs, COMSIG_GLOB_PLATOON_NAME_CHANGE, PROC_REF(rename_platoon))
+	RegisterSignal(SSdcs, COMSIG_GLOB_SQUAD_NAME_CHANGE, PROC_REF(rename_squad_name)) // SS220 EDIT
 
-	if(!isnull(channels[SQUAD_MARINE_1]) && SQUAD_MARINE_1 != GLOB.main_platoon_name)
-		rename_platoon(null, GLOB.main_platoon_name, SQUAD_MARINE_1)
+	for(var/static_squad_name in list(SQUAD_MARINE_1, SQUAD_MARINE_2, SQUAD_MARINE_3, SQUAD_MARINE_4)) // SS220 EDIT
+		var/runtime_squad_name = squad_name_get_runtime(static_squad_name)
+		if(!isnull(channels[static_squad_name]) && static_squad_name != runtime_squad_name)
+			rename_platoon(null, runtime_squad_name, static_squad_name)
 
 /obj/item/device/encryptionkey/proc/rename_platoon(datum/source, new_name, old_name)
 	SIGNAL_HANDLER
@@ -45,6 +48,11 @@
 	SSradio.remove_object(current_headset, passed_freq)
 
 	current_headset.recalculateChannels()
+
+/obj/item/device/encryptionkey/proc/rename_squad_name(datum/source, datum/squad/target_squad, new_name, old_name) // SS220 EDIT
+	SIGNAL_HANDLER
+
+	rename_platoon(source, new_name, old_name)
 
 /obj/item/device/encryptionkey/binary
 	icon_state = "binary_key"

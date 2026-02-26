@@ -668,7 +668,6 @@
 	if(!new_human.client)
 		return
 
-	add_verb(new_human.client, /client/proc/commander_rename_platoon)
 	give_action(new_human, /datum/action/innate/message_squad)
 
 /datum/equipment_preset/uscm_ship/so/lesser_rank
@@ -679,9 +678,7 @@
 	if(late_join)
 		return
 
-	add_verb(new_human.client, /client/proc/commander_rename_platoon)
-
-	do_rename_platoon(new_human.client.prefs.platoon_name)
+	// SS220 EDIT - squad names are now set by first Squad Leader preferences via modular manager
 	change_dropship_camo(new_human.client.prefs.dropship_camo)
 	change_dropship_name(new_human.client.prefs.dropship_name)
 
@@ -727,8 +724,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/device/binoculars/range/designator/upp(new_human), WEAR_L_HAND)
 
 /datum/equipment_preset/uscm_ship/so/upp/handle_late_join(mob/living/carbon/human/new_human, late_join)
-	if(!late_join)
-		add_verb(new_human.client, /client/proc/commander_rename_platoon)
+	return // SS220 EDIT - squad rename verb removed from Staff Officer flow
 
 /datum/equipment_preset/uscm_ship/so/pmc
 	name = "PMC Overwatch (PltCo)"

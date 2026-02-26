@@ -7,7 +7,10 @@
 		return TRUE
 	if(!H.assigned_squad)
 		return FALSE
-	if(H.assigned_squad.name == squad_type)
+	var/expected_squad_name = squad_name_get_runtime(squad_type) // SS220 EDIT
+	if(H.assigned_squad.name == expected_squad_name)
+		return TRUE
+	if(H.assigned_squad.name == squad_type) // SS220 EDIT - fallback
 		return TRUE
 
 	// Отдельная проверка для первого сквада

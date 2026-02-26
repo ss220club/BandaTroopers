@@ -11,3 +11,7 @@
 
 /datum/modpack/squads/post_initialize()
 	. = ..()
+	
+	if(!GLOB.squad_name_manager)
+		GLOB.squad_name_manager = new /datum/squad_name_manager()
+	GLOB.squad_name_manager.initialize_manager()

@@ -258,6 +258,14 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 
 	/// Name for platoon used when spawning as LT
 	var/platoon_name = "Sun Riders"
+	/// Preferred squad name for Alpha when spawning as Squad Leader // SS220 EDIT
+	var/squad_name_alpha_pref = "Assault A-Sct"
+	/// Preferred squad name for Bravo when spawning as Squad Leader // SS220 EDIT
+	var/squad_name_bravo_pref = "Auxiliary Eng. B-Sct"
+	/// Preferred squad name for Charlie when spawning as Squad Leader // SS220 EDIT
+	var/squad_name_charlie_pref = "Auxiliary Med. C-Sct"
+	/// Preferred squad name for Delta when spawning as Squad Leader // SS220 EDIT
+	var/squad_name_delta_pref = "Assault D-Sct"
 	/// Dropship camo used when spawning as LT
 	var/dropship_camo = DROPSHIP_CAMO_JUNGLE
 	/// Dropship name used when spawning as LT
@@ -474,7 +482,10 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 		if(MENU_PLTCO)
 			dat += "<div id='column1'>"
 			dat += "<h2><b><u>Platoon Settings:</u></b></h2>"
-			dat += "<b>Platoon Name:</b> <a href='byond://?_src_=prefs;preference=plat_name;task=input'><b>[platoon_name]</b></a><br>"
+			dat += "<b>Alpha Squad Name:</b> <a href='byond://?_src_=prefs;preference=squad_name_alpha_pref;task=input'><b>[squad_name_alpha_pref]</b></a><br>"
+			dat += "<b>Bravo Squad Name:</b> <a href='byond://?_src_=prefs;preference=squad_name_bravo_pref;task=input'><b>[squad_name_bravo_pref]</b></a><br>"
+			dat += "<b>Charlie Squad Name:</b> <a href='byond://?_src_=prefs;preference=squad_name_charlie_pref;task=input'><b>[squad_name_charlie_pref]</b></a><br>"
+			dat += "<b>Delta Squad Name:</b> <a href='byond://?_src_=prefs;preference=squad_name_delta_pref;task=input'><b>[squad_name_delta_pref]</b></a><br>"
 			dat += "<b>Dropship Camo:</b> <a href='byond://?_src_=prefs;preference=dropship_camo;task=input'><b>[dropship_camo]</b></a><br>"
 			dat += "<b>Dropship Name:</b> <a href='byond://?_src_=prefs;preference=dropship_name;task=input'><b>[dropship_name]</b></a><br>"
 			dat += "</div>"
@@ -1341,6 +1352,34 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 						to_chat(user, "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ' and .</font>")
 					else
 						platoon_name = raw_name
+
+				if("squad_name_alpha_pref")
+					var/raw_name = input(user, "Choose your Alpha squad name:", "Character Preference", squad_name_alpha_pref) as text|null
+					if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32) // SS220 EDIT
+						to_chat(user, SPAN_WARNING("Invalid squad name. Length must be between 1 and 32 characters."))
+					else
+						squad_name_alpha_pref = raw_name
+
+				if("squad_name_bravo_pref")
+					var/raw_name = input(user, "Choose your Bravo squad name:", "Character Preference", squad_name_bravo_pref) as text|null
+					if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32) // SS220 EDIT
+						to_chat(user, SPAN_WARNING("Invalid squad name. Length must be between 1 and 32 characters."))
+					else
+						squad_name_bravo_pref = raw_name
+
+				if("squad_name_charlie_pref")
+					var/raw_name = input(user, "Choose your Charlie squad name:", "Character Preference", squad_name_charlie_pref) as text|null
+					if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32) // SS220 EDIT
+						to_chat(user, SPAN_WARNING("Invalid squad name. Length must be between 1 and 32 characters."))
+					else
+						squad_name_charlie_pref = raw_name
+
+				if("squad_name_delta_pref")
+					var/raw_name = input(user, "Choose your Delta squad name:", "Character Preference", squad_name_delta_pref) as text|null
+					if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32) // SS220 EDIT
+						to_chat(user, SPAN_WARNING("Invalid squad name. Length must be between 1 and 32 characters."))
+					else
+						squad_name_delta_pref = raw_name
 
 				if ("dropship_camo")
 					var/new_camo = tgui_input_list(user, "Choose your platoon's dropship camo:", "Character Preferences", GLOB.dropship_camos)
