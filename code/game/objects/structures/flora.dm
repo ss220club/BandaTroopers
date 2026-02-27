@@ -774,4 +774,3 @@ ICEY GRASS. IT LOOKS LIKE IT'S MADE OF ICE.
 	desc = "Looks like some of that fruit might be edible."
 	icon_tag = "plant"
 	variations  = 7
-
