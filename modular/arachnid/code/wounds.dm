@@ -1,5 +1,5 @@
 /atom/movable/vis_obj/xeno_wounds/arachnid
-	icon = 'modular/arachnid/icons/mobs/arachnid.dmi'
+	icon = 'modular/arachnid/icons/mobs/warrior/arachnid.dmi'
 
 /mob/living/carbon/xenomorph/arachnid/Initialize(mapload, mob/living/carbon/xenomorph/old_xeno, hivenumber)
 	. = ..()

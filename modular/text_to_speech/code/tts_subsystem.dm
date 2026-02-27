@@ -482,13 +482,13 @@ SUBSYSTEM_DEF(tts220)
 	var/channel = CHANNEL_TTS_RADIO
 	switch(localyze_type)
 		if(TTS_LOCALYZE_LOCAL)
-			volume *= listener?.client.volume_preferences[VOLUME_TTS_LOCAL]
+			volume *= listener?.client.prefs.volume_preferences[VOLUME_TTS_LOCAL]
 			channel = get_local_channel_by_owner(speaker)
 		if(TTS_LOCALYZE_RADIO)
-			volume *= listener?.client.volume_preferences[VOLUME_TTS_RADIO]
+			volume *= listener?.client.prefs.volume_preferences[VOLUME_TTS_RADIO]
 			channel = CHANNEL_TTS_RADIO
 		if(TTS_LOCALYZE_ANNOUNCE)
-			volume *= listener?.client.volume_preferences[VOLUME_TTS_ANNOUNCE]
+			volume *= listener?.client.prefs.volume_preferences[VOLUME_TTS_ANNOUNCE]
 			channel = CHANNEL_TTS_ANNOUNCEMENT
 
 	var/sound/output = sound(voice)

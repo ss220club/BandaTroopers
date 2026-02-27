@@ -80,7 +80,14 @@
 		else if(isfacehugger(src))
 			playsound(loc, 'sound/voice/alien_facehugger_dies.ogg', 25, TRUE)
 		else
-			playsound(loc, prob(50) == 1 ? 'sound/voice/alien_death.ogg' : 'sound/voice/alien_death2.ogg', 25, 1)
+			// SS220 EDIT START - Modular Arachnid injection: sound selection implemented in modular/arachnid/code/sound/arachnid_sound_hooks.dm
+			// playsound(loc, prob(50) == 1 ? 'sound/voice/alien_death.ogg' : 'sound/voice/alien_death2.ogg', 25, 1)
+			var/default_death_sound = prob(50) ? 'sound/voice/alien_death.ogg' : 'sound/voice/alien_death2.ogg'
+			var/death_sound = modular_sound_pick_death(default_death_sound)
+			if(death_sound)
+				playsound(loc, death_sound, modular_get_sound_volume(25), 1)
+			// SS220 EDIT END
+
 		var/area/A = get_area(src)
 		if(hive && hive.living_xeno_queen)
 			if(!HAS_TRAIT(src, TRAIT_TEMPORARILY_MUTED))

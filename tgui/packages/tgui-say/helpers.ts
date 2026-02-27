@@ -55,7 +55,7 @@ const setWindowVisibility = (visible: boolean, scale: boolean) => {
   });
 };
 
-const CHANNEL_REGEX = /^[!:.#]\w\s/;
+const CHANNEL_REGEX = /^[:.#№][a-zA-Zfа-яА-Я0-9_]\s/; // BANDAMARINES EDIT
 
 /** Tests for a channel prefix, returning it or none */
 export function getPrefix(

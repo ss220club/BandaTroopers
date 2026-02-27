@@ -77,3 +77,10 @@
 			if(65 to 70) . += ascii2text(ascii+32) //letters A to F - translates to lowercase
 			else return default
 	return .
+
+/proc/sanitize_float(number, min = 0, max = 1, default = 0)
+	if(isnum(number))
+		if(min <= number && number <= max)
+			return number
+	return default
+

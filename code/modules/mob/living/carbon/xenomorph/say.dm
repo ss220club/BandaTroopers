@@ -66,9 +66,10 @@
 	if((speaking.flags & HIVEMIND) && can_hivemind_speak)
 		hivemind_talk(message)
 		return
+	modular_say()	// SS220 EDIT - Modular Arachnid injection: sound selection implemented in modular/arachnid/code/sound/arachnid_sound_hooks.dm
+	// if(speaking_noise) // SS220 EDIT
+	// 	playsound(loc, speaking_noise, 25, 1)
 
-	if(speaking_noise)
-		playsound(loc, speaking_noise, 25, 1)
 	..(message, speaking, verb, null, null, message_range, null)
 
 /mob/living/carbon/xenomorph/say_understands(mob/other, datum/language/speaking = null)
