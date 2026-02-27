@@ -13,3 +13,4 @@
 #include "fullscreen/_fullscreen.dme"
 #include "squads/_squads.dme"
 #include "arachnid/_arachnid.dme"
+#include "trees/_trees.dme"
