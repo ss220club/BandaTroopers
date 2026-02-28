@@ -40,13 +40,13 @@
 			continue
 		if(current_gear.allowed_roles && !(assignment in current_gear.allowed_roles))
 			to_chat(new_human, SPAN_WARNING("Custom gear [current_gear.display_name] cannot be equipped: Invalid Role"))
-			return
+			continue
 		if(current_gear.allowed_origins && !(new_human.origin in current_gear.allowed_origins))
 			to_chat(new_human, SPAN_WARNING("Custom gear [current_gear.display_name] cannot be equipped: Invalid Origin"))
-			return
+			continue
 		if(!current_gear.special_conditions())
 			to_chat(new_human, SPAN_WARNING("Custom gear [current_gear.display_name] cannot be equipped: Special conditions not met."))
-			return
+			continue
 		new current_gear.path(locker)
 
 	// Выдаем погоны в шкафчик.

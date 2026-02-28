@@ -20,32 +20,22 @@ GLOBAL_VAR_INIT(main_platoon_initial_name, GLOB.main_platoon_name)
 
 /// Actually renames the platoon
 /client/proc/rename_platoon()
-	if(!GLOB.squad_name_manager) // SS220 EDIT
+	var/datum/squad_name_manager/manager = GLOB.squad_name_manager
+	if(!manager) // SS220 EDIT
 		to_chat(src, SPAN_WARNING("Squad rename manager is unavailable."))
 		return
 
-	var/alpha_option = "Alpha ([squad_name_get_runtime(SQUAD_MARINE_1)])"
-	var/bravo_option = "Bravo ([squad_name_get_runtime(SQUAD_MARINE_2)])"
-	var/charlie_option = "Charlie ([squad_name_get_runtime(SQUAD_MARINE_3)])"
-	var/delta_option = "Delta ([squad_name_get_runtime(SQUAD_MARINE_4)])"
-	var/chosen_option = tgui_input_list(mob, "Choose squad to rename", "Squad Rename", list(alpha_option, bravo_option, charlie_option, delta_option))
-	if(!chosen_option)
-		return
-
-	var/static_name
-	switch(chosen_option)
-		if(alpha_option)
-			static_name = SQUAD_MARINE_1
-		if(bravo_option)
-			static_name = SQUAD_MARINE_2
-		if(charlie_option)
-			static_name = SQUAD_MARINE_3
-		if(delta_option)
-			static_name = SQUAD_MARINE_4
+	var/list/squad_options = list(
+		"Alpha ([squad_name_get_runtime(SQUAD_MARINE_1)])" = SQUAD_MARINE_1,
+		"Bravo ([squad_name_get_runtime(SQUAD_MARINE_2)])" = SQUAD_MARINE_2,
+		"Charlie ([squad_name_get_runtime(SQUAD_MARINE_3)])" = SQUAD_MARINE_3,
+		"Delta ([squad_name_get_runtime(SQUAD_MARINE_4)])" = SQUAD_MARINE_4,
+	)
+	var/static_name = tgui_input_list(mob, "Choose squad to rename", "Squad Rename", squad_options)
 	if(!static_name)
 		return
 
-	var/datum/squad/target_squad = GLOB.squad_name_manager.get_squad_by_static(static_name)
+	var/datum/squad/target_squad = manager.get_squad_by_static(static_name)
 	if(!target_squad)
 		to_chat(src, SPAN_WARNING("Failed to find selected squad datum."))
 		return
@@ -54,7 +44,7 @@ GLOBAL_VAR_INIT(main_platoon_initial_name, GLOB.main_platoon_name)
 	if(!new_name || !istext(new_name))
 		return
 
-	var/rename_result = GLOB.squad_name_manager.rename_squad(target_squad, new_name, mob, "admin_override", TRUE)
+	var/rename_result = manager.rename_squad(target_squad, new_name, mob, "admin_override", TRUE)
 	if(rename_result != TRUE)
 		to_chat(src, SPAN_WARNING("[rename_result]"))
 		return
@@ -63,14 +53,15 @@ GLOBAL_VAR_INIT(main_platoon_initial_name, GLOB.main_platoon_name)
 
 /proc/do_rename_platoon(name, mob/renamer)
 	// SS220 EDIT - legacy wrapper for alpha only
-	if(!GLOB.squad_name_manager)
+	var/datum/squad_name_manager/manager = GLOB.squad_name_manager
+	if(!manager)
 		return
 
-	var/datum/squad/alpha_squad = GLOB.squad_name_manager.get_squad_by_static(SQUAD_MARINE_1)
+	var/datum/squad/alpha_squad = manager.get_squad_by_static(SQUAD_MARINE_1)
 	if(!alpha_squad)
 		return
 
-	GLOB.squad_name_manager.rename_squad(alpha_squad, name, renamer, "legacy_do_rename_platoon", TRUE)
+	manager.rename_squad(alpha_squad, name, renamer, "legacy_do_rename_platoon", TRUE)
 
 
 /proc/change_dropship_camo(camo, mob/renamer)
