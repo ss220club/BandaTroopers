@@ -11,7 +11,7 @@
 #include "text_to_speech/_tts.dme"
 #include "game_master/_game_master.dme"
 #include "fullscreen/_fullscreen.dme"
+#include "round_outro/_round_outro.dme"
 #include "squads/_squads.dme"
 #include "arachnid/_arachnid.dme"
-#include "round_outro/_round_outro.dme"
 #include "cyrillic_fixes/_cyrillic_fixes.dme"
