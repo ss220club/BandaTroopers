@@ -15,10 +15,10 @@
 	)
 	var/list/runtime_name_by_static = list()
 	var/list/default_name_by_static = list(
-		SQUAD_MARINE_1 = "Assault A-Sct",
-		SQUAD_MARINE_2 = "Auxiliary Eng. B-Sct",
-		SQUAD_MARINE_3 = "Auxiliary Med. C-Sct",
-		SQUAD_MARINE_4 = "Assault D-Sct",
+		SQUAD_MARINE_1 = "Alpha Assault Sq",
+		SQUAD_MARINE_2 = "Bravo Aux. Eng-Sq",
+		SQUAD_MARINE_3 = "Charlie Aux. Med-Sq",
+		SQUAD_MARINE_4 = "Delta Assault Sq",
 	)
 	var/list/leader_lock_by_static = list()
 
