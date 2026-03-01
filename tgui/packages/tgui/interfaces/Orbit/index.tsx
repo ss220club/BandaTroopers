@@ -196,9 +196,6 @@ const marineSplitter = (
       if (x.squad_runtime) {
         staticTitles[staticKey] = x.squad_runtime;
       }
-      if (x.squad_color) {
-        staticColors[staticKey] = x.squad_color;
-      }
       return;
     }
 
@@ -207,13 +204,10 @@ const marineSplitter = (
       if (!runtimeBuckets[runtimeKey]) {
         runtimeBuckets[runtimeKey] = {
           members: [],
-          color: x.squad_color || 'blue',
+          color: 'blue',
         };
       }
       runtimeBuckets[runtimeKey].members.push(x);
-      if (x.squad_color) {
-        runtimeBuckets[runtimeKey].color = x.squad_color;
-      }
       return;
     }
 
@@ -517,8 +511,16 @@ const ObservableItem = (props: {
 }) => {
   const { act } = useBackend<OrbitData>();
   const { color, item } = props;
-  const { health, icon, full_name, nickname, orbiters, ref, background_color } =
-    item;
+  const {
+    health,
+    icon,
+    full_name,
+    nickname,
+    orbiters,
+    ref,
+    background_color,
+    squad_color,
+  } = item;
 
   const displayHealth = typeof health === 'number';
 
@@ -537,7 +539,7 @@ const ObservableItem = (props: {
     >
       {displayHealth && <ColorBox color={getHealthColor(health)} mr="0.5em" />}
       {!!icon && (
-        <ObservableIcon icon={icon} background_color={background_color} />
+        <ObservableIcon icon={icon} background_color={background_color || squad_color} />
       )}
       {capitalizeFirst(getDisplayName(full_name, nickname))}
       {!!orbiters && (
@@ -554,7 +556,7 @@ const ObservableItem = (props: {
 /** Displays some info on the mob as a tooltip. */
 const ObservableTooltip = (props: { readonly item: Observable }) => {
   const {
-    item: { caste, health, job, full_name, icon, background_color },
+    item: { caste, health, job, full_name, icon, background_color, squad_color },
   } = props;
 
   const displayHealth = typeof health === 'number';
@@ -568,7 +570,7 @@ const ObservableTooltip = (props: { readonly item: Observable }) => {
       {!!caste && (
         <LabeledList.Item label="Caste">
           {!!icon && (
-            <ObservableIcon icon={icon} background_color={background_color} />
+            <ObservableIcon icon={icon} background_color={background_color || squad_color} />
           )}
           {caste}
         </LabeledList.Item>
@@ -576,7 +578,7 @@ const ObservableTooltip = (props: { readonly item: Observable }) => {
       {!!job && (
         <LabeledList.Item label="Job">
           {!!icon && (
-            <ObservableIcon icon={icon} background_color={background_color} />
+            <ObservableIcon icon={icon} background_color={background_color || squad_color} />
           )}
           {job}
         </LabeledList.Item>
