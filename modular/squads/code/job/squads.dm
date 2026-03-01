@@ -28,6 +28,7 @@
 		if(JOB_SQUAD_RTO)
 			num_rto = max(0, num_rto - 1)
 
+
 // Основные отряды. Фактическая численность определяется суммой ролевых лимитов max_*.
 /datum/squad/marine/alpha
 	equipment_color = "#db1d1d"
@@ -40,6 +41,9 @@
 	max_smartgun = 2
 	max_leaders = 1
 	max_rto = 1
+	// В сумме слотов без спека и РТО:
+	// 9
+
 
 /datum/squad/marine/bravo
 	name = SQUAD_MARINE_2
@@ -58,11 +62,37 @@
 	max_riflemen = 2
 	max_engineers = 4
 	max_medics = 0
-	max_specialists = 0
+	max_specialists = 1
 	max_tl = 2
-	max_smartgun = 1
+	max_smartgun = 1 // всего 1 смарт, т.к. больже инженерный отряд
 	max_leaders = 1
 	max_rto = 1
+	// В сумме слотов без спека и РТО:
+	// 10
+
+
+/datum/squad/marine/delta
+	equipment_color = "#4148c8"
+	chat_color = "#828cff"
+	access = list(ACCESS_MARINE_ALPHA, ACCESS_MARINE_DELTA)
+	minimap_color = MINIMAP_SQUAD_DELTA
+	use_stripe_overlay = FALSE
+	roundstart = TRUE
+	active = TRUE
+	squad_type = "Section"
+	usable = FALSE // Включается при ready_players_usable готовых игроков
+	ready_players_usable = 16
+	platoon_associated_type = /datum/squad/marine/alpha
+	max_riflemen = 2
+	max_engineers = 0
+	max_medics = 2
+	max_specialists = 1
+	max_tl = 2
+	max_smartgun = 2
+	max_leaders = 1
+	max_rto = 1
+	// В сумме слотов без спека и РТО:
+	// 9
 	
 
 /datum/squad/marine/charlie
@@ -82,32 +112,11 @@
 	max_medics = 4
 	max_specialists = 0
 	max_tl = 2
-	max_smartgun = 1
+	max_smartgun = 1 // всего 1 смарт, т.к. больже мед отряд
 	max_leaders = 1
 	max_rto = 1
-
-
-/datum/squad/marine/delta
-	equipment_color = "#4148c8"
-	chat_color = "#828cff"
-	access = list(ACCESS_MARINE_ALPHA, ACCESS_MARINE_DELTA)
-	minimap_color = MINIMAP_SQUAD_DELTA
-	use_stripe_overlay = FALSE
-	roundstart = TRUE
-	active = TRUE
-	squad_type = "Section"
-	usable = FALSE // Включается при ready_players_usable готовых игроков
-	ready_players_usable = 16
-	platoon_associated_type = /datum/squad/marine/alpha
-	max_riflemen = 4
-	max_engineers = 0
-	max_medics = 2
-	max_specialists = 1
-	max_tl = 2
-	max_smartgun = 2
-	max_leaders = 1
-	max_rto = 1
-
+	// В сумме слотов без спека и РТО:
+	// 10
 
 // Предложение как можно переименовать отряды:
 // #define SQUAD_MARINE_1_RENAME "Assault A-Sct"
