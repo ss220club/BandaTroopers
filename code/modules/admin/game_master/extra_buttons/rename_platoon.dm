@@ -4,7 +4,7 @@ GLOBAL_VAR_INIT(main_platoon_initial_name, GLOB.main_platoon_name)
 
 /// Ability to rename the platoon
 /client/proc/game_master_rename_platoon()
-	set name = "Rename Squad Override" // SS220 EDIT
+	set name = "Rename Squad Override" // SS220 EDIT: renamed verb label for squad-specific override action
 	set category = "Game Master.Extras"
 
 	if(!admin_holder || !check_rights(R_MOD, FALSE))
@@ -16,12 +16,12 @@ GLOBAL_VAR_INIT(main_platoon_initial_name, GLOB.main_platoon_name)
 	set name = "Rename Platoon"
 	set category = "OOC.Commander"
 
-	to_chat(src, SPAN_NOTICE("Squad rename by Staff Officers is disabled. The first Squad Leader applies each squad name from preferences.")) // SS220 EDIT
+	to_chat(src, SPAN_NOTICE("Squad rename by Staff Officers is disabled. The first Squad Leader applies each squad name from preferences.")) // SS220 EDIT: disabled commander rename flow
 
 /// Actually renames the platoon
 /client/proc/rename_platoon()
 	var/datum/squad_name_manager/manager = GLOB.squad_name_manager
-	if(!manager) // SS220 EDIT
+	if(!manager) // SS220 EDIT: guard against missing squad name manager
 		to_chat(src, SPAN_WARNING("Squad rename manager is unavailable."))
 		return
 
@@ -31,9 +31,17 @@ GLOBAL_VAR_INIT(main_platoon_initial_name, GLOB.main_platoon_name)
 		"Charlie ([squad_name_get_runtime(SQUAD_MARINE_3)])" = SQUAD_MARINE_3,
 		"Delta ([squad_name_get_runtime(SQUAD_MARINE_4)])" = SQUAD_MARINE_4,
 	)
-	var/static_name = tgui_input_list(mob, "Choose squad to rename", "Squad Rename", squad_options)
-	if(!static_name)
+	// SS220 EDIT - START
+	// var/static_name = tgui_input_list(mob, "Choose squad to rename", "Squad Rename", squad_options)
+	var/selection = tgui_input_list(mob, "Choose squad to rename", "Squad Rename", squad_options)
+	if(!selection)
 		return
+
+	var/static_name = squad_options[selection]
+	if(!static_name)
+		to_chat(src, SPAN_WARNING("Failed to resolve selected squad identifier."))
+		return
+	// SS220 EDIT - END
 
 	var/datum/squad/target_squad = manager.get_squad_by_static(static_name)
 	if(!target_squad)
@@ -52,7 +60,7 @@ GLOBAL_VAR_INIT(main_platoon_initial_name, GLOB.main_platoon_name)
 	to_chat(src, SPAN_NOTICE("Renamed [static_name] to [target_squad.name]."))
 
 /proc/do_rename_platoon(name, mob/renamer)
-	// SS220 EDIT - legacy wrapper for alpha only
+	// SS220 EDIT: legacy wrapper kept for alpha-only compatibility
 	var/datum/squad_name_manager/manager = GLOB.squad_name_manager
 	if(!manager)
 		return

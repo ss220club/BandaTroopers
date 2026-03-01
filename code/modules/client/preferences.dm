@@ -258,13 +258,13 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 
 	/// Name for platoon used when spawning as LT
 	var/platoon_name = "Sun Riders"
-	/// Preferred squad name for Alpha when spawning as Squad Leader // SS220 EDIT
+	/// Preferred squad name for Alpha when spawning as Squad Leader // SS220 EDIT: added stored custom name for Alpha
 	var/squad_name_alpha_pref = "Assault A-Sct"
-	/// Preferred squad name for Bravo when spawning as Squad Leader // SS220 EDIT
+	/// Preferred squad name for Bravo when spawning as Squad Leader // SS220 EDIT: added stored custom name for Bravo
 	var/squad_name_bravo_pref = "Auxiliary Eng. B-Sct"
-	/// Preferred squad name for Charlie when spawning as Squad Leader // SS220 EDIT
+	/// Preferred squad name for Charlie when spawning as Squad Leader // SS220 EDIT: added stored custom name for Charlie
 	var/squad_name_charlie_pref = "Auxiliary Med. C-Sct"
-	/// Preferred squad name for Delta when spawning as Squad Leader // SS220 EDIT
+	/// Preferred squad name for Delta when spawning as Squad Leader // SS220 EDIT: added stored custom name for Delta
 	var/squad_name_delta_pref = "Assault D-Sct"
 	/// Dropship camo used when spawning as LT
 	var/dropship_camo = DROPSHIP_CAMO_JUNGLE
@@ -280,7 +280,7 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 	if(istype(C))
 		owner = C
 		if(!IsGuestKey(C.key))
-			// unlock_content = C.IsByondMember()  // SS220 EDIT - Compile Fix - чтобы линтер не ругался
+			// unlock_content = C.IsByondMember()  // SS220 EDIT: compile fix, temporary disable for linter
 			load_path(C.ckey)
 			if(load_preferences())
 				if(load_character())
@@ -1355,31 +1355,63 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 
 				if("squad_name_alpha_pref")
 					var/raw_name = input(user, "Choose your Alpha squad name:", "Character Preference", squad_name_alpha_pref) as text|null
-					if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32) // SS220 EDIT
+					// SS220 EDIT - START
+					var/datum/squad_name_manager/manager_alpha = GLOB.squad_name_manager
+					var/normalized_name_alpha = manager_alpha ? manager_alpha.normalize_squad_name(raw_name) : null
+					if(!normalized_name_alpha && raw_name && !manager_alpha && length_char(raw_name) <= 32)
+						normalized_name_alpha = raw_name
+					// if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32)
+					if(!normalized_name_alpha)
 						to_chat(user, SPAN_WARNING("Invalid squad name. Length must be between 1 and 32 characters."))
 					else
-						squad_name_alpha_pref = raw_name
+						// squad_name_alpha_pref = raw_name
+						squad_name_alpha_pref = normalized_name_alpha
+					// SS220 EDIT - END
 
 				if("squad_name_bravo_pref")
 					var/raw_name = input(user, "Choose your Bravo squad name:", "Character Preference", squad_name_bravo_pref) as text|null
-					if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32) // SS220 EDIT
+					// SS220 EDIT - START
+					var/datum/squad_name_manager/manager_bravo = GLOB.squad_name_manager
+					var/normalized_name_bravo = manager_bravo ? manager_bravo.normalize_squad_name(raw_name) : null
+					if(!normalized_name_bravo && raw_name && !manager_bravo && length_char(raw_name) <= 32)
+						normalized_name_bravo = raw_name
+					// if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32)
+					if(!normalized_name_bravo)
 						to_chat(user, SPAN_WARNING("Invalid squad name. Length must be between 1 and 32 characters."))
 					else
-						squad_name_bravo_pref = raw_name
+						// squad_name_bravo_pref = raw_name
+						squad_name_bravo_pref = normalized_name_bravo
+					// SS220 EDIT - END
 
 				if("squad_name_charlie_pref")
 					var/raw_name = input(user, "Choose your Charlie squad name:", "Character Preference", squad_name_charlie_pref) as text|null
-					if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32) // SS220 EDIT
+					// SS220 EDIT - START
+					var/datum/squad_name_manager/manager_charlie = GLOB.squad_name_manager
+					var/normalized_name_charlie = manager_charlie ? manager_charlie.normalize_squad_name(raw_name) : null
+					if(!normalized_name_charlie && raw_name && !manager_charlie && length_char(raw_name) <= 32)
+						normalized_name_charlie = raw_name
+					// if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32)
+					if(!normalized_name_charlie)
 						to_chat(user, SPAN_WARNING("Invalid squad name. Length must be between 1 and 32 characters."))
 					else
-						squad_name_charlie_pref = raw_name
+						// squad_name_charlie_pref = raw_name
+						squad_name_charlie_pref = normalized_name_charlie
+					// SS220 EDIT - END
 
 				if("squad_name_delta_pref")
 					var/raw_name = input(user, "Choose your Delta squad name:", "Character Preference", squad_name_delta_pref) as text|null
-					if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32) // SS220 EDIT
+					// SS220 EDIT - START
+					var/datum/squad_name_manager/manager_delta = GLOB.squad_name_manager
+					var/normalized_name_delta = manager_delta ? manager_delta.normalize_squad_name(raw_name) : null
+					if(!normalized_name_delta && raw_name && !manager_delta && length_char(raw_name) <= 32)
+						normalized_name_delta = raw_name
+					// if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32)
+					if(!normalized_name_delta)
 						to_chat(user, SPAN_WARNING("Invalid squad name. Length must be between 1 and 32 characters."))
 					else
-						squad_name_delta_pref = raw_name
+						// squad_name_delta_pref = raw_name
+						squad_name_delta_pref = normalized_name_delta
+					// SS220 EDIT - END
 
 				if ("dropship_camo")
 					var/new_camo = tgui_input_list(user, "Choose your platoon's dropship camo:", "Character Preferences", GLOB.dropship_camos)

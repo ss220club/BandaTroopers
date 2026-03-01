@@ -11,6 +11,18 @@
 		return null
 	return static_by_squad_type[target.type]
 
+/datum/squad_name_manager/proc/get_static_name_by_runtime(runtime_name)
+	if(!runtime_name)
+		return null
+
+	for(var/static_name in managed_static_names)
+		if(cmptext(runtime_name, static_name))
+			return static_name
+		if(cmptext(runtime_name, runtime_name_by_static[static_name]))
+			return static_name
+
+	return null
+
 /datum/squad_name_manager/proc/get_squad_by_static(static_name)
 	if(!GLOB.RoleAuthority || !islist(GLOB.RoleAuthority.squads_by_type))
 		return null

@@ -1,6 +1,7 @@
 #include "_squads.dm"
 
 #include "code/configuration.dm"
+#include "code/debug.dm"
 #include "code/squad_name_manager/datum.dm"
 #include "code/squad_name_manager/validation.dm"
 #include "code/squad_name_manager/mapping.dm"

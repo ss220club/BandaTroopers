@@ -486,13 +486,19 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 	if(isturf(late_join))
 		new_human.forceMove(late_join)
 	else if(late_join)
+		// SS220 EDIT - START
 		var/turf/late_join_turf
-		if(GLOB.latejoin_by_squad[assigned_squad])
-			late_join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
-		else if(GLOB.latejoin_by_job[new_job.title])
-			late_join_turf = get_turf(pick(GLOB.latejoin_by_job[new_job.title]))
-		else
-			late_join_turf = get_turf(pick(GLOB.latejoin))
+		late_join_turf = new_human.get_modular_spawn_turf(new_job, TRUE)
+		if(!late_join_turf)
+			// if(GLOB.latejoin_by_squad[assigned_squad])
+			// 	late_join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
+			if(GLOB.latejoin_by_squad[assigned_squad])
+				late_join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
+			else if(GLOB.latejoin_by_job[new_job.title])
+				late_join_turf = get_turf(pick(GLOB.latejoin_by_job[new_job.title]))
+			else
+				late_join_turf = get_turf(pick(GLOB.latejoin))
+		// SS220 EDIT - END
 		new_human.forceMove(late_join_turf)
 	else
 		var/turf/join_turf
@@ -513,7 +519,7 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 			pod.go_in_cryopod(new_human, silent = TRUE)
 			break
 	*/
-	new_human.try_enter_nearby_free_cryopod() // SS220 EDIT
+	new_human.try_enter_nearby_free_cryopod(new_job) // SS220 EDIT: passed new_job to modular cryopod selection
 
 	new_human.sec_hud_set_ID()
 	new_human.hud_set_squad()
@@ -539,10 +545,10 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 
 	var/datum/squad/lowest = pick(mixed_squads)
 
-	var/pref_squad_name // SS220 EDIT
+	var/pref_squad_name // SS220 EDIT: preferred squad is resolved via runtime squad name mapping
 	if(H && H.client && H.client.prefs.preferred_squad && H.client.prefs.preferred_squad != "None")
 		pref_squad_name = H.client.prefs.preferred_squad
-		pref_squad_name = squad_name_get_runtime(pref_squad_name) // SS220 EDIT
+		pref_squad_name = squad_name_get_runtime(pref_squad_name) // SS220 EDIT: mapped static preference to runtime squad name
 
 	for(var/datum/squad/L in mixed_squads)
 		if(L.usable)
@@ -614,11 +620,11 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 	//Non-standards are distributed regardless of squad population.
 	//If the number of available positions for the job are more than max_whatever, it will break.
 	//Ie. 8 squad medic jobs should be available, and total medics in squads should be 8.
-	if(/*H.job != JOB_SQUAD_MARINE &&*/ H.job != "Reinforcements") // SS220 EDIT - SQUADS - Марины тоже ограничены
+	if(/*H.job != JOB_SQUAD_MARINE &&*/ H.job != "Reinforcements") // SS220 EDIT: marines are also processed via role-limited branch
 		var/pref_squad_name
 		if(H && H.client && H.client.prefs.preferred_squad && H.client.prefs.preferred_squad != "None")
 			pref_squad_name = H.client.prefs.preferred_squad
-			pref_squad_name = squad_name_get_runtime(pref_squad_name) // SS220 EDIT
+			pref_squad_name = squad_name_get_runtime(pref_squad_name) // SS220 EDIT: mapped static preference to runtime squad name
 
 		var/datum/squad/lowest
 
@@ -704,14 +710,14 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 			if(JOB_SQUAD_RTO)
 				for(var/datum/squad/S in mixed_squads)
 					if(S.usable && S.roundstart)
-						if(!skip_limit && S.num_rto >= S.max_rto) continue // SS220 EDIT
+						if(!skip_limit && S.num_rto >= S.max_rto) continue // SS220 EDIT: added RTO limit check
 						if(pref_squad_name && S.name == pref_squad_name)
 							S.put_marine_in_squad(H) //fav squad has a spot for us.
 							return
 
 						if(!lowest)
 							lowest = S
-						else if(S.num_rto < lowest.num_rto) // SS220 EDIT
+						else if(S.num_rto < lowest.num_rto) // SS220 EDIT: added RTO lowest-population balancing
 							lowest = S
 
 			// SS220 EDIT - START - SQUADS - Марины тоже ограничены
@@ -730,8 +736,12 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 			// SS220 EDIT - END - SQUADS - Марины тоже ограничены
 
 		if(!lowest)
-			var/ranpick = rand(1,4)
-			lowest = mixed_squads[ranpick]
+			// SS220 EDIT - START
+			// var/ranpick = rand(1,4)
+			// lowest = mixed_squads[ranpick]
+			if(length(mixed_squads))
+				lowest = pick(mixed_squads)
+			// SS220 EDIT - END
 		if(lowest) lowest.put_marine_in_squad(H)
 		else to_chat(H, "Something went badly with randomize_squad()! Tell a coder!")
 

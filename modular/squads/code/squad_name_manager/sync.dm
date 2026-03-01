@@ -77,11 +77,6 @@
 	for(var/key in keys_to_update)
 		GLOB.department_radio_keys[key] = new_name
 
-	if(old_name in GLOB.ROLES_SQUAD_ALL)
-		GLOB.ROLES_SQUAD_ALL -= old_name
-	if(!(new_name in GLOB.ROLES_SQUAD_ALL))
-		GLOB.ROLES_SQUAD_ALL += new_name
-
 	move_simple_bucket(GLOB.frozen_items, old_name, new_name)
 	move_simple_bucket(GLOB.latejoin_by_squad, old_name, new_name)
 	move_spawn_bucket(old_name, new_name)

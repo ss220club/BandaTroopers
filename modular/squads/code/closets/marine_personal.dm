@@ -7,10 +7,10 @@
 		return TRUE
 	if(!H.assigned_squad)
 		return FALSE
-	var/expected_squad_name = squad_name_get_runtime(squad_type) // SS220 EDIT
+	var/expected_squad_name = squad_name_get_runtime(squad_type)
 	if(H.assigned_squad.name == expected_squad_name)
 		return TRUE
-	if(H.assigned_squad.name == squad_type) // SS220 EDIT - fallback
+	if(H.assigned_squad.name == squad_type)
 		return TRUE
 
 	// Отдельная проверка для первого сквада
@@ -26,7 +26,19 @@
 
 	var/turf/human_turf = get_turf(human)
 	if(linked_spawn_turf)
-		if(human_turf != linked_spawn_turf)
+		if(human_turf == linked_spawn_turf)
+			return is_correct_squad(human)
+
+		if(!istype(human.loc, /obj/structure/machinery/cryopod))
+			return FALSE
+
+		var/is_adjacent_to_spawn = FALSE
+		for(var/cardinal in GLOB.cardinals)
+			if(get_step(linked_spawn_turf, cardinal) == human_turf)
+				is_adjacent_to_spawn = TRUE
+				break
+
+		if(!is_adjacent_to_spawn)
 			return FALSE
 	else if(human.job != job)
 		return FALSE

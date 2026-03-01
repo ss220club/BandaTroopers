@@ -27,6 +27,11 @@
 		if(cmptext(channel_name, new_name) && !cmptext(channel_name, old_name))
 			return "This name is already used by another radio channel or squad."
 
+	for(var/static_name in managed_static_names)
+		var/runtime_name = get_runtime_name_by_static(static_name)
+		if(cmptext(runtime_name, new_name) && !cmptext(runtime_name, old_name))
+			return "This name is already used by another squad."
+
 	for(var/squad_name in GLOB.ROLES_SQUAD_ALL)
 		if(cmptext(squad_name, new_name) && !cmptext(squad_name, old_name))
 			return "This name is already used by another squad."

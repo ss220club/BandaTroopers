@@ -304,7 +304,7 @@
 				pod.go_in_cryopod(human, TRUE)
 				break
 		*/
-		human.try_enter_nearby_free_cryopod() // SS220 EDIT
+		human.try_enter_nearby_free_cryopod(src) // SS220 EDIT: passed job datum to modular cryopod selection
 
 		human.sec_hud_set_ID()
 		human.hud_set_squad()

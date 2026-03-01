@@ -8,23 +8,41 @@
 
 	return alive_human_names
 
+/datum/equipment_preset/proc/collect_active_human_names()
+	var/list/active_human_names = list()
+
+	for(var/mob/living/carbon/human/human as anything in GLOB.human_mob_list)
+		if(!human?.real_name || !human.client)
+			continue
+		active_human_names[human.real_name] = TRUE
+
+	squads_debug_log("Collected active human names for locker reclaim: [length(active_human_names)].")
+	return active_human_names
+
 /datum/equipment_preset/proc/find_personal_locker_for_player(mob/living/carbon/human/new_human, late_join = FALSE)
 	if(!new_human)
+		squads_debug_log("find_personal_locker_for_player called with null human.")
 		return null
 
 	var/obj/structure/closet/secure_closet/marine_personal/reclaimed_locker
-	var/list/alive_human_names = late_join ? collect_alive_human_names() : null
+	var/list/active_human_names = late_join ? collect_active_human_names() : null
 
 	for(var/obj/structure/closet/secure_closet/marine_personal/locker in GLOB.personal_closets)
 		if(!locker.matches_player_for_personal_locker(new_human))
 			continue
 
 		if(!locker.owner)
+			squads_debug_log("[new_human] locker match found: free locker [locker], late_join=[late_join].")
 			return locker
 
-		if(late_join && !reclaimed_locker && locker.is_abandoned_for_personal_locker(alive_human_names))
+		if(late_join && !reclaimed_locker && locker.is_abandoned_for_personal_locker(active_human_names))
+			squads_debug_log("[new_human] locker candidate for reclaim: [locker], owner=[locker.owner].")
 			reclaimed_locker = locker
 
+	if(late_join && reclaimed_locker)
+		squads_debug_log("[new_human] using reclaimed locker [reclaimed_locker].")
+	if(!reclaimed_locker)
+		squads_debug_log("[new_human] no locker matched for late_join=[late_join].")
 	return late_join ? reclaimed_locker : null
 
 /datum/equipment_preset/proc/populate_personal_locker_contents(obj/structure/closet/secure_closet/marine_personal/locker, mob/living/carbon/human/new_human, client/mob_client)
@@ -113,18 +131,22 @@
 
 /datum/equipment_preset/proc/try_handle_personal_locker_vanity(mob/living/carbon/human/new_human, client/mob_client, late_join = FALSE)
 	if(!new_human)
+		squads_debug_log("try_handle_personal_locker_vanity called with null human.")
 		return FALSE
 
 	var/obj/structure/closet/secure_closet/marine_personal/locker = find_personal_locker_for_player(new_human, late_join)
 	if(!locker)
+		squads_debug_log("[new_human] no personal locker found, fallback to load_vanity().")
 		load_vanity(new_human, mob_client)
 		return TRUE
 
 	if(locker.owner)
+		squads_debug_log("[new_human] reinitializing reclaimed locker [locker] with owner [locker.owner].")
 		locker.reinitialize_for_personal_locker_reuse()
 
 	locker.owner = new_human.real_name
 	locker.name = "личный шкафчик [locker.owner]"
+	squads_debug_log("[new_human] assigned personal locker [locker].")
 
 	populate_personal_locker_contents(locker, new_human, mob_client)
 	return TRUE
