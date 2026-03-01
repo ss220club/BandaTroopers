@@ -63,6 +63,7 @@
 	var/datum/squad/assigned_squad = H.assigned_squad
 	var/static_name = get_static_name_by_squad(assigned_squad)
 	if(!static_name)
+		squads_debug_log("leader preference static resolve failed: squad_name=[assigned_squad.name], squad_type=[assigned_squad.type], player=[H.ckey]")
 		return FALSE
 
 	if(leader_lock_by_static[static_name])

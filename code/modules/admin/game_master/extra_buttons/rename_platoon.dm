@@ -41,11 +41,16 @@ GLOBAL_VAR_INIT(main_platoon_initial_name, GLOB.main_platoon_name)
 	if(!static_name)
 		to_chat(src, SPAN_WARNING("Failed to resolve selected squad identifier."))
 		return
+
+	var/resolved_static_name = manager.resolve_static_name(static_name) // SS220 EDIT: normalize selected static/runtime squad identifier
+	if(!resolved_static_name)
+		to_chat(src, SPAN_WARNING("Failed to resolve selected squad identifier: [static_name].")) // SS220 EDIT: extended diagnostics for rename selection
+		return
 	// SS220 EDIT - END
 
-	var/datum/squad/target_squad = manager.get_squad_by_static(static_name)
+	var/datum/squad/target_squad = manager.get_squad_by_static(resolved_static_name) // SS220 EDIT: use normalized static identifier for lookup
 	if(!target_squad)
-		to_chat(src, SPAN_WARNING("Failed to find selected squad datum."))
+		to_chat(src, SPAN_WARNING("Failed to find selected squad datum. Static=[resolved_static_name], runtime=[manager.get_runtime_name_by_static(resolved_static_name)].")) // SS220 EDIT: extended diagnostics for missing squad datum
 		return
 
 	var/new_name = tgui_input_text(mob, "New squad name?", "Squad Name", target_squad.name)
@@ -57,7 +62,7 @@ GLOBAL_VAR_INIT(main_platoon_initial_name, GLOB.main_platoon_name)
 		to_chat(src, SPAN_WARNING("[rename_result]"))
 		return
 
-	to_chat(src, SPAN_NOTICE("Renamed [static_name] to [target_squad.name]."))
+	to_chat(src, SPAN_NOTICE("Renamed [resolved_static_name] to [target_squad.name].")) // SS220 EDIT: output normalized static squad identifier
 
 /proc/do_rename_platoon(name, mob/renamer)
 	// SS220 EDIT: legacy wrapper kept for alpha-only compatibility

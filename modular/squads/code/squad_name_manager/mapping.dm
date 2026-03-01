@@ -6,10 +6,28 @@
 /datum/squad_name_manager/proc/get_default_name_by_static(static_name)
 	return default_name_by_static[static_name]
 
+/datum/squad_name_manager/proc/resolve_static_name(raw_value)
+	if(!raw_value)
+		return null
+
+	if(raw_value in managed_static_names)
+		return raw_value
+
+	return get_static_name_by_runtime(raw_value)
+
 /datum/squad_name_manager/proc/get_static_name_by_squad(datum/squad/target)
 	if(!target)
 		return null
-	return static_by_squad_type[target.type]
+
+	var/static_name = static_by_squad_type[target.type]
+	if(static_name)
+		return static_name
+
+	for(var/managed_type in static_by_squad_type)
+		if(istype(target, managed_type))
+			return static_by_squad_type[managed_type]
+
+	return null
 
 /datum/squad_name_manager/proc/get_static_name_by_runtime(runtime_name)
 	if(!runtime_name)
@@ -26,10 +44,27 @@
 /datum/squad_name_manager/proc/get_squad_by_static(static_name)
 	if(!GLOB.RoleAuthority || !islist(GLOB.RoleAuthority.squads_by_type))
 		return null
-	var/managed_type = squad_type_by_static[static_name]
+
+	var/resolved_static_name = resolve_static_name(static_name)
+	if(!resolved_static_name)
+		return null
+
+	var/managed_type = squad_type_by_static[resolved_static_name]
 	if(!managed_type)
 		return null
-	return GLOB.RoleAuthority.squads_by_type[managed_type]
+
+	var/datum/squad/managed_squad = GLOB.RoleAuthority.squads_by_type[managed_type]
+	if(managed_squad)
+		return managed_squad
+
+	if(!islist(GLOB.RoleAuthority.squads))
+		return null
+
+	for(var/datum/squad/cycled_squad in GLOB.RoleAuthority.squads)
+		if(get_static_name_by_squad(cycled_squad) == resolved_static_name)
+			return cycled_squad
+
+	return null
 
 /datum/squad_name_manager/proc/is_managed_squad(datum/squad/target)
 	return !!get_static_name_by_squad(target)

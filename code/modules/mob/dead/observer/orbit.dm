@@ -140,10 +140,21 @@
 						break
 				serialized["icon"] = icon ? icon : "private"
 
+				// SS220 EDIT - START
+				// if(human.assigned_squad)
+				// 	serialized["background_color"] = human.assigned_squad.equipment_color ? human.assigned_squad.equipment_color : human.assigned_squad.minimap_color
+				// else
+				// 	serialized["background_color"] = human.assigned_equipment_preset?.minimap_background
+				var/datum/squad_name_manager/squad_name_manager = GLOB.squad_name_manager
 				if(human.assigned_squad)
-					serialized["background_color"] = human.assigned_squad.equipment_color ? human.assigned_squad.equipment_color : human.assigned_squad.minimap_color
+					var/squad_color = human.assigned_squad.equipment_color ? human.assigned_squad.equipment_color : (human.assigned_squad.chat_color ? human.assigned_squad.chat_color : human.assigned_squad.minimap_color)
+					serialized["background_color"] = squad_color
+					serialized["squad_runtime"] = human.assigned_squad.name
+					serialized["squad_color"] = squad_color
+					serialized["squad_static"] = squad_name_manager ? squad_name_manager.get_static_name_by_squad(human.assigned_squad) : null
 				else
 					serialized["background_color"] = human.assigned_equipment_preset?.minimap_background
+				// SS220 EDIT - END
 
 				if(human.status_flags & XENO_HOST)
 					infected += list(serialized)
