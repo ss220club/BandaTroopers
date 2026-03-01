@@ -738,18 +738,20 @@
 	//b_type = sanitize_text(b_type, initial(b_type))
 
 	platoon_name = platoon_name ? sanitize_text(platoon_name, initial(platoon_name)) : "Sun Riders"
-	squad_name_alpha_pref = squad_name_alpha_pref ? sanitize_text(squad_name_alpha_pref, initial(squad_name_alpha_pref)) : "Alpha Assault Sq" // SS220 EDIT
-	squad_name_bravo_pref = squad_name_bravo_pref ? sanitize_text(squad_name_bravo_pref, initial(squad_name_bravo_pref)) : "Bravo Aux. Eng-Sq" // SS220 EDIT
-	squad_name_charlie_pref = squad_name_charlie_pref ? sanitize_text(squad_name_charlie_pref, initial(squad_name_charlie_pref)) : "Charlie Aux. Med-Sq" // SS220 EDIT
-	squad_name_delta_pref = squad_name_delta_pref ? sanitize_text(squad_name_delta_pref, initial(squad_name_delta_pref)) : "Delta Assault Sq" // SS220 EDIT
-	if(length_char(squad_name_alpha_pref) > 32) // SS220 EDIT
-		squad_name_alpha_pref = "Alpha Assault Sq"
-	if(length_char(squad_name_bravo_pref) > 32) // SS220 EDIT
-		squad_name_bravo_pref = "Bravo Aux. Eng-Sq"
-	if(length_char(squad_name_charlie_pref) > 32) // SS220 EDIT
-		squad_name_charlie_pref = "Charlie Aux. Med-Sq"
-	if(length_char(squad_name_delta_pref) > 32) // SS220 EDIT
-		squad_name_delta_pref = "Delta Assault Sq"
+	// SS220 EDIT - START
+	squad_name_alpha_pref = squad_name_alpha_pref ? sanitize_text(squad_name_alpha_pref, initial(squad_name_alpha_pref)) : SQUAD_MARINE_1_DEFAULT_NAME
+	squad_name_bravo_pref = squad_name_bravo_pref ? sanitize_text(squad_name_bravo_pref, initial(squad_name_bravo_pref)) : SQUAD_MARINE_2_DEFAULT_NAME
+	squad_name_charlie_pref = squad_name_charlie_pref ? sanitize_text(squad_name_charlie_pref, initial(squad_name_charlie_pref)) : SQUAD_MARINE_3_DEFAULT_NAME
+	squad_name_delta_pref = squad_name_delta_pref ? sanitize_text(squad_name_delta_pref, initial(squad_name_delta_pref)) : SQUAD_MARINE_4_DEFAULT_NAME
+	if(length_char(squad_name_alpha_pref) > 32) // SS220 EDIT: overflow fallback now uses squad default define
+		squad_name_alpha_pref = SQUAD_MARINE_1_DEFAULT_NAME
+	if(length_char(squad_name_bravo_pref) > 32) // SS220 EDIT: overflow fallback now uses squad default define
+		squad_name_bravo_pref = SQUAD_MARINE_2_DEFAULT_NAME
+	if(length_char(squad_name_charlie_pref) > 32) // SS220 EDIT: overflow fallback now uses squad default define
+		squad_name_charlie_pref = SQUAD_MARINE_3_DEFAULT_NAME
+	if(length_char(squad_name_delta_pref) > 32) // SS220 EDIT: overflow fallback now uses squad default define
+		squad_name_delta_pref = SQUAD_MARINE_4_DEFAULT_NAME
+	// SS220 EDIT - END
 	dropship_camo = sanitize_inlist(dropship_camo, GLOB.dropship_camos, initial(dropship_camo))
 	dropship_name = dropship_name ? sanitize_text(dropship_name, initial(dropship_name)) : "Midway"
 

@@ -259,13 +259,13 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 	/// Name for platoon used when spawning as LT
 	var/platoon_name = "Sun Riders"
 	/// Preferred squad name for Alpha when spawning as Squad Leader // SS220 EDIT: added stored custom name for Alpha
-	var/squad_name_alpha_pref = "Alpha Assault Sq"
+	var/squad_name_alpha_pref = SQUAD_MARINE_1_DEFAULT_NAME // SS220 EDIT: default Alpha squad preference now uses define
 	/// Preferred squad name for Bravo when spawning as Squad Leader // SS220 EDIT: added stored custom name for Bravo
-	var/squad_name_bravo_pref = "Bravo Aux. Eng-Sq"
+	var/squad_name_bravo_pref = SQUAD_MARINE_2_DEFAULT_NAME // SS220 EDIT: default Bravo squad preference now uses define
 	/// Preferred squad name for Charlie when spawning as Squad Leader // SS220 EDIT: added stored custom name for Charlie
-	var/squad_name_charlie_pref = "Charlie Aux. Med-Sq"
+	var/squad_name_charlie_pref = SQUAD_MARINE_3_DEFAULT_NAME // SS220 EDIT: default Charlie squad preference now uses define
 	/// Preferred squad name for Delta when spawning as Squad Leader // SS220 EDIT: added stored custom name for Delta
-	var/squad_name_delta_pref = "Delta Assault Sq"
+	var/squad_name_delta_pref = SQUAD_MARINE_4_DEFAULT_NAME // SS220 EDIT: default Delta squad preference now uses define
 	/// Dropship camo used when spawning as LT
 	var/dropship_camo = DROPSHIP_CAMO_JUNGLE
 	/// Dropship name used when spawning as LT

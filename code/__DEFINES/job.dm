@@ -7,6 +7,12 @@
 #define SQUAD_MARINE_2 "Bravo"
 #define SQUAD_MARINE_3 "Charlie"
 #define SQUAD_MARINE_4 "Delta"
+// SS220 EDIT - START
+#define SQUAD_MARINE_1_DEFAULT_NAME "Alpha Assault Sq"
+#define SQUAD_MARINE_2_DEFAULT_NAME "Bravo Aux. Eng-Sq"
+#define SQUAD_MARINE_3_DEFAULT_NAME "Charlie Aux. Med-Sq"
+#define SQUAD_MARINE_4_DEFAULT_NAME "Delta Assault Sq"
+// SS220 EDIT - END
 #define SQUAD_MARINE_5 "Echo"
 #define SQUAD_MARINE_CRYO "Foxtrot"
 #define SQUAD_MARINE_INTEL "Intel"
