@@ -1,97 +1,97 @@
-# SS220 Development Rules
+# SS220: Правила разработки
 
-This document defines:
-- change marking rules for hardcode,
-- modularity and upstream maintenance rules,
-- AI collaboration rules for coding tasks.
+Документ фиксирует:
+- правила маркировки изменений в хардкоде,
+- правила модульности и сопровождения апстрима,
+- правила работы с ИИ при выполнении задач.
 
-## 1. Change Marking Rules (Hardcode Only)
+## 1. Маркировка изменений (только хардкод)
 
-Scope:
-- upstream hardcode (`code/...` and other non-`modular/` paths).
+Область действия:
+- апстрим-хардкод (`code/...` и другие пути вне `modular/`).
 
-1. Removed lines must not be fully deleted.
-2. Old logic should stay nearby as commented lines.
-3. If only one line is changed (including minor edits), mark that same line with:
-   - `// SS220 EDIT: <what changed / added / removed>`
-4. For minor single-line edits (variable replaced, value changed, item added to list, argument added, etc.), use inline marker only; do not wrap a one-line change into START/END block.
-5. If several nearby lines are changed, wrap the block with:
+1. Удаляемые строки не удаляются полностью.
+2. Старая логика остается рядом в виде закомментированных строк.
+3. Если изменена только одна строка (включая мелкую правку), в этой же строке ставится:
+   - `// SS220 EDIT: <что изменено / добавлено / удалено>`
+4. Для мелкой одноcтрочной правки (замена переменной, изменение значения, добавление аргумента, добавление элемента в список и т.д.) используется только inline-маркер, без `START/END`.
+5. Если изменено несколько соседних строк, блок оборачивается:
    - `// SS220 EDIT - START`
    - `// SS220 EDIT - END`
-6. If a line is replaced, keep old line commented directly above the new line.
-7. Inline markers must include a short concrete note (for example: `added new arg`, `switched key`, `replaced runtime name with static bucket`).
+6. Если строка заменяется, старая строка должна оставаться сразу над новой в закомментированном виде.
+7. Inline-маркер обязан содержать короткое и конкретное описание изменения.
 
-Example (single line):
-
-```dm
-value = new_value // SS220 EDIT: changed value source old_value -> new_value
-```
-
-Example (single line, argument added):
+Пример (одна строка):
 
 ```dm
-target_proc(arg1, arg2, extra_arg) // SS220 EDIT: added extra_arg for latejoin context
+value = new_value // SS220 EDIT: источник значения изменен old_value -> new_value
 ```
 
-Example (block):
+Пример (одна строка, добавлен аргумент):
+
+```dm
+target_proc(arg1, arg2, extra_arg) // SS220 EDIT: добавлен extra_arg для latejoin-контекста
+```
+
+Пример (блок):
 
 ```dm
 // SS220 EDIT - START
 // old_call(arg1, arg2)
 new_call(arg1, arg2, arg3)
 if(new_condition)
-    handle_new_flow()
+	handle_new_flow()
 // SS220 EDIT - END
 ```
 
-## 2. Modularity + Upstream Rules
+## 2. Модульность и апстрим
 
-1. New feature logic goes to `modular/squads/...` first.
-2. Hardcode gets only minimal integration points:
-   - module hook calls,
-   - safe fallbacks,
-   - unavoidable bugfix glue.
-3. Do not move large business logic into hardcode if module code can handle it.
-4. Keep hardcode diff minimal; avoid unrelated refactors in upstream files.
-5. Keep stable upstream contracts and keys unless change is absolutely required.
-6. Before hardcode edits, check existing extension points/hooks.
-7. Prefer adapters/wrappers over rewriting upstream subsystems.
-8. After upstream sync, re-check all `SS220` markers.
-9. Do not add `SS220` marking comments inside `modular/squads/...` unless explicitly requested.
+1. Новая бизнес-логика сначала реализуется в `modular/squads/...`.
+2. В хардкод вносятся только минимальные точки интеграции:
+   - вызовы модульных хуков,
+   - безопасные fallback-переходы,
+   - неизбежный glue-код для совместимости.
+3. Крупная бизнес-логика не переносится в хардкод, если ее можно держать в модуле.
+4. Дифф в апстрим-файлах должен быть минимальным, без несвязанных рефакторингов.
+5. Стабильные апстрим-контракты и ключи не ломаются без критической необходимости.
+6. Перед правками хардкода проверяются существующие extension points/хуки.
+7. Предпочтение отдается адаптерам/оберткам, а не переписыванию апстрим-подсистем.
+8. После синка с апстримом перепроверяются все маркеры `SS220`.
+9. Внутри `modular/squads/...` не добавляются `SS220`-комментарии о модульности (если это отдельно не запрошено).
 
-Recommended check:
+Рекомендуемая проверка:
 
 ```bash
 rg -n "SS220 EDIT" code
 ```
 
-## 3. Code Quality Rules (OOP + SOLID)
+## 3. Качество кода (ООП + SOLID)
 
-1. Single Responsibility: one unit of code = one clear responsibility.
-2. Open/Closed: extend via hooks/modules, avoid invasive base rewrites.
-3. Liskov safety: do not break expected behavior of inherited/compatible types.
-4. Interface Segregation: small focused APIs over broad catch-all procedures.
-5. Dependency Inversion: depend on abstractions/hooks, not concrete internals.
-6. Avoid hidden side effects and duplicate logic.
-7. Non-trivial decisions must be explainable by code and diff.
+1. Single Responsibility: одна единица кода решает одну четкую задачу.
+2. Open/Closed: расширение через модуль/хуки, а не через инвазивные переписывания базы.
+3. Liskov: не ломать ожидаемое поведение наследников и совместимых типов.
+4. Interface Segregation: небольшие целевые API вместо широких «универсальных» процедур.
+5. Dependency Inversion: зависимость от абстракций/хуков, а не от хрупких внутренних деталей.
+6. Избегать скрытых побочных эффектов и дублирования логики.
+7. Нетиповые решения должны быть объяснимы по коду и диффу.
 
-## 4. AI Collaboration Rules
+## 4. Правила работы с ИИ
 
-1. Do not assume; gather context first (callsites, data flow, side effects).
-2. Doubt solution before running: check edge cases and regressions.
-3. Define bug cause explicitly before implementing fix.
-4. Validate that fix addresses root cause, not only symptom.
-5. Verify after edits:
-   - touched call paths,
-   - behavior integrity (spawn/manifest/prefs/etc),
-   - no accidental unrelated changes.
-6. Do not use destructive git commands without explicit request.
-7. Do not finalize task without at least diff-level verification.
+1. Не предполагать: сначала собрать контекст (callsites, data flow, side effects).
+2. Сомневаться перед запуском: проверить edge cases и возможные регрессии.
+3. Перед фиксом явно сформулировать корневую причину бага.
+4. Проверять, что правка закрывает root cause, а не только симптом.
+5. После правок обязательно проверить:
+   - измененные call-path,
+   - целостность поведения (spawn/manifest/prefs и т.д.),
+   - отсутствие несвязанных изменений.
+6. Не использовать деструктивные git-команды без прямого запроса.
+7. Не финализировать задачу без проверки диффа минимум на уровне затронутых файлов.
 
-## 5. Finalization Checklist
+## 5. Чеклист перед сдачей
 
-1. Logic is modular; hardcode is integration-only where possible.
-2. `SS220` markers follow the format rules.
-3. Removed hardcode lines are preserved as comments.
-4. Diff is local and readable.
-5. Critical scenarios and fallback paths were checked.
+1. Логика модульная, хардкод используется только как интеграция там, где это необходимо.
+2. Маркеры `SS220` соответствуют формату.
+3. Удаленные строки хардкода сохранены в комментариях.
+4. Дифф локальный, читаемый и без лишних изменений.
+5. Критические сценарии и fallback-ветки проверены.

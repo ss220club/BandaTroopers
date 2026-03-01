@@ -14,6 +14,7 @@
 #include "code/job/squads.dm"
 #include "code/job/squads_name.dm"
 #include "code/job/squads_setup.dm"
+#include "code/job/spawn_resolver.dm"
 #include "code/job/latejoin_cryo.dm"
 #include "code/job/personal_lockers.dm"
 #include "code/job/marine/equipment_preset.dm"

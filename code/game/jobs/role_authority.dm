@@ -486,7 +486,7 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 	if(isturf(late_join))
 		new_human.forceMove(late_join)
 	else if(late_join)
-		// SS220 EDIT - START
+		// SS220 EDIT - START - раундстарт для squad-ролей сначала использует модульный резолвер спавна
 		var/turf/late_join_turf
 		late_join_turf = new_human.get_modular_spawn_turf(new_job, TRUE)
 		if(!late_join_turf)
@@ -502,14 +502,29 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 		new_human.forceMove(late_join_turf)
 	else
 		var/turf/join_turf
-		if(assigned_squad && GLOB.spawns_by_squad_and_job[assigned_squad] && GLOB.spawns_by_squad_and_job[assigned_squad][new_job.type])
-			join_turf = get_turf(pick(GLOB.spawns_by_squad_and_job[assigned_squad][new_job.type]))
-		else if(GLOB.spawns_by_job[new_job.type])
-			join_turf = get_turf(pick(GLOB.spawns_by_job[new_job.type]))
-		else if(assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
-			join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
-		else
-			join_turf = get_turf(pick(GLOB.latejoin))
+		// SS220 EDIT - START
+		// if(assigned_squad && GLOB.spawns_by_squad_and_job[assigned_squad] && GLOB.spawns_by_squad_and_job[assigned_squad][new_job.type])
+		// 	join_turf = get_turf(pick(GLOB.spawns_by_squad_and_job[assigned_squad][new_job.type]))
+		// else if(GLOB.spawns_by_job[new_job.type])
+		// 	join_turf = get_turf(pick(GLOB.spawns_by_job[new_job.type]))
+		// else if(assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
+		// 	join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
+		// else
+		// 	join_turf = get_turf(pick(GLOB.latejoin))
+
+		if(GLOB.job_squad_roles.Find(GET_DEFAULT_ROLE(new_job.title)))
+			join_turf = new_human.get_modular_spawn_turf(new_job, FALSE)
+
+		if(!join_turf)
+			if(assigned_squad && GLOB.spawns_by_squad_and_job[assigned_squad] && GLOB.spawns_by_squad_and_job[assigned_squad][new_job.type])
+				join_turf = get_turf(pick(GLOB.spawns_by_squad_and_job[assigned_squad][new_job.type]))
+			else if(GLOB.spawns_by_job[new_job.type])
+				join_turf = get_turf(pick(GLOB.spawns_by_job[new_job.type]))
+			else if(assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
+				join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
+			else
+				join_turf = get_turf(pick(GLOB.latejoin))
+		// SS220 EDIT - END
 		new_human.forceMove(join_turf)
 
 	/* SS220 REMOVE (e64bb63898, 2f8015c1f1, dac4758021)

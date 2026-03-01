@@ -1,12 +1,12 @@
 /datum/squad_name_manager/proc/is_valid_squad_name_char(ascii_char)
 	switch(ascii_char)
-		if(32, 39, 45, 46) // space, ', -, .
+		if(32, 39, 45, 46) // пробел, ', -, .
 			return TRUE
-		if(48 to 57) // 0-9
+		if(48 to 57) // цифры 0-9
 			return TRUE
-		if(65 to 90, 97 to 122) // latin
+		if(65 to 90, 97 to 122) // латиница
 			return TRUE
-		if(1025, 1040 to 1103, 1105) // cyrillic + yo
+		if(1025, 1040 to 1103, 1105) // кириллица + Ё/ё
 			return TRUE
 	return FALSE
 

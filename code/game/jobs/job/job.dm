@@ -285,16 +285,33 @@
 			assigned_squad = human.assigned_squad.name
 
 		var/turf/join_turf
-		if(assigned_squad && GLOB.spawns_by_squad_and_job[assigned_squad] && GLOB.spawns_by_squad_and_job[assigned_squad][type])
-			join_turf = get_turf(pick(GLOB.spawns_by_squad_and_job[assigned_squad][type]))
-		else if(GLOB.spawns_by_job[type])
-			join_turf = get_turf(pick(GLOB.spawns_by_job[type]))
-		else if(assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
-			join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
-		else if(GLOB.latejoin_by_job[title])
-			join_turf = get_turf(pick(GLOB.latejoin_by_job[title]))
-		else
-			join_turf = get_turf(pick(GLOB.latejoin))
+		// SS220 EDIT - START - раундстарт для squad-ролей сначала использует модульный резолвер спавна
+		// if(assigned_squad && GLOB.spawns_by_squad_and_job[assigned_squad] && GLOB.spawns_by_squad_and_job[assigned_squad][type])
+		// 	join_turf = get_turf(pick(GLOB.spawns_by_squad_and_job[assigned_squad][type]))
+		// else if(GLOB.spawns_by_job[type])
+		// 	join_turf = get_turf(pick(GLOB.spawns_by_job[type]))
+		// else if(assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
+		// 	join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
+		// else if(GLOB.latejoin_by_job[title])
+		// 	join_turf = get_turf(pick(GLOB.latejoin_by_job[title]))
+		// else
+		// 	join_turf = get_turf(pick(GLOB.latejoin))
+
+		if(GLOB.job_squad_roles.Find(GET_DEFAULT_ROLE(title)))
+			join_turf = human.get_modular_spawn_turf(src, FALSE)
+
+		if(!join_turf)
+			if(assigned_squad && GLOB.spawns_by_squad_and_job[assigned_squad] && GLOB.spawns_by_squad_and_job[assigned_squad][type])
+				join_turf = get_turf(pick(GLOB.spawns_by_squad_and_job[assigned_squad][type]))
+			else if(GLOB.spawns_by_job[type])
+				join_turf = get_turf(pick(GLOB.spawns_by_job[type]))
+			else if(assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
+				join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
+			else if(GLOB.latejoin_by_job[title])
+				join_turf = get_turf(pick(GLOB.latejoin_by_job[title]))
+			else
+				join_turf = get_turf(pick(GLOB.latejoin))
+		// SS220 EDIT - END
 		human.forceMove(join_turf)
 
 		/* SS220 REMOVE (e64bb63898, 2f8015c1f1, dac4758021)

@@ -1,4 +1,4 @@
-// TODO: Platoon Name
+// ЗАДАЧА: название взвода
 // /datum/squad/marine/bravo/New()
 // 	. = ..()
 
