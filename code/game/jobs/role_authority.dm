@@ -482,13 +482,16 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 		var/mob/living/carbon/human/human = new_human
 		if(human.assigned_squad)
 			assigned_squad = human.assigned_squad.name
+	var/list/spawn_candidate // SS220 EDIT: added modular spawn candidate (spawn_turf + preferred_pod)
 
 	if(isturf(late_join))
 		new_human.forceMove(late_join)
 	else if(late_join)
 		// SS220 EDIT - START - раундстарт для squad-ролей сначала использует модульный резолвер спавна
 		var/turf/late_join_turf
-		late_join_turf = new_human.get_modular_spawn_turf(new_job, TRUE)
+		// late_join_turf = new_human.get_modular_spawn_turf(new_job, TRUE)
+		spawn_candidate = new_human.get_modular_spawn_candidate(new_job, TRUE)
+		late_join_turf = spawn_candidate?["spawn_turf"]
 		if(!late_join_turf)
 			// if(GLOB.latejoin_by_squad[assigned_squad])
 			// 	late_join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
@@ -512,17 +515,25 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 		// else
 		// 	join_turf = get_turf(pick(GLOB.latejoin))
 
-		if(GLOB.job_squad_roles.Find(GET_DEFAULT_ROLE(new_job.title)))
-			join_turf = new_human.get_modular_spawn_turf(new_job, FALSE)
+		var/is_squad_role = GLOB.job_squad_roles.Find(GET_DEFAULT_ROLE(new_job.title)) // SS220 EDIT: extracted squad-role flag for roundstart fallback policy
+		if(is_squad_role)
+			// join_turf = new_human.get_modular_spawn_turf(new_job, FALSE)
+			spawn_candidate = new_human.get_modular_spawn_candidate(new_job, FALSE)
+			join_turf = spawn_candidate?["spawn_turf"]
 
 		if(!join_turf)
 			if(assigned_squad && GLOB.spawns_by_squad_and_job[assigned_squad] && GLOB.spawns_by_squad_and_job[assigned_squad][new_job.type])
 				join_turf = get_turf(pick(GLOB.spawns_by_squad_and_job[assigned_squad][new_job.type]))
 			else if(GLOB.spawns_by_job[new_job.type])
 				join_turf = get_turf(pick(GLOB.spawns_by_job[new_job.type]))
-			else if(assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
+			// SS220 EDIT - START - roundstart fallback for squad roles excludes latejoin sources
+			// else if(assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
+			// 	join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
+			else if(!is_squad_role && assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
 				join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
-			else
+			// else
+			// 	join_turf = get_turf(pick(GLOB.latejoin))
+			else if(!is_squad_role)
 				join_turf = get_turf(pick(GLOB.latejoin))
 		// SS220 EDIT - END
 		new_human.forceMove(join_turf)
@@ -534,7 +545,8 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 			pod.go_in_cryopod(new_human, silent = TRUE)
 			break
 	*/
-	new_human.try_enter_nearby_free_cryopod(new_job) // SS220 EDIT: passed new_job to modular cryopod selection
+	// new_human.try_enter_nearby_free_cryopod(new_job)
+	new_human.try_enter_nearby_free_cryopod(new_job, spawn_candidate?["preferred_pod"]) // SS220 EDIT: added preferred_pod from modular spawn candidate
 
 	new_human.sec_hud_set_ID()
 	new_human.hud_set_squad()

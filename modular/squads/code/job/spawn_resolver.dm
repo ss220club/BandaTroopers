@@ -4,8 +4,7 @@
 	var/obj/structure/machinery/cryopod/target_pod
 	var/source_tag
 	var/tier_tag
-	var/late_join = FALSE
-	var/retry_allowed = TRUE
+	var/no_pod_expected = FALSE
 
 /datum/modular_squad_spawn_resolver
 	var/mob/living/carbon/human/owner
@@ -62,6 +61,16 @@
 
 	return other_squad_keys
 
+/datum/modular_squad_spawn_resolver/proc/is_spawn_turf_available(turf/candidate_turf)
+	if(!isturf(candidate_turf) || candidate_turf.density)
+		return FALSE
+
+	for(var/atom/movable/movable as anything in candidate_turf)
+		if(movable.density)
+			return FALSE
+
+	return TRUE
+
 /datum/modular_squad_spawn_resolver/proc/start_job_key_matches_target(job_key)
 	if(!ispath(job_key, /datum/job) || !ispath(job_datum?.type, /datum/job))
 		return FALSE
@@ -85,6 +94,15 @@
 		return (landmark.job == job_datum.type || ispath(job_datum.type, landmark.job) || ispath(landmark.job, job_datum.type))
 
 	return (landmark.job == job_datum.title || GET_DEFAULT_ROLE(landmark.job) == GET_DEFAULT_ROLE(job_datum.title))
+
+/datum/modular_squad_spawn_resolver/proc/latejoin_job_key_matches_target(job_key)
+	if(!job_key || !job_datum?.title)
+		return FALSE
+
+	if(ispath(job_key, /datum/job))
+		return (job_key == job_datum.type || ispath(job_datum.type, job_key) || ispath(job_key, job_datum.type))
+
+	return (job_key == job_datum.title || GET_DEFAULT_ROLE(job_key) == GET_DEFAULT_ROLE(job_datum.title))
 
 /datum/modular_squad_spawn_resolver/proc/collect_start_landmarks(list/squad_keys, exact_job = FALSE, squad_roles_only = FALSE)
 	var/list/landmarks = list()
@@ -130,7 +148,24 @@
 
 	return landmarks
 
-/datum/modular_squad_spawn_resolver/proc/collect_landmarks_by_tier(source_tag, tier_index, list/own_squad_keys, list/other_squad_keys)
+/datum/modular_squad_spawn_resolver/proc/collect_latejoin_job_landmarks()
+	var/list/landmarks = list()
+
+	for(var/job_key in GLOB.latejoin_by_job)
+		if(!latejoin_job_key_matches_target(job_key))
+			continue
+
+		var/list/job_landmarks = GLOB.latejoin_by_job[job_key]
+		if(!islist(job_landmarks))
+			continue
+
+		for(var/obj/effect/landmark/late_join/landmark as anything in job_landmarks)
+			if(!(landmark in landmarks))
+				landmarks += landmark
+
+	return landmarks
+
+/datum/modular_squad_spawn_resolver/proc/collect_landmarks_for_step(source_tag, tier_index, list/own_squad_keys, list/other_squad_keys)
 	switch(source_tag)
 		if("start")
 			switch(tier_index)
@@ -154,6 +189,9 @@
 				if(4)
 					return collect_latejoin_landmarks(other_squad_keys)
 
+		if("latejoin_job")
+			return collect_latejoin_job_landmarks()
+
 	return list()
 
 /datum/modular_squad_spawn_resolver/proc/build_results_from_landmarks(list/landmarks, source_tag, tier_tag, require_free_pod = TRUE)
@@ -166,11 +204,7 @@
 			continue
 
 		var/turf/center_turf = get_turf(landmark)
-		if(!isturf(center_turf))
-			continue
-
-		var/turf/spawn_turf = owner.find_first_spawn_turf_in_search_order(center_turf)
-		if(!spawn_turf)
+		if(!is_spawn_turf_available(center_turf))
 			continue
 
 		var/obj/structure/machinery/cryopod/pod = owner.find_free_cardinal_cryopod(center_turf)
@@ -179,50 +213,83 @@
 
 		var/datum/modular_squad_spawn_result/result = new
 		result.landmark = landmark
-		result.spawn_turf = spawn_turf
+		result.spawn_turf = center_turf
 		result.target_pod = pod
 		result.source_tag = source_tag
 		result.tier_tag = tier_tag
-		result.late_join = late_join_mode
+		result.no_pod_expected = !pod
 		results += result
 
 	return results
 
-/datum/modular_squad_spawn_resolver/proc/pick_result_for_tier(source_tag, tier_index, list/own_squad_keys, list/other_squad_keys, require_free_pod = TRUE)
-	var/list/landmarks = collect_landmarks_by_tier(source_tag, tier_index, own_squad_keys, other_squad_keys)
+/datum/modular_squad_spawn_resolver/proc/pick_result_for_step(source_tag, tier_index, list/own_squad_keys, list/other_squad_keys, require_free_pod = TRUE)
+	var/tier_tag = isnull(tier_index) ? "job" : "tier_[tier_index]"
+	var/list/landmarks = collect_landmarks_for_step(source_tag, tier_index, own_squad_keys, other_squad_keys)
 	if(!length(landmarks))
 		return null
 
-	var/list/results = build_results_from_landmarks(landmarks, source_tag, "tier_[tier_index]", require_free_pod)
+	var/list/results = build_results_from_landmarks(landmarks, source_tag, tier_tag, require_free_pod)
 	if(!length(results))
 		return null
 
 	var/datum/modular_squad_spawn_result/picked_result = pick(results)
-	squads_debug_log("[owner] selected [source_tag]/tier_[tier_index], landmark=[picked_result.landmark], turf=[picked_result.spawn_turf], pod=[picked_result.target_pod].")
+	squads_debug_log("[owner] selected [source_tag]/[tier_tag], landmark=[picked_result.landmark], turf=[picked_result.spawn_turf], pod=[picked_result.target_pod].")
 	return picked_result
 
 /datum/modular_squad_spawn_resolver/proc/resolve_with_free_pod(list/own_squad_keys, list/other_squad_keys)
-	var/list/source_order = list("start", "latejoin")
-	for(var/source_tag in source_order)
-		for(var/tier_index in 1 to 4)
-			var/datum/modular_squad_spawn_result/tier_result = pick_result_for_tier(source_tag, tier_index, own_squad_keys, other_squad_keys, require_free_pod = TRUE)
-			if(tier_result)
-				return tier_result
-	return null
+	for(var/tier_index in 1 to 4)
+		var/datum/modular_squad_spawn_result/start_result = pick_result_for_step("start", tier_index, own_squad_keys, other_squad_keys, require_free_pod = TRUE)
+		if(start_result)
+			return start_result
+
+	if(!late_join_mode)
+		return null
+
+	for(var/tier_index in 1 to 4)
+		var/datum/modular_squad_spawn_result/latejoin_result = pick_result_for_step("latejoin", tier_index, own_squad_keys, other_squad_keys, require_free_pod = TRUE)
+		if(latejoin_result)
+			return latejoin_result
+
+	return pick_result_for_step("latejoin_job", null, own_squad_keys, other_squad_keys, require_free_pod = TRUE)
 
 /datum/modular_squad_spawn_resolver/proc/resolve_without_pod(list/own_squad_keys, list/other_squad_keys)
-	var/list/source_order = list("start", "latejoin")
-	var/list/fallback_tier_order = list(1, 3, 2, 4)
+	var/list/fallback_steps = list(
+		list("source" = "start", "tier" = 1),
+		list("source" = "start", "tier" = 3)
+	)
 
-	for(var/source_tag in source_order)
-		for(var/tier_index in fallback_tier_order)
-			var/datum/modular_squad_spawn_result/tier_result = pick_result_for_tier(source_tag, tier_index, own_squad_keys, other_squad_keys, require_free_pod = FALSE)
-			if(tier_result)
-				tier_result.target_pod = null
-				tier_result.source_tag = "[source_tag]_no_pod"
-				return tier_result
+	if(late_join_mode)
+		fallback_steps += list(
+			list("source" = "latejoin", "tier" = 1),
+			list("source" = "latejoin", "tier" = 3),
+			list("source" = "latejoin_job", "tier" = null)
+		)
+
+	for(var/list/fallback_step as anything in fallback_steps)
+		var/source_tag = fallback_step["source"]
+		var/tier_index = fallback_step["tier"]
+		var/datum/modular_squad_spawn_result/fallback_result = pick_result_for_step(source_tag, tier_index, own_squad_keys, other_squad_keys, require_free_pod = FALSE)
+		if(!fallback_result)
+			continue
+
+		fallback_result.target_pod = null
+		fallback_result.no_pod_expected = TRUE
+		fallback_result.source_tag = "[source_tag]_no_pod"
+		return fallback_result
 
 	return null
+
+/datum/modular_squad_spawn_resolver/proc/build_spawn_candidate(datum/modular_squad_spawn_result/resolve_result)
+	if(!istype(resolve_result) || !isturf(resolve_result.spawn_turf))
+		return null
+
+	return list(
+		"spawn_turf" = resolve_result.spawn_turf,
+		"preferred_pod" = resolve_result.target_pod,
+		"source_tag" = resolve_result.source_tag,
+		"tier_tag" = resolve_result.tier_tag,
+		"no_pod_expected" = !!resolve_result.no_pod_expected
+	)
 
 /datum/modular_squad_spawn_resolver/proc/resolve()
 	if(!owner || !istype(job_datum))
@@ -241,7 +308,8 @@
 
 	var/datum/modular_squad_spawn_result/result_with_pod = resolve_with_free_pod(own_squad_keys, other_squad_keys)
 	if(result_with_pod)
-		return result_with_pod
+		return build_spawn_candidate(result_with_pod)
 
 	squads_debug_log("[owner] no free cryopod found by tiered resolver, switching to spawn-only fallback.")
-	return resolve_without_pod(own_squad_keys, other_squad_keys)
+	var/datum/modular_squad_spawn_result/result_without_pod = resolve_without_pod(own_squad_keys, other_squad_keys)
+	return build_spawn_candidate(result_without_pod)

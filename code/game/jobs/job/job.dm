@@ -285,7 +285,8 @@
 			assigned_squad = human.assigned_squad.name
 
 		var/turf/join_turf
-		// SS220 EDIT - START - раундстарт для squad-ролей сначала использует модульный резолвер спавна
+		var/list/spawn_candidate // SS220 EDIT: added modular spawn candidate (spawn_turf + preferred_pod)
+		// SS220 EDIT - START - roundstart for squad roles uses modular spawn candidate first
 		// if(assigned_squad && GLOB.spawns_by_squad_and_job[assigned_squad] && GLOB.spawns_by_squad_and_job[assigned_squad][type])
 		// 	join_turf = get_turf(pick(GLOB.spawns_by_squad_and_job[assigned_squad][type]))
 		// else if(GLOB.spawns_by_job[type])
@@ -297,20 +298,31 @@
 		// else
 		// 	join_turf = get_turf(pick(GLOB.latejoin))
 
-		if(GLOB.job_squad_roles.Find(GET_DEFAULT_ROLE(title)))
-			join_turf = human.get_modular_spawn_turf(src, FALSE)
+		var/is_squad_role = GLOB.job_squad_roles.Find(GET_DEFAULT_ROLE(title)) // SS220 EDIT: extracted squad-role flag for roundstart fallback policy
+		if(is_squad_role)
+			// join_turf = human.get_modular_spawn_turf(src, FALSE)
+			spawn_candidate = human.get_modular_spawn_candidate(src, FALSE)
+			join_turf = spawn_candidate?["spawn_turf"]
 
 		if(!join_turf)
 			if(assigned_squad && GLOB.spawns_by_squad_and_job[assigned_squad] && GLOB.spawns_by_squad_and_job[assigned_squad][type])
 				join_turf = get_turf(pick(GLOB.spawns_by_squad_and_job[assigned_squad][type]))
 			else if(GLOB.spawns_by_job[type])
 				join_turf = get_turf(pick(GLOB.spawns_by_job[type]))
-			else if(assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
+			// SS220 EDIT - START - roundstart fallback for squad roles excludes latejoin sources
+			// else if(assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
+			// 	join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
+			else if(!is_squad_role && assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
 				join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
-			else if(GLOB.latejoin_by_job[title])
+			// else if(GLOB.latejoin_by_job[title])
+			// 	join_turf = get_turf(pick(GLOB.latejoin_by_job[title]))
+			else if(!is_squad_role && GLOB.latejoin_by_job[title])
 				join_turf = get_turf(pick(GLOB.latejoin_by_job[title]))
-			else
+			// else
+			// 	join_turf = get_turf(pick(GLOB.latejoin))
+			else if(!is_squad_role)
 				join_turf = get_turf(pick(GLOB.latejoin))
+			// SS220 EDIT - END - roundstart fallback for squad roles excludes latejoin sources
 		// SS220 EDIT - END
 		human.forceMove(join_turf)
 
@@ -321,7 +333,8 @@
 				pod.go_in_cryopod(human, TRUE)
 				break
 		*/
-		human.try_enter_nearby_free_cryopod(src) // SS220 EDIT: passed job datum to modular cryopod selection
+		// human.try_enter_nearby_free_cryopod(src)
+		human.try_enter_nearby_free_cryopod(src, spawn_candidate?["preferred_pod"]) // SS220 EDIT: added preferred_pod from modular spawn candidate
 
 		human.sec_hud_set_ID()
 		human.hud_set_squad()
