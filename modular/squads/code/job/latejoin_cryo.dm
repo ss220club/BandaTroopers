@@ -105,7 +105,13 @@
 			var/list/retry_candidate = resolve_modular_spawn_candidate(job_datum, cached_modular_spawn_late_join)
 			var/obj/structure/machinery/cryopod/retry_pod = retry_candidate?["preferred_pod"]
 			if(retry_pod && try_enter_selected_cryopod(retry_pod))
-				squads_debug_log("[src] entered retry cryopod [retry_pod], source=[retry_candidate[\"source_tag\"]], tier=[retry_candidate[\"tier_tag\"]].")
+				var/retry_source_tag = retry_candidate?["source_tag"]
+				var/retry_tier_tag = retry_candidate?["tier_tag"]
+				if(!retry_source_tag)
+					retry_source_tag = "unknown"
+				if(!retry_tier_tag)
+					retry_tier_tag = "unknown"
+				squads_debug_log("[src] entered retry cryopod [retry_pod], source=[retry_source_tag], tier=[retry_tier_tag].")
 				clear_modular_spawn_candidate_cache()
 				return TRUE
 
@@ -126,7 +132,13 @@
 	if(cached_candidate?["preferred_pod"])
 		var/obj/structure/machinery/cryopod/cached_pod = cached_candidate["preferred_pod"]
 		if(try_enter_selected_cryopod(cached_pod))
-			squads_debug_log("[src] entered cached cryopod [cached_pod], source=[cached_candidate[\"source_tag\"]], tier=[cached_candidate[\"tier_tag\"]].")
+			var/cached_source_tag = cached_candidate?["source_tag"]
+			var/cached_tier_tag = cached_candidate?["tier_tag"]
+			if(!cached_source_tag)
+				cached_source_tag = "unknown"
+			if(!cached_tier_tag)
+				cached_tier_tag = "unknown"
+			squads_debug_log("[src] entered cached cryopod [cached_pod], source=[cached_source_tag], tier=[cached_tier_tag].")
 			clear_modular_spawn_candidate_cache()
 			return TRUE
 
