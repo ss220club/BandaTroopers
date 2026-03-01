@@ -18,6 +18,9 @@
 		text_box.color = override_color
 	text_box.letters_per_update = override_letters_per_update // SS220 EDIT
 
+	if(!client) // SS220 EDIT - FIX
+		return
+
 	LAZYADD(client.screen_texts, text_box)
 	if(LAZYLEN(client.screen_texts) == 1) //lets only play one at a time, for thematic effect and prevent overlap
 		INVOKE_ASYNC(text_box, TYPE_PROC_REF(/atom/movable/screen/text/screen_text, play_to_client))
