@@ -1966,6 +1966,12 @@
 /obj/structure/machinery/light/double/blue/golden_arrow{
 	light_power = 0.3
 	},
+/obj/structure/closet/secure_closet/marine_personal/engineer/s4{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/engineer/s4{
+	pixel_x = -7
+	},
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/cryo_cells)
 "aev" = (
@@ -7442,9 +7448,6 @@
 /obj/structure/surface/table/reinforced/almayer_B,
 /obj/structure/cable/heavyduty{
 	icon_state = "1-2"
-	},
-/obj/structure/platform/strata/metal{
-	dir = 4
 	},
 /obj/structure/machinery/prop/almayer/CICmap/computer,
 /turf/open/floor/almayer/plate,
@@ -13297,6 +13300,9 @@
 /turf/open/floor/almayer/mono,
 /area/golden_arrow/hangar)
 "aMA" = (
+/obj/structure/platform{
+	dir = 8
+	},
 /turf/open/floor/almayer/blue/northwest,
 /area/golden_arrow/platoonprep)
 "aMC" = (
@@ -16803,6 +16809,18 @@
 /obj/structure/blocker/invisible_wall/directional,
 /turf/open/floor/plating/plating_catwalk,
 /area/golden_arrow/hangar)
+"bYd" = (
+/obj/structure/closet/secure_closet/marine_personal/smartgunner/s3{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s3{
+	pixel_x = 8
+	},
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	dir = 1
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "bYz" = (
 /obj/structure/largecrate/random/case/double{
 	pixel_y = 12
@@ -16830,6 +16848,15 @@
 /obj/effect/decal/cleanable/blood/oil,
 /turf/open/floor/almayer/plating/northeast,
 /area/golden_arrow/engineering)
+"bZV" = (
+/obj/structure/closet/secure_closet/marine_personal/smartgunner/s2{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/smartgunner/s2{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "bZZ" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "NW-out";
@@ -17104,6 +17131,15 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/blue/north,
 /area/golden_arrow/platoonarmory)
+"cvq" = (
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s4{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s4{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "cvE" = (
 /obj/structure/sign/safety/bulkhead_door{
 	pixel_y = 27
@@ -17289,6 +17325,15 @@
 	},
 /turf/open/floor/plating/plating_catwalk,
 /area/golden_arrow/lower_cargo)
+"cUm" = (
+/obj/structure/closet/secure_closet/marine_personal/squad_leader/s2{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/rto/s2{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "cUo" = (
 /turf/closed/wall/almayer/outer/friegt,
 /area/golden_arrow/cargo_shuttle/upper)
@@ -17756,8 +17801,9 @@
 /turf/open/floor/almayer/test_floor4,
 /area/golden_arrow/lower_cargo)
 "dNh" = (
-/obj/structure/platform/shiva,
-/obj/structure/platform/strata/metal,
+/obj/structure/platform{
+	dir = 8
+	},
 /turf/open/floor/almayer/blue/southwest,
 /area/golden_arrow/platoonprep)
 "dNn" = (
@@ -18298,6 +18344,15 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/dorms)
+"eGK" = (
+/obj/structure/closet/secure_closet/marine_personal/platoon_leader/s3{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/platoon_leader/s3{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "eGR" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "NW-out";
@@ -18316,6 +18371,15 @@
 	dir = 1
 	},
 /turf/open/floor/almayer/edge/north,
+/area/golden_arrow/cryo_cells)
+"eIF" = (
+/obj/structure/closet/secure_closet/marine_personal/platoon_leader/s4{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/platoon_leader/s4{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
 /area/golden_arrow/cryo_cells)
 "eJA" = (
 /obj/structure/machinery/light/double/blue/golden_arrow{
@@ -18448,6 +18512,15 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/emerald,
 /area/golden_arrow/platoonarmory)
+"eXI" = (
+/obj/structure/closet/secure_closet/marine_personal/engineer/s4{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/engineer/s4{
+	pixel_x = 8
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "eZE" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/warning_stripes{
@@ -18683,6 +18756,18 @@
 /obj/structure/closet/gmcloset,
 /turf/open/floor/almayer/black,
 /area/golden_arrow/platoonprep)
+"fyF" = (
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	light_power = 0.3
+	},
+/obj/structure/closet/secure_closet/marine_personal/engineer/s1{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/engineer/s1{
+	pixel_x = 8
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "fzw" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/bed/chair/office/dark{
@@ -19132,6 +19217,15 @@
 	},
 /turf/open/floor/almayer/red,
 /area/golden_arrow/platoonarmory)
+"gub" = (
+/obj/structure/closet/secure_closet/marine_personal/squad_leader/s3{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/rto/s3{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "gvG" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "door_warning";
@@ -19488,6 +19582,15 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/edge/smooth/corner/north,
 /area/golden_arrow/hangar)
+"hjg" = (
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s1{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/rto/s1{
+	pixel_x = 8
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "hjZ" = (
 /turf/open/floor/almayer/orange/north,
 /area/golden_arrow/platoon_commander_rooms)
@@ -19561,6 +19664,18 @@
 	},
 /turf/open/floor/almayer/edge/smooth,
 /area/golden_arrow/motor_pool)
+"hpo" = (
+/obj/structure/closet/secure_closet/marine_personal/squad_leader/s1{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/squad_leader/s1{
+	pixel_x = -7
+	},
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	dir = 1
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "hqq" = (
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/motor_pool)
@@ -19903,6 +20018,15 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/mono,
 /area/golden_arrow/platoon_commander_rooms)
+"ifV" = (
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s2{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s2{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "ihT" = (
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
@@ -19950,6 +20074,18 @@
 /obj/item/toy/prize/apc,
 /turf/open/floor/almayer/aicore,
 /area/golden_arrow/ai_interface)
+"imC" = (
+/obj/structure/closet/secure_closet/marine_personal/squad_leader/s4{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/squad_leader/s4{
+	pixel_x = -7
+	},
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	dir = 1
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "inw" = (
 /obj/item/reagent_container/food/drinks/cans/classcola{
 	pixel_x = -11;
@@ -20074,6 +20210,24 @@
 	},
 /turf/open/floor/almayer,
 /area/golden_arrow/hangar)
+"izi" = (
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s3{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s3{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
+"izt" = (
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s1{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s1{
+	pixel_x = 8
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "izv" = (
 /obj/structure/disposalpipe/segment{
 	dir = 8;
@@ -20428,7 +20582,7 @@
 	icon_state = "door_warning";
 	dir = 4
 	},
-/turf/open/floor/almayer/cargo_arrow/east,
+/turf/open/floor/almayer/edge/smooth/east,
 /area/golden_arrow/platoon_commander_rooms)
 "jbJ" = (
 /obj/effect/decal/cleanable/dirt{
@@ -20535,6 +20689,18 @@
 	},
 /turf/open/floor/almayer,
 /area/golden_arrow/hangar)
+"jlD" = (
+/obj/structure/closet/secure_closet/marine_personal/squad_leader/s2{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/squad_leader/s2{
+	pixel_x = -7
+	},
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	dir = 1
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "jmu" = (
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/mono,
@@ -20793,6 +20959,18 @@
 	},
 /turf/open/floor/almayer,
 /area/golden_arrow/supply)
+"jYQ" = (
+/obj/structure/closet/secure_closet/marine_personal/smartgunner/s2{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s2{
+	pixel_x = 8
+	},
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	dir = 1
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "jYS" = (
 /obj/structure/cargo_container/uscm/chinook/left{
 	color = "#898988";
@@ -20940,6 +21118,18 @@
 	can_block_movement = 0
 	},
 /turf/open/floor/almayer,
+/area/golden_arrow/cryo_cells)
+"kog" = (
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s3{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s3{
+	pixel_x = -7
+	},
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	light_power = 0.3
+	},
+/turf/open/floor/almayer/plate,
 /area/golden_arrow/cryo_cells)
 "kuk" = (
 /obj/structure/blocker/invisible_wall{
@@ -21102,9 +21292,6 @@
 	icon_state = "p_stair_full"
 	},
 /obj/structure/stairs/perspective,
-/obj/structure/platform/strata/metal{
-	dir = 4
-	},
 /turf/open/floor/almayer/mono,
 /area/golden_arrow/platoonprep)
 "kKs" = (
@@ -21261,6 +21448,15 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/hangar)
+"kZF" = (
+/obj/structure/closet/secure_closet/marine_personal/smartgunner/s1{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/smartgunner/s1{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "laE" = (
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/edge/smooth/west,
@@ -21301,6 +21497,15 @@
 /obj/effect/decal/cleanable/blood/drip,
 /turf/open/floor/almayer/sterile_green_side,
 /area/golden_arrow/medical)
+"lmi" = (
+/obj/structure/closet/secure_closet/marine_personal/engineer/s1{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/engineer/s1{
+	pixel_x = 8
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "lml" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "door_warning";
@@ -21315,6 +21520,15 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/uscm/directional/up_down/east,
 /area/golden_arrow/platoonprep)
+"lnt" = (
+/obj/structure/closet/secure_closet/marine_personal/engineer/s2{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/engineer/s2{
+	pixel_x = 8
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "lov" = (
 /obj/structure/disposalpipe/segment{
 	dir = 8
@@ -21356,6 +21570,15 @@
 /obj/structure/sign/poster/ad,
 /turf/open/floor/almayer,
 /area/golden_arrow/supply)
+"lqr" = (
+/obj/structure/closet/secure_closet/marine_personal/engineer/s3{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/engineer/s3{
+	pixel_x = 8
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "lqv" = (
 /obj/structure/bed/chair{
 	dir = 8
@@ -21792,6 +22015,18 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/hangar)
+"lRV" = (
+/obj/structure/closet/secure_closet/marine_personal/smartgunner/s1{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s1{
+	pixel_x = 8
+	},
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	dir = 1
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "lTe" = (
 /obj/structure/roof/cargocrane_tracks/cross{
 	pixel_y = 14
@@ -22145,6 +22380,15 @@
 "myb" = (
 /turf/open/floor/almayer/edge/smooth/endcap_left/north,
 /area/golden_arrow/platoonprep)
+"myz" = (
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s3{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/rto/s3{
+	pixel_x = 8
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "mAn" = (
 /obj/structure/cable/heavyduty{
 	icon_state = "4-8"
@@ -22897,6 +23141,18 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/blue,
 /area/golden_arrow/platoonprep)
+"nQZ" = (
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	light_power = 0.3
+	},
+/obj/structure/closet/secure_closet/marine_personal/engineer/s2{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/engineer/s2{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "nUJ" = (
 /obj/structure/pipes/standard/simple/hidden/supply{
 	dir = 9
@@ -22919,12 +23175,6 @@
 /obj/structure/surface/table/reinforced/almayer_B,
 /obj/structure/cable/heavyduty{
 	icon_state = "1-2"
-	},
-/obj/structure/platform/strata/metal{
-	layer = 3.1
-	},
-/obj/structure/platform/strata/metal{
-	dir = 4
 	},
 /obj/item/device/megaphone,
 /turf/open/floor/almayer/plate,
@@ -23364,6 +23614,15 @@
 /obj/effect/decal/cleanable/blood/oil,
 /turf/open/floor/almayer,
 /area/golden_arrow/engineering)
+"oTH" = (
+/obj/structure/closet/secure_closet/marine_personal/platoon_leader/s1{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/platoon_leader/s1{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "oUY" = (
 /obj/structure/machinery/door/poddoor/almayer/locked{
 	dir = 2;
@@ -23850,6 +24109,15 @@
 	},
 /turf/open/floor/almayer/mono,
 /area/golden_arrow/motor_pool)
+"pRS" = (
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s2{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s2{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "pSQ" = (
 /obj/structure/surface/table/almayer,
 /obj/item/attachable/scope/pve{
@@ -24173,6 +24441,15 @@
 	},
 /turf/open/floor/almayer/edge/smooth/north,
 /area/golden_arrow/hangar)
+"qwj" = (
+/obj/structure/closet/secure_closet/marine_personal/squad_leader/s4{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/rto/s4{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "qwr" = (
 /obj/structure/disposalpipe/segment,
 /obj/structure/pipes/standard/simple/hidden/supply,
@@ -24423,6 +24700,15 @@
 	},
 /turf/open/floor/plating/plating_catwalk,
 /area/golden_arrow/hangar)
+"qYr" = (
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s1{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s1{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "qZf" = (
 /obj/structure/flora/bush/ausbushes/lavendergrass,
 /obj/structure/flora/bush/ausbushes/var3/sunnybush,
@@ -24443,9 +24729,6 @@
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/hangar)
 "raZ" = (
-/obj/structure/platform/strata/metal{
-	dir = 4
-	},
 /obj/structure/stairs/perspective{
 	icon_state = "p_stair_full";
 	dir = 1
@@ -24468,6 +24751,18 @@
 	},
 /turf/open/floor/almayer/black/east,
 /area/golden_arrow/platoonprep)
+"rcH" = (
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	light_power = 0.3
+	},
+/obj/structure/closet/secure_closet/marine_personal/engineer/s3{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/engineer/s3{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "rds" = (
 /obj/structure/roof/cargocrane_tracks/tjoint2{
 	pixel_y = 14
@@ -24584,6 +24879,15 @@
 "rkd" = (
 /turf/open/floor/almayer/edge/northwest,
 /area/golden_arrow/platoon_commander_rooms)
+"rkW" = (
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s2{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/rto/s2{
+	pixel_x = 8
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "rll" = (
 /turf/open/floor/almayer/uscm/directional/up_down/east,
 /area/golden_arrow/prep_hallway)
@@ -24790,6 +25094,15 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/silvercorner/west,
 /area/golden_arrow/platoon_commander_rooms)
+"rDS" = (
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s4{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/rto/s4{
+	pixel_x = 8
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "rEz" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "S";
@@ -24805,6 +25118,18 @@
 "rJr" = (
 /turf/open/floor/almayer_hull/outerhull_dir/northeast,
 /area/space)
+"rJE" = (
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s1{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s1{
+	pixel_x = 8
+	},
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	light_power = 0.3
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "rKg" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/machinery/light/double/blue/golden_arrow{
@@ -24875,6 +25200,15 @@
 	},
 /turf/open/floor/plating/plating_catwalk,
 /area/golden_arrow/engineering)
+"rRu" = (
+/obj/structure/closet/secure_closet/marine_personal/squad_leader/s1{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/rto/s1{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "rRA" = (
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/plating/plating_catwalk,
@@ -25006,6 +25340,15 @@
 	},
 /turf/open/floor/almayer,
 /area/golden_arrow/dorms)
+"scF" = (
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s4{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s4{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "sdj" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/structure/cable/heavyduty{
@@ -25017,6 +25360,15 @@
 	},
 /turf/open/floor/almayer/edge/smooth/corner/east,
 /area/golden_arrow/hangar)
+"sdl" = (
+/obj/structure/closet/secure_closet/marine_personal/smartgunner/s3{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/smartgunner/s3{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "sdp" = (
 /obj/item/device/flashlight/lamp/tripod,
 /turf/open/floor/almayer/plate,
@@ -25503,6 +25855,15 @@
 	},
 /turf/open/floor/almayer/edge/west,
 /area/golden_arrow/engineering)
+"sWG" = (
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s3{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s3{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "tbU" = (
 /obj/structure/cable/heavyduty{
 	icon_state = "4-8"
@@ -25623,6 +25984,18 @@
 "tmN" = (
 /turf/closed/wall/almayer,
 /area/golden_arrow/platoon_commander_rooms)
+"tmY" = (
+/obj/structure/closet/secure_closet/marine_personal/squad_leader/s3{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/squad_leader/s3{
+	pixel_x = -7
+	},
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	dir = 1
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "tnx" = (
 /obj/structure/surface/table/reinforced/black,
 /obj/structure/machinery/prop/almayer/computer/PC/large{
@@ -25638,6 +26011,18 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/almayer/orange,
 /area/golden_arrow/platoonarmory)
+"toj" = (
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s4{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s4{
+	pixel_x = -7
+	},
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	light_power = 0.3
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "tsK" = (
 /obj/structure/machinery/floodlight/landing/floor{
 	color = "#dae2ff";
@@ -26378,6 +26763,15 @@
 /obj/structure/pipes/standard/simple/hidden/supply,
 /turf/open/floor/almayer,
 /area/golden_arrow/engineering)
+"uHP" = (
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s3{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s3{
+	pixel_x = 8
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "uJn" = (
 /turf/closed/wall/almayer,
 /area/golden_arrow/supply)
@@ -26725,6 +27119,18 @@
 	},
 /turf/open/floor/almayer,
 /area/golden_arrow/lower_cargo)
+"vrK" = (
+/obj/structure/closet/secure_closet/marine_personal/smartgunner/s4{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet/marine_personal/corpsman/s4{
+	pixel_x = 8
+	},
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	dir = 1
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "vxH" = (
 /obj/structure/ship_ammo/laser_battery,
 /obj/structure/ship_ammo/laser_battery{
@@ -26811,6 +27217,18 @@
 "vAm" = (
 /turf/closed/wall/almayer/aicore/hull,
 /area/golden_arrow/ai_interface)
+"vAE" = (
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s2{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/rifleman/s2{
+	pixel_x = -7
+	},
+/obj/structure/machinery/light/double/blue/golden_arrow{
+	light_power = 0.3
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "vCz" = (
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
@@ -27150,9 +27568,6 @@
 /obj/structure/surface/table/reinforced/almayer_B,
 /obj/structure/cable/heavyduty{
 	icon_state = "1-2"
-	},
-/obj/structure/platform/strata/metal{
-	dir = 4
 	},
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/platoonprep)
@@ -27646,6 +28061,24 @@
 	},
 /turf/open/floor/almayer,
 /area/golden_arrow/prep_hallway)
+"xts" = (
+/obj/structure/closet/secure_closet/marine_personal/smartgunner/s4{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/smartgunner/s4{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
+"xvk" = (
+/obj/structure/closet/secure_closet/marine_personal/engineer/s2{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/engineer/s2{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "xwW" = (
 /obj/structure/cable/heavyduty{
 	icon_state = "2-8"
@@ -27960,6 +28393,15 @@
 	},
 /turf/open/floor/almayer,
 /area/golden_arrow/platoonprep)
+"ycS" = (
+/obj/structure/closet/secure_closet/marine_personal/platoon_leader/s2{
+	pixel_x = 8
+	},
+/obj/structure/closet/secure_closet/marine_personal/platoon_leader/s2{
+	pixel_x = -7
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "ydL" = (
 /obj/structure/machinery/cm_vending/clothing/synth/snowflake,
 /turf/open/floor/almayer/test_floor5,
@@ -31687,29 +32129,29 @@ aEG
 aEG
 aEG
 aWh
-aRd
+kZF
 ahv
 anC
 ahe
-aRd
+izt
 aog
-aRd
+xts
 agu
 ayv
 agg
-aRd
+scF
 aog
-aRd
+bZV
 afe
 aeS
 aex
-aRd
+pRS
 aPS
-aRd
+sdl
 adr
 aOE
 acE
-aRd
+sWG
 aWh
 aEG
 aEG
@@ -31864,29 +32306,29 @@ aEG
 aEG
 aEG
 qjm
-ahD
+lRV
 ahx
 apm
 ahe
-aeu
+rJE
 aog
-ahD
+vrK
 agv
 aAv
 agi
-aeu
+toj
 aog
-ahD
+jYQ
 afe
 aeU
 aex
-aeu
+vAE
 aog
-ahD
+bYd
 adr
 acZ
 acE
-aeu
+kog
 aaS
 aEG
 aEG
@@ -32041,29 +32483,29 @@ aEG
 aEG
 aEG
 aWh
-aRd
+qYr
 ahy
 apm
 ahf
-aRd
+izt
 aog
-aRd
+cvq
 agv
 aAv
 agi
-aRd
+scF
 aog
-aRd
+ifV
 afg
 aeX
 aex
-aRd
+pRS
 ayp
-aRd
+izi
 adu
 adb
 acE
-aRd
+sWG
 aWh
 aEG
 aEG
@@ -32218,29 +32660,29 @@ aEG
 aEG
 aEG
 aWh
-aRd
+hjg
 ahy
 apm
 ahe
-aRd
+izt
 aog
-aRd
+rDS
 agu
 aAv
 agi
-aRd
+scF
 aog
-aRd
+rkW
 afg
 aeX
 aeB
-aRd
+pRS
 aog
-aRd
+myz
 adw
 adc
 acF
-aRd
+sWG
 aWh
 aEG
 aEG
@@ -32395,29 +32837,29 @@ aEG
 aEG
 aEG
 aWh
-aRd
+rRu
 ahy
 apm
 ahe
-aRd
+izt
 aog
-aRd
+qwj
 agu
 aAv
 agi
-aRd
+scF
 aog
-aRd
+cUm
 afg
 aeX
 aeB
-aRd
+xvk
 aog
-aRd
+gub
 adw
 adc
 acF
-aRd
+uHP
 aWh
 aEG
 aEG
@@ -32572,29 +33014,29 @@ aEG
 aEG
 aEG
 aWh
-ahD
+hpo
 ahy
 apm
 ahe
-aeu
+fyF
 aog
-ahD
+imC
 agu
 aAv
 agi
 aeu
 aog
-ahD
+jlD
 afg
 aeU
 aex
-aeu
+nQZ
 aog
-ahD
+tmY
 adr
 adc
 acE
-aeu
+rcH
 aWh
 aEG
 aEG
@@ -32749,29 +33191,29 @@ aEG
 aEG
 aEG
 aWh
-aRd
+oTH
 ahC
 aqN
 aRE
-aRd
+lmi
 aog
-aRd
+eIF
 apA
 agG
 aBq
-aRd
+eXI
 aog
-aRd
+ycS
 aLz
 aor
 aeD
-aRd
+lnt
 aog
-aRd
+eGK
 adF
 acL
 acG
-aRd
+lqr
 aWh
 aEG
 aEG
