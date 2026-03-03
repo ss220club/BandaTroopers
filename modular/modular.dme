@@ -15,3 +15,4 @@
 #include "arachnid/_arachnid.dme"
 #include "trees/_trees.dme"
 #include "cyrillic_fixes/_cyrillic_fixes.dme"
+#include "translations/_translations.dme"
