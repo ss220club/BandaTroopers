@@ -14,9 +14,9 @@
 	name = "КМБ Синтетик-Следователь"
 	prefix = "СИНТ.СЛ"
 
-/datum/paygrade/cmb/syn/riot
-	name = "КМБ Синтетик-Силовик"
-	prefix = "СИНТ.СЛК"
+// /datum/paygrade/cmb/syn/riot
+// 	name = "КМБ Синтетик-Силовик"
+// 	prefix = "СИНТ.СЛК"
 
 /datum/paygrade/cmb/riot
 	name = "КМБ Силовик"
