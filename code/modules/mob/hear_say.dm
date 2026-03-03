@@ -46,7 +46,7 @@
 		else
 			to_chat(src, SPAN_LOCALSAY("<span class='prefix'>[comm_paygrade][speaker_name]</span>[alt_name] talks but you cannot hear them."))
 	else
-		to_chat(src, SPAN_LOCALSAY("<span class='prefix'>[comm_paygrade][speaker_name]</span>[alt_name] [verb], <span class='[style]'>\"[message]\"</span>"))
+		to_chat(src, SPAN_LOCALSAY("<span class='prefix'>[comm_paygrade][speaker_name]</span>[alt_name] [ru_say_verb(verb)], <span class='[style]'>\"[message]\"</span>"))
 		if (speech_sound && (get_dist(speaker, src) <= GLOB.world_view_size && src.z == speaker.z))
 			var/turf/source = speaker? get_turf(speaker) : get_turf(src)
 			playsound_client(src.client, speech_sound, source, sound_vol, GET_RANDOM_FREQ)
