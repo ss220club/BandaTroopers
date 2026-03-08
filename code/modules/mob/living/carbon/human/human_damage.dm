@@ -418,6 +418,11 @@ This function restores all limbs.
 	sharp = 0, edge = 0, obj/used_weapon = null, no_limb_loss = FALSE, \
 	permanent_kill = FALSE, mob/firer = null, force = FALSE
 )
+	// SS220 EDIT - START
+	if(damage > 0 && player_survival_is_damage_blocked())
+		player_survival_log_damage_block("apply_damage", damage, damagetype)
+		return FALSE
+	// SS220 EDIT - END
 	if(protection_aura && damage > 0)
 		damage = floor(damage * ((ORDER_HOLD_CALC_LEVEL - protection_aura) / ORDER_HOLD_CALC_LEVEL))
 

@@ -25,6 +25,11 @@ GLOBAL_LIST_INIT(frozen_items, list(SQUAD_MARINE_1 = list(), SQUAD_MARINE_2 = li
 	var/mode = null
 	var/z_restricted = TRUE
 
+/obj/structure/machinery/computer/cryopod/Initialize()
+	. = ..()
+
+	RegisterSignal(SSdcs, COMSIG_GLOB_SQUAD_NAME_CHANGE, PROC_REF(rename_squad_name)) // SS220 EDIT
+
 /obj/structure/machinery/computer/cryopod/medical
 	cryotype = "Med"
 
@@ -44,6 +49,17 @@ GLOBAL_LIST_INIT(frozen_items, list(SQUAD_MARINE_1 = list(), SQUAD_MARINE_2 = li
 
 /obj/structure/machinery/computer/cryopod/alpha/proc/rename_platoon(datum/source, new_name, old_name)
 	SIGNAL_HANDLER
+
+	if(cryotype != old_name) // SS220 EDIT
+		return
+
+	cryotype = new_name
+
+/obj/structure/machinery/computer/cryopod/proc/rename_squad_name(datum/source, datum/squad/target_squad, new_name, old_name) // SS220 EDIT
+	SIGNAL_HANDLER
+
+	if(cryotype != old_name)
+		return
 
 	cryotype = new_name
 

@@ -51,6 +51,7 @@
 #define MOB_HUD_HUNTER 20
 #define MOB_HUD_HUNTER_CLAN 21
 #define MOB_HUD_EXECUTE 22
+#define MOB_HUD_FACTION_UNSC 23 // SS220 EDIT: HALO UNSC faction HUD slot
 
 //for SL/FTL/LZ targeting on locator huds
 #define TRACKER_SL "track_sl"

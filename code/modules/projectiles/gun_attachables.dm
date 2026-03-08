@@ -29,6 +29,7 @@ Defined in conflicts.dm of the #defines folder.
 	var/attach_icon //the sprite to show when the attachment is attached when we want it different from the icon_state.
 	var/pixel_shift_x = 16 //Determines the amount of pixels to move the icon state for the overlay.
 	var/pixel_shift_y = 16 //Uses the bottom left corner of the item.
+	var/layer_addition = 0 // SS220 EDIT: allow per-attachment overlay layer tuning for HALO content
 
 	flags_atom =  FPRINT|CONDUCT
 	matter = list("metal" = 100)
@@ -262,6 +263,7 @@ Defined in conflicts.dm of the #defines folder.
 	attach_icon = "suppressor_a"
 	hud_offset_mod = -3
 	gun_traits = list(TRAIT_GUN_SILENCED)
+	var/new_fire_sound = "gun_silenced" // SS220 EDIT: support suppressor-specific silenced shot keys
 
 /obj/item/attachable/suppressor/New()
 	..()

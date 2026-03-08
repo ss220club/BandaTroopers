@@ -1,0 +1,9 @@
+{
+    "map_name": "UNSC Dark Was The Night (ODSTBay)",
+    "map_path": "map_files/unsc_dark_was_the_night_odst",
+    "map_file": "unsc_dark_was_the_night_odst.dmm",
+    "webmap_url": "DarkWasTheNight",
+    "traits": [{"Marine Main Ship": true}],
+    "nightmare_path": "maps/Nightmare/maps/unsc_dark_was_the_night_odst/",
+    "platoon": "/datum/squad/marine/odst"
+}

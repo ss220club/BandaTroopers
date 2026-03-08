@@ -206,10 +206,30 @@ GLOBAL_LIST_INIT_TYPED(map_type_list, /obj/item/map, setup_all_maps())
 /obj/item/map/current_map/Initialize(mapload, ...)
 	. = ..()
 
-	var/map_name = SSmapping.configs[GROUND_MAP].map_name
+	var/datum/map_config/ground_map = SSmapping.configs[GROUND_MAP]
+	if(!ground_map) // SS220 EDIT: guard against missing map config during tests/bootstrapping
+		return
+
+	var/map_name = ground_map.map_name
+	var/map_type = ground_map.map_item_type
+
+	// SS220 EDIT - START: prefer JSON-configured map item type over legacy name registry
+	if(map_type)
+		var/obj/item/map/config_map = new map_type()
+		name = config_map.name
+		desc = config_map.desc
+		desc_lore = config_map.desc_lore
+		html_link = config_map.html_link
+		color = config_map.color
+		qdel(config_map)
+		return
+	// SS220 EDIT - END
+
 	var/obj/item/map/map = GLOB.map_type_list[map_name]
 	if (!map && (map_name == MAP_RUNTIME || map_name == MAP_CHINOOK || (map_name in SHIP_MAP_NAMES)))
 		return // "Maps" we don't have maps for so we don't need to throw a runtime for (namely in unit_testing)
+	if(!map) // SS220 EDIT: keep generic placeholder map if no config or legacy mapping exists
+		return
 	name = map.name
 	desc = map.desc
 	desc_lore = map.desc_lore

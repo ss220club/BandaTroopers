@@ -57,10 +57,16 @@ em {font-style: normal; font-weight: bold;}
 
 .clfradio {color: #6f679c}
 
-.alpharadio {color: #828cff;}
-.bravoradio {color: #C68610;}
-.charlieradio {color: #AA55AA;}
-.deltaradio {color: #007FCF;}
+// SS220 EDIT - START
+// .alpharadio {color: #828cff;}
+// .bravoradio {color: #C68610;}
+// .charlieradio {color: #AA55AA;}
+// .deltaradio {color: #007FCF;}
+.alpharadio {color: #db1d1d;} // SS220 EDIT: synced Alpha radio color with modular squad palette
+.bravoradio {color: #ffe650;} // SS220 EDIT: synced Bravo radio color with modular squad palette
+.charlieradio {color: #ff96ff;} // SS220 EDIT: synced Charlie radio color with modular squad palette
+.deltaradio {color: #828cff;} // SS220 EDIT: synced Delta radio color with modular squad palette
+// SS220 EDIT - END
 .echoradio {color: #3EB489;}
 .cryoradio {color: #4a4740;}
 .hcradio {color: #318779;}

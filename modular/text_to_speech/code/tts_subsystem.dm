@@ -301,15 +301,27 @@ SUBSYSTEM_DEF(tts220)
 	tts_sma_rps = round(rps_sum / tts_rps_list.len, 0.1)
 
 	var/free_rps = clamp(tts_rps_limit - tts_rps, 0, tts_rps_limit)
-	var/requests = tts_requests_queue.Copy(1, clamp(LAZYLEN(tts_requests_queue), 0, free_rps) + 1)
-	for(var/request in requests)
+	var/request_index = 1
+	while(free_rps > 0 && request_index <= LAZYLEN(tts_requests_queue))
+		var/list/request = tts_requests_queue[request_index]
 		var/text = request[1]
 		var/datum/tts_seed/seed = request[2]
-		var/datum/callback/proc_callback = request[3]
+		var/filename = request[3]
+		var/datum/callback/proc_callback = request[4]
 		var/datum/tts_provider/provider = seed.provider
-		provider.request(text, seed, proc_callback)
-		tts_rps_counter++
-	tts_requests_queue.Cut(1, clamp(LAZYLEN(tts_requests_queue), 0, free_rps) + 1)
+
+		if(!CONFIG_GET(flag/tts_enabled) || !provider?.is_available())
+			cancel_tts_request(filename)
+			tts_requests_queue.Cut(request_index, request_index + 1)
+			continue
+
+		if(provider.request(text, seed, proc_callback))
+			tts_rps_counter++
+			free_rps--
+			tts_requests_queue.Cut(request_index, request_index + 1)
+			continue
+
+		request_index++
 
 	if(sanitized_messages_caching)
 		sanitized_messages_cache.Cut()
@@ -325,23 +337,32 @@ SUBSYSTEM_DEF(tts220)
 	tts_request_succeeded = SStts220.tts_request_succeeded
 	tts_reused = SStts220.tts_reused
 
-/datum/controller/subsystem/tts220/proc/queue_request(text, datum/tts_seed/seed, datum/callback/proc_callback)
+/datum/controller/subsystem/tts220/proc/queue_request(text, datum/tts_seed/seed, filename, datum/callback/proc_callback)
+	if(!CONFIG_GET(flag/tts_enabled))
+		return FALSE
 	if(LAZYLEN(tts_requests_queue) > tts_requests_queue_limit)
 		is_enabled = FALSE
 		to_chat(world, span_announcement("SERVER: очередь запросов превысила лимит, подсистема SStts220 принудительно отключена!"))
+		cancel_tts_request(filename)
+		return FALSE
+
+	var/datum/tts_provider/provider = seed.provider
+	if(!provider?.is_available())
 		return FALSE
 
 	if(tts_rps_counter < tts_rps_limit)
-		var/datum/tts_provider/provider = seed.provider
-		provider.request(text, seed, proc_callback)
+		if(!provider.request(text, seed, proc_callback))
+			return FALSE
 		tts_rps_counter++
 		return TRUE
 
-	tts_requests_queue += list(list(text, seed, proc_callback))
+	tts_requests_queue += list(list(text, seed, filename, proc_callback))
 	return TRUE
 
 /datum/controller/subsystem/tts220/proc/get_tts(atom/speaker, mob/listener, message, datum/tts_seed/tts_seed, localyze_type = TTS_LOCALYZE_LOCAL, effect = SOUND_EFFECT_NONE, traits = TTS_TRAIT_RATE_FASTER, preSFX = null, postSFX = null)
 	if(!is_enabled)
+		return
+	if(!CONFIG_GET(flag/tts_enabled))
 		return
 	if(!message)
 		return
@@ -356,7 +377,7 @@ SUBSYSTEM_DEF(tts220)
 	tts_trps_counter++
 
 	var/datum/tts_provider/provider = tts_seed.provider
-	if(!provider.is_enabled)
+	if(!provider?.is_available())
 		return
 	if(provider.throttle_check())
 		return
@@ -395,7 +416,8 @@ SUBSYSTEM_DEF(tts220)
 		return
 
 	var/datum/callback/cb = CALLBACK(src, PROC_REF(get_tts_callback), speaker, listener, filename, tts_seed, localyze_type, effect, preSFX, postSFX)
-	queue_request(text, tts_seed, cb)
+	if(!queue_request(text, tts_seed, filename, cb))
+		return
 	LAZYADD(tts_queue[filename], play_tts_cb)
 
 /datum/controller/subsystem/tts220/proc/get_tts_callback(atom/speaker, mob/listener, filename, datum/tts_seed/seed, localyze_type, effect, preSFX, postSFX, datum/http_response/response)
@@ -539,6 +561,11 @@ SUBSYSTEM_DEF(tts220)
 /datum/controller/subsystem/tts220/proc/cleanup_tts_file(filename)
 	fdel(filename)
 
+/datum/controller/subsystem/tts220/proc/cancel_tts_request(filename)
+	if(isnull(filename))
+		return
+	tts_queue -= filename
+
 /datum/controller/subsystem/tts220/proc/get_available_seeds(owner)
 	var/list/_tts_seeds_names = list()
 	_tts_seeds_names |= tts_seeds_names
@@ -594,6 +621,8 @@ SUBSYSTEM_DEF(tts220)
 		sanitized_messages_cache[hash] = .
 
 /proc/tts_cast(atom/speaker, mob/listener, message, datum/tts_seed/tts_seed, localyze_type = TTS_LOCALYZE_LOCAL, effect = SOUND_EFFECT_NONE, traits = TTS_TRAIT_RATE_FASTER, preSFX = null, postSFX = null)
+	if(!SStts220.is_enabled || !CONFIG_GET(flag/tts_enabled))
+		return
 	SStts220.get_tts(speaker, listener, message, tts_seed, localyze_type, effect, traits, preSFX, postSFX)
 
 /proc/tts_acronym_replacer(word)

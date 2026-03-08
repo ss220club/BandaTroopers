@@ -260,6 +260,7 @@
 	var/drawSound = 'sound/weapons/gun_pistol_draw.ogg'
 	var/icon_x = 0
 	var/icon_y = -3
+	var/gun_underlay_path = 'icons/obj/items/clothing/belts.dmi' // SS220 EDIT: allow HALO pouches to override pistol overlay icon source
 
 /obj/item/storage/pouch/pistol/Destroy()
 	gun_underlay = null
@@ -295,7 +296,7 @@
 /obj/item/storage/pouch/pistol/proc/update_gun_icon()
 	if(current_gun)
 		playsound(src, drawSound, 15, TRUE)
-		gun_underlay = image('icons/obj/items/clothing/belts.dmi', current_gun.base_gun_icon)
+		gun_underlay = image(gun_underlay_path, current_gun.base_gun_icon) // SS220 EDIT: use per-pouch icon sheet for HALO gun overlays
 		gun_underlay.pixel_x = icon_x
 		gun_underlay.pixel_y = icon_y
 		gun_underlay.color = current_gun.color

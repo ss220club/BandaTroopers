@@ -28,8 +28,13 @@
 
 /datum/authority/branch/role/proc/associated_squad_job_positions(platoon_associated_type)
 	var/datum/squad/associated_squad = GLOB.RoleAuthority.squads_by_type[platoon_associated_type]
+	if(!associated_squad)
+		// Не нашли связанный отряд, добавлять слоты некуда.
+		return
 	for(var/role in GLOB.RoleAuthority.roles_by_path)
 		var/datum/job/job = GLOB.RoleAuthority.roles_by_path[role]
+		if(!job)
+			continue
 		// var/datum/job/job_mapped = GET_MAPPED_ROLE(job_path)
 		var/additional_positions = 0
 		switch(job.title)

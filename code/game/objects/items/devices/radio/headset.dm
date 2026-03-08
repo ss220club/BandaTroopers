@@ -70,14 +70,27 @@
 				default_freq = cycled_channel
 
 	RegisterSignal(SSdcs, COMSIG_GLOB_PLATOON_NAME_CHANGE, PROC_REF(rename_platoon))
+	RegisterSignal(SSdcs, COMSIG_GLOB_SQUAD_NAME_CHANGE, PROC_REF(rename_squad_name)) // SS220 EDIT
 
 	if(SQUAD_MARINE_1 == default_freq && SQUAD_MARINE_1 != GLOB.main_platoon_name)
 		rename_platoon(null, GLOB.main_platoon_name, SQUAD_MARINE_1)
+
+	for(var/static_squad_name in list(SQUAD_MARINE_1, SQUAD_MARINE_2, SQUAD_MARINE_3, SQUAD_MARINE_4)) // SS220 EDIT
+		var/runtime_squad_name = squad_name_get_runtime(static_squad_name)
+		if(!isnull(channels[static_squad_name]) && static_squad_name != runtime_squad_name)
+			var/channel_state = channels[static_squad_name]
+			channels -= static_squad_name
+			channels[runtime_squad_name] = channel_state
 
 /obj/item/device/radio/headset/proc/rename_platoon(datum/source, new_name, old_name)
 	SIGNAL_HANDLER
 
 	set_frequency(frequency)
+
+/obj/item/device/radio/headset/proc/rename_squad_name(datum/source, datum/squad/target_squad, new_name, old_name) // SS220 EDIT
+	SIGNAL_HANDLER
+
+	rename_platoon(source, new_name, old_name)
 
 /obj/item/device/radio/headset/Destroy()
 	wearer = null

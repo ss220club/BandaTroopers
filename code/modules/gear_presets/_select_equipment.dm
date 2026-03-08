@@ -367,7 +367,8 @@
 	if(show_job_gear)
 		load_gear(new_human, mob_client)
 	load_status(new_human, mob_client)
-	INVOKE_NEXT_TICK(src, PROC_REF(do_vanity), new_human, mob_client)
+	// SS220 REMOVE (e64bb63898, 2f8015c1f1, dac4758021): INVOKE_NEXT_TICK(src, PROC_REF(do_vanity), new_human, mob_client)
+	INVOKE_NEXT_TICK(src, PROC_REF(do_vanity), new_human, mob_client, late_join) // SS220 EDIT
 
 	load_traits(new_human, mob_client)
 	if(GLOB.round_statistics && count_participant)
@@ -390,12 +391,14 @@
 	if(ai_brain)
 		ai_brain.appraise_inventory()
 
-/datum/equipment_preset/proc/do_vanity(mob/living/carbon/human/new_human, client/mob_client)
+// SS220 REMOVE (e64bb63898, 2f8015c1f1, dac4758021): /datum/equipment_preset/proc/do_vanity(mob/living/carbon/human/new_human, client/mob_client)
+/datum/equipment_preset/proc/do_vanity(mob/living/carbon/human/new_human, client/mob_client, late_join = FALSE) // SS220 EDIT
 	var/turf/T = get_turf(new_human)
 	if(!T)
 		return
 	if(is_mainship_level(T.z))
-		spawn_vanity_in_personal_lockers(new_human, mob_client)
+		// SS220 REMOVE (e64bb63898, 2f8015c1f1, dac4758021): spawn_vanity_in_personal_lockers(new_human, mob_client)
+		spawn_vanity_in_personal_lockers(new_human, mob_client, late_join) // SS220 EDIT
 	else
 		load_vanity(new_human, mob_client)
 
@@ -484,8 +487,12 @@
 
 GLOBAL_LIST_EMPTY(personal_closets)
 
-/datum/equipment_preset/proc/spawn_vanity_in_personal_lockers(mob/living/carbon/human/new_human, client/mob_client)
+// SS220 REMOVE (e64bb63898, 2f8015c1f1, dac4758021): /datum/equipment_preset/proc/spawn_vanity_in_personal_lockers(mob/living/carbon/human/new_human, client/mob_client)
+/datum/equipment_preset/proc/spawn_vanity_in_personal_lockers(mob/living/carbon/human/new_human, client/mob_client, late_join = FALSE) // SS220 EDIT
 	var/obj/structure/closet/secure_closet/marine_personal/closet_to_spawn_in
+	// SS220 REMOVE (e64bb63898, 2f8015c1f1, dac4758021): отсутствовал модульный hook try_handle_personal_locker_vanity(...)
+	if(try_handle_personal_locker_vanity(new_human, mob_client, late_join)) // SS220 EDIT
+		return
 	if(!new_human?.client?.prefs?.gear)
 		return//We want to equip them with custom stuff second, after they are equipped with everything else.
 	for(var/obj/structure/closet/secure_closet/marine_personal/closet in GLOB.personal_closets)

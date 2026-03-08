@@ -1396,6 +1396,19 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/cryo_cells)
+"acV" = (
+/obj/effect/landmark/late_join,
+/obj/effect/landmark/late_join/delta,
+/obj/effect/decal/warning_stripes{
+	icon_state = "W";
+	pixel_x = -1;
+	pixel_y = 1
+	},
+/obj/effect/landmark/start/marine/rto/delta{
+	squad = "Delta"
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "acW" = (
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
@@ -1532,7 +1545,6 @@
 "adj" = (
 /obj/effect/landmark/late_join,
 /obj/effect/landmark/late_join/charlie,
-/obj/effect/landmark/start/marine/leader/charlie,
 /obj/structure/prop/invuln/overhead_pipe{
 	icon = 'icons/obj/structures/props/almayer_props.dmi';
 	icon_state = "wallpipe_2";
@@ -1543,6 +1555,9 @@
 	icon_state = "W";
 	pixel_x = -1;
 	pixel_y = 1
+	},
+/obj/effect/landmark/start/marine/rto/charlie{
+	squad = "Charlie"
 	},
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/cryo_cells)
@@ -1560,12 +1575,14 @@
 "adm" = (
 /obj/effect/landmark/late_join,
 /obj/effect/landmark/late_join/charlie,
-/obj/effect/landmark/start/marine/leader/charlie,
 /obj/structure/prop/invuln/overhead_pipe{
 	icon = 'icons/obj/structures/props/almayer_props.dmi';
 	icon_state = "wallpipe_2";
 	pixel_y = 8;
 	dir = 8
+	},
+/obj/effect/landmark/start/marine/rto/charlie{
+	squad = "Charlie"
 	},
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/cryo_cells)
@@ -2324,7 +2341,6 @@
 "aeP" = (
 /obj/effect/landmark/late_join,
 /obj/effect/landmark/late_join/bravo,
-/obj/effect/landmark/start/marine/leader/bravo,
 /obj/structure/prop/invuln/overhead_pipe{
 	icon = 'icons/obj/structures/props/almayer_props.dmi';
 	icon_state = "wallpipe_2";
@@ -2336,17 +2352,22 @@
 	pixel_x = -1;
 	pixel_y = 1
 	},
+/obj/effect/landmark/start/marine/rto/bravo{
+	squad = "Bravo"
+	},
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/cryo_cells)
 "aeQ" = (
 /obj/effect/landmark/late_join,
 /obj/effect/landmark/late_join/bravo,
-/obj/effect/landmark/start/marine/leader/bravo,
 /obj/structure/prop/invuln/overhead_pipe{
 	icon = 'icons/obj/structures/props/almayer_props.dmi';
 	icon_state = "wallpipe_2";
 	pixel_y = 8;
 	dir = 8
+	},
+/obj/effect/landmark/start/marine/rto/bravo{
+	squad = "Bravo"
 	},
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/cryo_cells)
@@ -4090,6 +4111,14 @@
 	},
 /turf/open/floor/almayer/test_floor4,
 /area/golden_arrow/hangar)
+"aiA" = (
+/obj/effect/landmark/late_join,
+/obj/effect/landmark/late_join/delta,
+/obj/effect/landmark/start/marine/rto/delta{
+	squad = "Delta"
+	},
+/turf/open/floor/almayer/plate,
+/area/golden_arrow/cryo_cells)
 "aiB" = (
 /obj/structure/bed/chair,
 /obj/effect/decal/cleanable/dirt,
@@ -4137,6 +4166,19 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/golden_arrow/supply)
+"aiF" = (
+/obj/effect/landmark/late_join/alpha,
+/obj/effect/landmark/late_join,
+/obj/effect/decal/warning_stripes{
+	icon_state = "W";
+	pixel_x = -1;
+	pixel_y = 1
+	},
+/obj/effect/landmark/start/marine/rto/alpha{
+	squad = "Alpha"
+	},
+/turf/open/floor/plating/plating_catwalk,
+/area/golden_arrow/cryo_cells)
 "aiG" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "N";
@@ -8933,9 +8975,11 @@
 /turf/open/floor/almayer/mono,
 /area/golden_arrow/motor_pool)
 "asK" = (
-/obj/effect/landmark/start/marine/leader/alpha,
 /obj/effect/landmark/late_join/alpha,
 /obj/effect/landmark/late_join,
+/obj/effect/landmark/start/marine/rto/alpha{
+	squad = "Alpha"
+	},
 /turf/open/floor/plating/plating_catwalk,
 /area/golden_arrow/cryo_cells)
 "asP" = (
@@ -30374,12 +30418,12 @@ axO
 agU
 ahq
 ahd
-agU
+aiF
 aNr
 afY
 agr
 agm
-afY
+acV
 fRC
 afK
 afb
@@ -30910,7 +30954,7 @@ aAU
 afZ
 ags
 agn
-afZ
+aiA
 aPL
 afL
 afc

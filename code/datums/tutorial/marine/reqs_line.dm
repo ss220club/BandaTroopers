@@ -94,6 +94,7 @@
 		/obj/item/explosive/grenade/incendiary = list("M40 HIDP", "Incendiary nade", "Incendiary grenade", "HIDP", "Fire grenade"),
 		/obj/item/explosive/plastic = list("C4", "C4", "plastic", "plastic explosives"),
 		/obj/item/explosive/plastic/breaching_charge = list("Breaching", "breach charge", "breaching charge"),
+		/obj/item/prop/folded_anti_tank_sadar/common = list("sadar", "rpg", "M83", "M83A2"), // SS220 EDIT - RPG WEAPON
 		/* AMMO */
 		/obj/item/ammo_magazine/rifle/extended = list("Extended", "MK2 Extended", "Extended MK2 Mags"),
 		/obj/item/ammo_magazine/smg/m39/ap = list("M39 AP", "M39 AP", "SMG AP"),

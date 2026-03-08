@@ -48,6 +48,8 @@
 	var/caliber
 	///Effect for the muzzle flash of the gun.
 	var/atom/movable/vis_obj/effect/muzzle_flash/muzzle_flash
+	///Icon file for muzzle flash visuals.
+	var/muzzleflash_icon = 'icons/obj/items/weapons/projectiles.dmi' // SS220 EDIT: HALO weapons can override muzzle flash icon sheet
 	///Icon state of the muzzle flash effect.
 	var/muzzleflash_iconstate
 	///Brightness of the muzzle flash effect.
@@ -62,6 +64,7 @@
 	///Does our gun have a unique empty mag sound? If so use instead of pitch shifting.
 	var/fire_rattle = null
 	var/unload_sound = 'sound/weapons/flipblade.ogg'
+	var/empty_click = 'sound/weapons/gun_empty.ogg' // SS220 EDIT: HALO energy weapons use dedicated empty trigger click sounds
 	var/empty_sound = 'sound/weapons/smg_empty_alarm.ogg'
 	//We don't want these for guns that don't have them.
 	var/reload_sound = null
@@ -209,6 +212,7 @@
 	var/has_open_icon = FALSE
 	var/bonus_overlay_x = 0
 	var/bonus_overlay_y = 0
+	var/bonus_overlay_layer = 3.02 // SS220 EDIT: HALO weapon overlays can require custom layer priority
 
 	/// How much recoil_buildup is lost per second. Builds up as time passes, and is set to 0 when a single shot is fired
 	var/recoil_loss_per_second = 10
@@ -282,6 +286,7 @@
 	base_gun_icon = icon_state
 	attachable_overlays = list("muzzle" = null, "rail" = null, "side_rail" = null, "under" = null, "stock" = null, "mag" = null, "special" = null)
 	muzzle_flash = new(src, muzzleflash_iconstate)
+	muzzle_flash.icon = muzzleflash_icon // SS220 EDIT: respect per-gun muzzle flash icon overrides
 
 	LAZYSET(item_state_slots, WEAR_BACK, item_state)
 	LAZYSET(item_state_slots, WEAR_JACKET, item_state)

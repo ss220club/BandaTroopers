@@ -152,12 +152,36 @@ const xenoSplitter = (members: Array<Observable>) => {
   return squads;
 };
 
-const marineSplitter = (members: Array<Observable>, platoon: string) => {
-  const mainPlatoon: Array<Observable> = [];
-  const alphaSquad: Array<Observable> = [];
-  const bravoSquad: Array<Observable> = [];
-  const charlieSquad: Array<Observable> = [];
-  const deltaSquad: Array<Observable> = [];
+const marineStaticOrder = ['Alpha', 'Bravo', 'Charlie', 'Delta'];
+
+const marineSplitter = (
+  members: Array<Observable>,
+  platoon: string | undefined,
+) => {
+  const staticBuckets: Record<string, Array<Observable>> = {
+    Alpha: [],
+    Bravo: [],
+    Charlie: [],
+    Delta: [],
+  };
+  const staticTitles: Record<string, string> = {
+    Alpha: platoon || 'Alpha',
+    Bravo: 'Bravo',
+    Charlie: 'Charlie',
+    Delta: 'Delta',
+  };
+  const staticColors: Record<string, string> = {
+    Alpha: 'red',
+    Bravo: 'yellow',
+    Charlie: 'purple',
+    Delta: 'blue',
+  };
+
+  const runtimeBuckets: Record<
+    string,
+    { members: Array<Observable>; color: string }
+  > = {};
+
   const foxtrotSquad: Array<Observable> = [];
   const echoSquad: Array<Observable> = [];
   const CBRNSquad: Array<Observable> = [];
@@ -166,17 +190,28 @@ const marineSplitter = (members: Array<Observable>, platoon: string) => {
   const other: Array<Observable> = [];
 
   members.forEach((x) => {
-    if (x.job?.includes(platoon)) {
-      mainPlatoon.push(x);
-    } else if (x.job?.includes('Alpha')) {
-      alphaSquad.push(x);
-    } else if (x.job?.includes('Bravo')) {
-      bravoSquad.push(x);
-    } else if (x.job?.includes('Charlie')) {
-      charlieSquad.push(x);
-    } else if (x.job?.includes('Delta')) {
-      deltaSquad.push(x);
-    } else if (x.job?.includes('Foxtrot')) {
+    const staticKey = x.squad_static;
+    if (staticKey && marineStaticOrder.includes(staticKey)) {
+      staticBuckets[staticKey].push(x);
+      if (x.squad_runtime) {
+        staticTitles[staticKey] = x.squad_runtime;
+      }
+      return;
+    }
+
+    if (x.squad_runtime) {
+      const runtimeKey = x.squad_runtime;
+      if (!runtimeBuckets[runtimeKey]) {
+        runtimeBuckets[runtimeKey] = {
+          members: [],
+          color: 'blue',
+        };
+      }
+      runtimeBuckets[runtimeKey].members.push(x);
+      return;
+    }
+
+    if (x.job?.includes('Foxtrot')) {
       foxtrotSquad.push(x);
     } else if (x.job?.includes('Echo')) {
       echoSquad.push(x);
@@ -191,19 +226,51 @@ const marineSplitter = (members: Array<Observable>, platoon: string) => {
     }
   });
 
-  const squads = [
-    buildSquadObservable(platoon, 'blue', mainPlatoon),
-    buildSquadObservable('Alpha', 'red', alphaSquad),
-    buildSquadObservable('Bravo', 'yellow', bravoSquad),
-    buildSquadObservable('Charlie', 'purple', charlieSquad),
-    buildSquadObservable('Delta', 'blue', deltaSquad),
-    buildSquadObservable('Foxtrot', 'brown', foxtrotSquad),
-    buildSquadObservable('Echo', 'teal', echoSquad),
-    buildSquadObservable('CBRN', 'dark-blue', CBRNSquad),
-    buildSquadObservable('FORECON', 'green', FORECONSquad),
-    buildSquadObservable('SOF', 'red', SOFSquad),
-    buildSquadObservable('Other', 'grey', other),
-  ];
+  const squads = marineStaticOrder
+    .filter((staticKey) => staticBuckets[staticKey].length)
+    .map((staticKey) =>
+      buildSquadObservable(
+        staticTitles[staticKey],
+        staticColors[staticKey],
+        staticBuckets[staticKey],
+      ),
+    );
+
+  Object.keys(runtimeBuckets)
+    .sort()
+    .forEach((runtimeTitle) => {
+      const runtimeBucket = runtimeBuckets[runtimeTitle];
+      if (runtimeBucket.members.length) {
+        squads.push(
+          buildSquadObservable(
+            runtimeTitle,
+            runtimeBucket.color,
+            runtimeBucket.members,
+          ),
+        );
+      }
+    });
+
+  if (foxtrotSquad.length) {
+    squads.push(buildSquadObservable('Foxtrot', 'brown', foxtrotSquad));
+  }
+  if (echoSquad.length) {
+    squads.push(buildSquadObservable('Echo', 'teal', echoSquad));
+  }
+  if (CBRNSquad.length) {
+    squads.push(buildSquadObservable('CBRN', 'dark-blue', CBRNSquad));
+  }
+  if (FORECONSquad.length) {
+    squads.push(buildSquadObservable('FORECON', 'green', FORECONSquad));
+  }
+  if (SOFSquad.length) {
+    squads.push(buildSquadObservable('SOF', 'red', SOFSquad));
+  }
+
+  if (other.length) {
+    squads.push(buildSquadObservable('Other', 'grey', other));
+  }
+
   return squads;
 };
 
@@ -444,8 +511,16 @@ const ObservableItem = (props: {
 }) => {
   const { act } = useBackend<OrbitData>();
   const { color, item } = props;
-  const { health, icon, full_name, nickname, orbiters, ref, background_color } =
-    item;
+  const {
+    health,
+    icon,
+    full_name,
+    nickname,
+    orbiters,
+    ref,
+    background_color,
+    squad_color,
+  } = item;
 
   const displayHealth = typeof health === 'number';
 
@@ -464,7 +539,10 @@ const ObservableItem = (props: {
     >
       {displayHealth && <ColorBox color={getHealthColor(health)} mr="0.5em" />}
       {!!icon && (
-        <ObservableIcon icon={icon} background_color={background_color} />
+        <ObservableIcon
+          icon={icon}
+          background_color={background_color || squad_color}
+        />
       )}
       {capitalizeFirst(getDisplayName(full_name, nickname))}
       {!!orbiters && (
@@ -481,7 +559,15 @@ const ObservableItem = (props: {
 /** Displays some info on the mob as a tooltip. */
 const ObservableTooltip = (props: { readonly item: Observable }) => {
   const {
-    item: { caste, health, job, full_name, icon, background_color },
+    item: {
+      caste,
+      health,
+      job,
+      full_name,
+      icon,
+      background_color,
+      squad_color,
+    },
   } = props;
 
   const displayHealth = typeof health === 'number';
@@ -495,7 +581,10 @@ const ObservableTooltip = (props: { readonly item: Observable }) => {
       {!!caste && (
         <LabeledList.Item label="Caste">
           {!!icon && (
-            <ObservableIcon icon={icon} background_color={background_color} />
+            <ObservableIcon
+              icon={icon}
+              background_color={background_color || squad_color}
+            />
           )}
           {caste}
         </LabeledList.Item>
@@ -503,7 +592,10 @@ const ObservableTooltip = (props: { readonly item: Observable }) => {
       {!!job && (
         <LabeledList.Item label="Job">
           {!!icon && (
-            <ObservableIcon icon={icon} background_color={background_color} />
+            <ObservableIcon
+              icon={icon}
+              background_color={background_color || squad_color}
+            />
           )}
           {job}
         </LabeledList.Item>

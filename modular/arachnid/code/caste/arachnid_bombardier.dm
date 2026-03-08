@@ -1,9 +1,6 @@
-#define BOMBARDIER_EXPLOSION_POWER 45
-#define BOMBARDIER_EXPLOSION_FALLOFF 15
-
 /datum/caste_datum/arachnid/bombardier
 	caste_type = ARACHNID_CASTE_BOMBARDIER
-	caste_desc = "A volatile arachnid that detonates itself after pouncing into a target."
+	caste_desc = "Взрывоопасный арахнид, который самоуничтожается после прыжка в цель."
 	tier = 1
 	melee_damage_lower = XENO_DAMAGE_TIER_1
 	melee_damage_upper = XENO_DAMAGE_TIER_2
@@ -39,7 +36,7 @@
 /mob/living/carbon/xenomorph/arachnid/bombardier
 	caste_type = ARACHNID_CASTE_BOMBARDIER
 	name = ARACHNID_CASTE_BOMBARDIER
-	desc = "A bloated arachnid that violently bursts after jumping on prey."
+	desc = "Раздутый арахнид-камикадзе, взрывающийся после контакта с добычей."
 	icon = 'modular/arachnid/icons/mobs/bombardier/Arachnid_Bombardir.dmi'
 	icon_state = "Bombard Walking"
 	icon_size = 64
@@ -65,25 +62,23 @@
 	icon_xenonid = 'modular/arachnid/icons/mobs/bombardier/Arachnid_Bombardir.dmi'
 
 	weed_food_icon = 'icons/mob/xenos/weeds_48x48.dmi'
-	weed_food_states = list("Facehugger_1","Facehugger_2","Facehugger_3")
-	weed_food_states_flipped = list("Facehugger_1","Facehugger_2","Facehugger_3")
+	weed_food_states = list("Facehugger_1", "Facehugger_2", "Facehugger_3")
+	weed_food_states_flipped = list("Facehugger_1", "Facehugger_2", "Facehugger_3")
 
 /mob/living/carbon/xenomorph/arachnid/bombardier/Initialize(mapload, ...)
-    . = ..()
-    // Устанавливаем случайное смещение при создании объекта
-    pixel_x = rand(-16, 16)
-    pixel_y = rand(-8, 20)
-    
-    // Если в коде используются переменные старого смещения для анимаций:
-    old_x = pixel_x
-    old_y = pixel_y
+	. = ..()
+	// Случайное смещение спрайта для визуального разнообразия.
+	pixel_x = rand(ARACHNID_BOMBARDIER_PIXEL_X_MIN, ARACHNID_BOMBARDIER_PIXEL_X_MAX)
+	pixel_y = rand(ARACHNID_BOMBARDIER_PIXEL_Y_MIN, ARACHNID_BOMBARDIER_PIXEL_Y_MAX)
+	old_x = pixel_x
+	old_y = pixel_y
 
-// Позволяет другим мобам проходить сквозь этого моба
 /mob/living/carbon/xenomorph/arachnid/bombardier/initialize_pass_flags(datum/pass_flags_container/pass_flags)
 	..()
-	if (pass_flags)
-		pass_flags.flags_pass = PASS_MOB_THRU|PASS_FLAGS_CRAWLER
+	if(pass_flags)
+		pass_flags.flags_pass = PASS_MOB_THRU | PASS_FLAGS_CRAWLER
 
+/// Запускает подготовку самоподрыва через поведенческий делегат.
 /mob/living/carbon/xenomorph/arachnid/bombardier/proc/prime_self_destruct()
 	var/datum/behavior_delegate/arachnid_bombardier/bombardier_delegate = behavior_delegate
 	if(!istype(bombardier_delegate))
@@ -107,45 +102,75 @@
 	ability_primacy = XENO_PRIMARY_ACTION_1
 	xeno_cooldown = 10
 	plasma_cost = 0
-	distance = 6
+	distance = ARACHNID_BOMBARDIER_POUNCE_RANGE
 	knockdown = TRUE
-	knockdown_duration = 1
+	knockdown_duration = ARACHNID_BOMBARDIER_POUNCE_KNOCKDOWN_DURATION
 	freeze_self = FALSE
-	// freeze_time = 300
 	can_be_shield_blocked = TRUE
 
-// Отключаем отмену прыжка при блокировании пути
+/// Прыжок бомбардира с шансом промаха в радиус рядом с целью.
+/datum/action/xeno_action/activable/pounce/arachnid_bombardier/use_ability(atom/A)
+	var/mob/living/carbon/human/target_carbon = A
+	if(istype(target_carbon) && prob(ARACHNID_BOMBARDIER_POUNCE_MISS_CHANCE))
+		var/turf/target_turf = get_turf(target_carbon)
+		if(target_turf)
+			var/list/turf/miss_turfs = list()
+			for(var/turf/open/open_turf in range(ARACHNID_BOMBARDIER_POUNCE_MISS_RADIUS, target_turf))
+				if(get_dist(open_turf, target_turf) == 0)
+					continue
+				miss_turfs += open_turf
+
+			if(length(miss_turfs))
+				A = pick(miss_turfs)
+
+	var/mob/living/carbon/xenomorph/arachnid/bombardier/bombardier = owner
+	if(istype(bombardier))
+		var/list/pounce_meta_bank = bombardier.get_sound_meta_bank(ARACHNID_SOUND_EVENT_POUNCE, null)
+		var/pounce_sound = bombardier.pick_sound_meta_or_default(ARACHNID_SOUND_EVENT_POUNCE, pounce_meta_bank, null)
+		if(pounce_sound)
+			playsound(bombardier, pounce_sound, bombardier.modular_get_sound_volume(ARACHNID_SOUND_VOLUME_BOMBARDIER_POUNCE), FALSE)
+
+	return ..(A)
+
+/// AI-использование прыжка: только по валидной цели в радиусе способности.
 /datum/action/xeno_action/activable/pounce/arachnid_bombardier/process_ai(mob/living/carbon/xenomorph/pouncing_xeno, delta_time)
-	var/mob/living/carbon/human/target_human = pouncing_xeno.current_target
-	if(!istype(target_human))
+	var/mob/living/carbon/human/target_carbon = pouncing_xeno.current_target
+	if(!istype(target_carbon))
 		return FALSE
 
-	if(pouncing_xeno.can_not_harm(target_human))
+	if(pouncing_xeno.can_not_harm(target_carbon))
 		return FALSE
 
-	if(get_dist(pouncing_xeno, target_human) > distance)
+	if(get_dist(pouncing_xeno, target_carbon) > distance)
 		return FALSE
 
 	if(!DT_PROB(ai_prob_chance, delta_time))
 		return FALSE
 
-	use_ability_async(target_human)
+	use_ability_async(target_carbon)
 	return TRUE
 
 /datum/behavior_delegate/arachnid_bombardier
-	name = "Arachnid Bombardier Behavior Delegate"
+	name = "Поведенческий делегат бомбардира"
 
 	var/primed = FALSE
 	var/detonation_timer_id = TIMER_ID_NULL
-	var/detonation_delay = 2.5 SECONDS
-	var/explosion_power = BOMBARDIER_EXPLOSION_POWER
-	var/explosion_falloff = BOMBARDIER_EXPLOSION_FALLOFF
+	var/detonation_delay = ARACHNID_BOMBARDIER_DETONATION_DELAY
+	var/explosion_power = ARACHNID_BOMBARDIER_EXPLOSION_POWER
+	var/explosion_falloff = ARACHNID_BOMBARDIER_EXPLOSION_FALLOFF
 
+/// Подготовка к взрыву: звук, оглушение и запуск таймера детонации.
 /datum/behavior_delegate/arachnid_bombardier/proc/prime_self_destruct()
 	if(!bound_xeno || primed || bound_xeno.stat == DEAD)
 		return
 
 	primed = TRUE
+	var/mob/living/carbon/xenomorph/arachnid/bombardier/bombardier = bound_xeno
+	if(istype(bombardier))
+		var/list/prime_meta_bank = bombardier.get_sound_meta_bank(ARACHNID_SOUND_EVENT_PRIME, null)
+		var/prime_sound = bombardier.pick_sound_meta_or_default(ARACHNID_SOUND_EVENT_PRIME, prime_meta_bank, null)
+		if(prime_sound && bombardier.modular_should_play_sound(ARACHNID_SOUND_EVENT_PRIME, prime_sound))
+			playsound(bound_xeno, prime_sound, bombardier.modular_get_sound_volume(ARACHNID_SOUND_VOLUME_BOMBARDIER_PRIME), FALSE)
 	flick("Normal Arachnid Bombardier Attacking", bound_xeno)
 	bound_xeno.Stun(detonation_delay)
 	bound_xeno.KnockDown(detonation_delay)
@@ -153,6 +178,7 @@
 
 	detonation_timer_id = addtimer(CALLBACK(src, PROC_REF(detonate_if_alive)), detonation_delay, TIMER_STOPPABLE)
 
+/// Выполняет фактический подрыв, если бомбардир еще жив.
 /datum/behavior_delegate/arachnid_bombardier/proc/detonate_if_alive()
 	detonation_timer_id = TIMER_ID_NULL
 
@@ -188,6 +214,3 @@
 	primed = FALSE
 
 	..()
-
-#undef BOMBARDIER_EXPLOSION_POWER
-#undef BOMBARDIER_EXPLOSION_FALLOFF

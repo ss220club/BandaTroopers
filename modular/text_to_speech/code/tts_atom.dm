@@ -10,6 +10,8 @@
 
 /atom/proc/cast_tts(mob/listener, message, atom/location, localyze_type = TTS_LOCALYZE_LOCAL, effect = SOUND_EFFECT_NONE, traits = TTS_TRAIT_RATE_FASTER, preSFX, postSFX)
 	SHOULD_CALL_PARENT(TRUE)
+	if(!SStts220.is_enabled || !CONFIG_GET(flag/tts_enabled))
+		return
 	if(SEND_SIGNAL(src, COMSIG_ATOM_PRE_TTS_CAST, listener, message, location, localyze_type, effect, traits, preSFX, postSFX) & COMPONENT_TTS_INTERRUPT)
 		return
 	SEND_SIGNAL(src, COMSIG_ATOM_TTS_CAST, listener, message, location, localyze_type, effect, traits, preSFX, postSFX)

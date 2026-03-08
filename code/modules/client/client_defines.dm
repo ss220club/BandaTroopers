@@ -137,6 +137,8 @@
 	/// Holds the game master datum for this client
 	var/datum/game_master/game_master_menu
 
+	// var/datum/game_rule_panel/game_rule_panel // SS220 EDIT: ownership moved to datum/game_rule_state.open_panels
+
 	/// Holds the human AI manager panel for this client
 	var/datum/human_ai_management_menu/human_ai_menu
 

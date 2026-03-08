@@ -1,4 +1,6 @@
 #include "_arachnid.dm"
+#include "code/arachnid_base.dm"
+#include "code/sound/arachnid_sound_hooks.dm"
 #include "code/blood/blood.dm"
 #include "code/blood/decals.dm"
 #include "code/blood/gibspawner.dm"

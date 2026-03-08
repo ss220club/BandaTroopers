@@ -12,7 +12,7 @@
 		if (9)
 			new_human.equip_to_slot_or_del(new /obj/item/clothing/head/helmet/marine(new_human), WEAR_HEAD)
 
-// TL
+// Командир боевой группы (TL)
 /datum/equipment_preset/uscm/tl_equipped/load_gear(mob/living/carbon/human/new_human)
 	. = ..()
 	new_human.equip_to_slot_or_del(new 	/obj/item/device/overwatch_camera(new_human), WEAR_R_EAR)
@@ -20,7 +20,7 @@
 	add_uscm_goggles(new_human)
 	new_human.equip_to_slot_or_del(new /obj/item/prop/helmetgarb/gunoil, WEAR_IN_HELMET)
 
-// RTO
+// Связист (RTO)
 /datum/equipment_preset/uscm/rto
 	access = list(ACCESS_MARINE_PREP, ACCESS_MARINE_SPECPREP, ACCESS_MARINE_TL_PREP)
 	skills = /datum/skills/military/survivor/forecon_standard
@@ -29,7 +29,7 @@
 	. = ..()
 	GLOB.character_traits[/datum/character_trait/skills/spotter].apply_trait(new_human)
 
-// RTO Equipped
+// Связист в расширенном комплекте
 /datum/equipment_preset/uscm/rto/equipped
 	name = "USCM Radio Telephone Operator (Equipped)"
 	flags = EQUIPMENT_PRESET_EXTRA|EQUIPMENT_PRESET_MARINE

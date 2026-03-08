@@ -1,0 +1,6 @@
+#include "_player_survival.dm"
+
+#include "code/configuration.dm"
+#include "code/human/player_survival.dm"
+#include "code/human/admin_second_chance.dm"
+#include "code/effects/crit_hook.dm"

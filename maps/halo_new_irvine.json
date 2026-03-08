@@ -1,0 +1,11 @@
+{
+	"map_name": "New Irvine",
+    "short_name": "New Irvine",
+	"map_path": "map_files/halo_new_irvine",
+    "map_file": "halo_new_irvine.dmm",
+    "webmap_url": "LV552",
+    "map_item_type": "/obj/item/map/lv522_map",
+    "weather_holder": "/datum/weather_ss_map_holder/lv522_chances_claim",
+
+    "camouflage": "jungle"
+}

@@ -267,6 +267,7 @@
 			LAZYADD(GLOB.spawns_by_job[job], src)
 
 	RegisterSignal(SSdcs, COMSIG_GLOB_PLATOON_NAME_CHANGE, PROC_REF(rename_platoon))
+	RegisterSignal(SSdcs, COMSIG_GLOB_SQUAD_NAME_CHANGE, PROC_REF(rename_squad_name)) // SS220 EDIT
 
 /obj/effect/landmark/start/Destroy()
 	if(job)
@@ -281,11 +282,14 @@
 	if(squad != old_name)
 		return
 
-	LAZYREMOVE(GLOB.spawns_by_squad_and_job, squad)
 	squad = new_name
-	LAZYINITLIST(GLOB.spawns_by_squad_and_job)
-	LAZYINITLIST(GLOB.spawns_by_squad_and_job[squad])
-	LAZYADD(GLOB.spawns_by_squad_and_job[squad][job], src)
+
+/obj/effect/landmark/start/proc/rename_squad_name(datum/source, datum/squad/target_squad, new_name, old_name) // SS220 EDIT
+	SIGNAL_HANDLER
+	if(squad != old_name)
+		return
+
+	squad = new_name
 
 /obj/effect/landmark/start/AISloc
 	name = "AI"
@@ -415,6 +419,17 @@
 /obj/effect/landmark/late_join/proc/rename_platoon(datum/source, new_name, old_name)
 	SIGNAL_HANDLER
 
+	if(squad != old_name) // SS220 EDIT
+		return
+
+	squad = new_name
+
+/obj/effect/landmark/late_join/proc/rename_squad_name(datum/source, datum/squad/target_squad, new_name, old_name) // SS220 EDIT
+	SIGNAL_HANDLER
+
+	if(squad != old_name)
+		return
+
 	squad = new_name
 
 /obj/effect/landmark/late_join/bravo
@@ -471,6 +486,10 @@
 	name = "forecon late join"
 	squad = SQUAD_LRRP
 
+/obj/effect/landmark/late_join/odst
+	name = "ODST late join" // SS220 EDIT: HALO ODST latejoin landmark
+	squad = SQUAD_ODST
+
 /obj/effect/landmark/late_join/pmc
 	name = "pmc late join"
 	squad = SQUAD_PMCPLT
@@ -487,6 +506,8 @@
 		LAZYADD(GLOB.latejoin_by_job[job], src)
 	else
 		GLOB.latejoin += src
+
+	RegisterSignal(SSdcs, COMSIG_GLOB_SQUAD_NAME_CHANGE, PROC_REF(rename_squad_name)) // SS220 EDIT
 
 /obj/effect/landmark/late_join/Destroy()
 	if(squad)
