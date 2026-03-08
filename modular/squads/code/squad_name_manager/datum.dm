@@ -21,6 +21,7 @@
 		SQUAD_MARINE_4 = SQUAD_MARINE_4_DEFAULT_NAME,
 	)
 	var/list/leader_lock_by_static = list()
+	var/first_platoon_commander_ckey
 
 /datum/squad_name_manager/New()
 	. = ..()
@@ -52,3 +53,6 @@
 		SQUAD_MARINE_3 = FALSE,
 		SQUAD_MARINE_4 = FALSE,
 	)
+
+/datum/squad_name_manager/proc/reset_first_platoon_commander()
+	first_platoon_commander_ckey = null

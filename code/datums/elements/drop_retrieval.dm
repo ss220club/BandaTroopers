@@ -57,8 +57,12 @@
 		return
 	container = new_container
 
+/datum/element/drop_retrieval/pouch_sling/Detach(datum/source, force)
+	container = null
+	return ..()
+
 /datum/element/drop_retrieval/pouch_sling/dropped(obj/item/I, mob/user)
-	container.handle_retrieval(user)
+	container?.handle_retrieval(user)
 
 /datum/element/drop_retrieval/mister
 	compatible_types = list(/obj/item/reagent_container/spray/mister)

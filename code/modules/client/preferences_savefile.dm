@@ -739,21 +739,23 @@
 
 	platoon_name = platoon_name ? sanitize_text(platoon_name, initial(platoon_name)) : "Sun Riders"
 	// SS220 EDIT - START
-	squad_name_alpha_pref = squad_name_alpha_pref ? sanitize_text(squad_name_alpha_pref, initial(squad_name_alpha_pref)) : SQUAD_MARINE_1_DEFAULT_NAME
-	squad_name_bravo_pref = squad_name_bravo_pref ? sanitize_text(squad_name_bravo_pref, initial(squad_name_bravo_pref)) : SQUAD_MARINE_2_DEFAULT_NAME
-	squad_name_charlie_pref = squad_name_charlie_pref ? sanitize_text(squad_name_charlie_pref, initial(squad_name_charlie_pref)) : SQUAD_MARINE_3_DEFAULT_NAME
-	squad_name_delta_pref = squad_name_delta_pref ? sanitize_text(squad_name_delta_pref, initial(squad_name_delta_pref)) : SQUAD_MARINE_4_DEFAULT_NAME
-	if(length_char(squad_name_alpha_pref) > 32) // SS220 EDIT: overflow fallback now uses squad default define
+	squad_name_alpha_pref = squad_name_normalize(squad_name_alpha_pref, 32)
+	squad_name_bravo_pref = squad_name_normalize(squad_name_bravo_pref, 32)
+	squad_name_charlie_pref = squad_name_normalize(squad_name_charlie_pref, 32)
+	squad_name_delta_pref = squad_name_normalize(squad_name_delta_pref, 32)
+	if(!squad_name_alpha_pref)
 		squad_name_alpha_pref = SQUAD_MARINE_1_DEFAULT_NAME
-	if(length_char(squad_name_bravo_pref) > 32) // SS220 EDIT: overflow fallback now uses squad default define
+	if(!squad_name_bravo_pref)
 		squad_name_bravo_pref = SQUAD_MARINE_2_DEFAULT_NAME
-	if(length_char(squad_name_charlie_pref) > 32) // SS220 EDIT: overflow fallback now uses squad default define
+	if(!squad_name_charlie_pref)
 		squad_name_charlie_pref = SQUAD_MARINE_3_DEFAULT_NAME
-	if(length_char(squad_name_delta_pref) > 32) // SS220 EDIT: overflow fallback now uses squad default define
+	if(!squad_name_delta_pref)
 		squad_name_delta_pref = SQUAD_MARINE_4_DEFAULT_NAME
 	// SS220 EDIT - END
 	dropship_camo = sanitize_inlist(dropship_camo, GLOB.dropship_camos, initial(dropship_camo))
-	dropship_name = dropship_name ? sanitize_text(dropship_name, initial(dropship_name)) : "Midway"
+	dropship_name = squad_name_normalize(dropship_name, 10)
+	if(!dropship_name)
+		dropship_name = "Midway" // SS220 EDIT: unify dropship preset validation with squad preset rules
 
 	personal_weapon = sanitize_inlist(personal_weapon, GLOB.personal_weapons_list+"None", initial(personal_weapon))
 

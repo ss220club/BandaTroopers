@@ -10,6 +10,12 @@
 		return FALSE
 	return manager.try_apply_leader_preference(H)
 
+/proc/squad_name_try_apply_platoon_commander_preference(mob/living/carbon/human/H)
+	var/datum/squad_name_manager/manager = GLOB.squad_name_manager
+	if(!manager)
+		return FALSE
+	return manager.try_apply_platoon_commander_preference(H)
+
 /proc/squad_name_apply_roundstart_defaults()
 	var/datum/squad_name_manager/manager = GLOB.squad_name_manager
 	if(!manager)

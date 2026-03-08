@@ -423,6 +423,7 @@ DEFINES in setup.dm, referenced here.
 		gun_image = image(attachment.icon,src, item_icon)
 		gun_image.pixel_x = attachable_offset["[slot]_x"] - attachment.pixel_shift_x + x_offset_by_attachment_type(attachment.type)
 		gun_image.pixel_y = attachable_offset["[slot]_y"] - attachment.pixel_shift_y + y_offset_by_attachment_type(attachment.type)
+		gun_image.layer += attachment.layer_addition // SS220 EDIT: allow HALO attachables to nudge overlay layering
 		attachable_overlays[slot] = gun_image
 		overlays += gun_image
 	else attachable_overlays[slot] = null
@@ -442,6 +443,7 @@ DEFINES in setup.dm, referenced here.
 		gun_image = image(current_mag.icon,src,current_mag.bonus_overlay)
 		gun_image.pixel_x += bonus_overlay_x
 		gun_image.pixel_y += bonus_overlay_y
+		gun_image.layer += bonus_overlay_layer // SS220 EDIT: allow HALO mags to render above custom weapon overlays
 		attachable_overlays["mag"] = gun_image
 		overlays += gun_image
 	else

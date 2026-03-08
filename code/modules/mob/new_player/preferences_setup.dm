@@ -258,6 +258,19 @@
 			return /datum/equipment_preset/uscm/tl_equipped
 		if(JOB_SO)
 			return /datum/equipment_preset/uscm_ship/so_equipped
+//ODST Section
+		if(JOB_SQUAD_MARINE_ODST)
+			return /datum/equipment_preset/unsc/pfc/odst/equipped // SS220 EDIT: HALO ODST preview routing
+		if(JOB_SQUAD_LEADER_ODST)
+			return /datum/equipment_preset/unsc/pfc/odst/equipped // SS220 EDIT: HALO ODST preview routing
+		if(JOB_SQUAD_MEDIC_ODST)
+			return /datum/equipment_preset/unsc/pfc/odst/equipped // SS220 EDIT: HALO ODST preview routing
+		if(JOB_SQUAD_SPECIALIST_ODST)
+			return /datum/equipment_preset/unsc/pfc/odst/equipped // SS220 EDIT: HALO ODST preview routing
+		if(JOB_SQUAD_TEAM_LEADER_ODST)
+			return /datum/equipment_preset/unsc/pfc/odst/equipped // SS220 EDIT: HALO ODST preview routing
+		if(JOB_SQUAD_RTO_ODST)
+			return /datum/equipment_preset/unsc/pfc/odst/equipped // SS220 EDIT: HALO ODST preview routing
 //USCM Aux forces (not part of pre-round role select normally)
 		if(JOB_SQUAD_SPECIALIST)
 			return /datum/equipment_preset/uscm/specialist_equipped

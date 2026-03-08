@@ -3,7 +3,7 @@
 	keybind_category = CATEGORY_HUMAN_EMOTE
 
 	/// Species that can use this emote.
-	var/list/species_type_allowed_typecache = list(/datum/species/human, /datum/species/synthetic, /datum/species/yautja)
+	var/list/species_type_allowed_typecache = list(/datum/species/human, /datum/species/synthetic, /datum/species/yautja, /datum/species/sangheili, /datum/species/unggoy) // SS220 EDIT: HALO emote species support
 	/// Species that can't use this emote.
 	var/list/species_type_blacklist_typecache = list(/datum/species/monkey)
 
@@ -205,6 +205,8 @@
 
 	if(isyautja(user))
 		return get_sfx("pred_pain")
+	if(issangheili(user)) // SS220 EDIT: HALO pain route
+		return get_sfx("pain_sangheili")
 
 /datum/emote/living/carbon/human/pain/run_emote(mob/living/user, params, type_override, intentional)
 	. = ..()
@@ -244,6 +246,10 @@
 			return get_sfx("female_scream")
 	if(isyautja(user))
 		return get_sfx("pred_pain")
+	if(issangheili(user)) // SS220 EDIT: HALO scream route
+		return get_sfx("pain_sangheili")
+	if(isunggoy(user)) // SS220 EDIT: HALO scream route
+		return get_sfx("pain_unggoy")
 
 /datum/emote/living/carbon/human/scream/run_emote(mob/living/user, params, type_override, intentional)
 	. = ..()
@@ -370,6 +376,10 @@
 				return get_sfx("female_upp_warcry")
 			else
 				return get_sfx("female_warcry")
+	if(issangheili(user)) // SS220 EDIT: HALO warcry route
+		return get_sfx("warcry_sangheili")
+	if(isunggoy(user)) // SS220 EDIT: HALO warcry route
+		return get_sfx("warcry_unggoy")
 
 /datum/emote/living/carbon/human/whimper
 	key = "whimper"

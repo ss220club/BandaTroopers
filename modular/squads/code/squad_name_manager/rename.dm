@@ -37,6 +37,7 @@
 /datum/squad_name_manager/proc/apply_roundstart_defaults()
 	reset_runtime_names()
 	reset_leader_locks()
+	reset_first_platoon_commander()
 
 	for(var/static_name in managed_static_names)
 		var/datum/squad/target_squad = get_squad_by_static(static_name)
@@ -55,6 +56,20 @@
 	GLOB.main_platoon_name = current_alpha_name
 	GLOB.main_platoon_initial_name = current_alpha_name
 	return TRUE
+
+/datum/squad_name_manager/proc/claim_first_platoon_commander(mob/living/carbon/human/H)
+	if(!H || GET_DEFAULT_ROLE(H.job) != JOB_SO)
+		return FALSE
+
+	var/claimer_ckey = H.ckey
+	if(!claimer_ckey)
+		return FALSE
+
+	if(!first_platoon_commander_ckey)
+		first_platoon_commander_ckey = claimer_ckey
+		return TRUE
+
+	return first_platoon_commander_ckey == claimer_ckey
 
 /datum/squad_name_manager/proc/try_apply_leader_preference(mob/living/carbon/human/H)
 	if(!H || GET_DEFAULT_ROLE(H.job) != JOB_SQUAD_LEADER || !H.assigned_squad)
@@ -89,3 +104,37 @@
 
 	to_chat(H, SPAN_WARNING("Failed to apply your squad name preference: [rename_result]"))
 	return FALSE
+
+/datum/squad_name_manager/proc/try_apply_platoon_commander_preference(mob/living/carbon/human/H)
+	if(!claim_first_platoon_commander(H))
+		return FALSE
+
+	var/datum/preferences/player_prefs = H.client?.prefs
+	var/applied_any = FALSE
+
+	for(var/static_name in managed_static_names)
+		if(leader_lock_by_static[static_name])
+			continue
+
+		var/datum/squad/target_squad = get_squad_by_static(static_name)
+		if(!target_squad)
+			continue
+
+		var/mob/living/carbon/human/current_leader = target_squad.squad_leader
+		if(current_leader && GET_DEFAULT_ROLE(current_leader.job) == JOB_SQUAD_LEADER)
+			continue
+
+		var/preferred_name = get_preference_name_for_static(player_prefs, static_name)
+		var/default_name = get_default_name_by_static(static_name)
+		var/desired_name = preferred_name ? preferred_name : default_name
+		var/rename_result = rename_squad(target_squad, desired_name, H, "first_platoon_commander", FALSE)
+		if(rename_result == TRUE)
+			applied_any = TRUE
+			continue
+
+		if(desired_name != default_name)
+			rename_result = rename_squad(target_squad, default_name, H, "first_platoon_commander_fallback", FALSE)
+			if(rename_result == TRUE)
+				applied_any = TRUE
+
+	return applied_any

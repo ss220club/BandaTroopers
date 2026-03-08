@@ -27,6 +27,7 @@ maps/**/backup
 __pycache__
 test_environment.txt
 .cache
+modular/__agents/.AI_AGENT/logs/
 
 #ALL_MAPS juke import files
 maps/templates_extra.dm

@@ -734,7 +734,8 @@
 		list("EXPLOSIVES", -1, null, null),
 		list("Plastic Explosives", round(scale * 2), /obj/item/explosive/plastic, VENDOR_ITEM_REGULAR),
 		list("Breaching Charge", round(scale * 2), /obj/item/explosive/plastic/breaching_charge, VENDOR_ITEM_REGULAR),
-
+		list("RPG M83A2-C", floor(scale * 2.5), /obj/item/prop/folded_anti_tank_sadar/common, VENDOR_ITEM_REGULAR), // SS220 EDIT - RPG WEAPON
+		
 		list("FLARE AND LIGHT", -1, null, null),
 		list("Combat Flashlight", round(scale * 5), /obj/item/device/flashlight/combat, VENDOR_ITEM_REGULAR),
 		list("Box of Flashlight", round(scale * 1), /obj/item/ammo_box/magazine/misc/flashlight, VENDOR_ITEM_REGULAR),

@@ -2,11 +2,19 @@
 	name = "Silero"
 	is_enabled = TRUE
 
+/datum/tts_provider/silero/is_available()
+	if(!..())
+		return FALSE
+	return CONFIG_GET(flag/tts_enabled) && length(trim(CONFIG_GET(string/tts_api_url_silero)))
+
 /datum/tts_provider/silero/request(text, datum/tts_seed/silero/seed, datum/callback/proc_callback)
+	if(!is_available())
+		return FALSE
 	if(throttle_check())
 		return FALSE
 
 	var/ssml_text = "<speak>[text]</speak>"
+	var/api_url = trim(CONFIG_GET(string/tts_api_url_silero))
 
 	var/list/req_body = list(
 		"api_token" = CONFIG_GET(string/tts_token_silero),
@@ -26,7 +34,7 @@
 
 	SShttp.create_async_request(
 		RUSTG_HTTP_METHOD_POST,
-		CONFIG_GET(string/tts_api_url_silero),
+		api_url,
 		json_encode(req_body),
 		list("Content-Type" = "application/json"),
 		proc_callback

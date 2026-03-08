@@ -206,6 +206,17 @@
 	usable = TRUE
 	squad_type = "Squad"
 
+/datum/squad/marine/odst
+	name = SQUAD_ODST // SS220 EDIT: HALO ODST squad
+	access = list(ACCESS_MARINE_ALPHA)
+	radio_freq = ODST_FREQ
+	faction = FACTION_UNSC
+	use_stripe_overlay = FALSE
+	equipment_color = "#32CD32"
+	chat_color = "#32CD32"
+	minimap_color = "#32CD32"
+	usable = TRUE
+
 /datum/squad/marine/bravo
 	name = SQUAD_MARINE_2
 	equipment_color = "#ffc32d"

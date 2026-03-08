@@ -113,7 +113,9 @@ GLOBAL_LIST_INIT(admin_verbs_admin, list(
 	/datum/admins/proc/admin_force_selfdestruct,
 	/client/proc/check_round_statistics,
 	/client/proc/force_teleporter,
-	/client/proc/matrix_editor
+	// /client/proc/matrix_editor
+	/client/proc/matrix_editor, // SS220 EDIT: added trailing comma for Game Rule Panel admin verb entry
+	/client/proc/toggle_game_rule_panel // SS220 EDIT: added Game Rule Panel admin verb
 ))
 
 GLOBAL_LIST_INIT(admin_verbs_ban, list(

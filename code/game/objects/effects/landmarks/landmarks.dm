@@ -486,6 +486,10 @@
 	name = "forecon late join"
 	squad = SQUAD_LRRP
 
+/obj/effect/landmark/late_join/odst
+	name = "ODST late join" // SS220 EDIT: HALO ODST latejoin landmark
+	squad = SQUAD_ODST
+
 /obj/effect/landmark/late_join/pmc
 	name = "pmc late join"
 	squad = SQUAD_PMCPLT

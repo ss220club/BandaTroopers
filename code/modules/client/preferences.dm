@@ -340,7 +340,7 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 
 	dat += "<center>"
 	dat += "<a[current_menu == MENU_MARINE ? " class='linkOff'" : ""] href=\"byond://?src=\ref[user];preference=change_menu;menu=[MENU_MARINE]\"><b>Human</b></a> - "
-	dat += "<a[current_menu == MENU_PLTCO ? " class='linkOff'" : ""] href=\"byond://?src=\ref[user];preference=change_menu;menu=[MENU_PLTCO]\"><b>Platoon Commander</b></a> - "
+	dat += "<a[current_menu == MENU_PLTCO ? " class='linkOff'" : ""] href=\"byond://?src=\ref[user];preference=change_menu;menu=[MENU_PLTCO]\"><b>Platoon Presets</b></a> - " // SS220 EDIT: renamed menu label to match preset-only behavior
 	dat += "<a[current_menu == MENU_XENOMORPH ? " class='linkOff'" : ""] href=\"byond://?src=\ref[user];preference=change_menu;menu=[MENU_XENOMORPH]\"><b>Xenomorph</b></a> - "
 	if(owner.check_whitelist_status(WHITELIST_COMMANDER))
 		dat += "<a[current_menu == MENU_CO ? " class='linkOff'" : ""] href=\"byond://?src=\ref[user];preference=change_menu;menu=[MENU_CO]\"><b>Commanding Officer</b></a> - "
@@ -481,7 +481,7 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 
 		if(MENU_PLTCO)
 			dat += "<div id='column1'>"
-			dat += "<h2><b><u>Platoon Settings:</u></b></h2>"
+			dat += "<h2><b><u>Platoon Presets:</u></b></h2>" // SS220 EDIT: renamed section header to match preset-only behavior
 			dat += "<b>Alpha Squad Name:</b> <a href='byond://?_src_=prefs;preference=squad_name_alpha_pref;task=input'><b>[squad_name_alpha_pref]</b></a><br>"
 			dat += "<b>Bravo Squad Name:</b> <a href='byond://?_src_=prefs;preference=squad_name_bravo_pref;task=input'><b>[squad_name_bravo_pref]</b></a><br>"
 			dat += "<b>Charlie Squad Name:</b> <a href='byond://?_src_=prefs;preference=squad_name_charlie_pref;task=input'><b>[squad_name_charlie_pref]</b></a><br>"
@@ -1355,63 +1355,35 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 
 				if("squad_name_alpha_pref")
 					var/raw_name = input(user, "Choose your Alpha squad name:", "Character Preference", squad_name_alpha_pref) as text|null
-					// SS220 EDIT - START
-					var/datum/squad_name_manager/manager_alpha = GLOB.squad_name_manager
-					var/normalized_name_alpha = manager_alpha ? manager_alpha.normalize_squad_name(raw_name) : null
-					if(!normalized_name_alpha && raw_name && !manager_alpha && length_char(raw_name) <= 32)
-						normalized_name_alpha = raw_name
-					// if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32)
+					var/normalized_name_alpha = squad_name_normalize(raw_name, 32) // SS220 EDIT: unified preset validation with Cyrillic support
 					if(!normalized_name_alpha)
-						to_chat(user, SPAN_WARNING("Invalid squad name. Length must be between 1 and 32 characters."))
+						to_chat(user, SPAN_WARNING("Invalid squad name. Use 1-32 chars: Latin/Cyrillic letters, numbers, spaces, apostrophe, hyphen or dot.")) // SS220 EDIT: explicit validation contract
 					else
-						// squad_name_alpha_pref = raw_name
 						squad_name_alpha_pref = normalized_name_alpha
-					// SS220 EDIT - END
 
 				if("squad_name_bravo_pref")
 					var/raw_name = input(user, "Choose your Bravo squad name:", "Character Preference", squad_name_bravo_pref) as text|null
-					// SS220 EDIT - START
-					var/datum/squad_name_manager/manager_bravo = GLOB.squad_name_manager
-					var/normalized_name_bravo = manager_bravo ? manager_bravo.normalize_squad_name(raw_name) : null
-					if(!normalized_name_bravo && raw_name && !manager_bravo && length_char(raw_name) <= 32)
-						normalized_name_bravo = raw_name
-					// if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32)
+					var/normalized_name_bravo = squad_name_normalize(raw_name, 32) // SS220 EDIT: unified preset validation with Cyrillic support
 					if(!normalized_name_bravo)
-						to_chat(user, SPAN_WARNING("Invalid squad name. Length must be between 1 and 32 characters."))
+						to_chat(user, SPAN_WARNING("Invalid squad name. Use 1-32 chars: Latin/Cyrillic letters, numbers, spaces, apostrophe, hyphen or dot.")) // SS220 EDIT: explicit validation contract
 					else
-						// squad_name_bravo_pref = raw_name
 						squad_name_bravo_pref = normalized_name_bravo
-					// SS220 EDIT - END
 
 				if("squad_name_charlie_pref")
 					var/raw_name = input(user, "Choose your Charlie squad name:", "Character Preference", squad_name_charlie_pref) as text|null
-					// SS220 EDIT - START
-					var/datum/squad_name_manager/manager_charlie = GLOB.squad_name_manager
-					var/normalized_name_charlie = manager_charlie ? manager_charlie.normalize_squad_name(raw_name) : null
-					if(!normalized_name_charlie && raw_name && !manager_charlie && length_char(raw_name) <= 32)
-						normalized_name_charlie = raw_name
-					// if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32)
+					var/normalized_name_charlie = squad_name_normalize(raw_name, 32) // SS220 EDIT: unified preset validation with Cyrillic support
 					if(!normalized_name_charlie)
-						to_chat(user, SPAN_WARNING("Invalid squad name. Length must be between 1 and 32 characters."))
+						to_chat(user, SPAN_WARNING("Invalid squad name. Use 1-32 chars: Latin/Cyrillic letters, numbers, spaces, apostrophe, hyphen or dot.")) // SS220 EDIT: explicit validation contract
 					else
-						// squad_name_charlie_pref = raw_name
 						squad_name_charlie_pref = normalized_name_charlie
-					// SS220 EDIT - END
 
 				if("squad_name_delta_pref")
 					var/raw_name = input(user, "Choose your Delta squad name:", "Character Preference", squad_name_delta_pref) as text|null
-					// SS220 EDIT - START
-					var/datum/squad_name_manager/manager_delta = GLOB.squad_name_manager
-					var/normalized_name_delta = manager_delta ? manager_delta.normalize_squad_name(raw_name) : null
-					if(!normalized_name_delta && raw_name && !manager_delta && length_char(raw_name) <= 32)
-						normalized_name_delta = raw_name
-					// if(!raw_name || !length_char(raw_name) || length_char(raw_name) > 32)
+					var/normalized_name_delta = squad_name_normalize(raw_name, 32) // SS220 EDIT: unified preset validation with Cyrillic support
 					if(!normalized_name_delta)
-						to_chat(user, SPAN_WARNING("Invalid squad name. Length must be between 1 and 32 characters."))
+						to_chat(user, SPAN_WARNING("Invalid squad name. Use 1-32 chars: Latin/Cyrillic letters, numbers, spaces, apostrophe, hyphen or dot.")) // SS220 EDIT: explicit validation contract
 					else
-						// squad_name_delta_pref = raw_name
 						squad_name_delta_pref = normalized_name_delta
-					// SS220 EDIT - END
 
 				if ("dropship_camo")
 					var/new_camo = tgui_input_list(user, "Choose your platoon's dropship camo:", "Character Preferences", GLOB.dropship_camos)
@@ -1420,11 +1392,12 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 						dropship_camo = new_camo
 
 				if("dropship_name")
-					var/raw_name = input(user, "Choose your Platoon's Dropship name:", "Character Preference")  as text|null
-					if(length(raw_name) > 10 || !length(raw_name)) // Check to ensure that the user entered text (rather than cancel.)
-						to_chat(user, "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ' and .</font>")
+					var/raw_name = input(user, "Choose your Platoon's Dropship name:", "Character Preference", dropship_name) as text|null
+					var/normalized_dropship_name = squad_name_normalize(raw_name, 10) // SS220 EDIT: unified preset validation with Cyrillic support
+					if(!normalized_dropship_name)
+						to_chat(user, SPAN_WARNING("Invalid dropship name. Use 1-10 chars: Latin/Cyrillic letters, numbers, spaces, apostrophe, hyphen or dot.")) // SS220 EDIT: explicit validation contract
 					else
-						dropship_name = raw_name
+						dropship_name = normalized_dropship_name
 
 				if("synth_name")
 					var/raw_name = input(user, "Choose your Synthetic's name:", "Character Preference")  as text|null

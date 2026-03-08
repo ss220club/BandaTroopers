@@ -1,26 +1,32 @@
-/datum/squad_name_manager/proc/is_valid_squad_name_char(ascii_char)
+/proc/squad_name_is_valid_char(ascii_char)
 	switch(ascii_char)
-		if(32, 39, 45, 46) // пробел, ', -, .
+		if(32, 39, 45, 46) // space, ', -, .
 			return TRUE
-		if(48 to 57) // цифры 0-9
+		if(48 to 57) // digits 0-9
 			return TRUE
-		if(65 to 90, 97 to 122) // латиница
+		if(65 to 90, 97 to 122) // latin
 			return TRUE
-		if(1025, 1040 to 1103, 1105) // кириллица + Ё/ё
+		if(1025, 1040 to 1103, 1105) // cyrillic + yo
 			return TRUE
 	return FALSE
 
-/datum/squad_name_manager/proc/normalize_squad_name(raw_name)
+/proc/squad_name_normalize(raw_name, max_length = 32)
 	if(!istext(raw_name))
 		return null
 	var/trimmed_name = trim_right(trim_left(raw_name))
-	if(!length_char(trimmed_name) || length_char(trimmed_name) > 32)
+	if(!length_char(trimmed_name) || length_char(trimmed_name) > max_length)
 		return null
 	for(var/i in 1 to length_char(trimmed_name))
 		var/ascii_char = text2ascii_char(trimmed_name, i)
-		if(!is_valid_squad_name_char(ascii_char))
+		if(!squad_name_is_valid_char(ascii_char))
 			return null
 	return trimmed_name
+
+/datum/squad_name_manager/proc/is_valid_squad_name_char(ascii_char)
+	return squad_name_is_valid_char(ascii_char)
+
+/datum/squad_name_manager/proc/normalize_squad_name(raw_name)
+	return squad_name_normalize(raw_name, 32)
 
 /datum/squad_name_manager/proc/validate_name_conflicts(new_name, old_name)
 	for(var/channel_name in GLOB.radiochannels)

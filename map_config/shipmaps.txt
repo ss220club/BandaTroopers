@@ -44,6 +44,13 @@ endmap
 
 # SS220 EDIT - START
 
+map unsc_dark_was_the_night
+	default # SS220 EDIT
+endmap
+
+map unsc_dark_was_the_night_odst
+endmap
+
 map blue_ridge
 	default
 endmap

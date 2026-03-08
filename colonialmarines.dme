@@ -132,6 +132,7 @@
 #include "code\__DEFINES\bandamarines\cyrillic.dm"
 #include "code\__DEFINES\bandamarines\game_master.dm"
 #include "code\__DEFINES\bandamarines\pronouns.dm"
+#include "code\__DEFINES\bandamarines\rto_support.dm"
 #include "code\__DEFINES\bandamarines\ru_jobs.dm"
 #include "code\__DEFINES\bandamarines\rust_g.dm"
 #include "code\__DEFINES\bandamarines\tts.dm"

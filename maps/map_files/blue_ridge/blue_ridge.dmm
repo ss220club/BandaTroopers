@@ -1404,7 +1404,7 @@
 	pixel_x = -1;
 	pixel_y = 1
 	},
-/obj/effect/landmark/start/marine/rto{
+/obj/effect/landmark/start/marine/rto/delta{
 	squad = "Delta"
 	},
 /turf/open/floor/almayer/plate,
@@ -1556,7 +1556,7 @@
 	pixel_x = -1;
 	pixel_y = 1
 	},
-/obj/effect/landmark/start/marine/rto{
+/obj/effect/landmark/start/marine/rto/charlie{
 	squad = "Charlie"
 	},
 /turf/open/floor/almayer/plate,
@@ -1581,7 +1581,7 @@
 	pixel_y = 8;
 	dir = 8
 	},
-/obj/effect/landmark/start/marine/rto{
+/obj/effect/landmark/start/marine/rto/charlie{
 	squad = "Charlie"
 	},
 /turf/open/floor/almayer/plate,
@@ -2352,7 +2352,7 @@
 	pixel_x = -1;
 	pixel_y = 1
 	},
-/obj/effect/landmark/start/marine/rto{
+/obj/effect/landmark/start/marine/rto/bravo{
 	squad = "Bravo"
 	},
 /turf/open/floor/almayer/plate,
@@ -2366,7 +2366,7 @@
 	pixel_y = 8;
 	dir = 8
 	},
-/obj/effect/landmark/start/marine/rto{
+/obj/effect/landmark/start/marine/rto/bravo{
 	squad = "Bravo"
 	},
 /turf/open/floor/almayer/plate,
@@ -4114,7 +4114,7 @@
 "aiA" = (
 /obj/effect/landmark/late_join,
 /obj/effect/landmark/late_join/delta,
-/obj/effect/landmark/start/marine/rto{
+/obj/effect/landmark/start/marine/rto/delta{
 	squad = "Delta"
 	},
 /turf/open/floor/almayer/plate,
@@ -4174,7 +4174,7 @@
 	pixel_x = -1;
 	pixel_y = 1
 	},
-/obj/effect/landmark/start/marine/rto{
+/obj/effect/landmark/start/marine/rto/alpha{
 	squad = "Alpha"
 	},
 /turf/open/floor/plating/plating_catwalk,
@@ -8977,7 +8977,7 @@
 "asK" = (
 /obj/effect/landmark/late_join/alpha,
 /obj/effect/landmark/late_join,
-/obj/effect/landmark/start/marine/rto{
+/obj/effect/landmark/start/marine/rto/alpha{
 	squad = "Alpha"
 	},
 /turf/open/floor/plating/plating_catwalk,
