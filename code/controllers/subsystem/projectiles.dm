@@ -29,6 +29,11 @@ SUBSYSTEM_DEF(projectiles)
 
 /datum/controller/subsystem/projectiles/stat_entry(msg)
 	msg = " | #Proj: [length(projectiles)]"
+	// SS220 EDIT: let modular packs append subsystem-specific diagnostics without baking them into hardcode
+	if(hascall(src, "modular_stat_entry_suffix"))
+		var/suffix = call(src, "modular_stat_entry_suffix")()
+		if(suffix)
+			msg += " | [suffix]"
 	return ..()
 
 /datum/controller/subsystem/projectiles/Initialize(start_timeofday)
@@ -36,6 +41,9 @@ SUBSYSTEM_DEF(projectiles)
 	flying = list()
 	sleepers = list()
 	return SS_INIT_SUCCESS
+
+/datum/controller/subsystem/projectiles/proc/get_projectile_queue_length()
+	return length(projectiles)
 
 /datum/controller/subsystem/projectiles/fire(resumed = FALSE)
 	if(!resumed)

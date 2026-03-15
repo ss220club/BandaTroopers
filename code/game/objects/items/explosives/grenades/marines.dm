@@ -44,6 +44,8 @@
 
 /obj/item/explosive/grenade/high_explosive/launch_impact(atom/hit_atom)
 	if(fuse_type != IMPACT_FUSE)
+		if(active) // SS220 EDIT: temporary diagnostics for timed grenade landings and short-throws
+			log_game("GRENADE FLIGHT DEBUG: [src] thrown by [key_name(launch_metadata?.thrower)] reached [AREACOORD(src)] after targeting [AREACOORD(launch_metadata?.target)] hit=[hit_atom ? "[hit_atom]@[AREACOORD(hit_atom)]" : "null"] dist=[launch_metadata?.dist]/[launch_metadata?.range] throwing=[throwing]")
 		return
 	var/detonate = TRUE
 	if(isobj(hit_atom) && !rebounding)

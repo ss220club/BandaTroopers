@@ -29,9 +29,11 @@ GLOBAL_DATUM_INIT(data_core, /datum/datacore, new)
 	var/list/eng = GLOB.ROLES_ENGINEERING.Copy()
 	var/list/req = GLOB.ROLES_REQUISITION.Copy()
 	var/list/med = GLOB.ROLES_MEDICAL.Copy()
+	var/datum/authority/branch/role/role_authority = GLOB.RoleAuthority
+	var/list/active_marine_roles = role_authority ? role_authority.get_marine_equivalent_role_titles(TRUE) : GLOB.ROLES_MARINES
 	var/list/marines_by_squad = GLOB.ROLES_SQUAD_ALL.Copy()
 	for(var/squad_name in marines_by_squad)
-		marines_by_squad[squad_name] = GLOB.ROLES_MARINES.Copy()
+		marines_by_squad[squad_name] = active_marine_roles.Copy()
 	var/list/isactive = new()
 
 // If we need not the HTML table, but list
@@ -46,7 +48,7 @@ GLOBAL_DATUM_INIT(data_core, /datum/datacore, new)
 		)
 		departments += marines_by_squad
 		var/list/manifest_out = list()
-		var/datum/squad/marine/main_ship_platoon = MAIN_SHIP_PLATOON
+		var/datum/squad/marine/main_ship_platoon = GLOB.RoleAuthority?.get_active_ship_platoon_type() || MAIN_SHIP_PLATOON || text2path(MAIN_SHIP_DEFAULT_PLATOON) // SS220 EDIT: manifest faction follows active ship platoon resolver with vanilla fallback
 		for(var/datum/data/record/record_entry in GLOB.data_core.general)
 			if(record_entry.fields["mob_faction"] != main_ship_platoon.faction) //we process only humans of the same faction as the ship forces
 				continue
@@ -117,7 +119,7 @@ GLOBAL_DATUM_INIT(data_core, /datum/datacore, new)
 	var/dept_flags = NO_FLAGS //Is there anybody in the department?.
 	var/list/squad_sublists = GLOB.ROLES_SQUAD_ALL.Copy() //Are there any marines in the squad?
 
-	var/datum/squad/marine/main_ship_platoon = MAIN_SHIP_PLATOON
+	var/datum/squad/marine/main_ship_platoon = GLOB.RoleAuthority?.get_active_ship_platoon_type() || MAIN_SHIP_PLATOON || text2path(MAIN_SHIP_DEFAULT_PLATOON) // SS220 EDIT: datacore faction filters use active ship platoon resolver with vanilla fallback
 	for(var/datum/data/record/record_entry in GLOB.data_core.general)
 		if(record_entry.fields["mob_faction"] != main_ship_platoon.faction) //we process only humans of the same faction as the ship forces
 			continue
@@ -162,7 +164,7 @@ GLOBAL_DATUM_INIT(data_core, /datum/datacore, new)
 		else if(real_rank in GLOB.ROLES_MEDICAL)
 			dept_flags |= FLAG_SHOW_MEDICAL
 			LAZYSET(med[real_rank], name, rank)
-		else if(real_rank in GLOB.ROLES_MARINES)
+		else if(role_authority ? role_authority.is_marine_equivalent_role(real_rank, TRUE) : (real_rank in GLOB.ROLES_MARINES))
 			if(isnull(squad_name))
 				continue
 			// SS220 EDIT - START
@@ -252,7 +254,8 @@ GLOBAL_DATUM_INIT(data_core, /datum/datacore, new)
 		if(!nosleep)
 			sleep(40)
 
-		var/list/jobs_to_check = GLOB.ROLES_CIC + GLOB.ROLES_AUXIL_SUPPORT + GLOB.ROLES_MISC + GLOB.ROLES_POLICE + GLOB.ROLES_ENGINEERING + GLOB.ROLES_REQUISITION + GLOB.ROLES_MEDICAL + GLOB.ROLES_MARINES
+		var/datum/authority/branch/role/role_authority = GLOB.RoleAuthority
+		var/list/jobs_to_check = GLOB.ROLES_CIC + GLOB.ROLES_AUXIL_SUPPORT + GLOB.ROLES_MISC + GLOB.ROLES_POLICE + GLOB.ROLES_ENGINEERING + GLOB.ROLES_REQUISITION + GLOB.ROLES_MEDICAL + (role_authority ? role_authority.get_marine_equivalent_role_titles(TRUE) : GLOB.ROLES_MARINES)
 		for(var/mob/living/carbon/human/H as anything in GLOB.human_mob_list)
 			if(should_block_game_interaction(H))
 				continue

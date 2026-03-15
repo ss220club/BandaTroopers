@@ -86,7 +86,6 @@ Additional game mode variables.
 	//Role Authority set up.
 	/// List of role titles to override to different roles when starting game
 	var/list/role_mappings
-
 	//current amount of survivors by type
 	var/list/survivors_by_type_amounts = list()
 
@@ -110,7 +109,7 @@ Additional game mode variables.
 
 
 /datum/game_mode/proc/get_roles_list()
-	return GLOB.ROLES_USCM
+	return GLOB.RoleAuthority?.get_shipside_role_titles() || GLOB.ROLES_USCM
 
 //===================================================\\
 
@@ -1066,7 +1065,7 @@ Additional game mode variables.
 		log_debug("Null client attempted to transform_joe")
 		return
 
-	var/turf/spawn_point = get_turf(pick(GLOB.latejoin_by_job[JOB_WORKING_JOE]))
+	var/turf/spawn_point = get_modular_safe_latejoin_turf(JOB_WORKING_JOE) // SS220 EDIT: safe latejoin fallback skips empty Working Joe bucket
 	var/mob/living/carbon/human/synthetic/new_joe = new(spawn_point)
 	joe_candidate.mind.transfer_to(new_joe, TRUE)
 	var/datum/job/joe_job = GLOB.RoleAuthority.roles_by_name[JOB_WORKING_JOE]

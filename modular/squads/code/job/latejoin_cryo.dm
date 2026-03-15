@@ -79,6 +79,21 @@
 	squads_debug_log("[src] no modular spawn turf resolved for [job_datum?.title], late_join=[late_join].")
 	return null
 
+/proc/get_modular_safe_latejoin_turf(job_key = null, squad_key = null, include_job_bucket = TRUE, include_global_bucket = TRUE)
+	var/turf/spawn_turf = get_turf(SAFEPICK(GLOB.latejoin_by_squad[squad_key]))
+	if(spawn_turf)
+		return spawn_turf
+
+	if(include_job_bucket)
+		spawn_turf = get_turf(SAFEPICK(GLOB.latejoin_by_job[job_key]))
+		if(spawn_turf)
+			return spawn_turf
+
+	if(include_global_bucket)
+		return get_turf(SAFEPICK(GLOB.latejoin))
+
+	return null
+
 /mob/living/carbon/human/proc/try_enter_selected_cryopod(obj/structure/machinery/cryopod/target_pod)
 	if(!target_pod || target_pod.occupant)
 		return FALSE

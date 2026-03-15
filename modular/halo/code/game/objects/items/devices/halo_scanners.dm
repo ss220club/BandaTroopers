@@ -1,5 +1,5 @@
 /obj/item/device/healthanalyzer/halo
-	name = "M7 medical PDA"
-	desc = " A deceptively advanced piece of equipment found in the hands of UNSC medical personnel and civilian EMTs. Allowing its user to conduct hands free, non-intrusive diagnosis and triage, including the ability to remotely connect to a marine's neural implants and armour systems, pulling significant biometric data at a moments notice. Also commonly used to embarrass squadmates."
+	name = "медицинский КПК M7"
+	desc = "Обманчиво продвинутое устройство, которое можно увидеть у медиков ККОН и гражданских парамедиков. Позволяет проводить бесконтактную диагностику и сортировку раненых без помощи рук, включая удалённое подключение к нейроимплантам и системам брони морпеха для мгновенного считывания важных биометрических данных. Также часто используется, чтобы позорить сослуживцев."
 	icon = 'icons/halo/obj/items/medical.dmi'
 	icon_state = "scanner"

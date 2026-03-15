@@ -1017,6 +1017,15 @@
 			visible_message(SPAN_AVOIDHARM("[src]'s armor deflects [P]!"))
 			if(P.ammo.sound_armor) playsound(src, P.ammo.sound_armor, 50, 1)
 
+	// SS220 EDIT - START: let worn modular shield harnesses intercept projectile damage without a generic signal allocation
+	if(damage_result > 0 && istype(wear_suit, /obj/item/clothing/suit/marine/shielded))
+		var/obj/item/clothing/suit/marine/shielded/shield_harness = wear_suit
+		damage_result = max(shield_harness.intercept_projectile_damage(src, damage_result), 0)
+		if(damage_result <= 0)
+			bullet_message(P)
+			return TRUE
+	// SS220 EDIT - END
+
 	if(P.ammo.debilitate && stat != DEAD && ( damage || ( ammo_flags & AMMO_IGNORE_RESIST) ) )  //They can't be dead and damage must be inflicted (or it's a xeno toxin).
 		//Predators and synths are immune to these effects to cut down on the stun spam. This should later be moved to their apply_effects proc, but right now they're just humans.
 		if(!isspeciesyautja(src) && !isspeciessynth(src))

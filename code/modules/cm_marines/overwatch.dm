@@ -40,7 +40,7 @@
 /obj/structure/machinery/computer/overwatch/Initialize()
 	. = ..()
 
-	var/datum/squad/main_squad_path = MAIN_SHIP_PLATOON
+	var/datum/squad/main_squad_path = GLOB.RoleAuthority?.get_active_ship_platoon_type() || MAIN_SHIP_PLATOON || text2path(MAIN_SHIP_DEFAULT_PLATOON) // SS220 EDIT: overwatch faction gate follows active ship platoon resolver with vanilla fallback
 	if (faction == main_squad_path::faction)
 		tacmap = new /datum/tacmap/drawing(src, minimap_type)
 	else
@@ -199,7 +199,7 @@
 							acting_sl = " (direct command)"
 						else if(marine_human.job != JOB_MARINE_RAIDER_SL)
 							acting_sl = " (acting TL)"
-					else if(marine_human.job != JOB_SQUAD_LEADER)
+					else if(GET_DEFAULT_ROLE(marine_human.job) != JOB_SQUAD_LEADER) // SS220 EDIT: treat modular squad-leader variants as canonical SL
 						acting_sl = " (acting SL)"
 					is_squad_leader = TRUE
 				else if(current_turf && (current_turf.z == SL_z))
@@ -239,7 +239,7 @@
 			mob_name = marine
 
 
-		switch(role)
+		switch(GET_DEFAULT_ROLE(role)) // SS220 EDIT: overwatch role buckets use canonical squad-role contracts
 			if(JOB_SQUAD_LEADER)
 				leader_count++
 				if(mob_state != "Dead")
@@ -598,7 +598,7 @@
 		current_squad.send_message("Attention: A new Squad Leader has been set: [selected_sl.real_name].")
 		visible_message("[icon2html(src, viewers(src))] [SPAN_BOLDNOTICE("[selected_sl.real_name] is the new Squad Leader of squad '[current_squad]'! Logging to enlistment file.")]")
 
-	to_chat(selected_sl, "[icon2html(src, selected_sl)] <font size='3' color='blue'><B>Overwatch: You've been promoted to \'[selected_sl.job == JOB_SQUAD_LEADER ? "SQUAD LEADER" : "ACTING SQUAD LEADER"]\' for [current_squad.name]. Your headset has access to the command channel (:v).</B></font>")
+	to_chat(selected_sl, "[icon2html(src, selected_sl)] <font size='3' color='blue'><B>Overwatch: You've been promoted to \'[GET_DEFAULT_ROLE(selected_sl.job) == JOB_SQUAD_LEADER ? "SQUAD LEADER" : "ACTING SQUAD LEADER"]\' for [current_squad.name]. Your headset has access to the command channel (:v).</B></font>") // SS220 EDIT: overwatch promotion text uses canonical squad-role contracts
 	to_chat(user, "[icon2html(src, usr)] [selected_sl.real_name] is [current_squad]'s new leader!")
 
 	if(selected_sl.assigned_fireteam)
@@ -613,7 +613,7 @@
 	SStracking.set_leader(current_squad.tracking_id, selected_sl)
 	SStracking.start_tracking("marine_sl", selected_sl)
 
-	if(selected_sl.job == JOB_SQUAD_LEADER)//a real SL
+	if(GET_DEFAULT_ROLE(selected_sl.job) == JOB_SQUAD_LEADER)//a real SL // SS220 EDIT: overwatch comm-title uses canonical squad-role contracts
 		selected_sl.comm_title = "SL"
 	else //an acting SL
 		selected_sl.comm_title = "aSL"

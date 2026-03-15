@@ -398,7 +398,7 @@
 				to_chat(user, SPAN_WARNING("Access denied."))
 				return
 
-			if(LAZYLEN(vendor_role) && !vendor_role.Find(user.job))
+			if(LAZYLEN(vendor_role) && !vendor_role_matches(user.job)) // SS220 EDIT: medical vendor gating uses canonical squad-role matching
 				to_chat(user, SPAN_WARNING("This machine isn't for you."))
 				return
 
@@ -428,7 +428,7 @@
 			cart_restock(grabbed.grabbed_thing, user)
 			return
 
-	if(hacked || (allowed(user) && (!LAZYLEN(vendor_role) || vendor_role.Find(user.job))))
+	if(hacked || (allowed(user) && (!LAZYLEN(vendor_role) || vendor_role_matches(user.job)))) // SS220 EDIT: medical vendor gating uses canonical squad-role matching
 		if(stock(I, user))
 			return
 

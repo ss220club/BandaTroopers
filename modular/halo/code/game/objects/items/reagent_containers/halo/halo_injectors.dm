@@ -41,9 +41,9 @@
 		playsound(loc, prime_sound, 25, 1)
 
 /obj/item/reagent_container/hypospray/autoinjector/primeable/biofoam
-	name = "biofoam canister"
+	name = "канистра биопены"
 	chemname = "biofoam"
-	desc = "An olive-drab canister full of a stabilizing biomedical polymer foam, otherwise known as biofoam. Fold open the injection rod to prime it, then stick it into your target's wounds."
+	desc = "Оливковая канистра, полная стабилизирующей биомедицинской полимерной пены, более известной как биопена. Разложите инъекционный стержень для подготовки и затем введите средство в раны цели."
 	icon_state = "biofoam"
 	amount_per_transfer_from_this = MED_REAGENTS_OVERDOSE
 	volume = MED_REAGENTS_OVERDOSE
@@ -53,10 +53,10 @@
 	prime_sound = 'sound/items/unfold.ogg'
 	causes_pain = TRUE
 
-	prime_text = "You fold open the injection rod."
-	description_unprimed = "The injection rod is folded down."
-	description_primed = "The injection rod is folded up."
-	instructions = "OD at 20u. Best used on critically wounded patients during mass casualty events. Prevents oxyloss, damage from injured organs, bleeding, and is as good as Oxycodone at painkilling."
+	prime_text = "Вы раскладываете инъекционный стержень."
+	description_unprimed = "Инъекционный стержень сложен."
+	description_primed = "Инъекционный стержень разложен."
+	instructions = "Передозировка при 20 ед. Лучше всего использовать на критически раненых пациентах во время массовых потерь. Предотвращает кислородное голодание, урон от повреждённых органов, кровотечение и по силе обезболивания сопоставима с оксикодоном."
 
 /obj/item/reagent_container/hypospray/autoinjector/primeable/biofoam/attack(mob/living/carbon/target, mob/living/user)
 	if(primed == TRUE)
@@ -81,9 +81,9 @@
 	target.pain.recalculate_pain()
 
 /obj/item/reagent_container/hypospray/autoinjector/primeable/biofoam/small
-	name = "biofoam pen"
+	name = "ручка с биопеной"
 	chemname = "biofoam_ext"
-	desc = "A small silver pen containing a easy to apply biofoam spray. This is intended to be sprayed on the outside of wounds rather than put directly into the wound."
+	desc = "Небольшая серебристая ручка с легко наносимым распылителем биопены. Предназначена для нанесения на поверхность раны, а не для введения внутрь."
 	icon_state = "syrette"
 	amount_per_transfer_from_this = MED_REAGENTS_OVERDOSE/2
 	volume = MED_REAGENTS_OVERDOSE
@@ -92,15 +92,15 @@
 	prime_sound = "rip"
 	causes_pain = TRUE
 
-	prime_text = "You tear the protective wrapper off of the biofoam pen."
-	description_unprimed = "The biofoam pen is still sealed inside its packaging."
-	description_primed = "The biofoam pen is ready to be used."
-	instructions = "OD at 20u. Best used on critically wounded patients before bringing them to medically trained personnel, comparable to tricordrazine but with additional stabilizing properties and painkilling."
+	prime_text = "Вы срываете защитную обёртку с ручки с биопеной."
+	description_unprimed = "Ручка с биопеной всё ещё запечатана в упаковке."
+	description_primed = "Ручка с биопеной готова к использованию."
+	instructions = "Передозировка при 20 ед. Лучше всего использовать на критически раненых до передачи обученному медику. По эффекту сопоставима с трикордразином, но дополнительно стабилизирует пациента и снимает боль."
 
 /obj/item/reagent_container/hypospray/autoinjector/primeable/biofoam/antidote
-	name = "biofoam dissolvent injector"
+	name = "инжектор-растворитель биопены"
 	chemname = "biofoam_dissolvent"
-	desc = "A small silver pen containing a slightly acidic compound to dissolve any biofoam injected into someone's system. This can hurt a lot...but it's better than dying from too much foam."
+	desc = "Небольшая серебристая ручка с умеренно кислотным составом для растворения биопены, введённой в организм. Это может быть очень больно... но всё же лучше, чем умереть от избытка пены."
 	icon_state = "antidote"
 	amount_per_transfer_from_this = LOWH_REAGENTS_OVERDOSE
 	volume = LOWH_REAGENTS_OVERDOSE
@@ -109,31 +109,31 @@
 	prime_sound = "rip"
 	causes_pain = TRUE
 
-	prime_text = "You tear the protective wrapper off of the biofoam dissolvent injector."
-	description_unprimed = "The biofoam dissolvent injector is still sealed inside its packaging."
-	description_primed = "The biofoam dissolvent injector is ready to be used."
-	instructions = "OD at 15u. Used on patients with extreme overdoses on biofoam, gives burn damage as a consequence however. Usually you only get one, try not to waste it."
+	prime_text = "Вы срываете защитную обёртку с инжектора-растворителя биопены."
+	description_unprimed = "Инжектор-растворитель биопены всё ещё запечатан в упаковке."
+	description_primed = "Инжектор-растворитель биопены готов к использованию."
+	instructions = "Передозировка при 15 ед. Используется при тяжёлой передозировке биопеной, но в качестве побочного эффекта наносит ожоги. Обычно такой у вас один - постарайтесь не тратить его впустую."
 
 /obj/item/reagent_container/hypospray/autoinjector/primeable/morphine
-	name = "morphine syrette"
+	name = "сиретта морфина"
 	chemname = "morphine"
-	desc = "A tan syrette filled with 10 units of morphine. Not enough to knock someone out, but close. Most patients can take two doses."
+	desc = "Бежевая сиретта с 10 единицами морфина. Не совсем достаточно, чтобы вырубить человека, но уже близко. Большинство пациентов выдерживают две дозы."
 	icon_state = "morphine"
 	amount_per_transfer_from_this = LOW_REAGENTS_OVERDOSE_CRITICAL
 	volume = LOW_REAGENTS_OVERDOSE_CRITICAL
 	uses_left = 1
 	prime_sound = 'sound/weapons/handling/m79_break_open.ogg'
 
-	prime_text = "You pop the cap off of the morphine syrette."
-	description_unprimed = "The morphine syrette still has the cap on it."
-	description_primed = "The morphine syrette is ready to be used."
-	instructions = "OD at 20u. Sitting somewhere between tramadol and oxycodone, this is a fairly good painkiller."
+	prime_text = "Вы снимаете колпачок с сиретты морфина."
+	description_unprimed = "На сиретте морфина всё ещё надет колпачок."
+	description_primed = "Сиретта морфина готова к использованию."
+	instructions = "Передозировка при 20 ед. По силе находится где-то между трамадолом и оксикодоном, то есть это вполне хорошее обезболивающее."
 
 /obj/item/reagent_container/hypospray/autoinjector/primeable/burnguard
-	name = "Optican BurnGuard package"
+	name = "упаковка Optican BurnGuard"
 	chemname = "burnguard"
-	desc = "An effective and simple to administer first-response burn treatment powder. Previously only seen in niche industrial settings where personnel worked with extreme heat or dangerous chemicals, now adapted for use by the UNSC as a relatively reliable first-aid treatment for the effects of plasma burns."
-	desc_lore = "Application is excruciating as the powder forms a hardened antibacterial \"scab\" over the wound site, encouraging healing."
+	desc = "Эффективный и простой в применении порошок для экстренной помощи при ожогах. Раньше встречался лишь в узких промышленных сферах, где персонал работал с экстремальным жаром или опасной химией, а теперь адаптирован для ККОН как сравнительно надёжное средство первой помощи при плазменных ожогах."
+	desc_lore = "Нанесение мучительно болезненно: порошок образует над раной затвердевшую антибактериальную \"корку\", ускоряющую заживление."
 	icon_state = "burnguard"
 	amount_per_transfer_from_this = 10
 	volume = HIGH_REAGENTS_OVERDOSE
@@ -141,15 +141,15 @@
 	prime_sound = "rip"
 	injectSFX = 'sound/items/powder_shake.ogg'
 
-	prime_text = "You tear open the Optican BurnGuard package."
-	description_unprimed = "The Optican BurnGuard package is still sealed."
-	description_primed = "The Optican BurnGuard package is torn open."
-	instructions = "OD at 30u. Functionally identical to kelotane along with slightly better painkilling properties than paracetamol, but with a smaller administer amount per \"injection.\""
+	prime_text = "Вы вскрываете упаковку Optican BurnGuard."
+	description_unprimed = "Упаковка Optican BurnGuard всё ещё запечатана."
+	description_primed = "Упаковка Optican BurnGuard вскрыта."
+	instructions = "Передозировка при 30 ед. По действию близок к келотану и обезболивает немного лучше парацетамола, но за одно \"введение\" наносится меньший объём вещества."
 
 // ----------------------------- Other -----------------------------
 
 /obj/item/reagent_container/syringe/halo // I HATE SYRINGESTAB. FUCKING SHITCODE but i dont want to override it :>
-	name = "milspec syringe"
+	name = "армейский шприц"
 	icon = 'icons/halo/obj/items/chemistry.dmi'
 	icon_state = "0"
 
@@ -351,10 +351,10 @@
 	volume = (REAGENTS_OVERDOSE * INJECTOR_PERCENTAGE_OF_OD) * INJECTOR_USES
 
 /obj/item/reagent_container/hypospray/autoinjector/halo_peridaxon
-	name = "\improper peridaxon autoinjector"
+	name = "\improper автоинъектор перидаксона"
 	icon = 'icons/halo/obj/items/chemistry.dmi'
 	chemname = "peridaxon"
-	desc = "An autoinjector loaded with 3 uses of Peridaxon, the novel blend of drugs that TEMPORARILY halts the symptoms of organ damage."
+	desc = "Автоинъектор с тремя дозами перидаксона - новой смеси препаратов, которая ВРЕМЕННО сдерживает симптомы повреждения органов."
 	amount_per_transfer_from_this = LOWH_REAGENTS_OVERDOSE * INJECTOR_PERCENTAGE_OF_OD
 	volume = (LOWH_REAGENTS_OVERDOSE * INJECTOR_PERCENTAGE_OF_OD) * INJECTOR_USES
 	uses_left = 3

@@ -3,7 +3,7 @@
 #define DIRECTION_CHANGE_PENALTY 2
 #define NO_WEED_PENALTY 2
 #define DISTANCE_PENALTY 1
-#define ASTAR_COST_FUNCTION(n) (abs(n.x - target.x)+abs(n.y - target.y))
+#define ASTAR_COST_FUNCTION(n, target) (abs(n.x - target.x)+abs(n.y - target.y)) // SS220 EDIT: make the pathfinding target explicit at each callsite
 
 #define OPEN_TURF_PENALTY 1
 #define DOOR_PENALTY 3

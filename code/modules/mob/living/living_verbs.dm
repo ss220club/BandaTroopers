@@ -76,6 +76,13 @@
 		var/obj/structure/machinery/cryopod/BB = loc
 		BB.eject()
 
+	// SS220 EDIT - START: allow Resist to exit modular HALO drop pods through upstream living verb flow
+	//getting out of drop pod
+	if(loc && (istype(loc, /obj/structure/halo_droppod)))
+		var/obj/structure/halo_droppod/drop_pod = loc
+		drop_pod.exit_pod()
+	// SS220 EDIT - END
+
 	//getting out of bodyscanner
 	if(loc && (istype(loc, /obj/structure/machinery/medical_pod/bodyscanner)))
 		var/obj/structure/machinery/medical_pod/bodyscanner/BB = loc

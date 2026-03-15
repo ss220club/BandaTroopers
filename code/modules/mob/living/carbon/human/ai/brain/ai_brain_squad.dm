@@ -17,6 +17,8 @@
 /datum/human_ai_squad/Destroy(force, ...)
 	for(var/datum/human_ai_brain/brain as anything in ai_in_squad)
 		remove_from_squad(brain)
+	if(SShuman_ai)
+		SShuman_ai.squad_id_dict -= "[id]"
 	SShuman_ai.squads -= src
 	squad_leader = null
 	return ..()

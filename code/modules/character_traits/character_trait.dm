@@ -52,6 +52,12 @@ GLOBAL_REFERENCE_LIST_INDEXED(character_traits, /datum/character_trait, type)
 		CRASH("Invalid trait_group set for character trait [type]")
 	trait_group.traits += src
 
+/datum/character_trait/Destroy()
+	if(istype(trait_group) && islist(trait_group.traits))
+		trait_group.traits -= src // SS220 EDIT: release dynamically created trait instances from their global group list for GC
+	trait_group = null
+	return ..()
+
 /// A wrapper to check if the trait can be applied first
 /datum/character_trait/proc/can_give_trait(datum/preferences/target)
 	if(type in target.traits)

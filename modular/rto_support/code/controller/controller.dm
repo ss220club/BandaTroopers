@@ -61,10 +61,10 @@
 	return TRUE
 
 /datum/rto_support_controller/proc/has_required_role()
-	return owner && !QDELETED(owner) && owner.job == JOB_SQUAD_RTO
+	return owner && !QDELETED(owner) && GET_DEFAULT_ROLE(owner.job) == JOB_SQUAD_RTO
 
 /datum/rto_support_controller/proc/get_available_templates()
-	if(!owner || owner.job != JOB_SQUAD_RTO)
+	if(!owner || GET_DEFAULT_ROLE(owner.job) != JOB_SQUAD_RTO)
 		return list()
 	var/list/templates = GLOB.rto_support_registry?.get_template_catalog()
 	return templates ? templates : list()
@@ -72,7 +72,7 @@
 /datum/rto_support_controller/proc/can_select_template()
 	if(!owner || QDELETED(owner))
 		return FALSE
-	if(owner.job != JOB_SQUAD_RTO)
+	if(GET_DEFAULT_ROLE(owner.job) != JOB_SQUAD_RTO)
 		return FALSE
 	if(!is_support_enabled_by_rules())
 		return FALSE
@@ -424,7 +424,7 @@
 	remove_support_actions()
 	action_handles = list()
 /datum/rto_support_controller/proc/sync_actions()
-	if(!owner || QDELETED(owner) || owner.job != JOB_SQUAD_RTO)
+	if(!owner || QDELETED(owner) || GET_DEFAULT_ROLE(owner.job) != JOB_SQUAD_RTO)
 		clear_actions()
 		return
 

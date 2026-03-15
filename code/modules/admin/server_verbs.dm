@@ -120,9 +120,42 @@
 		return
 
 	var/datum/map_config/VM = maprotatechoices[chosenmap]
-	if(!SSmapping.changemap(VM, SHIP_MAP))
+	var/list/ship_map_overrides = null
+	var/chosen_platoon_label = null
+	if(length(VM.allowed_platoons))
+		var/chosen_platoon = VM.allowed_platoons[1]
+		var/chosen_platoon_type = text2path(chosen_platoon)
+		chosen_platoon_label = GLOB.RoleAuthority?.get_ship_platoon_label(chosen_platoon_type) || chosen_platoon
+
+		if(length(VM.allowed_platoons) > 1)
+			var/list/platoon_choices = list()
+			for(var/platoon_value as anything in VM.allowed_platoons)
+				var/platoon_type = text2path(platoon_value)
+				if(!ispath(platoon_type, /datum/squad/marine))
+					continue
+
+				var/platoon_label = GLOB.RoleAuthority?.get_ship_platoon_label(platoon_type) || platoon_value
+				if(platoon_choices[platoon_label])
+					platoon_label = "[platoon_label] ([platoon_value])"
+				platoon_choices[platoon_label] = platoon_value
+
+			if(!length(platoon_choices))
+				to_chat(usr, SPAN_WARNING("Failed to resolve allowed platoons for [VM.map_name]."))
+				return
+
+			var/chosen_platoon_option = tgui_input_list(usr, "Choose a platoon for [VM.map_name]", "Change Ship Map", platoon_choices)
+			if(!chosen_platoon_option)
+				return
+
+			chosen_platoon = platoon_choices[chosen_platoon_option]
+			chosen_platoon_label = chosen_platoon_option
+
+		ship_map_overrides = list("platoon" = chosen_platoon)
+
+	if(!SSmapping.changemap(VM, SHIP_MAP, ship_map_overrides))
 		to_chat(usr, SPAN_WARNING("Failed to change the ship map."))
 		return
 
-	log_admin("[key_name(usr)] changed the ship map to [VM.map_name].")
-	message_admins("[key_name_admin(usr)] changed the ship map to [VM.map_name].")
+	var/platoon_suffix = chosen_platoon_label ? " with [chosen_platoon_label]" : ""
+	log_admin("[key_name(usr)] changed the ship map to [VM.map_name][platoon_suffix].")
+	message_admins("[key_name_admin(usr)] changed the ship map to [VM.map_name][platoon_suffix].")

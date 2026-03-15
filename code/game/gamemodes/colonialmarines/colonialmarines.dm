@@ -31,7 +31,8 @@
 	to_chat_spaced(world, type = MESSAGE_TYPE_SYSTEM, html = SPAN_ROUNDHEADER("The current map is - [SSmapping.configs[GROUND_MAP].map_name]!"))
 
 /datum/game_mode/colonialmarines/get_roles_list()
-	return GLOB.ROLES_DISTRESS_SIGNAL
+	// return GLOB.ROLES_DISTRESS_SIGNAL
+	return GLOB.RoleAuthority?.get_main_ship_distress_roles() || GLOB.ROLES_DISTRESS_SIGNAL // SS220 EDIT: ship-side distress roster resolves through modular platoon helpers when RoleAuthority is available
 
 ////////////////////////////////////////////////////////////////////////////////////////
 //Temporary, until we sort this out properly.
@@ -79,6 +80,11 @@
 	QDEL_LIST(GLOB.hunter_secondaries)
 	QDEL_LIST(GLOB.crap_items)
 	QDEL_LIST(GLOB.good_items)
+	var/datum/authority/branch/role/role_authority = GLOB.RoleAuthority
+	if(role_authority) // SS220 EDIT: ship-side roster and squad family are selected through modular platoon helpers
+		role_mappings = role_authority.get_main_ship_role_mappings()
+		role_authority.handle_main_ship_mode_changed()
+		role_authority.filter_role_authority_squads_to_types(role_authority.get_main_ship_primary_family_types(), TRUE)
 
 	// Spawn gamemode-specific map items
 	if(SSmapping.configs[GROUND_MAP].map_item_type)
@@ -398,12 +404,12 @@
 				if(FACTION_TWE)
 					human.play_screen_text("<span class='maptext' style=text-align:left valign='top'><u>[uppertext(GLOB.round_statistics.round_name)]</u></span><br>" + "[SSmapping.configs[GROUND_MAP].map_name]<br>" + "[worldtime2text("hh:mm")], [time2text(REALTIMEOFDAY, "DD-MMM-[GLOB.game_year]")]<br>" + "Gamma Troop<br>" + "[human.job], [human]<br>", /atom/movable/screen/text/screen_text/picture/gamma_troop) // SS220 FONTS FIX
 				if(FACTION_UNSC) // SS220 EDIT: HALO UNSC intro branch
-					var/set_squad
-					if(human.assigned_squad && (human.assigned_squad == SQUAD_MARINE_1 || human.assigned_squad == SQUAD_MARINE_2))
-						set_squad = "7th RECOM Div. \"Rock Hoppers\""
-					if(human.assigned_squad && (human.assigned_squad == SQUAD_ODST || human.assigned_squad == SQUAD_ODST_2))
-						set_squad = "33rd Drop Jet Batt. \"The Ferrymen\""
-					human.play_screen_text("<span class='maptext' style=text-align:left valign='top'><u>[uppertext(GLOB.round_statistics.round_name)]</u></span><br>" + "[SSmapping.configs[GROUND_MAP].map_name]<br>" + "[worldtime2text("hh:mm")], [time2text(REALTIMEOFDAY, "DD-MMM-[GLOB.game_year]")]<br>" + "[set_squad]<br>" + "[human.job], [human]<br>", /atom/movable/screen/text/screen_text/picture/dark_was_the_night)
+					// SS220 EDIT - START: platoon label and art now come from the active ship display profile
+					var/list/ship_profile = GLOB.RoleAuthority?.get_main_ship_display_profile()
+					var/set_squad = ship_profile ? ship_profile["label"] : ""
+					var/intro_picture = ship_profile ? ship_profile["intro_picture"] : /atom/movable/screen/text/screen_text/picture/dark_was_the_night
+					human.play_screen_text("<span class='maptext' style=text-align:left valign='top'><u>[uppertext(GLOB.round_statistics.round_name)]</u></span><br>" + "[SSmapping.configs[GROUND_MAP].map_name]<br>" + "[worldtime2text("hh:mm")], [time2text(REALTIMEOFDAY, "DD-MMM-[GLOB.game_year]")]<br>" + "[set_squad]<br>" + "[human.job], [human]<br>", intro_picture)
+					// SS220 EDIT - END
 			var/admin_names
 			for(var/client/admin in GLOB.admins)
 				admin_names += "[admin.ckey]<br>"
@@ -560,6 +566,10 @@
 
 /datum/game_mode/colonialmarines/proc/add_current_round_status_to_end_results(special_round_status as text)
 	var/players = GLOB.clients
+	var/datum/authority/branch/role/role_authority = GLOB.RoleAuthority
+	var/list/active_marine_roles = role_authority ? role_authority.get_marine_equivalent_role_titles(TRUE) : GLOB.ROLES_MARINES
+	var/list/active_auxiliary_roles = role_authority ? role_authority.get_non_marine_shipside_role_titles(TRUE) : (GLOB.ROLES_USCM - GLOB.ROLES_MARINES)
+	var/main_ship_faction = role_authority?.get_main_ship_faction() || FACTION_MARINE
 	var/list/counted_humans = list(
 		"Squad Marines" = list(),
 		"Auxiliary Marines" = list(),
@@ -567,9 +577,9 @@
 	)
 
 	//organize our jobs in a readable and standard way
-	for(var/job in GLOB.ROLES_MARINES)
+	for(var/job in active_marine_roles)
 		counted_humans["Squad Marines"][job] = 0
-	for(var/job in GLOB.ROLES_USCM - GLOB.ROLES_MARINES)
+	for(var/job in active_auxiliary_roles)
 		counted_humans["Auxiliary Marines"][job] = 0
 	for(var/job in GLOB.ROLES_SPECIAL)
 		counted_humans["Non-Standard Humans"][job] = 0
@@ -589,8 +599,8 @@
 	for(var/client/player_client in players)
 		if(player_client.mob && player_client.mob.stat != DEAD)
 			if(ishuman(player_client.mob))
-				if(player_client.mob.faction == FACTION_MARINE)
-					if(player_client.mob.job in (GLOB.ROLES_MARINES))
+				if(player_client.mob.faction == main_ship_faction)
+					if(role_authority ? role_authority.is_marine_equivalent_role(player_client.mob.job, TRUE) : (player_client.mob.job in GLOB.ROLES_MARINES))
 						counted_humans["Squad Marines"][player_client.mob.job]++
 					else
 						counted_humans["Auxiliary Marines"][player_client.mob.job]++

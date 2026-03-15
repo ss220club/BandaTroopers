@@ -125,7 +125,14 @@
 					return TRUE
 				if(!client.prefs?.preview_dummy)
 					client.prefs.update_preview_icon()
-				var/mob/dead/observer/observer = new /mob/dead/observer(get_turf(pick(GLOB.latejoin)), client.prefs.preview_dummy)
+				// SS220 EDIT - START - observer creation uses safe latejoin fallback to avoid pick(empty list) runtime
+				var/turf/observer_spawn_turf = get_modular_safe_latejoin_turf()
+				if(!observer_spawn_turf)
+					observer_spawn_turf = get_turf(SAFEPICK(GLOB.observer_starts))
+				if(!observer_spawn_turf)
+					observer_spawn_turf = locate(1, 1, 1)
+				var/mob/dead/observer/observer = new /mob/dead/observer(observer_spawn_turf, client.prefs.preview_dummy)
+				// SS220 EDIT - END
 				observer.set_lighting_alpha_from_pref(client)
 				spawning = TRUE
 				observer.started_as_observer = TRUE
@@ -321,6 +328,7 @@
 	var/positions = FALSE
 	var/position_dat = "Choose from the following open positions:<br>"
 	var/roles_show = FLAG_SHOW_ALL_JOBS
+	var/datum/authority/branch/role/role_authority = GLOB.RoleAuthority
 
 	for(var/i in GLOB.RoleAuthority.roles_for_mode)
 		var/datum/job/J = GLOB.RoleAuthority.roles_for_mode[i]
@@ -359,7 +367,7 @@
 			dat += "<hr>Medbay:<br>"
 			roles_show ^= FLAG_SHOW_MEDICAL
 
-		else if(roles_show & FLAG_SHOW_MARINES && GLOB.ROLES_MARINES.Find(J.title))
+		else if(roles_show & FLAG_SHOW_MARINES && (role_authority ? role_authority.is_marine_equivalent_role(J.title, TRUE) : GLOB.ROLES_MARINES.Find(J.title)))
 			dat += "<hr>Marines:<br>"
 			roles_show ^= FLAG_SHOW_MARINES
 

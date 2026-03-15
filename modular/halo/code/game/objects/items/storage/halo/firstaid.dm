@@ -1,6 +1,6 @@
 /obj/item/storage/firstaid/unsc
-	name = "UNSC health pack"
-	desc = "First-class military medical aid is typically found in these octogon-shaped health packs."
+	name = "аптечка ККОН"
+	desc = "Первоклассные армейские медикаменты обычно лежат именно в этих восьмиугольных аптечках."
 	icon = 'icons/halo/obj/items/storage/medical.dmi'
 	icon_state = "healthpack"
 	open_state = "healthpack_empty"
@@ -42,11 +42,11 @@
 
 /obj/item/storage/firstaid/unsc/get_examine_text(mob/user)
 	. = ..()
-	. += SPAN_NOTICE("You can re-label it with alt+mmb.")
+	. += SPAN_NOTICE("Её можно заново подписать через alt+mmb.")
 
 /obj/item/storage/firstaid/unsc/clicked(mob/living/carbon/human/user, mods)
 	if(mods["alt"] && mods["middle"])
-		maptext_label = tgui_input_text(user, "Enter a new label. 4 character limit.", "Relabel", max_length = 4, encode = TRUE)
+		maptext_label = tgui_input_text(user, "Введите новую подпись. Не более 4 символов.", "Новая подпись", max_length = 4, encode = TRUE)
 		update_icon()
 		return
 	else
@@ -77,8 +77,8 @@
 	return
 
 /obj/item/storage/syringe_case/unsc
-	name = "syringe case"
-	desc = "It's a medical case for storing syringes."
+	name = "футляр для шприцов"
+	desc = "Медицинский футляр для хранения шприцов."
 	icon = 'icons/halo/obj/items/storage/medical.dmi'
 	icon_state = "syringecase"
 	use_sound = "toolbox"
@@ -97,8 +97,8 @@
 	)
 
 /obj/item/storage/syringe_case/unsc/morphine
-	name = "morphine case"
-	desc = "Standard issue in UNSC IFAK packets, contains three single-use syrettes of morphine."
+	name = "футляр с морфином"
+	desc = "Стандартное содержимое индивидуальных аптечных пакетов ККОН. Внутри три одноразовые сиретты с морфином."
 	icon_state = "morphinecase"
 	can_hold = list(
 		/obj/item/reagent_container/hypospray/autoinjector/primeable/morphine,
@@ -115,8 +115,8 @@
 	new /obj/item/reagent_container/syringe/halo(src)
 
 /obj/item/storage/syringe_case/unsc/burnguard
-	name = "Optican BurnGuard case"
-	desc = "Four-pack case of OptiCan Burn Guard."
+	name = "футляр Optican BurnGuard"
+	desc = "Футляр на четыре упаковки Optican BurnGuard."
 	icon_state = "burnguard"
 	storage_slots = 4
 	can_hold = list(

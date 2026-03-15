@@ -165,11 +165,10 @@
 		return
 
 	var/mob/living/carbon/human/ai_human = new()
-	ai_human.AddComponent(/datum/component/human_ai)
-
 	if(!cmd_admin_dress_human(ai_human, randomize = TRUE))
 		qdel(ai_human)
 		return
+	ai_human.AddComponent(/datum/component/human_ai)
 
 	ai_human.face_dir(mob.dir)
 	ai_human.forceMove(get_turf(mob))

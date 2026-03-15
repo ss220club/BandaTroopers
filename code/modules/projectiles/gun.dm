@@ -319,6 +319,7 @@
 	attachable_offset = null
 
 /obj/item/weapon/gun/Destroy()
+	SEND_SIGNAL(src, COMSIG_GUN_INTERRUPT_FIRE)
 	in_chamber = null
 	ammo = null
 	QDEL_NULL(current_mag)
@@ -859,6 +860,8 @@ As sniper rifles have both and weapon mods can change them as well. ..() deals w
 //Hardcoded and horrible
 /obj/item/weapon/gun/proc/cock_gun(mob/user)
 	set waitfor = 0
+	if(QDELETED(src))
+		return
 	if(cocked_sound)
 		addtimer(CALLBACK(src, PROC_REF(cock_sound), user), 0.5 SECONDS)
 
@@ -2170,9 +2173,7 @@ not all weapons use normal magazines etc. load_into_chamber() itself is designed
 	return target
 
 /obj/item/weapon/gun/ai_can_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain)
-	if(istype(current_mag, /obj/item/ammo_magazine/internal) && (current_mag.current_rounds <= 0) && !ai_brain.weapon_ammo_search(ai_brain.primary_weapon))
-		return FALSE
-	else if((!current_mag || (current_mag.current_rounds <= 0)) && !ai_brain.weapon_ammo_search(ai_brain.primary_weapon))
+	if(!has_ammunition() && (!ai_brain || !ai_brain.weapon_ammo_search(src)))
 		return FALSE
 
 	if((flags_gun_features & GUN_WY_RESTRICTED) && !wy_allowed_check(user))

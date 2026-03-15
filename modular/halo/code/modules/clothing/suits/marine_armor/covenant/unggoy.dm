@@ -1,6 +1,6 @@
 /obj/item/clothing/suit/marine/unggoy
-	name = "placeholder Unggoy combat harness"
-	desc = "A combat harness made to fit an Unggoy. Placeholder."
+	name = "заглушка боевой сбруи унггоя"
+	desc = "Боевая сбруя, подогнанная под унггоя. Заглушка."
 	slowdown = SLOWDOWN_ARMOR_LIGHT
 
 	icon = 'icons/halo/obj/items/clothing/covenant/armor.dmi'
@@ -19,27 +19,27 @@
 	flags_atom = NO_SNOW_TYPE|NO_NAME_OVERRIDE
 
 /obj/item/clothing/suit/marine/unggoy/minor
-	name = "Unggoy Minor combat harness"
-	desc = "A combat harness designed for use by Unggoy warriors, made of a sturdy nanolaminate composite and coloured to denote the warriors rank. Thanks to the weight of the methane tank usually mounted to the harness, the actual coverage of the plating is relatively limited, only covering the chest, waist and shoulders. <b>This one indicates the wearer is an Unggoy Minor.</b>"
+	name = "боевая сбруя унггоя-минор"
+	desc = "Боевая сбруя для воинов-унггоев, выполненная из прочного наноламинатного композита и окрашенная в соответствии с рангом владельца. Из-за веса метанового баллона, который обычно крепится к сбруе, реальная площадь бронирования остаётся сравнительно небольшой и прикрывает в основном грудь, талию и плечи. <b>Этот вариант указывает, что владелец - унггой-минор.</b>"
 
 /obj/item/clothing/suit/marine/unggoy/major
-	name = "Unggoy Major combat harness"
-	desc = "A red coloured harness is the sign of an Unggoy Major, a more veteran warrior usually given charge of files of Minors. While featuring no superior protective qualities to the standard orange harness of its lessers, the Major's harness is noted to fit just a bit more comfortably and provide higher-quality methane to its user."
-	desc_lore = "Minor adjustments include a more robust communications system, allowing for more efficient comms with their superiors, a noted negative by anyone who isn't an Unggoy."
+	name = "боевая сбруя унггоя-майор"
+	desc = "Красная сбруя обозначает унггоя-майора - более опытного воина, которому обычно доверяют группы миноров. По защитным качествам она не превосходит стандартную оранжевую сбрую низших, но сидит немного удобнее и обеспечивает владельца более качественным метаном."
+	desc_lore = "Среди мелких улучшений - более надёжная система связи, позволяющая эффективнее поддерживать контакт с начальством, что отмечают как минус все, кто не является унггоем."
 	icon_state = "unggoy_major"
 	item_state = "unggoy_major"
 
 /obj/item/clothing/suit/marine/unggoy/heavy
-	name = "Unggoy Heavy combat harness"
-	desc = "This green combat harness denotes the wearer as a special weapons operator, from plasma cannons and shade turrets to fuel rod cannons and explosive ordinance. Features additional padding and a specific nanolaminate composition to more easily resist explosive damage in the case of enemy counter fire, or semi-common accidents."
+	name = "тяжёлая боевая сбруя унггоя"
+	desc = "Эта зелёная боевая сбруя обозначает оператора специального оружия - от плазменных пушек и турелей Shade до топливных стержневых пушек и взрывного вооружения. Оснащена дополнительной подкладкой и особым составом наноламината, чтобы легче переживать взрывной урон от ответного огня противника или, что случается нередко, несчастных случаев."
 	icon_state = "unggoy_heavy"
 	item_state = "unggoy_heavy"
 
 	armor_bomb = CLOTHING_ARMOR_HIGH
 
 /obj/item/clothing/suit/marine/unggoy/ultra
-	name = "Unggoy Ultra combat harness"
-	desc = "A white coloured combat harness marking its user as a Ultra, a combat veteran of many campaigns. The armour not only features vastly superior material composition in its protective qualities, but is fitted to its owner exactly, providing a comfortable fit that allows for more natural movement."
+	name = "боевая сбруя унггоя-ультра"
+	desc = "Белая боевая сбруя, обозначающая владельца как ультру - ветерана множества кампаний. Эта броня не только заметно превосходит прочие по материалам и защитным свойствам, но и точно подогнана под хозяина, обеспечивая удобную посадку и более естественную подвижность."
 	icon_state = "unggoy_ultra"
 	item_state = "unggoy_ultra"
 
@@ -52,8 +52,8 @@
 	armor_internaldamage = CLOTHING_ARMOR_MEDIUMHIGH
 
 /obj/item/clothing/suit/marine/unggoy/deacon
-	name = "Unggoy Deacon harness"
-	desc = "This harness is of the highest quality, reserved for ministry personnel who serve as Deacons to their San'shyuum betters. Its many features include custom fitting and more robust mounting brackets, alongside a superior nanolaminate composite that is not only both light without sacrificing protective quality, but also may include small holographic projectors to provide reinforcement to ones sermons and duties."
+	name = "сбруя унггоя-дьякона"
+	desc = "Сбруя высочайшего качества, предназначенная для служителей министерств, исполняющих обязанности дьяконов при сан'шайуумских владыках. Среди её достоинств - индивидуальная подгонка, более прочные крепления и улучшенный наноламинатный композит, который остаётся лёгким без потери защиты, а иногда даже включает небольшие голографические проекторы для усиления проповедей и церемониальных обязанностей."
 	icon_state = "unggoy_deacon"
 	item_state = "unggoy_deacon"
 
@@ -66,11 +66,13 @@
 	armor_internaldamage = CLOTHING_ARMOR_MEDIUMHIGH
 
 /obj/item/clothing/suit/marine/stealth/unggoy_specops
-	name = "Unggoy SpecOps combat harness"
-	desc = "A dark purple harness reserved for those few Unggoy who meet the requirements to join the Special-Warfare-Group's ranks. While benefiting from numerous fitting and material developments over the more common combat harnesses of their brothers, the Spec-Ops variant also features obvious advancements in the areas of stealth."
-	desc_lore = "From passive thermal and sensor stealth built into its matrices, to the capability to become totally invisible on all spectrum given an active camouflage module, this harness is well worth the countless nights of training."
+	name = "боевая сбруя унггоя спецопераций"
+	desc = "Тёмно-фиолетовая сбруя, предназначенная для тех немногих унггоев, которые соответствуют требованиям Special Warfare Group. Помимо множества улучшений посадки и материалов по сравнению с обычными боевыми комплектами собратьев, вариант Spec-Ops заметно продвинут и в области маскировки."
+	desc_lore = "От встроенной пассивной термальной и сенсорной незаметности до способности становиться полностью невидимым во всех спектрах при наличии модуля активного камуфляжа - эта сбруя вполне оправдывает бессчётные ночи тренировок."
 	icon_state = "unggoy_specops"
 	item_state = "unggoy_specops"
+	slowdown = SLOWDOWN_ARMOR_LIGHT
+	flags_atom = NO_SNOW_TYPE|NO_NAME_OVERRIDE
 
 	icon = 'icons/halo/obj/items/clothing/covenant/armor.dmi'
 	item_icons = list(
@@ -87,8 +89,8 @@
 	armor_internaldamage = CLOTHING_ARMOR_MEDIUMHIGH
 
 /obj/item/clothing/suit/marine/stealth/unggoy_specops/ultra
-	name = "Unggoy SpecOps Ultra combat harness"
-	desc = "A modification of the Spec-Ops harness used by Unggoy of the Special-Warfare-Group, worn by veterans and specialists. A notable improvement over the common Spec-Ops harness, featuring reinforced composites designed for direct combat. While many may regard Unggoy as cowardly and weak, few who've seen this black harness live to tell about it, and those who do have far different opinions."
+	name = "боевая сбруя унггоя спецопераций-ультра"
+	desc = "Модификация сбруи Spec-Ops, используемая ветеранами и специалистами из Special Warfare Group. Это заметное улучшение по сравнению с обычной спецоперативной сбруей: усиленные композиты рассчитаны уже на прямой бой. Многие считают унггоев трусливыми и слабыми, но немногие из тех, кто увидел этот чёрный комплект, доживают до рассказа об этом - а те, кто доживает, меняют мнение."
 	icon_state = "unggoy_specops_ultra"
 	item_state = "unggoy_specops_ultra"
 

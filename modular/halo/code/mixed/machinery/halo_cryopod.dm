@@ -1,5 +1,5 @@
 /obj/structure/machinery/cryopod/big/halo
-	name = "cryo pod"
+	name = "криокапсула"
 	icon = 'icons/halo/obj/structures/machinery/64x64cryogenics.dmi'
 	icon_state = "map_tool"
 	dir = WEST

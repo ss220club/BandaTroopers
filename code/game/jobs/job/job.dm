@@ -261,6 +261,9 @@
 			job_whitelist = "[title][whitelist_status]"
 
 		human.job = title //TODO Why is this a mob variable at all?
+		// SS220 EDIT - START - mark real spawn for one-shot personal locker miss diagnostics
+		human.mark_personal_locker_spawn_context(FALSE)
+		// SS220 EDIT - END
 
 		if(gear_preset_whitelist[job_whitelist])
 			arm_equipment(human, gear_preset_whitelist[job_whitelist], FALSE, TRUE, late_join = FALSE)
@@ -313,15 +316,15 @@
 			// else if(assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
 			// 	join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
 			else if(!is_squad_role && assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
-				join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
+				join_turf = get_modular_safe_latejoin_turf(null, assigned_squad, FALSE) // SS220 EDIT: safe latejoin fallback skips empty squad buckets
 			// else if(GLOB.latejoin_by_job[title])
 			// 	join_turf = get_turf(pick(GLOB.latejoin_by_job[title]))
 			else if(!is_squad_role && GLOB.latejoin_by_job[title])
-				join_turf = get_turf(pick(GLOB.latejoin_by_job[title]))
+				join_turf = get_modular_safe_latejoin_turf(title) // SS220 EDIT: safe latejoin fallback skips empty job buckets before global latejoin
 			// else
 			// 	join_turf = get_turf(pick(GLOB.latejoin))
 			else if(!is_squad_role)
-				join_turf = get_turf(pick(GLOB.latejoin))
+				join_turf = get_modular_safe_latejoin_turf(null, null, FALSE) // SS220 EDIT: safe latejoin fallback avoids pick(empty list)
 			// SS220 EDIT - END - roundstart fallback for squad roles excludes latejoin sources
 		// SS220 EDIT - END
 		human.forceMove(join_turf)

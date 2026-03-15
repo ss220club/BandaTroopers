@@ -85,11 +85,6 @@
 /datum/job/marine/medic/ai/get_total_positions(latejoin=0)
 	return latejoin ? total_positions : spawn_positions
 
-/datum/job/marine/medic/ai/odst
-	title = JOB_SQUAD_MEDIC_ODST // SS220 EDIT: HALO ODST medic role
-	gear_preset = /datum/equipment_preset/unsc/medic/odst
-	gear_preset_secondary = /datum/equipment_preset/unsc/medic/odst/lesser_rank
-
 /datum/job/marine/medic/ai/upp
 	title = JOB_SQUAD_MEDIC_UPP
 	gear_preset = /datum/equipment_preset/uscm/medic/upp
@@ -154,11 +149,6 @@
 	name = JOB_SQUAD_MEDIC_FORECON
 	squad = SQUAD_LRRP
 	job = /datum/job/marine/medic/ai/forecon
-
-/obj/effect/landmark/start/marine/medic/odst
-	name = JOB_SQUAD_MEDIC_ODST // SS220 EDIT: HALO ODST medic spawn
-	squad = SQUAD_ODST
-	job = /datum/job/marine/medic/ai/odst
 
 //-- RMC Platoon --//
 //Medical Assistant//

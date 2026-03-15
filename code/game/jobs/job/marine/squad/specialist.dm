@@ -79,13 +79,3 @@
 	name = JOB_TWE_RMC_MARKSMAN
 	squad = SQUAD_RMC
 	job = /datum/job/marine/specialist/ai/rmc
-
-/obj/effect/landmark/start/marine/spec/odst
-	name = JOB_SQUAD_SPECIALIST_ODST // SS220 EDIT: HALO ODST specialist spawn
-	squad = SQUAD_ODST
-	job = /datum/job/marine/specialist/ai/odst
-
-/datum/job/marine/specialist/ai/odst
-	title = JOB_SQUAD_SPECIALIST_ODST // SS220 EDIT: HALO ODST specialist role
-	gear_preset = /datum/equipment_preset/unsc/spec/odst
-	gear_preset_secondary = /datum/equipment_preset/unsc/spec/odst/lesser_rank

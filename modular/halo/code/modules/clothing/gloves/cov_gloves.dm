@@ -1,9 +1,9 @@
 /obj/item/clothing/gloves/marine/sangheili
-	name = "\improper Sangheili gauntlets"
-	desc = "Simple gauntlets worn over the wrists of a Sangheili, made of common nanolaminate composites. Fitted precisely, these gauntlets do not interfere whatsoever with the warriors work, and in the case where pure brute strength is needed, prove sufficient as improvised weapons."
+	name = "\improper латные перчатки сангхейли"
+	desc = "Простые латные перчатки, которые сангхейли носят поверх запястий и предплечий. Выполнены из обычных наноламинатных композитов. Благодаря точной посадке они ничуть не мешают работе воина, а если приходится полагаться на чистую силу, вполне сойдут и за импровизированное оружие."
 	icon = 'icons/halo/obj/items/clothing/covenant/gloves.dmi'
 	icon_state = "sanggauntlets_minor"
-	item_state = "sangauntlets_minor"
+	item_state = "sanggauntlets_minor"
 
 	item_icons = list(
 		WEAR_HANDS = 'icons/halo/mob/humans/onmob/clothing/sangheili/gloves.dmi'
@@ -17,11 +17,12 @@
 	armor_bomb = CLOTHING_ARMOR_MEDIUM
 
 /obj/item/clothing/gloves/marine/sangheili/minor
-	name = "\improper Sangheili Minor gauntlets"
+	name = "\improper латные перчатки сангхейли-минор"
 
 /obj/item/clothing/gloves/marine/sangheili/major
-	name = "\improper Sangheili Major gauntlets"
+	name = "\improper латные перчатки сангхейли-майор"
 	icon_state = "sanggauntlets_major"
+	item_state = "sanggauntlets_major"
 
 	armor_melee = CLOTHING_ARMOR_HIGHPLUS
 	armor_bullet = CLOTHING_ARMOR_HIGHPLUS
@@ -29,8 +30,9 @@
 	armor_bomb = CLOTHING_ARMOR_MEDIUMHIGH
 
 /obj/item/clothing/gloves/marine/sangheili/ultra
-	name = "\improper Sangheili Ultra gauntlets"
+	name = "\improper латные перчатки сангхейли-ультра"
 	icon_state = "sanggauntlets_ultra"
+	item_state = "sanggauntlets_ultra"
 
 	armor_melee = CLOTHING_ARMOR_VERYHIGH
 	armor_bullet = CLOTHING_ARMOR_VERYHIGH
@@ -38,8 +40,9 @@
 	armor_bomb = CLOTHING_ARMOR_HIGH
 
 /obj/item/clothing/gloves/marine/sangheili/zealot
-	name = "\improper Sangheili Zealot gauntlets"
+	name = "\improper латные перчатки сангхейли-зилота"
 	icon_state = "sanggauntlets_zealot"
+	item_state = "sanggauntlets_zealot"
 
 	armor_melee = CLOTHING_ARMOR_ULTRAHIGH
 	armor_bullet = CLOTHING_ARMOR_ULTRAHIGH

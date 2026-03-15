@@ -65,6 +65,13 @@
 /datum/http_request/proc/into_response()
 	var/datum/http_response/R = new()
 
+	// SS220 EDIT - START
+	if(!length(_raw_response) || !rustg_json_is_valid(_raw_response))
+		R.errored = TRUE
+		R.error = _raw_response
+		return R
+	// SS220 EDIT - END
+
 	try
 		var/list/L = json_decode(_raw_response)
 		R.status_code = L["status_code"]

@@ -42,6 +42,7 @@ GLOBAL_VAR_INIT(players_preassigned, 0)
 	/// List of mapped roles that should be used in place of usual ones
 	var/list/role_mappings
 	var/list/default_roles
+	var/list/ship_role_title_mappings_cache
 
 	var/list/unassigned_players
 	var/list/squads
@@ -279,25 +280,115 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 
 	return roles_to_assign
 
+/datum/authority/branch/role/proc/resolve_job_title(job_or_title)
+	if(isnull(job_or_title))
+		return null
+
+	if(istype(job_or_title, /datum/job))
+		var/datum/job/job_datum = job_or_title
+		return job_datum.title
+
+	if(ispath(job_or_title, /datum/job))
+		if(!islist(roles_by_path))
+			return null
+		var/datum/job/job_by_path = roles_by_path[job_or_title]
+		return job_by_path?.title
+
+	return job_or_title
+
+/datum/authority/branch/role/proc/get_default_role_title(job_title)
+	if(!job_title)
+		return null
+
+	// Preference buckets can be queried before mode-specific role mappings are populated.
+	if(!islist(default_roles))
+		return job_title
+
+	var/default_role = default_roles[job_title]
+	if(default_role)
+		return default_role
+
+	return job_title
+
+/datum/authority/branch/role/proc/get_ship_role_title_mappings()
+	if(!islist(roles_by_path))
+		return null
+
+	if(length(ship_role_title_mappings_cache))
+		return ship_role_title_mappings_cache
+
+	ship_role_title_mappings_cache = list()
+	for(var/platoon_type in get_known_ship_platoon_types())
+		var/list/profile = get_ship_platoon_profile(platoon_type)
+		var/list/role_mappings = profile?["role_mappings"]
+		if(!islist(role_mappings) || !length(role_mappings))
+			role_mappings = GLOB.platoon_to_jobs[platoon_type]
+		if(!islist(role_mappings))
+			continue
+
+		for(var/role_path in role_mappings)
+			var/datum/job/job_datum = roles_by_path[role_path]
+			if(!job_datum?.title)
+				continue
+			if(!(job_datum.title in ship_role_title_mappings_cache))
+				ship_role_title_mappings_cache[job_datum.title] = role_mappings[role_path]
+
+	return ship_role_title_mappings_cache
+
+/datum/authority/branch/role/proc/get_job_preference_bucket_key(job_or_title)
+	var/job_title = resolve_job_title(job_or_title)
+	if(!job_title)
+		return null
+
+	var/default_role = get_default_role_title(job_title)
+	if(default_role != job_title)
+		return default_role
+
+	var/list/title_mappings = get_ship_role_title_mappings()
+	var/mapped_title = islist(title_mappings) ? title_mappings[job_title] : null
+	if(mapped_title)
+		return mapped_title
+
+	return job_title
+
+/datum/authority/branch/role/proc/get_active_role_title_for_preference_bucket(bucket_key, mode_name = GLOB.master_mode, datum/game_mode/mode_datum = SSticker.mode)
+	if(!bucket_key)
+		return null
+
+	var/list/active_role_titles = get_gamemode_role_titles(mode_name)
+	if(islist(active_role_titles))
+		for(var/role_title as anything in active_role_titles)
+			if(get_job_preference_bucket_key(role_title) == bucket_key)
+				return role_title
+
+	return bucket_key
+
 /datum/authority/branch/role/proc/assign_role_to_player_by_priority(mob/new_player/cycled_unassigned, list/roles_to_assign, list/unassigned_players, priority)
-	var/wanted_jobs_by_name = shuffle(cycled_unassigned.client.prefs.get_jobs_by_priority(priority))
+	var/wanted_role_buckets = shuffle(cycled_unassigned.client.prefs.get_jobs_by_priority(priority))
 	var/player_assigned_job = FALSE
 
-	for(var/job_name in wanted_jobs_by_name)
-		if(job_name in roles_to_assign)
+	for(var/role_bucket in wanted_role_buckets)
+		for(var/job_name in roles_to_assign)
+			if(get_job_preference_bucket_key(job_name) != role_bucket)
+				continue
+
 			var/datum/job/actual_job = roles_to_assign[job_name]
+			if(!assign_role(cycled_unassigned, actual_job))
+				continue
 
-			if(assign_role(cycled_unassigned, actual_job))
-				log_debug("ASSIGNMENT: We have assigned [job_name] to [cycled_unassigned] at priority [priority].")
-				cycled_unassigned.client.player_data?.adjust_stat(PLAYER_STAT_UNASSIGNED_ROUND_STREAK, STAT_CATEGORY_MISC, 0, TRUE)
-				unassigned_players -= cycled_unassigned
+			log_debug("ASSIGNMENT: We have assigned [job_name] to [cycled_unassigned] at priority [priority] via bucket [role_bucket].")
+			cycled_unassigned.client.player_data?.adjust_stat(PLAYER_STAT_UNASSIGNED_ROUND_STREAK, STAT_CATEGORY_MISC, 0, TRUE)
+			unassigned_players -= cycled_unassigned
 
-				if(actual_job.spawn_positions != -1 && actual_job.current_positions >= actual_job.spawn_positions)
-					roles_to_assign -= job_name
-					log_debug("ASSIGNMENT: We have ran out of slots for [job_name] and it has been removed from roles to assign.")
+			if(actual_job.spawn_positions != -1 && actual_job.current_positions >= actual_job.spawn_positions)
+				roles_to_assign -= job_name
+				log_debug("ASSIGNMENT: We have ran out of slots for [job_name] and it has been removed from roles to assign.")
 
-				player_assigned_job = TRUE
-				break
+			player_assigned_job = TRUE
+			break
+
+		if(player_assigned_job)
+			break
 
 	if(player_assigned_job)
 		return player_assigned_job
@@ -313,7 +404,7 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 /datum/authority/branch/role/proc/calculate_role_weight(datum/job/J)
 	if(!J)
 		return 0
-	if(GLOB.ROLES_MARINES.Find(J.title))
+	if(is_marine_equivalent_role(J.title, TRUE))
 		return 1
 	if(GLOB.ROLES_XENO.Find(J.title))
 		return 1
@@ -358,7 +449,8 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 //here is the main reason this proc exists - to remove freed squad jobs from squad,
 //so latejoining person ends in the squad which's job was freed and not random one
 	var/datum/squad/sq = null
-	if(GLOB.job_squad_roles.Find(J.title))
+	var/default_role = GET_DEFAULT_ROLE(J.title) // SS220 EDIT: map modular squad-role titles back to shared squad contracts
+	if(GLOB.job_squad_roles.Find(default_role))
 		var/list/squad_list = list()
 		for(sq in GLOB.RoleAuthority.squads)
 			if(sq.usable)
@@ -367,7 +459,7 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 		sq = input(user, "Select squad you want to free [J.title] slot from.", "Squad Selection")  as null|anything in squad_list
 		if(!sq)
 			return
-		switch(J.title)
+		switch(default_role)
 			if(JOB_SQUAD_ENGI)
 				if(sq.num_engineers > 0)
 					sq.num_engineers--
@@ -458,6 +550,9 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 		job_whitelist = "[new_job.title][whitelist_status]"
 
 	new_human.job = new_job.title //TODO Why is this a mob variable at all?
+	// SS220 EDIT - START - mark real spawn for one-shot personal locker miss diagnostics
+	new_human.mark_personal_locker_spawn_context(late_join)
+	// SS220 EDIT - END
 
 	if(new_job.gear_preset_whitelist[job_whitelist])
 		arm_equipment(new_human, new_job.gear_preset_whitelist[job_whitelist], FALSE, TRUE, late_join = late_join)
@@ -495,12 +590,11 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 		if(!late_join_turf)
 			// if(GLOB.latejoin_by_squad[assigned_squad])
 			// 	late_join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
-			if(GLOB.latejoin_by_squad[assigned_squad])
-				late_join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
-			else if(GLOB.latejoin_by_job[new_job.title])
-				late_join_turf = get_turf(pick(GLOB.latejoin_by_job[new_job.title]))
-			else
-				late_join_turf = get_turf(pick(GLOB.latejoin))
+			// else if(GLOB.latejoin_by_job[new_job.title])
+			// 	late_join_turf = get_turf(pick(GLOB.latejoin_by_job[new_job.title]))
+			// else
+			// 	late_join_turf = get_turf(pick(GLOB.latejoin))
+			late_join_turf = get_modular_safe_latejoin_turf(new_job.title, assigned_squad) // SS220 EDIT: safe latejoin fallback skips empty buckets before global latejoin
 		// SS220 EDIT - END
 		new_human.forceMove(late_join_turf)
 	else
@@ -530,11 +624,11 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 			// else if(assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
 			// 	join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
 			else if(!is_squad_role && assigned_squad && GLOB.latejoin_by_squad[assigned_squad])
-				join_turf = get_turf(pick(GLOB.latejoin_by_squad[assigned_squad]))
+				join_turf = get_modular_safe_latejoin_turf(null, assigned_squad, FALSE) // SS220 EDIT: safe latejoin fallback skips empty squad buckets
 			// else
 			// 	join_turf = get_turf(pick(GLOB.latejoin))
 			else if(!is_squad_role)
-				join_turf = get_turf(pick(GLOB.latejoin))
+				join_turf = get_modular_safe_latejoin_turf(null, null, FALSE) // SS220 EDIT: safe latejoin fallback avoids pick(empty list)
 		// SS220 EDIT - END
 		new_human.forceMove(join_turf)
 
@@ -617,6 +711,8 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 	if(H.assigned_squad) //Wait, we already have a squad. Get outta here!
 		return
 
+	var/default_role = GET_DEFAULT_ROLE(H.job) // SS220 EDIT: map modular squad-role titles back to shared squad contracts
+
 	//we make a list of squad that is randomized so alpha isn't always lowest squad.
 	var/list/squads_copy = squads.Copy()
 	var/list/mixed_squads = list()
@@ -655,7 +751,7 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 
 		var/datum/squad/lowest
 
-		switch(H.job)
+		switch(default_role) // SS220 EDIT: squad assignment logic runs on canonical squad roles
 			if(JOB_SQUAD_ENGI)
 				for(var/datum/squad/S in mixed_squads)
 					if(S.usable && S.roundstart)
@@ -881,7 +977,7 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 
 // returns TRUE if transfer_marine's role is at max capacity in the new squad
 /datum/authority/branch/role/proc/check_squad_capacity(mob/living/carbon/human/transfer_marine, datum/squad/new_squad)
-	switch(transfer_marine.job)
+	switch(GET_DEFAULT_ROLE(transfer_marine.job)) // SS220 EDIT: squad caps use canonical squad roles for modular variants
 		if(JOB_SQUAD_LEADER)
 			if(new_squad.num_leaders >= new_squad.max_leaders)
 				return TRUE

@@ -1,3 +1,16 @@
+/mob/living/carbon/human
+	var/tmp/personal_locker_spawn_context = null
+
+/mob/living/carbon/human/proc/mark_personal_locker_spawn_context(late_join = FALSE)
+	personal_locker_spawn_context = late_join ? "latejoin" : "roundstart"
+
+/mob/living/carbon/human/proc/clear_personal_locker_spawn_context()
+	personal_locker_spawn_context = null
+
+/mob/living/carbon/human/proc/consume_personal_locker_spawn_context()
+	. = personal_locker_spawn_context
+	personal_locker_spawn_context = null
+
 /datum/equipment_preset/proc/collect_alive_human_names()
 	var/list/alive_human_names = list()
 
@@ -129,20 +142,49 @@
 			given_medal.recipient_rank = medal.recipient_role
 			given_medal.medal_citation = medal.citation
 
+/datum/equipment_preset/proc/log_personal_locker_spawn_miss(mob/living/carbon/human/new_human, late_join = FALSE)
+	if(!new_human)
+		return
+
+	var/turf/current_turf = get_turf(new_human)
+	var/area/current_area = get_area(new_human)
+	var/mob_ckey = new_human.client?.ckey
+	if(!mob_ckey && new_human.key)
+		mob_ckey = ckey(new_human.key)
+	if(!mob_ckey)
+		mob_ckey = "NO_CKEY"
+	var/real_name = new_human.real_name || "UNKNOWN"
+	var/job_title = new_human.job || assignment || "UNKNOWN"
+	var/squad_name = new_human.assigned_squad ? new_human.assigned_squad.name : "NONE"
+	var/area_text = current_area ? "[current_area]" : "null area"
+	var/coords_text = current_turf ? "([current_turf.x],[current_turf.y],[current_turf.z])" : "(no turf)"
+	var/late_join_text = late_join ? "TRUE" : "FALSE"
+	var/jump_text = current_turf ? " [ADMIN_JMP(current_turf)]" : ""
+
+	log_game("PERSONAL LOCKER MISS: player=[key_name(new_human)] ckey=[mob_ckey] real_name=[real_name] job=[job_title] squad=[squad_name] late_join=[late_join_text] location=[area_text] [coords_text].")
+	message_admins("[key_name_admin(new_human)] spawned without a usable personal locker; loadout fallback used. ckey=[mob_ckey]; real_name=[real_name]; job=[job_title]; squad=[squad_name]; late_join=[late_join_text]; location=[area_text] [coords_text].[jump_text]")
+
 /datum/equipment_preset/proc/try_handle_personal_locker_vanity(mob/living/carbon/human/new_human, client/mob_client, late_join = FALSE)
 	if(!new_human)
 		squads_debug_log("try_handle_personal_locker_vanity called with null human.")
 		return FALSE
 
+	var/spawn_context = new_human.consume_personal_locker_spawn_context()
+	var/should_log_spawn_miss = spawn_context != null
 	var/obj/structure/closet/secure_closet/marine_personal/locker = find_personal_locker_for_player(new_human, late_join)
 	if(!locker)
 		squads_debug_log("[new_human] no personal locker found, fallback to load_vanity().")
+		if(should_log_spawn_miss)
+			log_personal_locker_spawn_miss(new_human, spawn_context == "latejoin")
 		load_vanity(new_human, mob_client)
 		return TRUE
 
 	if(locker.owner)
 		squads_debug_log("[new_human] reinitializing reclaimed locker [locker] with owner [locker.owner].")
 		locker.reinitialize_for_personal_locker_reuse()
+	else if(locker.has_cryo_gear && !length(locker.contents))
+		squads_debug_log("[new_human] matched empty locker [locker], restoring baseline spawn gear before claim.")
+		locker.spawn_gear()
 
 	locker.owner = new_human.real_name
 	locker.name = "личный шкафчик [locker.owner]"

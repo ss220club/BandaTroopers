@@ -137,7 +137,7 @@
 	if(!ishuman(user))
 		return FALSE
 	var/mob/living/carbon/human/human_user = user
-	if(human_user.job != JOB_SQUAD_RTO)
+	if(GET_DEFAULT_ROLE(human_user.job) != JOB_SQUAD_RTO)
 		return FALSE
 	var/datum/rto_support_controller/controller = human_user.get_rto_support_controller()
 	if(!controller)

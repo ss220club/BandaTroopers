@@ -109,6 +109,10 @@
 	. = ..()
 	container.emp_act(severity)
 
+/obj/structure/vehicle_locker/human_ai_act(mob/living/carbon/human/ai_human, datum/human_ai_brain/brain)
+	// Human AI can brush against wall lockers during nearby movement. They should not try to open storage UIs.
+	return FALSE
+
 /obj/structure/vehicle_locker/hear_talk(mob/M, msg)
 	container.hear_talk(M, msg)
 	..()

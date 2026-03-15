@@ -115,7 +115,7 @@
 			. += "Primary Objective: [html_decode(assigned_squad.primary_objective)]"
 		if(assigned_squad.secondary_objective)
 			. += "Secondary Objective: [html_decode(assigned_squad.secondary_objective)]"
-	if(job in GLOB.ROLES_USCM)
+	if(GLOB.RoleAuthority ? GLOB.RoleAuthority.is_shipside_role(job, TRUE) : (job in GLOB.ROLES_USCM))
 		. += ""
 		. += "<a href='byond://?MapView=1'>View Tactical Map</a>"
 	if(mobility_aura)
@@ -1029,7 +1029,7 @@
 	set name = "View Crew Manifest"
 	set category = "IC"
 
-	if(job in GLOB.ROLES_USCM)
+	if(GLOB.RoleAuthority ? GLOB.RoleAuthority.is_shipside_role(job, TRUE) : (job in GLOB.ROLES_USCM))
 		var/dat = GLOB.data_core.get_manifest()
 		show_browser(src, dat, "Crew Manifest", "manifest", width = 400, height = 750)
 	else
@@ -1707,6 +1707,7 @@
 	overlay_fullscreen_timer(time_to_remove + 2 SECONDS, 20, "roundstart_fade", /atom/movable/screen/fullscreen/spawning_in)
 	var/alert_type = /atom/movable/screen/text/screen_text/picture/starting
 	var/platoon = "3rd Bat. 'Solar Devils"
+	var/list/ship_profile = faction == FACTION_UNSC ? GLOB.RoleAuthority?.get_main_ship_display_profile() : null // SS220 EDIT: HALO ship display data resolves through modular helpers
 	switch(faction)
 		if(FACTION_MARINE)
 			alert_type = /atom/movable/screen/text/screen_text/picture/starting
@@ -1724,12 +1725,9 @@
 			alert_type = /atom/movable/screen/text/screen_text/picture/starting/twe
 			platoon = "Gamma Troop"
 		if(FACTION_UNSC) // SS220 EDIT: HALO UNSC manifest branch
-			if(assigned_squad && assigned_squad.name == SQUAD_MARINE_1)
-				alert_type = /atom/movable/screen/text/screen_text/picture/starting/unsc
-				platoon = "7th RECOM Div. \"Rock Hoppers\""
-			if(assigned_squad && assigned_squad.name == SQUAD_ODST)
-				alert_type = /atom/movable/screen/text/screen_text/picture/starting/odst
-				platoon = "33rd Drop Jet Batt. \"The Ferrymen\""
+			if(ship_profile)
+				alert_type = ship_profile["manifest_picture"]
+				platoon = ship_profile["label"]
 	play_screen_text("<u>[SSmapping.configs[SHIP_MAP].map_name]<br></u>" + "[platoon]<br><br>" + human_manifest, alert_type)
 
 /mob/living/carbon/human/point_to_atom(atom/A, turf/T)

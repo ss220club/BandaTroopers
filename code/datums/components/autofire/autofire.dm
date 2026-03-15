@@ -51,6 +51,10 @@
 	src.callback_set_firing = callback_set_firing
 
 /datum/component/automatedfire/autofire/Destroy(force, silent)
+	shooting = FALSE
+	bursting = FALSE
+	// Detach from any queued bucket before callbacks are dropped during teardown.
+	bucket_eject()
 	QDEL_NULL(callback_fire)
 	QDEL_NULL(callback_reset_fire)
 	QDEL_NULL(callback_bursting)
@@ -103,18 +107,22 @@
 ///Hard reset the autofire, happens when the shooter fall/is thrown, at the end of a burst or when it runs out of ammunition
 /datum/component/automatedfire/autofire/proc/hard_reset()
 	SIGNAL_HANDLER
-	callback_reset_fire.Invoke() //resets the gun
+	if(callback_reset_fire)
+		callback_reset_fire.Invoke() //resets the gun
 	shots_fired = 0
 	have_to_reset_at_burst_end = FALSE
 	if(bursting)
 		bursting = FALSE
-		callback_bursting.Invoke(FALSE)
+		callback_bursting?.Invoke(FALSE)
 	shooting = FALSE
 
 
 ///Ask the shooter to fire and schedule the next shot if need
 /datum/component/automatedfire/autofire/process_shot()
-	if(!shooting)
+	if(!shooting || QDELETED(src) || QDELETED(parent))
+		return
+	if(!callback_fire)
+		shooting = FALSE
 		return
 	if(next_fire > world.time)//This mean duplication somewhere, we abort now
 		return

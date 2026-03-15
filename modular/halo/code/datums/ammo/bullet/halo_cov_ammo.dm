@@ -54,6 +54,9 @@
 /datum/ammo/needler/on_hit_mob(mob/M, obj/projectile/P)
 	. = ..()
 	if(ishuman(M))
+		var/mob/living/carbon/human/shooter_human = P?.firer
+		if(halo_is_ai_only_combat_pair(shooter_human, M))
+			return
 		M.AddComponent(/datum/component/supercombine, M, P.dir)
 
 /datum/ammo/bullet/rifle/carbine

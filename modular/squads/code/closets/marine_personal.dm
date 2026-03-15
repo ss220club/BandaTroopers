@@ -2,6 +2,28 @@
 /obj/structure/closet/secure_closet/marine_personal
 	var/squad_type
 
+/obj/structure/closet/secure_closet/marine_personal/proc/get_normalized_job_title_for_personal_locker(job_title)
+	if(!job_title)
+		return null
+
+	var/datum/authority/branch/role/role_authority = GLOB.RoleAuthority
+	var/normalized_job_title = role_authority?.get_job_preference_bucket_key(job_title)
+	if(normalized_job_title)
+		return normalized_job_title
+
+	return GET_DEFAULT_ROLE(job_title)
+
+/obj/structure/closet/secure_closet/marine_personal/proc/is_correct_job(mob/living/carbon/human/H)
+	if(!H)
+		return FALSE
+
+	var/normalized_human_job = get_normalized_job_title_for_personal_locker(H.job)
+	var/normalized_locker_job = get_normalized_job_title_for_personal_locker(job)
+	if(!normalized_human_job || !normalized_locker_job)
+		return H.job == job
+
+	return normalized_human_job == normalized_locker_job
+
 /obj/structure/closet/secure_closet/marine_personal/proc/is_correct_squad(mob/living/carbon/human/H)
 	if(!squad_type)
 		return TRUE
@@ -40,7 +62,7 @@
 
 		if(!is_adjacent_to_spawn)
 			return FALSE
-	else if(human.job != job)
+	else if(!is_correct_job(human))
 		return FALSE
 
 	return is_correct_squad(human)

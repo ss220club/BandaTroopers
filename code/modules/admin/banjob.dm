@@ -125,7 +125,7 @@ WARNING!*/
 	jobs += generate_job_ban_list(M, P, GLOB.ROLES_MEDICAL, "Medical", "ffeef0")
 	jobs += "<br>"
 //Marines
-	jobs += generate_job_ban_list(M, P, GLOB.ROLES_MARINES, "Marines", "ffeeee")
+	jobs += generate_job_ban_list(M, P, GLOB.RoleAuthority ? GLOB.RoleAuthority.get_marine_equivalent_role_titles() : GLOB.ROLES_MARINES, "Marines", "ffeeee")
 	jobs += "<br>"
 // MISC
 	jobs += generate_job_ban_list(M, P, GLOB.ROLES_MISC, "Misc", "aaee55")

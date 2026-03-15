@@ -1,8 +1,8 @@
 //===========================//CUSTOM ARMOR COSMETIC PLATES\\================================\\
 
 /obj/item/clothing/accessory/pads/unsc
-	name = "\improper M52B Shoulder Pads"
-	desc = "A set shoulder pads attachable to the M52B armor set worn by the UNSC."
+	name = "\improper наплечники M52B"
+	desc = "Комплект наплечников, крепящихся к бронекомплекту M52B, который носит ККОН."
 	icon = 'icons/halo/obj/items/clothing/accessories/accessories.dmi'
 	icon_state = "pads"
 	item_state = "pads"
@@ -11,52 +11,52 @@
 	accessory_icons = list(WEAR_BODY = 'icons/halo/mob/humans/onmob/clothing/accessories/accessories.dmi', WEAR_JACKET = 'icons/halo/mob/humans/onmob/clothing/accessories/accessories.dmi')
 
 /obj/item/clothing/accessory/pads/unsc/bracers
-	name = "\improper M52B Arm Bracers"
-	desc = "A set arm bracers worn in conjunction to the M52B body armor of the UNSC."
+	name = "\improper наручи M52B"
+	desc = "Комплект наручей, носимых вместе с бронекомплектом M52B ККОН."
 	icon_state = "bracers"
 	item_state = "bracers"
 	slot = ACCESSORY_SLOT_DECORBRACER
 	flags_atom = NO_SNOW_TYPE
 
 /obj/item/clothing/accessory/pads/unsc/bracers/police
-	name = "\improper Police Shoulder Bracers"
-	desc = "A set arm bracers worn in conjunction to an armoured vest, commonly issued to Police forces."
+	name = "\improper полицейские наручи"
+	desc = "Комплект наручей, носимых вместе с бронежилетом и обычно выдаваемых полицейским силам."
 	icon_state = "bracers_police"
 	item_state = "bracers_police"
 
 /obj/item/clothing/accessory/pads/unsc/neckguard
-	name = "\improper M52B Neck Guard"
-	desc = "An attachable neck guard option for the M52B body armor worn by the UNSC."
+	name = "\improper защита шеи M52B"
+	desc = "Съёмный модуль защиты шеи для бронекомплекта M52B, который носит ККОН."
 	icon_state = "neckguard"
 	item_state = "neckguard"
 	slot = ACCESSORY_SLOT_DECORNECK
 	flags_atom = NO_SNOW_TYPE
 
 /obj/item/clothing/accessory/pads/unsc/neckguard/police
-	name = "\improper Police Neck Guard"
-	desc = "An attachable neck guard option for basic ballistic vests, commonly issued to the Police."
+	name = "\improper полицейская защита шеи"
+	desc = "Съёмный модуль защиты шеи для базовых баллистических жилетов, обычно выдаваемый полиции."
 	icon_state = "neckguard_police"
 	item_state = "neckguard_police"
 
 /obj/item/clothing/accessory/pads/unsc/greaves
-	name = "\improper M52B Shin Guards"
-	desc = "A set shinguards designed to be worn in conjuction with M52B body armor."
+	name = "\improper поножи M52B"
+	desc = "Комплект поножей, предназначенных для ношения вместе с бронекомплектом M52B."
 	icon_state = "shinguards"
 	item_state = "shinguards"
 	slot = ACCESSORY_SLOT_DECORSHIN
 	flags_atom = NO_SNOW_TYPE
 
 /obj/item/clothing/accessory/pads/unsc/groin
-	name = "\improper M52B Groin Plate"
-	desc = "A plate designed to attach to M52B body armor to protect the babymakers of the Corps. Standardized protection of the UNSC often seen worn more often than not."
+	name = "\improper паховая пластина M52B"
+	desc = "Пластина, крепящаяся к бронекомплекту M52B, чтобы защищать самое ценное у Корпуса. Стандартизированный элемент защиты ККОН, который чаще носят, чем нет."
 	icon_state = "groinplate"
 	item_state = "groinplate"
 	slot = ACCESSORY_SLOT_DECORGROIN
 	flags_atom = NO_SNOW_TYPE
 
 /obj/item/clothing/accessory/pads/unsc/groin/police
-	name = "\improper Police Groin Plate"
-	desc = "A plate designed to attach to an armoured Vest to protect the babymakers. Most commonly attached to Police Vests."
+	name = "\improper полицейская паховая пластина"
+	desc = "Пластина, предназначенная для крепления к бронежилету и защиты самого ценного. Чаще всего ставится на полицейские жилеты."
 	icon_state = "groinplate_police"
 	item_state = "groinplate_police"
 
@@ -81,26 +81,26 @@
 	item_state = "groinplate_insurgent"
 
 /obj/item/clothing/accessory/pads/unsc/odst
-	name = "\improper M70DT Shoulder Pads"
-	desc = "A set shoulder pads attachable to the M70DT armor set worn by the ODSTs."
+	name = "\improper наплечники M70DT"
+	desc = "Комплект наплечников, крепящихся к бронекомплекту M70DT, который носят ODST."
 	icon_state = "odst_pads"
 	item_state = "odst_pads"
 
 /obj/item/clothing/accessory/pads/unsc/bracers/odst
-	name = "\improper M70DT Bracers"
-	desc = "A set arm bracers worn in conjunction to the M70DT body armor of the ODSTs."
+	name = "\improper наручи M70DT"
+	desc = "Комплект наручей, носимых вместе с бронекомплектом M70DT у бойцов ODST."
 	icon_state = "odst_bracers"
 	item_state = "odst_bracers"
 
 /obj/item/clothing/accessory/pads/unsc/greaves/odst
-	name = "\improper M70DT Greaves"
-	desc = "A set greaves designed to be worn in conjuction with M70DT body armor."
+	name = "\improper поножи M70DT"
+	desc = "Комплект поножей, предназначенных для ношения вместе с бронекомплектом M70DT."
 	icon_state = "odst_shinguards"
 	item_state = "odst_shinguards"
 
 /obj/item/clothing/accessory/pads/unsc/groin/odst
-	name = "\improper M70DT Groin Plate"
-	desc = "A plate designed to attach to M70DT body armor to protect the babymakers of the Corps. Standardized protection of the ODSTs often seen worn more often than not."
+	name = "\improper паховая пластина M70DT"
+	desc = "Пластина, крепящаяся к бронекомплекту M70DT, чтобы защищать самое ценное у Корпуса. Стандартный элемент защиты ODST, который носят чаще, чем нет."
 	icon_state = "odst_groinplate"
 	item_state = "odst_groinplate"
 
@@ -131,8 +131,8 @@
 
 
 /obj/item/clothing/accessory/storage/webbing/m52b
-	name = "\improper M52B Pattern Webbing"
-	desc = "A sturdy mess of synthcotton belts and buckles designed to attach to the M52B body armor armor standard for the UNSC. This one is the slimmed down model designed for general purpose storage."
+	name = "\improper разгрузка образца M52B"
+	desc = "Крепкая сеть ремней и пряжек из синткоттона, предназначенная для крепления к стандартной броне M52B ККОН. Этот вариант - облегчённая модель для хранения предметов общего назначения."
 	icon = 'icons/halo/obj/items/clothing/accessories/accessories.dmi'
 	icon_state = "m52b_webbing"
 	hold = /obj/item/storage/internal/accessory/webbing/m52bgeneric
@@ -147,8 +147,8 @@
 	)
 
 /obj/item/clothing/accessory/storage/webbing/m52b/mag
-	name = "\improper M52B Pattern Magazine Webbing"
-	desc = "A variant of the M52B pattern webbing that features pouches for pulse rifle magazines."
+	name = "\improper магазинная разгрузка образца M52B"
+	desc = "Вариант разгрузки образца M52B с подсумками под магазины импульсных винтовок."
 	icon_state = "m52b_magwebbing"
 	hold = /obj/item/storage/internal/accessory/webbing/m52bmag
 
@@ -191,8 +191,8 @@
 //===
 
 /obj/item/clothing/accessory/storage/webbing/m52b/shotgun
-	name = "\improper M52B Pattern Shell Webbing"
-	desc = "A slightly modified variant of the M52B pattern webbing, fitted for 12 gauge shotgun shells."
+	name = "\improper патронная разгрузка образца M52B"
+	desc = "Слегка модифицированный вариант разгрузки образца M52B, рассчитанный под дробовые патроны 12-го калибра."
 	icon_state = "m52b_shotgunwebbing"
 	hold = /obj/item/storage/internal/accessory/black_vest/m52bshotgun
 
@@ -202,8 +202,8 @@
 	)
 
 /obj/item/clothing/accessory/storage/webbing/m52b/small
-	name = "\improper M52B Pattern Small Pouch Webbing"
-	desc = "A set of M52B pattern webbing fully outfitted with pouches and pockets to carry a while array of small items."
+	name = "\improper малоподсумочная разгрузка образца M52B"
+	desc = "Комплект разгрузки образца M52B, полностью оснащённый подсумками и карманами для переноски широкого набора мелких предметов."
 	icon_state = "m52b_smallwebbing"
 	hold = /obj/item/storage/internal/accessory/black_vest/m52bgeneric
 	slot = ACCESSORY_SLOT_M3UTILITY
@@ -215,8 +215,8 @@
 	)
 
 /obj/item/clothing/accessory/storage/webbing/m52b/grenade
-	name = "\improper M52B Pattern Grenade Webbing"
-	desc = "A variation of the M52B pattern webbing fitted with loops for storing M40 grenades."
+	name = "\improper гранатная разгрузка образца M52B"
+	desc = "Вариант разгрузки образца M52B с петлями для хранения гранат M40."
 	icon_state = "m52b_grenadewebbing"
 	hold = /obj/item/storage/internal/accessory/black_vest/m52bgrenade
 

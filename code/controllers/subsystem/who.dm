@@ -51,6 +51,7 @@ SUBSYSTEM_DEF(who)
 		"uscm_marines" = 0,
 	)
 	var/list/counted_factions = list()
+	var/datum/authority/branch/role/role_authority = GLOB.RoleAuthority
 
 	// Running thru all clients and doing some counts
 	for(var/client/client as anything in sortTim(GLOB.clients, GLOBAL_PROC_REF(cmp_ckey_asc)))
@@ -117,9 +118,10 @@ SUBSYSTEM_DEF(who)
 							counted_additional["humans"]++
 							if(client_mob.status_flags & XENO_HOST)
 								counted_additional["infected_humans"]++
-							if(client_mob.faction == FACTION_MARINE)
+							var/main_ship_faction = role_authority?.get_main_ship_faction() || FACTION_MARINE
+							if(client_mob.faction == main_ship_faction)
 								counted_additional["uscm"]++
-								if(client_mob.job in (GLOB.ROLES_MARINES))
+								if(role_authority ? role_authority.is_marine_equivalent_role(client_mob.job, TRUE) : (client_mob.job in GLOB.ROLES_MARINES))
 									counted_additional["uscm_marines"]++
 							else
 								counted_factions[client_mob.faction]++

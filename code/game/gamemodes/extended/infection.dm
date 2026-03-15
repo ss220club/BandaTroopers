@@ -15,7 +15,7 @@
 	to_world("<B>Don't ahelp asking for specific details, you won't get them.</B>")
 
 /datum/game_mode/infection/get_roles_list()
-	return GLOB.ROLES_USCM
+	return GLOB.RoleAuthority?.get_shipside_role_titles() || GLOB.ROLES_USCM
 
 /datum/game_mode/infection/pre_setup()
 	return ..()

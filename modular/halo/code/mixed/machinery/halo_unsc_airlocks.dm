@@ -1,5 +1,5 @@
 /obj/structure/machinery/door/airlock/unsc
-	name = "\improper airlock"
+	name = "\improper шлюз"
 	icon = 'icons/halo/obj/structures/doors/standard.dmi'
 	opacity = TRUE
 	glass = FALSE
@@ -21,7 +21,7 @@
 	icon_state = "door_locked"
 
 /obj/structure/machinery/door/airlock/multi_tile/unsc
-	name = "\improper airlock"
+	name = "\improper шлюз"
 	icon = 'icons/halo/obj/structures/doors/2x1_standard.dmi'
 	openspeed = 8
 
@@ -41,7 +41,7 @@
 	icon_state = "door_locked"
 
 /obj/structure/machinery/door/airlock/multi_tile/unsc/blast_door
-	name = "\improper blast door"
+	name = "\improper взрывозащитная дверь"
 	icon = 'icons/halo/obj/structures/doors/3x1_standard.dmi'
 	width = 3
 	openspeed = 10

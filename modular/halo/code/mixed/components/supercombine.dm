@@ -47,7 +47,7 @@
 		parent_carbon.embedded_items -= needle
 		organ = null
 		qdel(needle)
-		overlay_remove()
+	overlay_remove()
 
 /datum/component/supercombine/proc/generate_overlay()
 	needler_overlay = new()

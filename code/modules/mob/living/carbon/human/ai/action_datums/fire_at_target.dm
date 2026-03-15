@@ -5,6 +5,9 @@
 	var/currently_firing
 
 /datum/ai_action/fire_at_target/get_weight(datum/human_ai_brain/brain)
+	if(!brain.has_valid_tied_human()) // SS220 EDIT: upstream action glue must not schedule work for detached modular AI owners
+		return 0
+
 	if(!brain.in_combat)
 		return 0
 
@@ -25,6 +28,9 @@
 	if((get_dist(brain.tied_human, brain.target_turf) > brain.view_distance) && !should_fire_offscreen)
 		return 0
 
+	if(brain.halo_should_defer_ranged_fire(brain.current_target || brain.target_turf))
+		return 0
+
 	if(!firing_line_check(brain, brain.target_turf))
 		return 0
 
@@ -41,11 +47,17 @@
 	currently_firing = FALSE
 	rounds_burst_fired = 0
 
-	UnregisterSignal(brain.tied_human, COMSIG_MOB_FIRED_GUN)
+	if(!brain)
+		return
+
+	if(brain.has_valid_tied_human())
+		UnregisterSignal(brain.tied_human, COMSIG_MOB_FIRED_GUN)
 	brain.primary_weapon?.set_target(null)
 
 /datum/ai_action/fire_at_target/trigger_action()
 	. = ..()
+	if(!brain || !brain.has_valid_tied_human()) // SS220 EDIT: firing action exits cleanly if the modular AI owner disappears mid-combat
+		return ONGOING_ACTION_COMPLETED
 
 	var/obj/item/weapon/gun/primary_weapon = brain.primary_weapon
 	if(!primary_weapon || brain.active_grenade_found || !COOLDOWN_FINISHED(brain, stop_fire_cooldown))
@@ -53,6 +65,9 @@
 
 	var/should_fire_offscreen = (brain.target_turf && !COOLDOWN_FINISHED(brain, fire_offscreen))
 	if(!brain.current_target && !should_fire_offscreen)
+		return ONGOING_ACTION_COMPLETED
+
+	if(brain.halo_should_defer_ranged_fire(brain.current_target || brain.target_turf))
 		return ONGOING_ACTION_COMPLETED
 
 	if(currently_firing || !COOLDOWN_FINISHED(brain, fire_overload_cooldown))
@@ -91,6 +106,9 @@
 	return ONGOING_ACTION_UNFINISHED
 
 /datum/ai_action/fire_at_target/proc/firing_line_check(datum/human_ai_brain/brain, atom/target)
+	if(!brain.has_valid_tied_human()) // SS220 EDIT: avoid post-delete signal work from upstream firing callbacks
+		return FALSE
+
 	var/mob/living/carbon/tied_human = brain.tied_human
 	var/list/turf_list = get_line(get_turf(tied_human), get_turf(target))
 	for(var/turf/tile in turf_list)
@@ -125,7 +143,7 @@
 /datum/ai_action/fire_at_target/proc/on_gun_fire(datum/source, obj/item/weapon/gun/fired)
 	SIGNAL_HANDLER
 
-	if(!brain)
+	if(!brain || !brain.has_valid_tied_human()) // SS220 EDIT: late gun callbacks can outlive the modular AI owner for a tick
 		qdel(src)
 		return
 
@@ -171,6 +189,15 @@
 			brain.lose_target()
 			qdel(src)
 			return
+
+	if(brain.halo_should_defer_ranged_fire(shoot_next))
+		stop_firing(brain)
+		qdel(src)
+		return
+
+	var/count_shot_against_burst_limit = ((brain.primary_weapon.gun_firemode == GUN_FIREMODE_AUTOMATIC) || gun_data.count_every_shot_toward_burst_limit)
+	if(count_shot_against_burst_limit)
+		rounds_burst_fired++
 
 	if(rounds_burst_fired >= gun_data.burst_amount_max)
 		var/short_action_delay = brain.short_action_delay
@@ -231,9 +258,6 @@
 	else if(brain.primary_weapon.gun_firemode == GUN_FIREMODE_SEMIAUTO)
 		currently_firing = FALSE
 		addtimer(CALLBACK(brain.primary_weapon, TYPE_PROC_REF(/obj/item/weapon/gun, start_fire), null, brain.current_target, null, null, null, TRUE), brain.primary_weapon.get_fire_delay())
-
-	else if(brain.primary_weapon.gun_firemode == GUN_FIREMODE_AUTOMATIC)
-		rounds_burst_fired++
 
 	else if(brain.primary_weapon.gun_firemode == GUN_FIREMODE_BURSTFIRE)
 		currently_firing = FALSE

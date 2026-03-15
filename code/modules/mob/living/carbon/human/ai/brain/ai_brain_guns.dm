@@ -17,13 +17,15 @@
 	if(!primary_weapon)
 		return FALSE
 
-	if(primary_weapon.in_chamber)
-		return FALSE
+	// if(primary_weapon.in_chamber)
+	// 	return FALSE
 
-	if(!primary_weapon.current_mag)
-		return TRUE
+	// if(!primary_weapon.current_mag)
+	// 	return TRUE
 
-	if(primary_weapon.current_mag.current_rounds > 0)
-		return FALSE
+	// if(primary_weapon.current_mag.current_rounds > 0)
+	// 	return FALSE
 
-	return TRUE
+	// return TRUE
+
+	return !primary_weapon.has_ammunition()	// SS220 EDIT

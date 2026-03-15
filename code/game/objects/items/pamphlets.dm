@@ -68,7 +68,7 @@
 	bypass_pamphlet_limit = TRUE
 
 /obj/item/pamphlet/skill/spotter/can_use(mob/living/carbon/human/user)
-	if(user.job != JOB_SQUAD_MARINE)
+	if((GLOB.RoleAuthority?.get_job_preference_bucket_key(user.job) || user.job) != JOB_SQUAD_MARINE) // SS220 EDIT: allow ship-side rifleman variants through canonical role matching
 		to_chat(user, SPAN_WARNING("Only squad riflemen can use this."))
 		return
 	var/obj/item/card/id/ID = user.get_idcard()
@@ -98,7 +98,7 @@
 	bypass_pamphlet_limit = TRUE
 
 /obj/item/pamphlet/skill/loader/can_use(mob/living/carbon/human/user)
-	if(user.job != JOB_SQUAD_MARINE)
+	if((GLOB.RoleAuthority?.get_job_preference_bucket_key(user.job) || user.job) != JOB_SQUAD_MARINE) // SS220 EDIT: allow ship-side rifleman variants through canonical role matching
 		to_chat(user, SPAN_WARNING("Only squad riflemen can use this."))
 		return
 	var/obj/item/card/id/ID = user.get_idcard()

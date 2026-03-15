@@ -709,6 +709,11 @@
 	selected_ability = null
 	queued_action = null
 
+	if(length(registered_ai_abilities))
+		for(var/datum/action/xeno_action/registered_ai_action as anything in registered_ai_abilities.Copy())
+			unregister_ai_action(registered_ai_action)
+	registered_ai_abilities = null
+
 	QDEL_NULL(strain)
 	QDEL_NULL(behavior_delegate)
 

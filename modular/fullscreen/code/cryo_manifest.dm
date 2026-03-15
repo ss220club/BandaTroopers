@@ -57,10 +57,11 @@
 	if(a_rank_weight != b_rank_weight)
 		return b_rank_weight - a_rank_weight
 
-	var/a_name = a?.real_name || a?.name || ""
-	var/b_name = b?.real_name || b?.name || ""
-	return sorttext(b_name, a_name)
-
+	// --- титульник ---
+	var/alert_type = /atom/movable/screen/text/screen_text/picture/starting
+	var/platoon = "3rd Bat. 'Banda Troopers"
+	var/list/ship_profile = faction == FACTION_UNSC ? GLOB.RoleAuthority?.get_main_ship_display_profile() : null
+  
 /mob/living/carbon/human/proc/get_cryo_intro_alert_type()
 	var/alert_type = /atom/movable/screen/text/screen_text/picture/starting/cm_brutal
 	switch(faction)

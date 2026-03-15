@@ -66,6 +66,7 @@
 	var/nightmare_path
 
 	var/platoon
+	var/list/allowed_platoons = list()
 	/// If truthy this is config for a round overridden map: search for override maps in data/, instead of using a path in maps/
 	var/override_map
 
@@ -91,11 +92,11 @@
 		/datum/equipment_preset/synth/survivor/radiation_synth,
 	)
 
-/proc/load_map_config(filename, default, delete_after, error_if_missing = TRUE)
+/proc/load_map_config(filename, default = FALSE, delete_after = FALSE, error_if_missing = TRUE, maptype = GROUND_MAP)
 	var/datum/map_config/config = new
 	if(default)
 		return config
-	if(!config.LoadConfig(filename, error_if_missing))
+	if(!config.LoadConfig(filename, error_if_missing, maptype))
 		qdel(config)
 		config = new /datum/map_config
 	if(delete_after)
@@ -356,33 +357,56 @@
 	if(json["platoon"])
 		platoon = json["platoon"]
 
+	if(maptype == SHIP_MAP)
+		if(islist(json["allowed_platoons"]))
+			for(var/allowed_platoon as anything in json["allowed_platoons"])
+				if(!istext(allowed_platoon))
+					log_world("map_config allowed_platoons must contain text typepaths!")
+					return
+				var/platoon_type = text2path(allowed_platoon)
+				if(!ispath(platoon_type, /datum/squad/marine))
+					log_world("map_config allowed_platoons contains an invalid platoon typepath!")
+					return
+				if(!(allowed_platoon in allowed_platoons))
+					allowed_platoons += allowed_platoon
+		else if(!isnull(json["allowed_platoons"]))
+			log_world("map_config allowed_platoons is not a list!")
+			return
+
+		if(length(allowed_platoons))
+			var/default_platoon_type = text2path(platoon)
+			if(!ispath(default_platoon_type, /datum/squad/marine) || !(platoon in allowed_platoons))
+				log_world("map_config ship platoon must be one of allowed_platoons!")
+				return
+
 	if(islist(json["environment_traits"]))
 		environment_traits = json["environment_traits"]
 	else if(!isnull(json["environment_traits"]))
 		log_world("map_config environment_traits is not a list!")
 		return
 
-	var/list/gamemode_names = list()
-	for(var/t in subtypesof(/datum/game_mode))
-		var/datum/game_mode/G = t
-		gamemode_names += initial(G.config_tag)
+	if(maptype != SHIP_MAP)
+		var/list/gamemode_names = list()
+		for(var/t in subtypesof(/datum/game_mode))
+			var/datum/game_mode/G = t
+			gamemode_names += initial(G.config_tag)
 
-	if(islist(json["gamemodes"]))
-		for(var/g in json["gamemodes"])
-			if(!(g in gamemode_names))
-				log_world("map_config has an invalid gamemode name!")
-				return
-			if(g == "Extended") // always allow extended
-				continue
-			gamemodes += g
-		gamemodes += "Extended"
-	else if(!isnull(json["gamemodes"]))
-		log_world("map_config gamemodes is not a list!")
-		return
-	else
-		for(var/a in subtypesof(/datum/game_mode))
-			var/datum/game_mode/G = a
-			gamemodes += initial(G.config_tag)
+		if(islist(json["gamemodes"]))
+			for(var/g in json["gamemodes"])
+				if(!(g in gamemode_names))
+					log_world("map_config has an invalid gamemode name!")
+					return
+				if(g == "Extended") // always allow extended
+					continue
+				gamemodes += g
+			gamemodes += "Extended"
+		else if(!isnull(json["gamemodes"]))
+			log_world("map_config gamemodes is not a list!")
+			return
+		else
+			for(var/a in subtypesof(/datum/game_mode))
+				var/datum/game_mode/G = a
+				gamemodes += initial(G.config_tag)
 
 	defaulted = FALSE
 	return TRUE
@@ -398,12 +422,37 @@
 	for (var/file in map_file)
 		. += "[dirpath]/[file]"
 
+/datum/map_config/proc/read_config_json()
+	var/json_text = file2text(config_filename)
+	if(!json_text)
+		log_world("map_config is not text: [config_filename]")
+		return null
 
-/datum/map_config/proc/MakeNextMap(maptype = GROUND_MAP)
+	var/list/json = json_decode(json_text)
+	if(!json)
+		log_world("map_config is not json: [config_filename]")
+		return null
+
+	return json
+
+/datum/map_config/proc/MakeNextMap(maptype = GROUND_MAP, list/json_overrides = null)
 	if(CONFIG_GET(flag/ephemeral_map_mode))
 		message_admins("NOTICE: Running in ephemeral mode - map change request ignored")
 		return TRUE
-	if(maptype == GROUND_MAP)
-		return config_filename == "data/next_map.json" || fcopy(config_filename, "data/next_map.json")
-	else if(maptype == SHIP_MAP)
-		return config_filename == "data/next_ship.json" || fcopy(config_filename, "data/next_ship.json")
+
+	var/target_filename = MAP_TO_FILENAME[maptype]
+	if(!target_filename)
+		return FALSE
+
+	if(!islist(json_overrides) || !length(json_overrides))
+		return config_filename == target_filename || fcopy(config_filename, target_filename)
+
+	var/list/json = read_config_json()
+	if(!islist(json))
+		return FALSE
+
+	for(var/key in json_overrides)
+		json[key] = json_overrides[key]
+
+	rustg_file_write(json_encode(json), target_filename)
+	return TRUE

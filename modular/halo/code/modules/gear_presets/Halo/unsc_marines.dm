@@ -4,8 +4,6 @@
 	faction_group = FACTION_LIST_UNSC
 	languages = list(LANGUAGE_ENGLISH)
 	idtype = /obj/item/card/id/dogtag
-	var/auto_squad_name_unsc
-	var/ert_squad_halo = FALSE
 
 /datum/equipment_preset/unsc/load_status(mob/living/carbon/human/new_human)
 	new_human.nutrition = NUTRITION_VERYLOW
@@ -35,39 +33,6 @@
 		new_human.h_style = pick("Side Undercut", "Side Hang Undercut (Reverse)", "Undercut, Top", "CIA", "Mulder", "Pvt. Redding", "Pixie Cut Left", "Pixie Cut Right", "Bun")
 	new_human.change_real_name(new_human, random_name)
 	new_human.age = rand(20,35)
-
-/datum/equipment_preset/unsc/load_preset(mob/living/carbon/human/new_human, randomise, count_participant)
-	. = ..()
-	if(!auto_squad_name_unsc || (should_block_game_interaction(new_human) && !ert_squad_halo))
-		return
-	if(!GLOB.data_core.manifest_modify(new_human.real_name, WEAKREF(new_human), assignment, rank))
-		GLOB.data_core.manifest_inject(new_human)
-
-	var/obj/item/card/id/ID = new_human.get_idcard()
-	var/datum/money_account/acct = create_account(new_human, rand(30, 50), GLOB.paygrades[ID.paygrade])
-	ID.associated_account_number = acct.account_number
-
-	var/datum/squad/auto_squad = get_squad_by_name(auto_squad_name_unsc)
-	if(auto_squad)
-		transfer_marine_to_squad(new_human, auto_squad, new_human.assigned_squad, ID)
-	if(!ert_squad_halo && !auto_squad.active)
-		auto_squad.engage_squad(FALSE)
-
-	if(!auto_squad)
-		transfer_marine_to_squad(new_human, pick(GLOB.RoleAuthority.squads), new_human.assigned_squad, new_human.wear_id)
-
-	new_human.marine_buyable_categories[MARINE_CAN_BUY_EAR] = 0
-	new_human.sec_hud_set_ID()
-	new_human.hud_set_squad()
-
-	if(new_human.wear_l_ear)
-		if(istype(new_human.wear_l_ear, /obj/item/device/radio/headset/almayer/marine))
-			var/obj/item/device/radio/headset/almayer/marine/equipped_headset = new_human.wear_l_ear
-			equipped_headset.add_hud_tracker(new_human)
-	else if(new_human.wear_r_ear)
-		if(istype(new_human.wear_r_ear, /obj/item/device/radio/headset/almayer/marine))
-			var/obj/item/device/radio/headset/almayer/marine/equipped_headset = new_human.wear_r_ear
-			equipped_headset.add_hud_tracker(new_human)
 
 ///Equipped Presets need doing///
 

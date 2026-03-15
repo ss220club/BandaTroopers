@@ -5,7 +5,7 @@
 	window_type = /obj/structure/window/framed/unsc
 
 /obj/structure/window/framed/unsc
-	name = "framed window"
+	name = "окно в раме"
 	icon = 'icons/halo/turf/walls/unsc_window.dmi'
 	icon_state = "unsc_window0"
 	basestate = "unsc_window"

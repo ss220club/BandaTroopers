@@ -159,7 +159,7 @@
 		if(ID)
 			squad_info_data["fireteams"][team]["sqldr"] += list("paygrade" = get_paygrades(ID.paygrade, 1))
 			var/rank = ID.rank
-			switch(rank)
+			switch(GET_DEFAULT_ROLE(rank)) // SS220 EDIT: display canonical squad abbreviations for modular variants
 				if(JOB_SQUAD_MARINE)
 					rank = "Mar"
 				if(JOB_SQUAD_ENGI)
@@ -238,7 +238,7 @@
 			if(ID)
 				mar[H.real_name] += list("paygrade" = get_paygrades(ID.paygrade, 1))
 				var/rank = ID.rank
-				switch(rank)
+				switch(GET_DEFAULT_ROLE(rank)) // SS220 EDIT: display canonical squad abbreviations for modular variants
 					if(JOB_SQUAD_MARINE)
 						rank = "Mar"
 					if(JOB_SQUAD_ENGI)
@@ -287,7 +287,7 @@
 			if(ID)
 				mar[H.real_name] += list("paygrade" = get_paygrades(ID.paygrade, 1))
 				var/rank = ID.rank
-				switch(rank)
+				switch(GET_DEFAULT_ROLE(rank)) // SS220 EDIT: display canonical squad abbreviations for modular variants
 					if(JOB_SQUAD_MARINE)
 						rank = "Mar"
 					if(JOB_SQUAD_ENGI)

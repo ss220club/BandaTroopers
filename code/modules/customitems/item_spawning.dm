@@ -31,7 +31,10 @@ GLOBAL_LIST_FILE_LOAD(custom_items, "config/custom_items.txt")
 				var/obj/item/Item = new path()
 				if(is_mainship_level(turf.z))
 					for(var/obj/structure/closet/secure_closet/marine_personal/closet in GLOB.personal_closets) // now this gets called after we got our awesome pve personal locker hooray
-						if(closet.owner == M.real_name && closet.job == M.job)
+						// SS220 EDIT - START - normalize HALO locker job titles for personal-locker custom-item routing
+						// if(closet.owner == M.real_name && closet.job == M.job)
+						if(closet.owner == M.real_name && closet.is_correct_job(M))
+						// SS220 EDIT - END
 							closet_to_spawn_in = closet
 							Item.forceMove(closet_to_spawn_in)
 							ok = TRUE

@@ -56,7 +56,7 @@
 	return TRUE
 
 /mob/living/carbon/human/proc/try_relocate_rto_to_squad_spawn()
-	if(!istype(src) || job != JOB_SQUAD_RTO || !assigned_squad)
+	if(!istype(src) || GET_DEFAULT_ROLE(job) != JOB_SQUAD_RTO || !assigned_squad)
 		return FALSE
 	if(!is_mainship_level(z))
 		return FALSE

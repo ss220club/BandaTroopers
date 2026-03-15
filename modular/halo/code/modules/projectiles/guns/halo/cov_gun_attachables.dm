@@ -1,6 +1,6 @@
 /obj/item/attachable/carbine_muzzle
-	name = "\improper carbine muzzle"
-	desc = "This isn't supposed to be separated from the gun, how'd this happen?"
+	name = "\improper дульная часть карабина"
+	desc = "Эта деталь не должна отделяться от оружия. Как это вообще произошло?"
 	icon = 'icons/halo/obj/items/weapons/guns_by_faction/covenant/covenant_attachments.dmi'
 	icon_state = "carbine_muzzle"
 	attach_icon = "carbine_muzzle"

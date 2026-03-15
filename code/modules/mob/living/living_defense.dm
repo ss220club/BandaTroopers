@@ -40,6 +40,7 @@
 	var/impact_damage = (1 + O.throwforce*THROWFORCE_COEFF)*O.throwforce*THROW_SPEED_IMPACT_COEFF*O.cur_speed
 
 	var/datum/launch_metadata/LM = O.launch_metadata
+	var/atom/thrower = istype(LM) ? LM.thrower : null // SS220 EDIT: explosion-thrown debris can legitimately lack a thrower
 	var/dist = 2
 	if(istype(LM))
 		dist = LM.dist
@@ -65,8 +66,8 @@
 	O.throwing = 0 //it hit, so stop moving
 
 	var/mob/M
-	if(ismob(LM.thrower))
-		M = LM.thrower
+	if(ismob(thrower))
+		M = thrower
 		if(damage_done > 5)
 			M.track_hit(initial(O.name))
 			if (M.faction == faction)
@@ -88,7 +89,8 @@
 
 /mob/living/obj_launch_collision(obj/O)
 	var/datum/launch_metadata/LM = launch_metadata
-	if(!rebounding && LM.thrower != src)
+	var/atom/thrower = istype(LM) ? LM.thrower : null // SS220 EDIT: explosion throws can collide without an owning mob
+	if(!rebounding && thrower != src)
 		var/impact_damage = (1 + MOB_SIZE_COEFF/(mob_size + 1))*THROW_SPEED_DENSE_COEFF*cur_speed
 		apply_damage(impact_damage)
 		visible_message(SPAN_DANGER("\The [name] slams into [O]!"), null, null, 5) //feedback to know that you got slammed into a wall and it hurt
@@ -98,9 +100,10 @@
 //This is called when the mob or human is thrown into a dense turf or wall
 /mob/living/turf_launch_collision(turf/T)
 	var/datum/launch_metadata/LM = launch_metadata
-	if(!rebounding && LM.thrower != src)
-		if(LM.thrower)
-			last_damage_data = create_cause_data("wall tossing", LM.thrower)
+	var/atom/thrower = istype(LM) ? LM.thrower : null // SS220 EDIT: explosion throws can collide without an owning mob
+	if(!rebounding && thrower != src)
+		if(thrower)
+			last_damage_data = create_cause_data("wall tossing", thrower)
 		var/impact_damage = (1 + MOB_SIZE_COEFF/(mob_size + 1))*THROW_SPEED_DENSE_COEFF*cur_speed
 		apply_damage(impact_damage)
 		visible_message(SPAN_DANGER("\The [name] slams into [T]!"), null, null, 5) //feedback to know that you got slammed into a wall and it hurt

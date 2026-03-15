@@ -75,6 +75,18 @@
 			var/template_id = params["template_id"]
 			if(!length(template_id))
 				return FALSE
+			var/datum/rto_support_template/template = controller?.find_template(template_id)
+			if(!template)
+				return FALSE
+			var/confirm_choice = tgui_alert(
+				user,
+				"Вы уверены, что хотите выбрать пакет поддержки \"[template.name]\"? Выбор нельзя изменить до конца жизни персонажа.",
+				"Подтверждение выбора",
+				list("Подтвердить", "Отмена"),
+				15 SECONDS,
+			)
+			if(confirm_choice != "Подтвердить")
+				return FALSE
 			if(!controller?.select_template(template_id))
 				to_chat(user, SPAN_WARNING("Не удалось выбрать пакет поддержки."))
 				return FALSE

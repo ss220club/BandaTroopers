@@ -19,6 +19,11 @@
 	var/source_terminal = ""
 
 /proc/create_account(new_owner_name = "Default user", starting_funds = 0, datum/paygrade/id_paygrade)
+	if(ismob(new_owner_name))
+		var/mob/account_owner = new_owner_name
+		new_owner_name = account_owner.real_name || account_owner.name
+	else
+		new_owner_name = "[new_owner_name]"
 
 	//create a new account
 	var/datum/money_account/M = new()

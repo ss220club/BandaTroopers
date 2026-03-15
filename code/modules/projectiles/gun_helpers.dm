@@ -409,10 +409,14 @@ DEFINES in setup.dm, referenced here.
 			update_overlays(attached_attachment, attached_attachment.slot)
 
 /obj/item/weapon/gun/proc/update_attachable(attachable) //Updates individually.
+	if(!islist(attachable_overlays))
+		return
 	if(attachable_offset && attachments[attachable])
 		update_overlays(attachments[attachable], attachable)
 
 /obj/item/weapon/gun/proc/update_overlays(obj/item/attachable/attachment, slot)
+	if(!islist(attachable_overlays))
+		return
 	var/image/gun_image = attachable_overlays[slot]
 	overlays -= gun_image
 	attachable_overlays[slot] = null
@@ -435,6 +439,8 @@ DEFINES in setup.dm, referenced here.
 	return 0
 
 /obj/item/weapon/gun/proc/update_mag_overlay()
+	if(!islist(attachable_overlays))
+		return
 	var/image/gun_image = attachable_overlays["mag"]
 	if(istype(gun_image))
 		overlays -= gun_image
@@ -451,6 +457,8 @@ DEFINES in setup.dm, referenced here.
 	return
 
 /obj/item/weapon/gun/proc/update_special_overlay(new_icon_state)
+	if(!islist(attachable_overlays))
+		return
 	overlays -= attachable_overlays["special"]
 	attachable_overlays["special"] = null
 	var/image/gun_image = image(icon,src,new_icon_state)

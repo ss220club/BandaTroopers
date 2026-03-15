@@ -1,11 +1,23 @@
 GLOBAL_LIST_INIT_TYPED(firearm_appraisals, /datum/firearm_appraisal, build_firearm_appraisal_list())
 
+// SS220 EDIT - START: keep subtype-specific appraisals ahead of generic bases so modular HALO guns resolve correctly
+/proc/get_firearm_appraisal_specificity(datum/firearm_appraisal/appraisal)
+	var/max_specificity = 0
+	for(var/gun_type as anything in appraisal.gun_types)
+		max_specificity = max(max_specificity, length(splittext("[gun_type]", "/")))
+	return max_specificity
+
+/proc/cmp_firearm_appraisal_specificity(datum/firearm_appraisal/a, datum/firearm_appraisal/b)
+	return get_firearm_appraisal_specificity(b) - get_firearm_appraisal_specificity(a)
+// SS220 EDIT - END
+
 /proc/build_firearm_appraisal_list()
 	. = list()
 	for(var/type in subtypesof(/datum/firearm_appraisal))
 		. += new type
+	. = sortTim(., GLOBAL_PROC_REF(cmp_firearm_appraisal_specificity)) // SS220 EDIT: prefer most-specific firearm appraisal matches before generic weapon families
 
-/proc/get_firearm_appraisal(obj/item/weapon/gun/firearm)
+/proc/get_firearm_appraisal(obj/item/weapon/gun/firearm) as /datum/firearm_appraisal
 	for(var/datum/firearm_appraisal/appraisal as anything in GLOB.firearm_appraisals)
 		if(is_type_in_list(firearm, appraisal.gun_types))
 			return appraisal
@@ -19,6 +31,8 @@ GLOBAL_LIST_INIT_TYPED(firearm_appraisals, /datum/firearm_appraisal, build_firea
 	var/maximum_range = 16
 	/// How many rounds to fire in 1 burst at most
 	var/burst_amount_max = 8
+	/// If TRUE, every fired shot counts toward the burst cap even for semiauto or burstfire weapons.
+	var/count_every_shot_toward_burst_limit = FALSE
 	/// List of types that set the human AI to this appraisal type
 	var/list/gun_types = list()
 	/// If TRUE, this gun is disposable and isn't worth trying to reload
@@ -41,18 +55,28 @@ GLOBAL_LIST_INIT_TYPED(firearm_appraisals, /datum/firearm_appraisal, build_firea
 
 /// Reload sequence per weapon type, override as needed
 /datum/firearm_appraisal/proc/do_reload(obj/item/weapon/gun/firearm, obj/item/ammo_magazine/mag, mob/living/carbon/user, datum/human_ai_brain/AI)
+	if(QDELETED(firearm) || QDELETED(mag) || QDELETED(user) || !AI || !AI.has_valid_tied_human())
+		return
 	AI.unholster_primary()
 	AI.ensure_primary_hand(firearm)
 	firearm.unwield(user)
 	sleep(AI.short_action_delay * AI.action_delay_mult)
+	if(QDELETED(firearm) || QDELETED(user) || !AI.has_valid_tied_human())
+		return
 	if(!(firearm?.flags_gun_features & GUN_INTERNAL_MAG) && firearm?.current_mag)
 		firearm?.unload(user, FALSE, TRUE, FALSE)
 	user.swap_hand()
 	sleep(AI.micro_action_delay * AI.action_delay_mult)
+	if(QDELETED(firearm) || QDELETED(mag) || QDELETED(user) || !AI.has_valid_tied_human())
+		return
 	AI.equip_item_from_equipment_map(HUMAN_AI_AMMUNITION, mag)
 	sleep(AI.short_action_delay * AI.action_delay_mult)
+	if(QDELETED(firearm) || QDELETED(mag) || QDELETED(user) || !AI.has_valid_tied_human())
+		return
 	if(istype(mag, /obj/item/ammo_magazine/handful))
 		for(var/i in 1 to mag.current_rounds)
+			if(QDELETED(firearm) || QDELETED(mag) || QDELETED(user) || !AI.has_valid_tied_human())
+				return
 			firearm?.attackby(mag, user)
 			sleep(AI.micro_action_delay * AI.action_delay_mult)
 		if(!QDELETED(mag) && (mag.current_rounds > 0))
@@ -64,6 +88,8 @@ GLOBAL_LIST_INIT_TYPED(firearm_appraisals, /datum/firearm_appraisal, build_firea
 	else
 		firearm?.attackby(mag, user)
 	sleep(AI.short_action_delay * AI.action_delay_mult)
+	if(QDELETED(user) || !AI.has_valid_tied_human())
+		return
 	user.swap_hand()
 	AI.wield_primary_sleep()
 

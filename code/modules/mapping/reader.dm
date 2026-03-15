@@ -501,7 +501,7 @@
 			var/list/cache = modelCache[gset.gridLines[i]]
 			if(!cache)
 				SSatoms.map_loader_stop(REF(src))
-				CRASH("Undefined model key in DMM: [gset.gridLines[i]]")
+				CRASH("Undefined model key in DMM: [gset.gridLines[i]] (file: [original_path], format: [map_format], x: [true_xcrd], y: [ycrd], z: [zcrd], grid_x: [gset.xcrd], row_index: [i])")
 			build_coordinate(cache, locate(true_xcrd, ycrd, zcrd), no_afterchange, place_on_top, new_z, delete)
 
 			// only bother with bounds that actually exist
@@ -657,7 +657,7 @@
 				var/list/cache = modelCache[model_key]
 				if(!cache)
 					SSatoms.map_loader_stop(REF(src))
-					CRASH("Undefined model key in DMM: [model_key]")
+					CRASH("Undefined model key in DMM: [model_key] (file: [original_path], format: [map_format], x: [xcrd], y: [ycrd], z: [zcrd], grid_x: [gset.xcrd], row_index: [i], key_offset: [tpos])")
 				build_coordinate(cache, locate(xcrd, ycrd, zcrd), no_afterchange, place_on_top, new_z, delete)
 
 				// only bother with bounds that actually exist

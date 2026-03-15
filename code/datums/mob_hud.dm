@@ -61,8 +61,9 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, flatten_numeric_alist(alist(
 	if(!user.client)
 		return
 	for(var/i in hud_icons)
-		user.client.images -= target.hud_list[i]
-		if(target.clone)
+		if(i in target.hud_list)
+			user.client.images -= target.hud_list[i]
+		if(target.clone && (i in target.clone.hud_list))
 			user.client.images -= target.clone.hud_list[i]
 
 // Allow user to view a HUD (putting on medical glasses)

@@ -1,6 +1,6 @@
 /obj/item/clothing/mask/gas/unggoy
-	name = "methane rebreather"
-	desc = "Worn by the Unggoy, this rebreather hooks up to their tank and allows them to operate in planets lacking methane-rich atmosphere."
+	name = "метановый ребризер"
+	desc = "Этот ребризер, который носят унггои, подключается к их баллону и позволяет действовать на планетах без атмосферы, богатой метаном."
 	icon = 'icons/halo/obj/items/clothing/covenant/masks.dmi'
 	icon_state = "methane_mask"
 	item_state = "methane_mask"

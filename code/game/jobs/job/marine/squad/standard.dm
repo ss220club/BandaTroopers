@@ -156,10 +156,6 @@
 /obj/effect/landmark/start/marine/rto/delta
 	squad = SQUAD_MARINE_4
 
-/obj/effect/landmark/start/marine/rto/odst
-	name = JOB_SQUAD_RTO_ODST // SS220 EDIT: HALO ODST RTO spawn
-	squad = SQUAD_ODST
-	job = /datum/job/marine/standard/ai/rto/odst
 
 /datum/job/marine/standard/ai/rmc
 	title = JOB_TWE_RMC_RIFLEMAN

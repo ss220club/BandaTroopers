@@ -29,6 +29,8 @@
 		return
 
 	COOLDOWN_START(src, cover_search_cooldown, 10 SECONDS)
+	// SS220 EDIT: keep a lightweight count of human AI cover scans during HALO perf investigations
+	halo_perf_bump_cover_scans()
 
 	var/list/turf_dict = list()
 	var/cover_dir = reverse_direction(angle2dir4ai(angle))
@@ -40,7 +42,6 @@
 #endif
 
 	cover_processing(turf_dict)
-	squad_cover_processing(turf_dict)
 
 /// If an AI decides to go into cover, any squadmates in their view range will process on the same view dictionary so as to help with performance
 /datum/human_ai_brain/proc/squad_cover_processing(list/turf_dict)
@@ -145,5 +146,6 @@
 		turf_dict -= best_cover
 		// insert cover atom deletion/move comsigs here
 		current_cover = best_cover
+		// SS220 EDIT: forward the resolved cover scan once with the correct turf_dict payload
 		if(!from_squad)
-			squad_cover_processing(FALSE, turf_dict)
+			squad_cover_processing(turf_dict)

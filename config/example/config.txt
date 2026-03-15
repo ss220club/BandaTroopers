@@ -185,6 +185,10 @@ AUTOOOCMUTE
 
 #RECORD_ROUNDS
 
+## Uncomment to enable HALO AI-vs-AI perf telemetry in MC stat output.
+## Intended for local profiling and short-lived debug sessions, not normal production use.
+#HALO_PERF_DEBUG
+
 # LOBBY_MUSIC 1 path/to/sound.ogg
 # LOBBY_MUSIC 2 path/to/sound.ogg
 # LOBBY_MUSIC 3 path/to/sound.ogg

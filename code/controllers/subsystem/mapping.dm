@@ -205,7 +205,8 @@ SUBSYSTEM_DEF(mapping)
 
 /datum/controller/subsystem/mapping/proc/Loadship(list/errorList, name, path, files, list/traits, list/default_traits, silent = FALSE, override_map_path = "maps/")
 	LoadGroup(errorList, name, path, files, traits, default_traits, silent, override_map_path = override_map_path)
-	GLOB.gamemode_roles["Distress Signal: Lowpop"] = GLOB.platoon_to_role_list[MAIN_SHIP_PLATOON]
+	// GLOB.gamemode_roles["Distress Signal: Lowpop"] = GLOB.platoon_to_role_list[MAIN_SHIP_PLATOON]
+	GLOB.RoleAuthority?.handle_main_ship_mode_changed() // SS220 EDIT: refresh ship-mode role cache after ship map load
 
 /datum/controller/subsystem/mapping/proc/Loadground(list/errorList, name, path, files, list/traits, list/default_traits, silent = FALSE, override_map_path = "maps/")
 	LoadGroup(errorList, name, path, files, traits, default_traits, silent, override_map_path = override_map_path)
@@ -244,25 +245,23 @@ SUBSYSTEM_DEF(mapping)
 		INIT_ANNOUNCE(msg)
 #undef INIT_ANNOUNCE
 
-/datum/controller/subsystem/mapping/proc/changemap(datum/map_config/VM, maptype = GROUND_MAP)
+/datum/controller/subsystem/mapping/proc/changemap(datum/map_config/VM, maptype = GROUND_MAP, list/json_overrides = null)
 	LAZYINITLIST(next_map_configs)
-	if(maptype == GROUND_MAP)
-		if(!VM.MakeNextMap(maptype))
-			next_map_configs[GROUND_MAP] = load_map_configs(list(maptype), default = TRUE)
-			message_admins("Failed to set new map with next_map.json for [VM.map_name]! Using default as backup!")
-			return
+	if(!VM.MakeNextMap(maptype, json_overrides))
+		var/list/default_configs = load_map_configs(list(maptype), default = TRUE)
+		next_map_configs[maptype] = default_configs[maptype]
+		message_admins("Failed to set new map with [MAP_TO_FILENAME[maptype]] for [VM.map_name]! Using default as backup!")
+		return
 
-		next_map_configs[GROUND_MAP] = VM
-		return TRUE
+	var/datum/map_config/next_config = VM
+	if(islist(json_overrides) && length(json_overrides))
+		next_config = load_map_config(MAP_TO_FILENAME[maptype], error_if_missing = FALSE, maptype = maptype)
+		if(next_config.defaulted)
+			qdel(next_config)
+			next_config = VM
 
-	else if(maptype == SHIP_MAP)
-		if(!VM.MakeNextMap(maptype))
-			next_map_configs[SHIP_MAP] = load_map_configs(list(maptype), default = TRUE)
-			message_admins("Failed to set new map with next_map.json for [VM.map_name]! Using default as backup!")
-			return
-
-		next_map_configs[SHIP_MAP] = VM
-		return TRUE
+	next_map_configs[maptype] = next_config
+	return TRUE
 
 /datum/controller/subsystem/mapping/proc/preloadTemplates(path = "maps/templates/") //see master controller setup
 	var/list/filelist = flist(path)

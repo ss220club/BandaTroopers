@@ -1,6 +1,6 @@
 /obj/item/clothing/suit/marine/unsc
-	name = "\improper M52B body armor"
-	desc = "Standard-issue to the UNSC Marine Corps, the M52B armor entered service by 2531 for use in the Human Covenant war, coming with improved protection against plasma-based projectiles compared to older models."
+	name = "\improper бронежилет M52B"
+	desc = "Штатная броня корпуса морской пехоты ККОН. Комплект M52B поступил на вооружение к 2531 году для войны людей с Ковенантом и обеспечивал лучшую защиту от плазменного оружия по сравнению со старыми моделями."
 	icon = 'icons/halo/obj/items/clothing/suits/suits_by_faction/suit_unsc.dmi'
 	icon_state = "m52b"
 	item_state = "m52b"
@@ -35,14 +35,14 @@
 	)
 
 /obj/item/clothing/suit/marine/unsc/oni
-	name = "\improper ONI M52B body armor"
-	desc = "A modified variant of the standard M52B armor, used by ONI security forces. Has no significant differences in protection compared to standard issue armor, but is painted black."
+	name = "\improper бронежилет ONI M52B"
+	desc = "Модифицированный вариант стандартной брони M52B, используемый силами безопасности ONI. Существенно не отличается по защите от штатного образца, но окрашен в чёрный цвет."
 	icon_state = "oni_sec"
 	item_state = "oni_sec"
 
 /obj/item/clothing/suit/marine/unsc/police
-	name = "\improper police RD90 ballistic armor"
-	desc = "An older model of the M52B body armor, designated as the RD90 by local police and security forces. Whilst not as comfortable, it still does the job for most of its users, and has added protection against melee attacks."
+	name = "\improper баллистическая броня полиции RD90"
+	desc = "Более старая модель брони M52B, обозначаемая местной полицией и силами безопасности как RD90. Пусть она и не столь удобна, для большинства пользователей она всё ещё справляется со своей задачей, а вдобавок лучше защищает от ударов в ближнем бою."
 	icon = 'icons/halo/obj/items/clothing/suits/suits_by_faction/suit_unsc.dmi'
 	valid_accessory_slots = list(ACCESSORY_SLOT_MEDAL, ACCESSORY_SLOT_DECORGROIN, ACCESSORY_SLOT_DECORBRACER, ACCESSORY_SLOT_DECORNECK, ACCESSORY_SLOT_PAINT, ACCESSORY_SLOT_M3UTILITY, ACCESSORY_SLOT_PONCHO)
 	restricted_accessory_slots = list(ACCESSORY_SLOT_DECORGROIN, ACCESSORY_SLOT_DECORBRACER, ACCESSORY_SLOT_DECORNECK, ACCESSORY_SLOT_M3UTILITY, ACCESSORY_SLOT_PAINT)
@@ -63,7 +63,7 @@
 
 /obj/item/clothing/suit/marine/unsc/odst
 	name = "\improper M70DT ODST BDU"
-	desc = "The sum total of the ODST armor complex, simply called 'Battle-Dress-Uniform'. Designed for several environments, be it in vacuum with its 30 minutes of air, in the racket of a SOEIV or the clamour of a battlefield; this BDU is ready for it all."
+	desc = "Полный комплект брони ODST, проще называемый Battle Dress Uniform. Рассчитан на самые разные условия: от вакуума с собственным запасом воздуха на 30 минут до грохота SOEIV и хаоса поля боя. Этот BDU готов ко всему."
 	icon_state = "odst"
 	item_state = "odst"
 	armor_melee = CLOTHING_ARMOR_HIGH
@@ -73,7 +73,7 @@
 	armor_internaldamage = CLOTHING_ARMOR_HIGH
 
 /obj/item/clothing/suit/marine/unsc/odst/insurrection
-	name = "\improper scavenged M70DT ODST BDU"
+	name = "\improper трофейный комплект M70DT ODST BDU"
 	icon_state = "odst_insurgent"
 	item_state = "odst_insurgent"
 	valid_accessory_slots = list(ACCESSORY_SLOT_MEDAL, ACCESSORY_SLOT_PAINT, ACCESSORY_SLOT_M3UTILITY, ACCESSORY_SLOT_PONCHO)

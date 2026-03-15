@@ -33,6 +33,11 @@ SUBSYSTEM_DEF(human_ai)
 
 /datum/controller/subsystem/human_ai/stat_entry(msg)
 	msg = "P:[length(GLOB.human_ai_brains)]"
+	// SS220 EDIT: let modular packs append subsystem-specific diagnostics without baking them into hardcode
+	if(hascall(src, "modular_stat_entry_suffix"))
+		var/suffix = call(src, "modular_stat_entry_suffix")()
+		if(suffix)
+			msg += " | [suffix]"
 	return ..()
 
 /datum/admins/proc/toggle_human_ai()

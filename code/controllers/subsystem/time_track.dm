@@ -50,20 +50,24 @@ SUBSYSTEM_DEF(time_track)
 		sendmaps_headers += sendmaps_names_map[proper_name]
 		sendmaps_headers += "[sendmaps_names_map[proper_name]]_count"
 
-	log_perf(
-		list(
-			"time",
-			"players",
-			"tidi",
-			"tidi_fastavg",
-			"tidi_avg",
-			"tidi_slowavg",
-			"maptick",
-			"num_timers",
-			"in_progress",
-			"in_callback",
-		) + sendmaps_headers
+	var/list/perf_headers = list(
+		"time",
+		"players",
+		"tidi",
+		"tidi_fastavg",
+		"tidi_avg",
+		"tidi_slowavg",
+		"maptick",
+		"num_timers",
+		"in_progress",
+		"in_callback",
 	)
+	// SS220 EDIT: modular packs may extend the CSV with their own perf columns
+	if(hascall(src, "modular_perf_headers"))
+		var/list/modular_headers = call(src, "modular_perf_headers")()
+		if(islist(modular_headers) && length(modular_headers))
+			perf_headers += modular_headers
+	log_perf(perf_headers + sendmaps_headers)
 	return SS_INIT_SUCCESS
 
 /datum/controller/subsystem/time_track/fire()
@@ -109,17 +113,21 @@ SUBSYSTEM_DEF(time_track)
 		send_maps_values += packet["value"]
 		send_maps_values += packet["calls"]
 
-	log_perf(
-		list(
-			world.time,
-			length(GLOB.clients),
-			time_dilation_current,
-			time_dilation_avg_fast,
-			time_dilation_avg,
-			time_dilation_avg_slow,
-			MAPTICK_LAST_INTERNAL_TICK_USAGE,
-			length(SStimer.timer_id_dict),
-			SSdatabase.in_progress,
-			SSdatabase.in_callback,
-		) + send_maps_values
+	var/list/perf_values = list(
+		world.time,
+		length(GLOB.clients),
+		time_dilation_current,
+		time_dilation_avg_fast,
+		time_dilation_avg,
+		time_dilation_avg_slow,
+		MAPTICK_LAST_INTERNAL_TICK_USAGE,
+		length(SStimer.timer_id_dict),
+		SSdatabase.in_progress,
+		SSdatabase.in_callback,
 	)
+	// SS220 EDIT: modular packs may append values for the extra perf columns they registered at init
+	if(hascall(src, "modular_perf_values"))
+		var/list/modular_values = call(src, "modular_perf_values")()
+		if(islist(modular_values) && length(modular_values))
+			perf_values += modular_values
+	log_perf(perf_values + send_maps_values)

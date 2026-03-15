@@ -767,6 +767,14 @@
 /turf/open/floor/almayer/edge/smooth/corner/west
 	dir = WEST
 
+// SS220 EDIT - START: frigate maplint-compatible edge variants
+/turf/open/floor/almayer/edge/smooth/corner/east/south
+	dir = SOUTH
+
+/turf/open/floor/almayer/edge/smooth/corner/east/west
+	dir = WEST
+// SS220 EDIT - END
+
 /turf/open/floor/almayer/edge/smooth/endcap_left/north
 	dir = NORTH
 
@@ -793,6 +801,10 @@
 
 /turf/open/floor/almayer/edge/smooth/east
 	dir = EAST
+
+// SS220 EDIT: frigate maplint-compatible east-west edge subtype
+/turf/open/floor/almayer/edge/smooth/east/west
+	dir = WEST
 
 /turf/open/floor/almayer/edge/smooth/northeast
 	dir = NORTHEAST

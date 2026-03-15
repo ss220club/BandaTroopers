@@ -586,7 +586,7 @@
 			if("Medicaldept")
 				joblist += get_job_titles_from_list(GLOB.ROLES_MEDICAL)
 			if("Marinesdept")
-				joblist += get_job_titles_from_list(GLOB.ROLES_MARINES)
+				joblist += get_job_titles_from_list(GLOB.RoleAuthority ? GLOB.RoleAuthority.get_marine_equivalent_role_titles() : GLOB.ROLES_MARINES)
 			if("Miscdept")
 				joblist += get_job_titles_from_list(GLOB.ROLES_MISC)
 			if("Xenosdept")
@@ -809,7 +809,8 @@
 	else if(href_list["c_mode2"])
 		if(!check_rights(R_ADMIN|R_SERVER)) return
 
-		GLOB.master_mode = href_list["c_mode2"]
+		GLOB.master_mode = href_list["c_mode2"] // SS220 EDIT: selected ship mode stays UI-synced through modular roster helpers
+		GLOB.RoleAuthority?.handle_main_ship_mode_changed() // SS220 EDIT: refresh ship-mode role cache after admin mode change
 		message_admins("[key_name_admin(usr)] set the mode as [GLOB.master_mode].")
 		to_world(SPAN_NOTICE("<b><i>The mode is now: [GLOB.master_mode]!</i></b>"))
 		Game() // updates the main game menu
@@ -1211,6 +1212,25 @@
 			return
 		GLOB.orbital_cannon_cancellation["[cancel_token]"] = null
 		message_admins("[src.owner] has cancelled the orbital strike.")
+
+	// SS220 EDIT - START: HALO SPNKr admin callback bridges modular launcher UI to upstream topic handling
+	else if(href_list["adminacceptspnkr"])
+		if(!check_rights(R_MOD)) return
+		var/obj/item/weapon/gun/halo_launcher/spnkr/rocket = locate(href_list["spnkr"])
+		var/turf/sound_turf = locate(href_list["turf"])
+		var/missile_name = url_decode(href_list["missile_name"] || "") // SS220 EDIT: decode modular HALO missile label from href payload
+		if(!rocket)
+			return
+		var/template_choice = tgui_input_list(usr, "Do you want to allow the missile to hit its target?", "AA Missile", list("Yes - Crash", "Yes - Damage", "No - Miss"))
+		if(!template_choice)
+			return
+		var/choice
+		if(template_choice == "Yes - Crash")
+			choice = "crash"
+		if(template_choice == "Yes - Damage")
+			choice = "damage"
+		rocket.hit_announce(sound_turf, choice, missile_name)
+	// SS220 EDIT - END
 
 	else if(href_list["admincancelpredsd"])
 		if (!check_rights(R_MOD)) return

@@ -100,6 +100,11 @@
 	if(default_ai_action)
 		xeno_mob.register_ai_action(src)
 
+/datum/action/xeno_action/remove_from(mob/living/carbon/xenomorph/xeno)
+	if(istype(xeno) && xeno.registered_ai_abilities?.Find(src))
+		xeno.unregister_ai_action(src)
+	return ..()
+
 /datum/action/xeno_action/update_button_icon()
 	if(!button)
 		return

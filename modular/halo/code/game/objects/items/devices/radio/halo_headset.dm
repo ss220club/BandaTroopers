@@ -1,6 +1,6 @@
 /obj/item/device/radio/headset/almayer/marine/solardevils/unsc
-	name = "UNSC headset"
-	desc = "A special headset used by the United Nations Space Command for all branches of the military."
+	name = "гарнитура ККОН"
+	desc = "Специальная гарнитура, используемая Космическим Командованием Объединённых Наций во всех родах войск."
 	frequency = CRYO_FREQ
 	has_hud = TRUE
 	hud_type = list(MOB_HUD_FACTION_UNSC)
@@ -19,7 +19,7 @@
 	frequency = ODST_FREQ
 
 /obj/item/device/radio/headset/distress/oni
-	name = "ONI security headset"
-	desc = "A headset utilized by ONI security forces."
+	name = "гарнитура охраны ONI"
+	desc = "Гарнитура, используемая силами безопасности ONI."
 	frequency = ONI_FREQ
 	initial_keys = list(/obj/item/device/encryptionkey/oni)

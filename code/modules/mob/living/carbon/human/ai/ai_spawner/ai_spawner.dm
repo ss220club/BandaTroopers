@@ -58,9 +58,8 @@ GLOBAL_LIST_EMPTY(human_ai_equipment_presets)
 				return
 
 			var/mob/living/carbon/human/ai_human = new()
-			ai_human.AddComponent(/datum/component/human_ai)
-
 			arm_equipment(ai_human, gotten_path::path, TRUE)
+			ai_human.AddComponent(/datum/component/human_ai)
 
 			ai_human.face_dir(ui.user.dir)
 			ai_human.forceMove(get_turf(ui.user))

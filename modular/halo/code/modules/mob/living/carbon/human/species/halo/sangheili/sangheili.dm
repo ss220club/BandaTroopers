@@ -53,6 +53,13 @@
 		"eyes" =  /datum/internal_organ/eyes
 		)
 
+/datum/species/sangheili/New()
+	equip_adjust = list(
+		WEAR_R_HAND = list("[NORTH]" = list("x" = 5, "y" = 6), "[EAST]" = list("x" = 0, "y" = 6), "[SOUTH]" = list("x" = -5, "y" = 6), "[WEST]" = list("x" = 2, "y" = 6)),
+		WEAR_L_HAND = list("[NORTH]" = list("x" = -5, "y" = 6), "[EAST]" = list("x" = -2, "y" = 6), "[SOUTH]" = list("x" = 5, "y" = 6), "[WEST]" = list("x" = 0, "y" = 6))
+	)
+	..()
+
 /datum/species/sangheili/post_species_loss(mob/living/carbon/human/H)
 	..()
 	var/datum/mob_hud/medical/advanced/A = GLOB.huds[MOB_HUD_MEDICAL_ADVANCED]
@@ -106,5 +113,5 @@
 	give_action(sangheili, /datum/action/human_action/activable/covenant/sangheili_kick)
 
 	sangheili.set_languages(list(LANGUAGE_SANGHEILI))
+	sangheili.halo_apply_species_tts_seed()
 	return ..()
-

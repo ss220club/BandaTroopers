@@ -105,10 +105,10 @@ GLOBAL_LIST_EMPTY(human_ai_squad_presets)
 	for(var/datum/equipment_preset/ai_equipment as anything in ai_to_spawn)
 		for(var/i in 1 to ai_to_spawn[ai_equipment])
 			var/mob/living/carbon/human/ai_human = new(pick(viable_turfs))
-			var/datum/component/human_ai/ai_comp = ai_human.AddComponent(/datum/component/human_ai)
 			arm_equipment(ai_human, ai_equipment, TRUE)
+			var/datum/component/human_ai/ai_comp = ai_human.AddComponent(/datum/component/human_ai)
+			ai_comp.ai_brain?.appraise_inventory(armor = TRUE)
 			new_squad.add_to_squad(ai_comp.ai_brain)
 			if(!squad_leader_selected)
 				new_squad.set_squad_leader(ai_comp.ai_brain)
 				squad_leader_selected = TRUE
-

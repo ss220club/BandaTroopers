@@ -35,7 +35,7 @@ GLOBAL_DATUM_INIT(rto_support_registry, /datum/rto_support_registry, new)
 /datum/rto_support_registry/proc/ensure_controller(mob/living/carbon/human/human)
 	if(!human || QDELETED(human))
 		return null
-	if(human.job != JOB_SQUAD_RTO)
+	if(GET_DEFAULT_ROLE(human.job) != JOB_SQUAD_RTO)
 		return null
 	var/datum/rto_support_controller/controller = get_controller(human)
 	if(controller)

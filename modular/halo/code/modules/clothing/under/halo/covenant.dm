@@ -1,6 +1,6 @@
 /obj/item/clothing/under/marine/covenant
-	name = "undersuit"
-	desc = "Covenant undersuit. You shouldn't see this."
+	name = "нижний костюм"
+	desc = "Нижний костюм Ковенанта. Вы не должны это видеть."
 	icon = 'icons/halo/obj/items/clothing/covenant/under.dmi'
 	icon_state = "sangheili_undersuit"
 	item_state = "sangheili_undersuit"
@@ -11,8 +11,8 @@
 	allowed_species_list = list()
 
 /obj/item/clothing/under/marine/covenant/sangheili
-	name = "\improper Sangheili undersuit"
-	desc = "A high-tech jumpsuit that for the most part conforms to the users body. Interlaced with nanolaminate armoring, it provides ample protection for how flexible it is - enabling the wearer to be aggressive while still protecting themselves. Advanced magnetic projectors on the undersuit are capable of locking armor to it with considerable force."
+	name = "\improper нижний костюм сангхейли"
+	desc = "Высокотехнологичный комбинезон, в основном повторяющий форму тела носителя. Благодаря вплетённым слоям наноламинатной брони он обеспечивает достойную защиту при высокой гибкости, позволяя владельцу действовать агрессивно и при этом не оставаться без прикрытия. Продвинутые магнитные проекторы костюма способны с большой силой фиксировать на нём элементы брони."
 	icon = 'icons/halo/obj/items/clothing/covenant/under.dmi'
 	icon_state = "sangheili_undersuit"
 	item_state = "sangheili_undersuit"
@@ -29,8 +29,8 @@
 	)
 
 /obj/item/clothing/under/marine/covenant/unggoy
-	name = "\improper Unggoy magnetic webbing"
-	desc = "Issued to Unggoy as a part of their combat kit, the webbing is a series of straps fitted with magnetic locks intended to be worn with their issued armor. Although uncomfortable and doesn't prevent any armor chafing, Unggoy skin is pretty tough."
+	name = "\improper магнитная разгрузка унггоя"
+	desc = "Выдаваемая унггоям как часть боевого комплекта, эта система ремней с магнитными замками рассчитана на ношение вместе со штатной бронёй. Она неудобна и почти не спасает от натирания, но кожа у унггоев и без того весьма прочная."
 
 	icon_state = "unggoy_harness"
 	item_state = "unggoy_harness"

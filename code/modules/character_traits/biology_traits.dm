@@ -120,7 +120,7 @@
 	cost = 1
 
 /datum/character_trait/biology/hardcore/apply_trait(mob/living/carbon/human/target, datum/equipment_preset/preset)
-	if(target.job != JOB_SQUAD_MARINE)
+	if((GLOB.RoleAuthority?.get_job_preference_bucket_key(target.job) || target.job) != JOB_SQUAD_MARINE) // SS220 EDIT: treat ship-side rifleman titles as canonical squad marine for Hardcore gating
 		to_chat(target, SPAN_WARNING("Only riflemen can have the Hardcore trait."))
 		return
 
