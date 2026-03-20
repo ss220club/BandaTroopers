@@ -35,7 +35,9 @@ export const HumanSquadSpawner = (props) => {
   const { data, act } = useBackend<BackendContext>();
   const [chosenSquad, setSquad] = useState<Squad | null>(null);
   const [spawnRadius, setSpawnRadius] = useState(1);
-  const [onlyAccessibleTiles, setOnlyAccessibleTiles] = useState(true);
+  const [onlyClearTiles, setOnlyClearTiles] = useState(true);
+  const [onlyReachableTiles, setOnlyReachableTiles] = useState(false);
+  const [treatWindowsAsBlockers, setTreatWindowsAsBlockers] = useState(true);
   const { squads } = data;
   return (
     <Window title="Human Squad Spawner" width={800} height={900}>
@@ -94,13 +96,33 @@ export const HumanSquadSpawner = (props) => {
                     </Stack.Item>
                     <Stack.Item>
                       <Button.Checkbox
-                        checked={onlyAccessibleTiles}
+                        checked={onlyClearTiles}
+                        fluid
+                        onClick={() => setOnlyClearTiles(!onlyClearTiles)}
+                      >
+                        Only clear tiles
+                      </Button.Checkbox>
+                    </Stack.Item>
+                    <Stack.Item>
+                      <Button.Checkbox
+                        checked={onlyReachableTiles}
                         fluid
                         onClick={() =>
-                          setOnlyAccessibleTiles(!onlyAccessibleTiles)
+                          setOnlyReachableTiles(!onlyReachableTiles)
                         }
                       >
-                        Only accessible tiles
+                        Only reachable tiles
+                      </Button.Checkbox>
+                    </Stack.Item>
+                    <Stack.Item>
+                      <Button.Checkbox
+                        checked={treatWindowsAsBlockers}
+                        fluid
+                        onClick={() =>
+                          setTreatWindowsAsBlockers(!treatWindowsAsBlockers)
+                        }
+                      >
+                        Treat windows as blockers
                       </Button.Checkbox>
                     </Stack.Item>
                     <Stack.Item>
@@ -111,7 +133,9 @@ export const HumanSquadSpawner = (props) => {
                           act('create_squad', {
                             path: chosenSquad.path,
                             radius: spawnRadius,
-                            only_accessible: onlyAccessibleTiles ? 1 : 0,
+                            only_accessible: onlyClearTiles ? 1 : 0,
+                            only_reachable: onlyReachableTiles ? 1 : 0,
+                            windows_blockers: treatWindowsAsBlockers ? 1 : 0,
                           })
                         }
                       >
