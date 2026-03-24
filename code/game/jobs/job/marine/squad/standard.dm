@@ -169,19 +169,24 @@
 
 /obj/effect/landmark/start/marine/rto
 	name = JOB_SQUAD_RTO
+	icon_state = "rto_spawn"
 	squad = SQUAD_LRRP
 	job = /datum/job/marine/standard/ai/rto
 
 /obj/effect/landmark/start/marine/rto/alpha
+	icon_state = "rto_spawn_alpha"
 	squad = SQUAD_MARINE_1
 
 /obj/effect/landmark/start/marine/rto/bravo
+	icon_state = "rto_spawn_bravo"
 	squad = SQUAD_MARINE_2
 
 /obj/effect/landmark/start/marine/rto/charlie
+	icon_state = "rto_spawn_charlie"
 	squad = SQUAD_MARINE_3
 
 /obj/effect/landmark/start/marine/rto/delta
+	icon_state = "rto_spawn_delta"
 	squad = SQUAD_MARINE_4
 
 
