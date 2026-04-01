@@ -281,7 +281,6 @@ DEFINE_BITFIELD(whitelist_status, list(
 #define FACTION_TWE_REBEL "TWE Rebel"
 #define FACTION_UA_REBEL "UA Rebel"
 #define FACTION_CANC "UPP Rebel"
-#define FACTION_CANC_DOGWAR "Chinese Asian Nation Cooperative"
 #define FACTION_PMC "PMC"
 #define FACTION_CONTRACTOR "VAI"
 #define FACTION_MARSHAL "Colonial Marshal"
