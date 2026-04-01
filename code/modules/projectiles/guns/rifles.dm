@@ -963,11 +963,6 @@
 	starting_attachment_types = list(/obj/item/attachable/angledgrip, /obj/item/attachable/suppressor, /obj/item/attachable/magnetic_harness)
 	flags_gun_features = GUN_AMMO_COUNTER|GUN_AUTO_EJECTOR|GUN_CAN_POINTBLANK|GUN_AUTO_EJECT_CASINGS
 
-/obj/item/weapon/gun/rifle/mar40/marksman
-	desc = "A cheap, reliable assault rifle chambered in 8.8x29mm. Commonly found in the hands of criminals or mercenaries, or in the hands of the UPP or CLF."
-	starting_attachment_types = list(/obj/item/attachable/scope/slavic, /obj/item/attachable/extended_barrel)
-	flags_gun_features = GUN_AUTO_EJECTOR|GUN_CAN_POINTBLANK|GUN_AUTO_EJECT_CASINGS
-
 /obj/item/weapon/gun/rifle/mar40/carbine
 	name = "\improper MAR-30 battle carbine"
 	desc = "A cheap, reliable carbine chambered in 8.8x29mm. Commonly found in the hands of criminals or mercenaries."
@@ -1636,9 +1631,6 @@
 /obj/item/weapon/gun/rifle/type71/preloaded
 	starting_attachment_types = list(/obj/item/attachable/stock/type71, /obj/item/attachable/attached_gun/grenade/type71/preloaded)
 
-/obj/item/weapon/gun/rifle/type71/stripped
-	starting_attachment_types = list(/obj/item/attachable/stock/type71)
-
 /obj/item/weapon/gun/rifle/type71/unloaded
 	current_mag = null
 	flags_gun_features = GUN_AUTO_EJECTOR|GUN_CAN_POINTBLANK|GUN_AMMO_COUNTER|GUN_TRIGGER_SAFETY
@@ -1722,11 +1714,6 @@
 /obj/item/weapon/gun/rifle/lw317/set_gun_attachment_offsets()
 	attachable_offset = list("muzzle_x" = 33, "muzzle_y" = 17,"rail_x" = 16, "rail_y" = 23, "under_x" = 25, "under_y" = 12, "stock_x" = 21, "stock_y" = 18, "side_rail_x" = 24, "side_rail_y" = 17)
 
-/obj/item/weapon/gun/rifle/lw317/specops
-	current_mag = /obj/item/ammo_magazine/rifle/lw317/ap
-	starting_attachment_types = list(/obj/item/attachable/suppressor, /obj/item/attachable/reflex/upp, /obj/item/attachable/verticalgrip/upp)
-
-
 /obj/item/weapon/gun/rifle/lw317/dmr
 	name = "\improper LW/RS-317 pulse carbine"
 	desc = "Light Weapon, Rifle, Sniper, Type 317. Modification of Type 317 carbine, this unorthodox DMR was developed in order to provide long-range support to guerilla fighting groups. Modified internal mechanism allows for improved accuracy, but because of that rate of fire is impeded severely."
@@ -1753,21 +1740,6 @@
 /obj/item/weapon/gun/rifle/lw317/dmr/handle_starting_attachment()
 	..()
 	var/obj/item/attachable/barrel = new /obj/item/attachable/lw317barrel(src)
-	barrel.flags_attach_features &= ~ATTACH_REMOVABLE
-	barrel.Attach(src)
-	update_attachable(barrel.slot)
-
-	var/obj/item/attachable/scope/variable_zoom/canc/scope = new(src)
-	scope.flags_attach_features &= ~ATTACH_REMOVABLE
-	scope.Attach(src)
-	update_attachable(scope.slot)
-
-/obj/item/weapon/gun/rifle/lw317/dmr/specops
-	starting_attachment_types = list(/obj/item/attachable/verticalgrip/upp)
-
-/obj/item/weapon/gun/rifle/lw317/dmr/specops/handle_starting_attachment()
-	..()
-	var/obj/item/attachable/barrel = new /obj/item/attachable/suppressor(src)
 	barrel.flags_attach_features &= ~ATTACH_REMOVABLE
 	barrel.Attach(src)
 	update_attachable(barrel.slot)

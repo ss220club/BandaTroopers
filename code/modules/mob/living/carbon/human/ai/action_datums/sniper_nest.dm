@@ -76,10 +76,12 @@
 		/datum/equipment_preset/clf/soldier/svd::name = /datum/equipment_preset/clf/soldier/svd,
 		/datum/equipment_preset/rebel/sniper::name = /datum/equipment_preset/rebel/sniper,
 		/datum/equipment_preset/canc/remnant/marksman::name = /datum/equipment_preset/canc/remnant/marksman,
+		//SS220 EDIT - START CANC1337
 		/datum/equipment_preset/canc_dogwar/soldier/marksman::name = /datum/equipment_preset/canc_dogwar/soldier/marksman,
 		/datum/equipment_preset/canc_dogwar/militia/marksman::name = /datum/equipment_preset/canc_dogwar/militia/marksman,
 		/datum/equipment_preset/canc_dogwar/upp/marksman::name = /datum/equipment_preset/canc_dogwar/upp/marksman,
 		/datum/equipment_preset/canc_dogwar/specops/marksman::name = /datum/equipment_preset/canc_dogwar/specops/marksman,
+		//SS220 EDIT - END CANC1337
 		/datum/equipment_preset/canc/remnant/marksman/snowman::name = /datum/equipment_preset/canc/remnant/marksman/snowman,
 		/datum/equipment_preset/canc/remnant/marksman/type88::name = /datum/equipment_preset/canc/remnant/marksman/type88,
 		/datum/equipment_preset/canc/remnant/marksman/type88/snowman::name = /datum/equipment_preset/canc/remnant/marksman/type88/snowman,

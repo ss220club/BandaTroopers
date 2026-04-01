@@ -78,8 +78,10 @@
 		/datum/equipment_preset/canc/remnant/snowman::name = /datum/equipment_preset/canc/remnant/snowman,
 		/datum/equipment_preset/canc/newblood_machinegunner::name = /datum/equipment_preset/canc/newblood_machinegunner,
 		/datum/equipment_preset/canc/machinegunner::name = /datum/equipment_preset/canc/machinegunner,
+		//SS220 EDIT - START CANC1337
 		/datum/equipment_preset/canc_dogwar/militia/lmg::name = /datum/equipment_preset/canc_dogwar/militia/lmg,
 		/datum/equipment_preset/canc_dogwar/soldier/machinegunner::name = /datum/equipment_preset/canc_dogwar/soldier/machinegunner,
+		//SS220 EDIT - END CANC1337
 		/datum/equipment_preset/canc/machinegunner/snowman::name = /datum/equipment_preset/canc/machinegunner/snowman,
 		/datum/equipment_preset/upp/machinegunner::name = /datum/equipment_preset/upp/machinegunner,
 		/datum/equipment_preset/contractor/duty/heavy::name = /datum/equipment_preset/contractor/duty/heavy,

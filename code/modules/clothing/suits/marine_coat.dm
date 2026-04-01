@@ -412,11 +412,6 @@
 	icon_state = "upp_coat_service"
 	flags_atom = NO_SNOW_TYPE
 
-/obj/item/clothing/suit/storage/jacket/marine/upp/canc
-	name = "\improper CANC service uniform jacket"
-	desc = "A CANC service uniform jacket featuring small dispersed para-aramid inserts providing the barest of defensive functionality."
-	icon_state = "canc_coat_service"
-
 /obj/item/clothing/suit/storage/jacket/marine/upp/mss
 	name = "\improper MSS uniform jacket"
 	desc = "A Ministry of Space Security service jacket featuring small dispersed para-aramid inserts providing the barest of defensive functionality."

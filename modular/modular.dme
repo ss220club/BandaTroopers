@@ -24,3 +24,4 @@
 #include "translations/_translations.dme"
 #include "halo/_halo.dme"
 #include "localization/_localization.dme"
+#include "canc_1337/_canc.dme"

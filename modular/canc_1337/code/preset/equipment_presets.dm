@@ -32,7 +32,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/tool/kitchen/can_opener(new_human), WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/reagent_container/food/drinks/flask/canteen(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -64,7 +64,7 @@
 	//pockets
 	new_human.equip_to_slot_or_del(new /obj/item/storage/pouch/firstaid/full/alternate(new_human), WEAR_R_STORE)
 	//weapon
-	add_canc_rifle(new_human)
+	add_dogwar_rifle(new_human)
 
 /datum/equipment_preset/canc_dogwar/soldier/leader
 	name = "CANC Soldier, Squad Leader"
@@ -83,7 +83,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/reagent_container/food/drinks/flask/canteen(new_human), WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/device/binoculars/fire_support/upp(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc/command(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar/command(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -116,7 +116,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/storage/pouch/firstaid/full/alternate(new_human), WEAR_L_STORE)
 	new_human.equip_to_slot_or_del(new /obj/item/storage/pouch/pistol/alt, WEAR_R_STORE)
 	new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/pistol/t73, WEAR_IN_R_STORE)
-	add_canc_rifle(new_human)
+	add_dogwar_rifle(new_human)
 
 /datum/equipment_preset/canc_dogwar/soldier/pl_leader
 	name = "CANC Soldier, Platoon Leader"
@@ -135,7 +135,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/reagent_container/food/drinks/flask/canteen(new_human), WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/device/binoculars/fire_support/upp(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc/command(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar/command(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -192,7 +192,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/tool/kitchen/can_opener(new_human), WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/reagent_container/food/drinks/flask/canteen(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -244,7 +244,7 @@
 /datum/equipment_preset/canc_dogwar/soldier/machinegunner/load_gear(mob/living/carbon/human/new_human)
 	new_human.undershirt = "undershirt"
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -294,7 +294,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/storage/box/mre/upp, WEAR_IN_ACCESSORY)
 	new_human.equip_to_slot_or_del(new /obj/item/reagent_container/food/drinks/flask/canteen, WEAR_IN_ACCESSORY)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -351,7 +351,7 @@
 	if(prob(50))
 		new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rocket/upp/incen(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -378,7 +378,7 @@
 	//pockets
 	new_human.equip_to_slot_or_del(new /obj/item/storage/pouch/firstaid/full/alternate(new_human), WEAR_L_STORE)
 	//weapon
-	add_canc_rifle_pouch(new_human)
+	add_dogwar_rifle_pouch(new_human)
 
 /datum/equipment_preset/canc_dogwar/soldier/antiair
 	name = "CANC Soldier, Anti-Air"
@@ -390,7 +390,7 @@
 	//back
 	new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/launcher/rocket/anti_air/upp(new_human), WEAR_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -417,7 +417,7 @@
 	//pockets
 	new_human.equip_to_slot_or_del(new /obj/item/storage/pouch/firstaid/full/alternate(new_human), WEAR_R_STORE)
 	//weapon
-	add_canc_rifle(new_human)
+	add_dogwar_rifle(new_human)
 
 /datum/equipment_preset/canc_dogwar/soldier/medic
 	name = "CANC Soldier, Field Medic"
@@ -436,7 +436,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/storage/firstaid/softpack/surgical/upp, WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/roller, WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc/medic(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar/medic(new_human), WEAR_L_EAR)
 	if(new_human.disabilities & NEARSIGHTED)
 		new_human.equip_to_slot_or_del(new /obj/item/clothing/glasses/hud/health/prescription, WEAR_EYES)
 	else
@@ -473,7 +473,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/device/healthanalyzer, WEAR_IN_L_STORE)
 	new_human.equip_to_slot_or_del(new /obj/item/reagent_container/hypospray/tricordrazine, WEAR_IN_L_STORE)
 	//weapon
-	add_canc_rifle_pouch(new_human)
+	add_dogwar_rifle_pouch(new_human)
 	if(prob(30))
 		new_human.equip_to_slot_or_del(new /obj/item/clothing/glasses/mgoggles/orange(new_human), WEAR_IN_HELMET)
 
@@ -518,7 +518,7 @@
 	if(prob(3))
 		new_human.equip_to_slot_or_del(new /obj/item/explosive/grenade/incendiary/molotov, WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	//uniform
 	add_civilian_uniform(new_human)
 	//jacket
@@ -542,7 +542,7 @@
 			new_human.equip_to_slot_or_del(new /obj/item/clothing/head/helmet/marine/veteran/canc(new_human), WEAR_HEAD)
 		if(2,3,4)
 			add_rebel_upp_helmet(new_human)
-	add_canc_rifle_newblood(new_human)
+	add_dogwar_rifle_newblood(new_human)
 
 /datum/equipment_preset/canc_dogwar/militia/antitank
 	name = "CANC Colonial Militia, Anti-Tank"
@@ -575,7 +575,7 @@
 	if(prob(3))
 		new_human.equip_to_slot_or_del(new /obj/item/explosive/grenade/incendiary/molotov, WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	//uniform
 	add_civilian_uniform(new_human)
 	//jacket
@@ -633,7 +633,7 @@
 	if(prob(1))
 		new_human.equip_to_slot_or_del(new /obj/item/explosive/grenade/incendiary/molotov, WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	//uniform
 	add_civilian_uniform(new_human)
 	//jacket
@@ -681,7 +681,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/storage/firstaid/softpack/regular, WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/mre_food_packet/clf, WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc/medic(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar/medic(new_human), WEAR_L_EAR)
 	//uniform
 	add_civilian_uniform(new_human)
 	//jacket
@@ -746,7 +746,7 @@
 	if(prob(3))
 		new_human.equip_to_slot_or_del(new /obj/item/explosive/grenade/incendiary/molotov, WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc/command(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar/command(new_human), WEAR_L_EAR)
 	//head
 	new_human.equip_to_slot_or_del(new /obj/item/clothing/head/uppcap/beret/guerilla(new_human), WEAR_HEAD)
 	//uniform
@@ -767,7 +767,7 @@
 			new_human.equip_to_slot_or_del(new /obj/item/clothing/shoes/marine/civilian(new_human), WEAR_FEET)
 		if(7)
 			new_human.equip_to_slot_or_del(new /obj/item/clothing/shoes/white(new_human), WEAR_FEET)
-	add_canc_rifle_newblood(new_human)
+	add_dogwar_rifle_newblood(new_human)
 
 /datum/equipment_preset/canc_dogwar/militia/marksman
 	name = "CANC Colonial Militia, Marksman"
@@ -800,7 +800,7 @@
 	if(prob(3))
 		new_human.equip_to_slot_or_del(new /obj/item/explosive/grenade/incendiary/molotov, WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	//uniform
 	add_civilian_uniform(new_human)
 	//jacket
@@ -868,7 +868,7 @@
 	if(prob(3))
 		new_human.equip_to_slot_or_del(new /obj/item/explosive/grenade/incendiary/molotov, WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	//uniform
 	add_civilian_uniform(new_human)
 	//jacket
@@ -923,7 +923,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/tool/kitchen/can_opener(new_human), WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/reagent_container/food/drinks/flask/canteen(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -953,7 +953,7 @@
 	//pockets
 	new_human.equip_to_slot_or_del(new /obj/item/storage/pouch/firstaid/full/alternate(new_human), WEAR_R_STORE)
 	//weapon
-	add_canc_rifle_upp(new_human)
+	add_dogwar_rifle_upp(new_human)
 
 /datum/equipment_preset/canc_dogwar/upp/medic
 	name = "CANC Soldier, Field Medic (UPP)"
@@ -972,7 +972,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/storage/firstaid/softpack/surgical/upp, WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/roller, WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc/medic(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar/medic(new_human), WEAR_L_EAR)
 	if(new_human.disabilities & NEARSIGHTED)
 		new_human.equip_to_slot_or_del(new /obj/item/clothing/glasses/hud/health/prescription, WEAR_EYES)
 	else
@@ -1009,7 +1009,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/device/healthanalyzer, WEAR_IN_L_STORE)
 	new_human.equip_to_slot_or_del(new /obj/item/reagent_container/hypospray/tricordrazine, WEAR_IN_L_STORE)
 	//weapon
-	add_canc_rifle_upp_pouch(new_human)
+	add_dogwar_rifle_upp_pouch(new_human)
 	if(prob(30))
 		new_human.equip_to_slot_or_del(new /obj/item/clothing/glasses/mgoggles/orange(new_human), WEAR_IN_HELMET)
 
@@ -1028,7 +1028,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/tool/kitchen/can_opener(new_human), WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/reagent_container/food/drinks/flask/canteen(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -1087,7 +1087,7 @@
 	if(prob(50))
 		new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rocket/upp/incen(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -1114,7 +1114,7 @@
 	//pockets
 	new_human.equip_to_slot_or_del(new /obj/item/storage/pouch/firstaid/full/alternate(new_human), WEAR_L_STORE)
 	//weapon
-	add_canc_rifle_upp_pouch(new_human)
+	add_dogwar_rifle_upp_pouch(new_human)
 
 /datum/equipment_preset/canc_dogwar/upp/antiair
 	name = "CANC Soldier, Anti-Air Specialist (UPP)"
@@ -1126,7 +1126,7 @@
 	//back
 	new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/launcher/rocket/anti_air/upp(new_human), WEAR_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -1157,7 +1157,7 @@
 	//pockets
 	new_human.equip_to_slot_or_del(new /obj/item/storage/pouch/firstaid/full/alternate(new_human), WEAR_L_STORE)
 	//weapon
-	add_canc_rifle_upp_pouch(new_human)
+	add_dogwar_rifle_upp_pouch(new_human)
 
 /datum/equipment_preset/canc_dogwar/upp/shotgun
 	name = "CANC Soldier, Shotgunner (UPP)"
@@ -1173,7 +1173,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/tool/kitchen/can_opener(new_human), WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/reagent_container/food/drinks/flask/canteen(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -1229,7 +1229,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/device/binoculars/fire_support/upp(new_human), WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/storage/firstaid/softpack/regular/upp(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc/command(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar/command(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -1261,7 +1261,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/storage/pouch/pistol/alt, WEAR_R_STORE)
 	new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/pistol/t73, WEAR_IN_R_STORE)
 	//weapon
-	add_canc_rifle_upp(new_human)
+	add_dogwar_rifle_upp(new_human)
 
 /datum/equipment_preset/canc_dogwar/upp/pl_leader
 	name = "CANC Soldier, Platoon Leader (UPP)"
@@ -1280,7 +1280,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/reagent_container/food/drinks/flask/canteen(new_human), WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/device/binoculars/fire_support/upp(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc/command(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar/command(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)
@@ -1343,7 +1343,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/reagent_container/food/drinks/flask/canteen(new_human), WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/explosive/plastic/breaching_charge(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc/sof(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar/sof(new_human), WEAR_L_EAR)
 	new_human.equip_to_slot_or_del(new /obj/item/clothing/mask/rebreather/scarf/tan(new_human), WEAR_FACE)
 	new_human.equip_to_slot_or_del(new /obj/item/clothing/glasses/mgoggles/black(new_human), WEAR_EYES)
 	//head
@@ -1390,7 +1390,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/explosive/plastic/breaching_charge(new_human), WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/storage/firstaid/softpack/adv/upp(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc/sof(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar/sof(new_human), WEAR_L_EAR)
 	new_human.equip_to_slot_or_del(new /obj/item/clothing/mask/rebreather/scarf/tan(new_human), WEAR_FACE)
 	new_human.equip_to_slot_or_del(new /obj/item/clothing/glasses/mgoggles/black(new_human), WEAR_EYES)
 	//head
@@ -1435,7 +1435,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/reagent_container/food/drinks/flask/canteen(new_human), WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/device/binoculars/range/designator/upp(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc/sof(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar/sof(new_human), WEAR_L_EAR)
 	new_human.equip_to_slot_or_del(new /obj/item/clothing/mask/rebreather/scarf/tan(new_human), WEAR_FACE)
 	new_human.equip_to_slot_or_del(new /obj/item/clothing/glasses/canc_monoscope(new_human), WEAR_EYES)
 	//head
@@ -1483,7 +1483,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/explosive/plastic/breaching_charge(new_human), WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/prop/folded_anti_tank_sadar/canc(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc/sof(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar/sof(new_human), WEAR_L_EAR)
 	new_human.equip_to_slot_or_del(new /obj/item/clothing/mask/rebreather/scarf/tan(new_human), WEAR_FACE)
 	new_human.equip_to_slot_or_del(new /obj/item/clothing/glasses/mgoggles/black(new_human), WEAR_EYES)
 	//head
@@ -1529,7 +1529,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/storage/firstaid/softpack/surgical/upp(new_human), WEAR_IN_BACK)
 	new_human.equip_to_slot_or_del(new /obj/item/roller(new_human), WEAR_IN_BACK)
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc/sof(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar/sof(new_human), WEAR_L_EAR)
 	new_human.equip_to_slot_or_del(new /obj/item/clothing/mask/rebreather/scarf/tan(new_human), WEAR_FACE)
 	new_human.equip_to_slot_or_del(new /obj/item/clothing/glasses/hud/health(new_human), WEAR_EYES)
 	//head
@@ -1574,7 +1574,7 @@
 /datum/equipment_preset/canc_dogwar/soldier/officer/load_gear(mob/living/carbon/human/new_human)
 	new_human.undershirt = "undershirt"
 	//face
-	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc/command(new_human), WEAR_L_EAR)
+	new_human.equip_to_slot_or_del(new /obj/item/device/radio/headset/almayer/marine/solardevils/canc_dogwar/command(new_human), WEAR_L_EAR)
 	var/random_neckwear_canc = rand(1,4)
 	switch(random_neckwear_canc)
 		if(1,2)

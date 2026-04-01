@@ -887,20 +887,8 @@
 	desc = "A special headset used by CANC military."
 	icon_state = "upp_headset"
 	item_state = "upp_headset"
-	frequency = CANC_FREQ
+	frequency = CLF_FREQ
 	has_hud = FALSE //Until we get CANC stuff, this'll do
-
-/obj/item/device/radio/headset/almayer/marine/solardevils/canc/command
-	frequency = CANC_FREQ
-	initial_keys = list(/obj/item/device/encryptionkey/canc/command)
-
-/obj/item/device/radio/headset/almayer/marine/solardevils/canc/medic
-	frequency = CANC_FREQ
-	initial_keys = list(/obj/item/device/encryptionkey/canc/medic)
-
-/obj/item/device/radio/headset/almayer/marine/solardevils/canc/sof
-	frequency = CANC_FREQ
-	initial_keys = list(/obj/item/device/encryptionkey/canc/sof)
 
 /obj/item/device/radio/headset/almayer/cia
 	name = "radio headset"

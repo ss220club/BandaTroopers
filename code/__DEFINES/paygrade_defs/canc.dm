@@ -15,24 +15,3 @@
 
 /// CA5,
 #define PAY_SHORT_CA5 "CA5"
-
-/// CA6,
-#define PAY_SHORT_CA6 "CA6"
-
-/// CA7,
-#define PAY_SHORT_CA7 "CA7"
-
-/// CO1,
-#define PAY_SHORT_CO1 "CO1"
-
-/// CO2,
-#define PAY_SHORT_CO2 "CO2"
-
-/// CO3,
-#define PAY_SHORT_CO3 "CO3"
-
-/// CO4,
-#define PAY_SHORT_CO4 "CO4"
-
-/// CO5,
-#define PAY_SHORT_CO5 "CO5"

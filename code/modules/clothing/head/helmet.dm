@@ -1044,10 +1044,6 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 	icon_state = "canc"
 	flags_inv_hide = HIDEEARS|HIDETOPHAIR
 
-/obj/item/clothing/head/helmet/marine/veteran/canc/specops
-	built_in_visors = list(new /obj/item/device/helmet_visor/night_vision/canc)
-	start_down_visor_type = /obj/item/device/helmet_visor/night_vision/canc
-
 /obj/item/clothing/head/helmet/marine/veteran/pmc
 	name = "\improper Mk10 combat helmet"
 	desc = "Standard issue high molecular density polymer combat helmet used by Weyland Yutani's elite tactical teams. Designed by Weyland-Yutani, initially as a hard hat, the project was eventually retrofitted into a cheap, reliable combat helmet system that incorporates a tactical camera, IFF signal transponder, and heads up display lens. Also features white/black hot IR viewing modes from the camera system."
@@ -1915,11 +1911,6 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 	name = "\improper UL3 MSS peaked cap"
 	desc = "Standard issue peaked cap of the Ministry of Space Security."
 	icon_state = "upp_peaked_mss"
-
-/obj/item/clothing/head/uppcap/peaked/canc
-	name = "\improper CANC peaked cap"
-	desc = "Standard issue peaked cap of the Chinese-Asian Nation Cooperative."
-	icon_state = "canc_peaked"
 
 /obj/item/clothing/head/uppcap/ushanka
 	name = "\improper UL2 ushanka"

@@ -1,0 +1,40 @@
+// CANC PAYGRADES
+
+/// CA6,
+#define PAY_SHORT_CA6 "CA6"
+
+/// CA7,
+#define PAY_SHORT_CA7 "CA7"
+
+/// CO1,
+#define PAY_SHORT_CO1 "CO1"
+
+/// CO2,
+#define PAY_SHORT_CO2 "CO2"
+
+/// CO3,
+#define PAY_SHORT_CO3 "CO3"
+
+/// CO4,
+#define PAY_SHORT_CO4 "CO4"
+
+/// CO5,
+#define PAY_SHORT_CO5 "CO5"
+
+#define FACTION_CANC_DOGWAR "Chinese Asian Nation Cooperative" //SS220 Edit - CANC
+
+//CANC Comms
+#define RADIO_CHANNEL_CANC_GEN "CANC"
+#define RADIO_CHANNEL_CANC_CMD "CANC Command"
+#define RADIO_CHANNEL_CANC_MED "CANC Med"
+#define RADIO_CHANNEL_CANC_ENGI "CANC Engi"
+#define RADIO_CHANNEL_CANC_SOF "CANC SOF"
+
+//CANC Channels (1300-1304)
+#define CANC_FREQ 1300
+#define CANC_CMD_FREQ 1301
+#define CANC_ENGI_FREQ 1302
+#define CANC_MED_FREQ 1303
+#define CANC_SOF_FREQ 1304
+
+#define CANC_FREQS list(CANC_FREQ, CANC_CMD_FREQ, CANC_ENGI_FREQ, CANC_MED_FREQ, CANC_SOF_FREQ)

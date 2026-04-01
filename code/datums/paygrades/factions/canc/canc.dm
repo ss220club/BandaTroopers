@@ -1,7 +1,7 @@
 /datum/paygrade/canc
 	name = "CANC Paygrade"
 	pay_multiplier = 0.1
-	default_faction = FACTION_LIST_CANC
+	default_faction = FACTION_CANC
 
 /datum/paygrade/canc/ca1
 	paygrade = PAY_SHORT_CA1
@@ -23,54 +23,12 @@
 
 /datum/paygrade/canc/ca4
 	paygrade = PAY_SHORT_CA4
-	name = "Er jí Shàng Shì"
-	prefix = "Er jí."
+	name = "Er Jí Shàng Shì"
+	prefix = "Er Ji."
 	pay_multiplier = 0.5
 
 /datum/paygrade/canc/ca5
 	paygrade = PAY_SHORT_CA5
-	name = "San jí Shàng Shì"
-	prefix = "San Ji."
-	pay_multiplier = 0.6
-
-/datum/paygrade/canc/ca6
-	paygrade = PAY_SHORT_CA6
 	name = "Yī jí Jūn Shì Zhǎng"
 	prefix = "Yī jí."
-	pay_multiplier = 0.7
-
-/datum/paygrade/canc/ca7
-	paygrade = PAY_SHORT_CA7
-	name = "Wu jí Shì Guān"
-	prefix = "Wu jí."
-	pay_multiplier = 0.8
-
-/datum/paygrade/canc/co1
-	paygrade = PAY_SHORT_CO1
-	name = "Zhǔnwèi"
-	prefix = "Zhǔn."
-	pay_multiplier = 1.0
-
-/datum/paygrade/canc/co2
-	paygrade = PAY_SHORT_CO2
-	name = "Shàowèi"
-	prefix = "Shào."
-	pay_multiplier = 1.2
-
-/datum/paygrade/canc/co3
-	paygrade = PAY_SHORT_CO3
-	name = "Zhōngwèi"
-	prefix = "Zhōng."
-	pay_multiplier = 1.4
-
-/datum/paygrade/canc/co4
-	paygrade = PAY_SHORT_CO4
-	name = "Shàngwèi"
-	prefix = "Shàng."
-	pay_multiplier = 1.5
-
-/datum/paygrade/canc/co5
-	paygrade = PAY_SHORT_CO5
-	name = "Shàoxiào"
-	prefix = "Shàxi."
-	pay_multiplier = 1.8
+	pay_multiplier = 0.6

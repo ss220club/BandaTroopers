@@ -573,10 +573,6 @@
 	var/obj/item/clothing/accessory/storage/webbing/m3/uppsmall/webbing = new()
 	src.attach_accessory(null, webbing, TRUE)
 
-/obj/item/clothing/suit/marine/faction/UPP/CANC/specops
-
-	has_light = FALSE
-
 /obj/item/clothing/suit/marine/smartgunner/upp/canc
 	name = "\improper Type 12 CANC harness"
 	desc = "Vintage CANC armor system. Provides basic ballistic/shrapnel protection."
