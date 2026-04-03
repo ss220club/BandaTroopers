@@ -340,6 +340,13 @@ SUBSYSTEM_DEF(radio)
 		"[CLF_ENGI_FREQ]" = "opforeng",
 		"[PFA_FREQ]" = "pfaradio",
 		"[JSC_FREQ]" = "jscradio",
+// SS220 EDIT - CANC1337 START
+		"[CANC_FREQ]" = "cancradio",
+		"[CANC_CMD_FREQ]" = "cancradio",
+		"[CANC_ENGI_FREQ]" = "cancradio",
+		"[CANC_MED_FREQ]" = "cancradio",
+		"[CANC_SOF_FREQ]" = "cancradio",
+// SS220 EDIT - CANC1337 END
 	)
 
 /datum/controller/subsystem/radio/proc/add_object(obj/device as obj, new_frequency as num, filter = null as text|null)

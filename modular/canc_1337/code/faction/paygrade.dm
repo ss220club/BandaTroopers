@@ -1,7 +1,7 @@
 /datum/paygrade/canc_dogwar
 	name = "CANC Paygrade"
 	pay_multiplier = 0.1
-	default_faction = FACTION_LIST_CANC
+	default_faction = FACTION_CANC_DOGWAR
 
 /datum/paygrade/canc_dogwar/ca1
 	paygrade = PAY_SHORT_CA1
@@ -53,6 +53,12 @@
 
 /datum/paygrade/canc_dogwar/co2
 	paygrade = PAY_SHORT_CO2
+	name = "Shàowèi"
+	prefix = "Shào."
+	pay_multiplier = 1.2
+
+/datum/paygrade/canc_dogwar/co3
+	paygrade = PAY_SHORT_CO3
 	name = "Zhōngwèi"
 	prefix = "Zhōng."
 	pay_multiplier = 1.4
