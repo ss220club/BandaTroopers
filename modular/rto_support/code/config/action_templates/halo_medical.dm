@@ -11,14 +11,14 @@
 	parent_type = /datum/rto_support_action_template/halo/medical
 	action_id = "halo_medical_packets_drop"
 	name = "Медицинские пакеты"
-	description = "Сбрасывает запас травмпакетов и морфия для стабилизации раненых на передовой."
+	description = "Сбрасывает запас травмпакетов для стабилизации раненых на передовой."
 	fire_support_path = /datum/fire_support/supply_drop/halo/medical_packets
 
 /datum/rto_support_action_template/halo_corpsman_kit_drop
 	parent_type = /datum/rto_support_action_template/halo/medical
 	action_id = "halo_corpsman_kit_drop"
-	name = "Набор корпусмана"
-	description = "Сбрасывает ящик корпусмана с полностью укомплектованным медснаряжением."
+	name = "Набор корпсмана"
+	description = "Сбрасывает ящик корпсмана с полностью укомплектованным медснаряжением."
 	fire_support_path = /datum/fire_support/supply_drop/halo/corpsman_kit
 
 /datum/rto_support_action_template/halo_biofoam_reserve_drop

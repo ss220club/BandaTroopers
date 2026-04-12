@@ -12,15 +12,15 @@
 /datum/rto_support_template/halo_logistics
 	parent_type = /datum/rto_support_template/halo
 	template_id = "halo_logistics"
-	name = "Десантное снабжение"
+	name = "Боевые припасы "
 	support_resource_mode = RTO_SUPPORT_RESOURCE_MODE_CHARGES
 	support_pool_capacity = 3
 	support_pool_starting_charges = 3
-	support_pool_recharge_interval = 165 SECONDS
+	support_pool_recharge_interval = 240 SECONDS
 	support_pool_recharge_amount = 1
 	support_pool_auto_recharge = TRUE
 	support_package_lockout = 6 SECONDS
-	description = "Десантный пакет снабжения с общими 3 зарядами для винтовочных патронов, специализированных боеприпасов и гранат."
+	description = "Десантный пакет снабжения с 3 общими зарядами, содержит различные наборы боеприпасов для стандартного вооружения ODST."
 	role_summary = "Основной объём уходит в винтовочный боезапас. Специализированные ящики легче, чтобы пакета хватало на всю огневую группу, а не на одного бойца."
 	targeting_summary = "Сектор не требуется: отметьте открытую точку посадки через RTO-бинокль и вызывайте груз напрямую."
 	restriction_summary = "Доступен RTO ролям UNSC и ODST. Каждый сброс требует открытого неба и восстанавливается медленнее, чем снабжение USCM."

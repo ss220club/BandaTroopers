@@ -7,9 +7,9 @@
 	name = "UNSC rifle ammunition case"
 	desc = "A UNSC ammunition case containing the main rifle reserve for line troops."
 	supplies = list(
-		/obj/item/ammo_box/magazine/unsc/ma5c = 2,
-		/obj/item/ammo_box/magazine/unsc/ma5b = 2,
-		/obj/item/ammo_box/magazine/unsc/br55 = 2,
+		/obj/item/ammo_box/magazine/unsc/ma5c = 1,
+		/obj/item/ammo_box/magazine/unsc/ma5b = 1,
+		/obj/item/ammo_box/magazine/unsc/br55 = 1,
 	)
 
 /obj/structure/largecrate/supply/ammo/halo/marksman
@@ -23,15 +23,16 @@
 	name = "UNSC secondary weapon ammunition case"
 	desc = "A UNSC ammunition case containing M7 magazines and sidearm ammunition for secondary weapons."
 	supplies = list(
-		/obj/item/ammo_magazine/smg/halo/m7 = 4,
-		/obj/item/ammo_box/magazine/unsc/small/m6c = 2,
-		/obj/item/ammo_magazine/pistol/halo/m6d = 2,
+		/obj/item/ammo_box/magazine/misc/unsc/m7_ammo = 1,
+		/obj/item/ammo_box/magazine/unsc/small/m6c = 1,
+		/obj/item/ammo_magazine/pistol/halo/m6d = 3,
+		/obj/item/ammo_box/magazine/unsc/small/m6g = 1,
 	)
 
 /obj/structure/largecrate/supply/ammo/halo/shotgun
 	name = "UNSC shotgun ammunition case"
 	desc = "A compact UNSC shotgun case intended for one breacher."
-	supplies = list(/obj/item/ammo_magazine/shotgun/slug/unsc = 3)
+	supplies = list(/obj/item/ammo_magazine/shotgun/buckshot/unsc = 4)
 
 /obj/structure/largecrate/supply/ammo/halo/sniper
 	name = "UNSC sniper ammunition case"
@@ -47,8 +48,8 @@
 	name = "UNSC grenadier ammunition case"
 	desc = "A UNSC ammunition case containing 40mm grenades and fragmentation grenades."
 	supplies = list(
-		/obj/item/ammo_box/magazine/misc/unsc/grenade/launchable = 2,
-		/obj/item/ammo_box/magazine/misc/unsc/grenade = 2,
+		/obj/item/ammo_box/magazine/misc/unsc/grenade/launchable = 1,
+		/obj/item/ammo_box/magazine/misc/unsc/grenade = 1,
 	)
 
 /obj/structure/largecrate/supply/medicine/halo
@@ -60,8 +61,7 @@
 	name = "UNSC medical packets case"
 	desc = "A UNSC medical case containing trauma packets and morphine reserve."
 	supplies = list(
-		/obj/item/ammo_box/magazine/misc/unsc/medical_packets = 4,
-		/obj/item/storage/syringe_case/unsc/morphine/full = 2,
+		/obj/item/ammo_box/magazine/misc/unsc/medical_packets = 2,
 	)
 
 /obj/structure/largecrate/supply/medicine/halo/corpsman_kit
@@ -100,9 +100,10 @@
 	name = "UNSC fortification case"
 	desc = "A UNSC support case containing field fortification materials and defensive mines."
 	supplies = list(
-		/obj/item/stack/sandbags_empty/half = 2,
-		/obj/item/stack/sheet/plasteel/med_large_stack = 1,
-		/obj/item/stack/folding_barricade/three = 1,
+		/obj/item/stack/sandbags_empty/full = 1,
+		/obj/item/stack/sheet/plasteel/large_stack = 1,
+		/obj/item/stack/sheet/metal/large_stack = 2,
+		/obj/item/stack/folding_barricade/three = 2,
 		/obj/item/storage/box/explosive_mines = 1,
 	)
 
