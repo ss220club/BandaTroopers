@@ -1,7 +1,7 @@
 /datum/rto_support_template/halo_medical
 	parent_type = /datum/rto_support_template/halo
 	template_id = "halo_medical"
-	name = "Десантная медицина"
+	name = "Медицинские припасы"
 	support_resource_mode = RTO_SUPPORT_RESOURCE_MODE_CHARGES
 	support_pool_capacity = 3
 	support_pool_starting_charges = 3
@@ -9,8 +9,8 @@
 	support_pool_recharge_amount = 1
 	support_pool_auto_recharge = TRUE
 	support_package_lockout = 6 SECONDS
-	description = "Десантный медицинский пакет с общими 3 зарядами для стабилизации раненых и снабжения корпусманов."
-	role_summary = "Поддерживает лечение в поле: медицинские пакеты, набор корпусмана и запас биопены стоят по 1 заряду."
+	description = "Десантный медицинский пакет с 3 общими зарядами с припасами для корпсманов и комплектами первой помощи."
+	role_summary = "Снабжение корпсманов в поле: медицинские пакеты стоят 2 заряда, набор корпсмана и запас биопены стоят по 1 заряду."
 	targeting_summary = "Сектор не требуется: отметьте открытую точку посадки через RTO-бинокль и вызывайте груз напрямую."
 	restriction_summary = "Доступен RTO ролям UNSC и ODST. Требует открытого неба и пополняется в умеренном темпе, чтобы не превращаться в бесконечную медподдержку."
 	action_template_types = list(

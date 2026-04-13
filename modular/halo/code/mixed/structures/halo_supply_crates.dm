@@ -92,7 +92,8 @@
 	desc = "A UNSC support case containing engineering tools and repair load-bearing gear."
 	supplies = list(
 		/obj/item/storage/toolbox/traxus/big = 2,
-		/obj/item/storage/box/kit/engineering_supply_kit = 1,
+		/obj/item/storage/pouch/electronics/full = 1,
+		/obj/item/clothing/glasses/welding = 2,
 		/obj/item/storage/backpack/marine/engineerpack/welder_chestrig = 1,
 	)
 
@@ -124,7 +125,7 @@
 	name = "UNSC signal case"
 	desc = "A UNSC support case containing flare and signaling gear."
 	supplies = list(
-		/obj/item/storage/box/flare = 2,
+		/obj/item/ammo_box/magazine/misc/flares = 1,
 		/obj/item/storage/box/flare/signal = 1,
 		/obj/item/storage/pouch/flare/full = 1,
 		/obj/item/weapon/gun/flare = 1,

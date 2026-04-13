@@ -19,7 +19,5 @@
 		/datum/rto_support_action_template/halo_breaching_drop,
 		/datum/rto_support_action_template/halo_vehicle_service_drop,
 		/datum/rto_support_action_template/halo_signal_drop,
-		/datum/rto_support_action_template/halo_recon_drop,
-		/datum/rto_support_action_template/halo_rto_command_drop,
 	)
 	support_action_icon_state = "build"

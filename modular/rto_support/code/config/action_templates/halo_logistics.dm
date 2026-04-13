@@ -32,7 +32,7 @@
 /datum/rto_support_action_template/halo_pdw_ammo_drop
 	parent_type = /datum/rto_support_action_template/halo/logistics
 	action_id = "halo_pdw_ammo_drop"
-	name = "Боеприпасы вторичного оружия"
+	name = "Боеприпасы пистолетеного калибра и средств самообороны"
 	description = "Сбрасывает магазины M7 и пистолетов."
 	support_pool_cost = 2
 	fire_support_path = /datum/fire_support/supply_drop/halo/pdw
