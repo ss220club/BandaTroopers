@@ -66,7 +66,7 @@
 
 /obj/structure/largecrate/supply/medicine/halo/medical_packets
 	name = "UNSC medical packets case"
-	desc = "A UNSC medical case containing trauma packets and morphine reserve."
+	desc = "A UNSC medical case containing trauma packets."
 	supplies = list(
 		/obj/item/ammo_box/magazine/misc/unsc/medical_packets = 2,
 	)

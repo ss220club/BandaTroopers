@@ -11,7 +11,7 @@
 	parent_type = /datum/rto_support_action_template/halo/engineering
 	action_id = "halo_fortification_drop"
 	name = "Ящик с оборонительными припасами"
-	description = "Сбрасывает мешки с песком, пласталь, метал, складные баррикады и оборонительные мины."
+	description = "Сбрасывает мешки с песком, пласталь, металл, складные баррикады и оборонительные мины."
 	support_pool_cost = 2
 	fire_support_path = /datum/fire_support/supply_drop/halo/fortification
 

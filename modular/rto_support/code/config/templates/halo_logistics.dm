@@ -12,7 +12,7 @@
 /datum/rto_support_template/halo_logistics
 	parent_type = /datum/rto_support_template/halo
 	template_id = "halo_logistics"
-	name = "Боевые припасы "
+	name = "Боевые припасы"
 	support_resource_mode = RTO_SUPPORT_RESOURCE_MODE_CHARGES
 	support_pool_capacity = 3
 	support_pool_starting_charges = 3
