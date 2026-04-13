@@ -28,6 +28,7 @@
 		new /datum/halo_support_catalog_entry("halo_sniper_ammo_drop", "Снайперские боеприпасы", /datum/fire_support/supply_drop/halo/sniper, "halo_logistics", "Десантное снабжение", "halo_logistics"),
 		new /datum/halo_support_catalog_entry("halo_spnkr_ammo_drop", "Боеприпасы SPNKr", /datum/fire_support/supply_drop/halo/spnkr, "halo_logistics", "Десантное снабжение", "halo_logistics"),
 		new /datum/halo_support_catalog_entry("halo_grenadier_ammo_drop", "Боеприпасы гренадера", /datum/fire_support/supply_drop/halo/grenadier, "halo_logistics", "Десантное снабжение", "halo_logistics"),
+		new /datum/halo_support_catalog_entry("halo_emergency_weapon_drop", "Экстренное вооружение", /datum/fire_support/supply_drop/halo/emergency_weapon, "halo_logistics", "Десантное снабжение", "halo_logistics"),
 		new /datum/halo_support_catalog_entry("halo_medical_packets_drop", "Медицинские пакеты", /datum/fire_support/supply_drop/halo/medical_packets, "halo_medical", "Десантная медицина", "halo_medical"),
 		new /datum/halo_support_catalog_entry("halo_corpsman_kit_drop", "Набор корпусмана", /datum/fire_support/supply_drop/halo/corpsman_kit, "halo_medical", "Десантная медицина", "halo_medical"),
 		new /datum/halo_support_catalog_entry("halo_biofoam_reserve_drop", "Резерв биопены", /datum/fire_support/supply_drop/halo/biofoam_reserve, "halo_medical", "Десантная медицина", "halo_medical"),
@@ -113,6 +114,11 @@
 	name = "боеприпасы гренадера"
 	fire_support_type = "halo_grenadier_ammo_drop"
 	delivered = /obj/structure/largecrate/supply/ammo/halo/grenadier
+
+/datum/fire_support/supply_drop/halo/emergency_weapon
+	name = "боеприпасы гренадера"
+	fire_support_type = "emergency_weapon_drop"
+	delivered = /obj/structure/largecrate/supply/ammo/halo/emergency_weapon
 
 /datum/fire_support/supply_drop/halo/medical_packets
 	name = "медицинские пакеты"

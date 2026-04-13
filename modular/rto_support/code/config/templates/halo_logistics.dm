@@ -32,5 +32,6 @@
 		/datum/rto_support_action_template/halo_sniper_ammo_drop,
 		/datum/rto_support_action_template/halo_spnkr_ammo_drop,
 		/datum/rto_support_action_template/halo_grenadier_ammo_drop,
+		/datum/rto_support_action_template/halo_emergency_weapon_drop,
 	)
 	support_action_icon_state = "ammo"

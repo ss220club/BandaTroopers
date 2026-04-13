@@ -65,3 +65,11 @@
 	description = "Сбрасывает ящик гренадера с 40-мм выстрелами и осколочными гранатами."
 	support_pool_cost = 2
 	fire_support_path = /datum/fire_support/supply_drop/halo/grenadier
+
+/datum/rto_support_action_template/halo_emergency_weapon_drop
+	parent_type = /datum/rto_support_action_template/halo/logistics
+	action_id = "halo_emergency_weapon_drop"
+	name = "Ящик черезвычайного вооружения"
+	description = "Сбрасывает набор для самообороны, содержит кобуру с пистолетом M6G и боезапас к нему."
+	support_pool_cost = 1
+	fire_support_path = /datum/fire_support/supply_drop/halo/emergency_weapon

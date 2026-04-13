@@ -52,6 +52,13 @@
 		/obj/item/ammo_box/magazine/misc/unsc/grenade = 1,
 	)
 
+/obj/structure/largecrate/supply/ammo/halo/emergency_weapon
+	name = "UNSC emergency weapon case"
+	desc = "A UNSC emergency weapon case containing M6G handgun and some spare ammo"
+	supplies = list(
+		/obj/item/storage/belt/gun/m6/full_m6g = 1,
+	)
+
 /obj/structure/largecrate/supply/medicine/halo
 	name = "UNSC medical case"
 	desc = "A UNSC medical case containing field treatment supplies."
