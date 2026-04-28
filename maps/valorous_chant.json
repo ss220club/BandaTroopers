@@ -1,0 +1,11 @@
+{
+	"map_name": "SDV Valorous Chant",
+    "short_name": "SDV Valorous Chant",
+	"map_path": "map_files/valorous_chant",
+    "map_file": "valorous_chant.dmm",
+    "webmap_url": "LV552",
+    "map_item_type": "/obj/item/map/lv522_map",
+    "weather_holder": "/datum/weather_ss_map_holder/big_red",
+
+    "camouflage": "jungle"
+}

@@ -3,7 +3,7 @@
 	keybind_category = CATEGORY_HUMAN_EMOTE
 
 	/// Species that can use this emote.
-	var/list/species_type_allowed_typecache = list(/datum/species/human, /datum/species/synthetic, /datum/species/yautja, /datum/species/sangheili, /datum/species/unggoy) // SS220 EDIT: HALO emote species support
+	var/list/species_type_allowed_typecache = list(/datum/species/human, /datum/species/synthetic, /datum/species/yautja, /datum/species/sangheili, /datum/species/unggoy, /datum/species/ruuhtian, /datum/species/spartan) // SS220 EDIT: HALO emote species support
 	/// Species that can't use this emote.
 	var/list/species_type_blacklist_typecache = list(/datum/species/monkey)
 
@@ -193,7 +193,7 @@
 	key = "pain"
 	message = "cries out in pain!"
 	alt_message = "cries out"
-	species_type_allowed_typecache = list(/datum/species/human, /datum/species/synthetic, /datum/species/yautja, /datum/species/synthetic/colonial/wy_droid)
+	species_type_allowed_typecache = list(/datum/species/human, /datum/species/synthetic, /datum/species/yautja, /datum/species/synthetic/colonial/wy_droid, /datum/species/sangheili, /datum/species/unggoy, /datum/species/ruuhtian, /datum/species/spartan) // SS220 EDIT: HALO pain emote species support
 	species_type_blacklist_typecache = list(/datum/species/synthetic)
 	emote_type = EMOTE_AUDIBLE|EMOTE_VISIBLE
 
@@ -208,6 +208,10 @@
 		return get_sfx("pred_pain")
 	if(issangheili(user)) // SS220 EDIT: HALO pain route
 		return get_sfx("pain_sangheili")
+	if(isunggoy(user)) // SS220 EDIT: HALO pain route
+		return get_sfx("pain_unggoy")
+	if(isruuhtian(user)) // SS220 EDIT: HALO pain route
+		return get_sfx("pain_ruuhtian")
 
 	if(iswydroid(user))
 		return get_sfx("wy_droid_pain")
@@ -254,6 +258,8 @@
 		return get_sfx("pain_sangheili")
 	if(isunggoy(user)) // SS220 EDIT: HALO scream route
 		return get_sfx("pain_unggoy")
+	if(isruuhtian(user)) // SS220 EDIT: HALO scream route
+		return get_sfx("pain_ruuhtian")
 
 /datum/emote/living/carbon/human/scream/run_emote(mob/living/user, params, type_override, intentional)
 	. = ..()
@@ -384,6 +390,8 @@
 		return get_sfx("warcry_sangheili")
 	if(isunggoy(user)) // SS220 EDIT: HALO warcry route
 		return get_sfx("warcry_unggoy")
+	if(isruuhtian(user)) // SS220 EDIT: HALO warcry route
+		return get_sfx("warcry_ruuhtian")
 
 /datum/emote/living/carbon/human/whimper
 	key = "whimper"

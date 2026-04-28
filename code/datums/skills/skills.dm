@@ -176,6 +176,11 @@
 	skill_level = SKILL_FIREMAN_DEFAULT
 	max_skill_level = SKILL_FIREMAN_MAX
 
+/datum/skill/gun_ho
+	skill_name = SKILL_GUN_HO
+	skill_level = SKILL_GUN_HO_UNTRAINED
+	max_skill_level = SKILL_GUN_HO_MAX
+
 /// Skill with an extra S at the end is a collection of multiple skills. Basically a skillSET
 /// This is to organize and provide a common interface to the huge heap of skills there are
 /datum/skills

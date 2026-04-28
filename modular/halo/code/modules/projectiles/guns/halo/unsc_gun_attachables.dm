@@ -13,9 +13,9 @@
 	size_mod = 0
 	hud_offset_mod = -3
 
-/obj/item/attachable/attached_gun/grenade/ma5c
-	name = "\improper M301C 40mm grenade launcher"
-	desc = "Подствольный 40-мм гранатомёт. Вариант M301C специально разработан для платформы MA5C ICWS и одновременно служит передней рукоятью, подобно штатному фонарю MA5C."
+/obj/item/attachable/attached_gun/grenade/ma5
+	name = "\improper M301 40mm grenade launcher"
+	desc = "Подствольный 40-мм гранатомёт. Заменяет штатный фонарь у штурмовых винтовок серии MA5 и подходит как для MA5C, так и для MA5B."
 	icon = 'icons/halo/obj/items/weapons/guns_by_faction/unsc/unsc_attachments.dmi'
 	icon_state = "ma5c_gl"
 	attach_icon = "ma5c_gl"
@@ -25,6 +25,36 @@
 	attachment_firing_delay = 5
 	layer_addition = 0.1
 	caliber = "40mm"
+
+/obj/item/attachable/attached_gun/grenade/ma5/update_icon()
+	. = ..()
+	var/base_icon_state = "ma5c_gl"
+	if(istype(loc, /obj/item/weapon/gun/rifle/halo/ma5b))
+		base_icon_state = "ma5b_gl"
+	else if(istype(loc, /obj/item/weapon/gun/rifle/halo/ma5c))
+		base_icon_state = "ma5c_gl"
+	attach_icon = base_icon_state
+	icon_state = base_icon_state
+	if(breech_open)
+		attach_icon += "-open"
+		icon_state += "-open"
+	if(istype(loc, /obj/item/weapon/gun))
+		var/obj/item/weapon/gun/gun = loc
+		gun.update_attachable(slot)
+
+/obj/item/attachable/attached_gun/grenade/ma5/Attach(obj/item/weapon/gun/subject)
+	if(istype(subject, /obj/item/weapon/gun/rifle/halo/ma5b))
+		attach_icon = "ma5b_gl"
+		return ..()
+	if(istype(subject, /obj/item/weapon/gun/rifle/halo/ma5c))
+		attach_icon = "ma5c_gl"
+		return ..()
+	return FALSE
+
+/obj/item/attachable/attached_gun/grenade/ma5c
+	parent_type = /obj/item/attachable/attached_gun/grenade/ma5
+	name = "\improper M301C 40mm grenade launcher"
+	desc = "Подствольный 40-мм гранатомёт. Вариант M301C специально разработан для платформы MA5C ICWS и одновременно служит передней рукоятью, подобно штатному фонарю MA5C."
 
 /obj/item/attachable/ma3a_shroud
 	name = "\improper MA3A shroud"
@@ -108,27 +138,27 @@
 	size_mod = 0
 	hud_offset_mod = -3
 
+/obj/item/attachable/flashlight/ma5
+	name = "\improper MA5 integrated flashlight"
+	desc = "Встроенный фонарь серии MA5, штатно устанавливаемый на любую штурмовую винтовку этой линейки."
+	icon = 'icons/halo/obj/items/weapons/guns_by_faction/unsc/unsc_attachments.dmi'
+	icon_state = "ma5_flashlight"
+	attach_icon = "ma5_flashlight"
+	original_state = "ma5_flashlight"
+	original_attach = "ma5_flashlight"
+	slot = "under"
+
 /obj/item/attachable/flashlight/ma5c
+	parent_type = /obj/item/attachable/flashlight/ma5
 	name = "\improper MA5C integrated flashlight"
 	desc = "Встроенный фонарь MA5C, штатно устанавливаемый на любую штурмовую винтовку серии MA5."
-	icon = 'icons/halo/obj/items/weapons/guns_by_faction/unsc/unsc_attachments.dmi'
-	icon_state = "ma5c_flashlight"
-	attach_icon = "ma5c_flashlight"
-	original_state = "ma5c_flashlight"
-	original_attach = "ma5c_flashlight"
-	slot = "under"
 
 /obj/item/attachable/flashlight/ma5b
+	parent_type = /obj/item/attachable/flashlight/ma5
 	name = "\improper MA5B integrated flashlight"
 	desc = "Встроенный фонарь MA5B, штатно устанавливаемый на любую штурмовую винтовку серии MA5 и фактически необходимый для нормального хвата."
-	icon = 'icons/halo/obj/items/weapons/guns_by_faction/unsc/unsc_attachments.dmi'
-	icon_state = "ma5b_flashlight"
-	attach_icon = "ma5b_flashlight"
-	original_state = "ma5b_flashlight"
-	original_attach = "ma5b_flashlight"
-	slot = "under"
 
-/obj/item/attachable/flashlight/ma5c/ma3a
+/obj/item/attachable/flashlight/ma5/ma3a
 	name = "\improper MA3A integrated flashlight"
 	desc = "Подствольная рукоять для MA3A, совмещённая с фонарём."
 	icon = 'icons/halo/obj/items/weapons/guns_by_faction/unsc/unsc_attachments.dmi'
@@ -138,9 +168,12 @@
 	original_attach = "ma3a_flashlight"
 	slot = "under"
 
-/obj/item/attachable/flashlight/ma5c/ma3a/New()
+/obj/item/attachable/flashlight/ma5/ma3a/New()
 	..()
 	recoil_mod = -RECOIL_AMOUNT_TIER_4
+
+/obj/item/attachable/flashlight/ma5c/ma3a
+	parent_type = /obj/item/attachable/flashlight/ma5/ma3a
 
 /obj/item/attachable/flashlight/m90
 	name = "\improper M90 integrated flashlight"
@@ -534,3 +567,15 @@
 	attach_icon = "m7_grip"
 	wield_delay_mod = WIELD_DELAY_NONE
 	size_mod = 1
+
+/obj/item/attachable/spnkr_handle
+	name = "\improper spnkr handle"
+	desc = "Эта деталь не должна отделяться от оружия. Как это вообще произошло?"
+	icon = 'icons/halo/obj/items/weapons/guns_by_faction/unsc/unsc_attachments.dmi'
+	icon_state = "spnkr_scope"
+	attach_icon = "spnkr_scope"
+	slot = "under"
+	wield_delay_mod = WIELD_DELAY_NONE
+	flags_attach_features = NO_FLAGS
+	melee_mod = 0 //Integrated attachment for visuals, stats handled on main gun.
+	size_mod = 0

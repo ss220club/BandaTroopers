@@ -30,6 +30,7 @@
 	var/dual_purpose = FALSE
 	var/fuse_type = TIMED_FUSE
 	var/spent_case = null //For smokes & such that leave behind used up cases/shells
+	var/timed_fuse_deadline = 0 // SS220 EDIT: timed grenade AI needs the remaining fuse window without changing impact-fuse behavior
 
 
 /obj/item/explosive/grenade/Initialize()
@@ -38,6 +39,12 @@
 
 /obj/item/explosive/grenade/proc/log_grenade_debug(message, mob/user = null)
 	log_game("GRENADE DEBUG: [src] [message] user=[key_name(user)] loc=[AREACOORD(src)] active=[active] throwing=[throwing] rebounding=[rebounding] launch_target=[AREACOORD(launch_metadata?.target)] launch_dist=[launch_metadata?.dist]/[launch_metadata?.range]")
+
+/obj/item/explosive/grenade/proc/get_remaining_timed_fuse_ticks()
+	if(!active || (fuse_type != TIMED_FUSE) || (timed_fuse_deadline <= 0))
+		return null
+
+	return max(0, timed_fuse_deadline - world.time)
 
 /obj/item/explosive/grenade/proc/can_use_grenade(mob/living/carbon/human/user)
 	if(!hand_throwable)
@@ -102,6 +109,7 @@
 	if(!hand_throwable && hand_throw)
 		to_chat(user, SPAN_WARNING("This isn't a hand grenade!"))
 		return
+	timed_fuse_deadline = 0
 	cause_data = create_cause_data(initial(name), user)
 	if(has_arm_sound)
 		playsound(loc, arm_sound, 25, 1, 6)
@@ -109,12 +117,15 @@
 		activate_sensors()
 	else
 		active = TRUE
+		if((fuse_type == TIMED_FUSE) && det_time)
+			timed_fuse_deadline = world.time + det_time // SS220 EDIT: track the armed timed-fuse deadline so throw-back can randomize across the real remaining window
 		det_time ? addtimer(CALLBACK(src, PROC_REF(prime)), det_time) : prime()
 	log_grenade_debug("activated") // SS220 EDIT: temporary diagnostics for grenade timer arming
 	w_class = SIZE_MASSIVE // We cheat a little, primed nades become massive so they cant be stored anywhere
 	update_icon()
 
 /obj/item/explosive/grenade/prime(force = FALSE)
+	timed_fuse_deadline = 0
 	log_grenade_debug("prime() entered") // SS220 EDIT: temporary diagnostics for grenades that appear to never detonate
 	..()
 	if(!QDELETED(src))

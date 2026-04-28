@@ -121,7 +121,7 @@ GLOBAL_DATUM_INIT(rto_support_registry, /datum/rto_support_registry, new)
 	if(!length(safe_ckey))
 		return null
 	for(var/datum/rto_support_controller/controller as anything in get_active_controllers())
-		if(controller?.get_owner_ckey() == safe_ckey)
+		if(ckey(controller?.get_owner_ckey()) == safe_ckey)
 			return controller
 	return null
 

@@ -256,8 +256,8 @@
 	icon_state = "case_double"
 
 /obj/structure/largecrate/supply/explosives/mines
-	name = "\improper M20A2 claymore case (x25)"
-	desc = "A case containing five boxes of five M20A2 claymores."
+	name = "M20A2 claymore bulk crate (x25)" // SS220 EDIT: sync HALO PR139 M20 mine crate wording.
+	desc = "A crate containing five cases of five M20A2 claymores." // SS220 EDIT: sync HALO PR139 M20 mine crate wording.
 	supplies = list(/obj/item/storage/box/explosive_mines = 5)
 
 /obj/structure/largecrate/supply/explosives/mines/m760

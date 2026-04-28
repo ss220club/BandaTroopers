@@ -35,3 +35,13 @@
 			apply_pain(O.damage * PAIN_ORGAN_DAMAGE_MULTIPLIER)
 
 	return TRUE
+
+/datum/pain/spartan
+	max_pain = 750
+
+	threshold_mild = 500
+	threshold_discomforting = 550
+	threshold_moderate = 600
+	threshold_distressing = 650
+	threshold_severe = 700
+	threshold_horrible = 725

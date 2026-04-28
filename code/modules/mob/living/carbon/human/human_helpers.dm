@@ -170,7 +170,7 @@
 		body_size_icon = body_size
 		body_type_icon = body_type
 
-	if(isspeciessangheili(src) || isspeciesunggoy(src)) // SS220 EDIT: HALO limb icon handling
+	if(isspeciessangheili(src) || isspeciesunggoy(src) || isspeciesruuhtian(src) || isspeciesspartan(src)) // SS220 EDIT: HALO limb icon handling
 		skin_color_icon = skin_color
 		body_size_icon = body_size
 		body_type_icon = body_type

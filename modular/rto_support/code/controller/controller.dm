@@ -496,7 +496,7 @@
 /datum/rto_support_controller/proc/get_owner_ckey()
 	if(!owner)
 		return null
-	return ckey(owner.ckey || owner.client?.ckey)
+	return owner.ckey || owner.client?.ckey
 
 /datum/rto_support_controller/proc/get_owner_display_name()
 	if(!owner)
@@ -564,7 +564,7 @@
 /datum/rto_support_controller/proc/mark_admin_charge_pool_update(datum/rto_support_resource_pool_state/pool, admin_ckey = null)
 	if(!pool)
 		return FALSE
-	pool.last_modified_by_admin_ckey = ckey(admin_ckey)
+	pool.last_modified_by_admin_ckey = admin_ckey
 	refresh_action_handles()
 	return TRUE
 
@@ -638,7 +638,7 @@
 		if(!pool)
 			continue
 		pool.set_current_charges(pool.capacity, world.time)
-		pool.last_modified_by_admin_ckey = ckey(admin_ckey)
+		pool.last_modified_by_admin_ckey = admin_ckey
 		updated = TRUE
 	if(updated)
 		refresh_action_handles()
@@ -653,7 +653,7 @@
 		if(!pool)
 			continue
 		pool.set_current_charges(0, world.time)
-		pool.last_modified_by_admin_ckey = ckey(admin_ckey)
+		pool.last_modified_by_admin_ckey = admin_ckey
 		updated = TRUE
 	if(updated)
 		refresh_action_handles()
@@ -731,7 +731,7 @@
 
 	var/datum/rto_support_resource_pool_state/pool = get_admin_charge_pool(template_id)
 	if(pool)
-		pool.last_modified_by_admin_ckey = ckey(admin_ckey)
+		pool.last_modified_by_admin_ckey = admin_ckey
 
 	sync_actions()
 	refresh_action_handles()

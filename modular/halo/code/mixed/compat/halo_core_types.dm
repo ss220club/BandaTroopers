@@ -6,6 +6,17 @@
 	attack_verb = list("pummel", "slamm", "punch")
 	damage = 40
 
+/datum/unarmed_attack/punch/kigyar
+	attack_verb = list("scratch", "claw", "slice")
+	damage = 10
+	attack_sound = 'sound/weapons/bladeslice.ogg'
+	sharp = TRUE
+	edge = TRUE
+
+/datum/unarmed_attack/punch/spartan
+	attack_verb = list("pummel", "slamm", "punch")
+	damage = 50
+
 /obj/item/clothing/glasses/sunglasses/big/unsc
 	name = "\improper UNSC shooting shades"
 	desc = "Пара штатных затемнённых очков. Некоторые модели оснащаются встроенной HUD-системой, но этот экземпляр явно без неё."

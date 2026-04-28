@@ -49,7 +49,7 @@
 		skin_color_icon = H.skin_color
 		body_type_icon = H.body_type
 
-	if(isspeciessangheili(H) || isspeciesunggoy(H)) // SS220 EDIT: HALO limb item visuals
+	if(isspeciessangheili(H) || isspeciesunggoy(H) || isspeciesruuhtian(H) || isspeciesspartan(H)) // SS220 EDIT: HALO limb item visuals
 		skin_color_icon = H.skin_color
 		body_type_icon = H.body_type
 

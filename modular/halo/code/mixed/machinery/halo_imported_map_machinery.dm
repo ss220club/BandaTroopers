@@ -33,7 +33,7 @@
 	if(anchored)
 		var/image/I = image(icon, "+spikespikespikes")
 		overlays += I
-	if(timing > 0)
+	if(timing)
 		var/image/I = image(icon, "+light_base")
 		overlays += I
 	if(timing == -1)

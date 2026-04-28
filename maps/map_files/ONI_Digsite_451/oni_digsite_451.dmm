@@ -11,6 +11,12 @@
 /obj/item/device/flashlight/combat,
 /turf/open/floor/almayer/pod_landing_floor,
 /area/oni_digsite/sub_level_9/research)
+"aab" = (
+/obj/docking_port/stationary/marine_dropship/pelican_lz{
+	name = "Sub-Level 2 Hangar"
+	},
+/turf/open/floor/almayer/plate,
+/area/oni_digsite/sub_level_2/south/hangar)
 "aam" = (
 /obj/structure/bed/chair/comfy/black{
 	dir = 1
@@ -676,13 +682,10 @@
 /turf/open/shuttle/escapepod/east,
 /area/oni_digsite/sub_level_9/research)
 "aPd" = (
-/obj/structure/machinery/cm_vending/sorted/cargo_guns/squad{
-	req_one_access_txt = "9;12;39;40";
-	req_one_access = list()
-	},
 /obj/structure/machinery/light/double/blue{
 	dir = 4
 	},
+/obj/structure/closet/secure_closet,
 /turf/open/floor/prison/floor_plate,
 /area/oni_digsite/sub_level_2/north/checkpoint_delta)
 "aPm" = (
@@ -3149,9 +3152,11 @@
 /turf/open/auto_turf/sand_white/layer0,
 /area/oni_digsite/sub_level_2/cavern)
 "dBq" = (
-/obj/structure/machinery/cm_vending/sorted/uniform_supply/squad_prep{
-	req_one_access_txt = "9;12;39;40";
-	req_access = list()
+/obj/structure/closet/secure_closet{
+	pixel_x = -7
+	},
+/obj/structure/closet/secure_closet{
+	pixel_x = 7
 	},
 /turf/open/floor/dark,
 /area/oni_digsite/sub_level_2/north/security)
@@ -4609,7 +4614,7 @@
 	},
 /obj/item/reagent_container/food/drinks/coffeecup{
 	pixel_y = 12;
-	
+	pixel_x = 8
 	},
 /turf/open/floor/prison/floor_plate,
 /area/oni_digsite/sub_level_2/north/offices)
@@ -5359,7 +5364,7 @@
 	},
 /obj/item/reagent_container/food/drinks/coffeecup{
 	pixel_y = 12;
-	
+	pixel_x = 8
 	},
 /turf/open/floor/prison/floor_plate,
 /area/oni_digsite/sub_level_2/north/offices)
@@ -8976,8 +8981,6 @@
 	req_access = null
 	},
 /obj/item/ammo_magazine/shotgun/buckshot/unsc,
-/obj/item/ammo_magazine/shotgun/buckshot/unsc,
-/obj/item/storage/pouch/shotgun/large,
 /obj/item/weapon/gun/shotgun/pump/halo/m90,
 /turf/open/floor/prison/floor_plate,
 /area/oni_digsite/sub_level_2/north/security)
@@ -12569,7 +12572,7 @@
 /obj/structure/window/reinforced/toughened,
 /obj/item/reagent_container/food/drinks/coffeecup{
 	pixel_y = 12;
-	
+	pixel_x = 8
 	},
 /turf/open/floor/prison/floor_plate,
 /area/oni_digsite/sub_level_2/north/offices)
@@ -14325,7 +14328,8 @@
 /obj/item/clothing/accessory/limb/skeleton/head{
 	pixel_y = 6;
 	name = "Blind";
-	desc = "You get the feeling that, if this object had power over you, it would disable your HUD."
+	desc = "You get the feeling that, if this object had power over you, it would disable your HUD.";
+	pixel_x = 14
 	},
 /turf/open/floor/plating/plating_catwalk/prison,
 /area/oni_digsite/sub_level_2/north/garage)
@@ -18176,10 +18180,7 @@
 /turf/open/floor/shiva/radiator_tile2,
 /area/oni_digsite/sub_level_9/small_buildings)
 "uiG" = (
-/obj/structure/machinery/cm_vending/sorted/uniform_supply/squad_prep{
-	req_one_access_txt = "9;12;39;40";
-	req_access = list()
-	},
+/obj/structure/closet/secure_closet,
 /turf/open/floor/prison/floor_plate,
 /area/oni_digsite/sub_level_2/north/checkpoint_delta)
 "uja" = (
@@ -18921,13 +18922,6 @@
 /obj/structure/machinery/autolathe,
 /turf/open/floor/prison/floor_plate,
 /area/oni_digsite/sub_level_2/north/power)
-"uXc" = (
-/obj/structure/machinery/cm_vending/sorted/cargo_guns/squad{
-	req_one_access_txt = "9;12;39;40";
-	req_one_access = list()
-	},
-/turf/open/floor/dark,
-/area/oni_digsite/sub_level_2/north/security)
 "uXu" = (
 /obj/structure/machinery/door_control{
 	pixel_x = 25;
@@ -29059,7 +29053,7 @@ pIr
 pIr
 pIr
 pIr
-pIr
+aab
 pIr
 pIr
 pIr
@@ -29881,8 +29875,8 @@ gpA
 bRG
 vCh
 kZJ
-uXc
-uXc
+dBq
+dBq
 kZJ
 vCh
 bRG

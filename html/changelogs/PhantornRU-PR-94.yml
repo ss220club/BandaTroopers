@@ -1,0 +1,7 @@
+author: PhantornRU
+delete-after: True
+changes:
+  - rscadd: "Added HALO Kig-Yar and Spartan content, including new species, gear, squads, and spawn support."
+  - bugfix: "Fixed Spartan shield, armor degradation, and tactical reload integration for BandaTroopers HALO compat surfaces."
+  - imageadd: "Added Kig-Yar and Spartan sprites, clothing sheets, and rendering support assets."
+  - soundadd: "Added Kig-Yar voice lines."

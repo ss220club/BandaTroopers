@@ -225,6 +225,12 @@
 	icon_state = "bunker"
 	walltype = WALL_REINFORCED_BUNKER
 
+// SS220 EDIT - START
+// HALO PR126 New Irvine bunker hull compatibility.
+/turf/closed/wall/r_wall/bunker/hull
+	hull = TRUE
+// SS220 EDIT - END
+
 //Prison
 
 /turf/closed/wall/r_wall/prison
@@ -293,4 +299,3 @@
 
 /turf/closed/wall/r_wall/elevator/button/arrivals
 	icon_state = "wall_button_arrivals"
-

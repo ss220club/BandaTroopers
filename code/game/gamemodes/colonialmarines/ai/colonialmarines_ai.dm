@@ -55,7 +55,10 @@
 
 /datum/game_mode/colonialmarines/ai/post_setup()
 	set_lz_resin_allowed(TRUE)
-	spawn_personal_weapon()
+	// SS220 EDIT - START
+	// spawn_personal_weapon()
+	spawn_personal_weapon() // SS220 EDIT: keep the upstream lowpop integration point explicit while modular locker runtime owns actual weapon delivery
+	// SS220 EDIT - END
 	return ..()
 
 /datum/game_mode/colonialmarines/ai/announce_bioscans()
@@ -137,48 +140,24 @@ GLOBAL_LIST_INIT(platoon_to_role_list, list(/datum/squad/marine/alpha = ROLES_AI
 												/datum/squad/marine/rmc = ROLES_RMCTROOP))
 
 
-GLOBAL_LIST_INIT(personal_weapons_list, list("Ithaca 37 shotgun-stakeout" = /obj/item/storage/large_holster/m37/full/noammo,\
-											"Ithaca 37 shotgun-traditional" = /obj/item/weapon/gun/shotgun/pump/stock,\
-											"Sawn-off double barrel shotgun" = /obj/item/weapon/gun/shotgun/double/sawn,\
-											"M79 grenade launcher" = /obj/item/weapon/gun/launcher/grenade/m81/m79/modified,\
-											"Cut down M79 grenade launcher" = /obj/item/weapon/gun/launcher/grenade/m81/m79/modified/sawnoff,\
-											"4 M15 grenades" = /obj/effect/essentials_set/m15_4_pack))
+// SS220 EDIT - START
+/*
+GLOBAL_LIST_INIT(personal_weapons_list, list(
+	"Ithaca 37 shotgun-stakeout" = /obj/item/storage/large_holster/m37/full/noammo,
+	"Ithaca 37 shotgun-traditional" = /obj/item/weapon/gun/shotgun/pump/stock,
+	"Sawn-off double barrel shotgun" = /obj/item/weapon/gun/shotgun/double/sawn,
+	"M79 grenade launcher" = /obj/item/weapon/gun/launcher/grenade/m81/m79/modified,
+	"Cut down M79 grenade launcher" = /obj/item/weapon/gun/launcher/grenade/m81/m79/modified/sawnoff,
+	"4 M15 grenades" = /obj/effect/essentials_set/m15_4_pack,
+))
+*/
+GLOBAL_LIST_INIT(personal_weapons_list, list("Shotgun",\
+											"Compact shotgun",\
+											"Double-barrel shotgun",\
+											"Grenade launcher",\
+											"Compact grenade launcher",\
+											"Grenade pack"))
+// SS220 EDIT - END
 
 /datum/game_mode/colonialmarines/ai/proc/spawn_personal_weapon()
-	var/datum/squad/squad = locate() in GLOB.RoleAuthority.squads
-	if(!squad || squad.faction != FACTION_MARINE || !squad.marines_list.len > 0)
-		return
-	if(!GLOB.personal_weapon.len)
-		return
-	var/mob/living/carbon/human/marine
-	var/chosen_weapon
-	var/iteration = 0 //10 marines with no personal weapon selected? its more likely than you think!
-	var/list/temporary_list = squad.marines_list
-	while(!chosen_weapon && iteration < squad.marines_list.len)
-		iteration++
-		marine = pick(temporary_list)
-		if(!squad.marines_list.Find(marine))
-			chosen_weapon = "bugged"
-			break
-		if(marine.job == JOB_SO) //get outta here butter bars
-			temporary_list.Remove(marine)
-			continue
-		if(!marine.client)
-			temporary_list.Remove(marine)
-			continue
-		if(marine.client.prefs.personal_weapon == "None")
-			temporary_list.Remove(marine)
-			continue
-		chosen_weapon = marine.client.prefs.personal_weapon
-	if(!isnull(chosen_weapon)) //Probably highly unlikely that all marines have it set to None but uhhhhh you never know.
-		if(chosen_weapon == "bugged")
-			log_debug("Chosen Weapon selected a bugged marine.")
-		else
-			var/obj/item/storage/box/personalcase/pcase = new(get_turf(pick(GLOB.personal_weapon)))
-			pcase.assign_owner(marine.real_name)
-			addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(to_chat), marine, SPAN_NOTICE("You remember that you've successfully snuck in your <b>heirloom weapon</b> aboard: <b>[marine.client.prefs.personal_weapon]</b>. It's in the armory")), 5 SECONDS)
-			var/the_gun = GLOB.personal_weapons_list[chosen_weapon]
-			new the_gun(pcase)
-			for(var/obj/effect/landmark/personal_weapon/PW in GLOB.personal_weapon)
-				qdel(PW)
-	temporary_list = null
+	return // SS220 EDIT: legacy lowpop armory-landmark delivery now resolves through modular personal locker population

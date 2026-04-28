@@ -11,6 +11,11 @@
 	desc = "Стрелок, заточенный под штурм, прорыв и работу на ближней дистанции."
 	path = /datum/equipment_preset/insurgent/rifleman/breacher
 
+/datum/human_ai_equipment_preset/insurgent/breacher
+	name = "Insurgent Breacher"
+	desc = "Alias for the HALO insurgent breacher preset."
+	path = /datum/equipment_preset/insurgent/rifleman/breacher
+
 /datum/human_ai_equipment_preset/insurgent/technician
 	name = "Инсургент-техник"
 	desc = "Полевой техник, полезный для ремонта, обхода и саботажа."
@@ -19,7 +24,7 @@
 /datum/human_ai_equipment_preset/insurgent/specialist
 	name = "Инсургент-специалист"
 	desc = "Тяжелый повстанец с более редким вооружением и задачами огневой поддержки."
-	path = /datum/equipment_preset/insurgent/specialist
+	path = /datum/equipment_preset/insurgent/specialist/ai_man
 
 /datum/human_ai_equipment_preset/insurgent/specialist/sniper
 	name = "Инсургент-снайпер"
@@ -34,6 +39,11 @@
 /datum/human_ai_equipment_preset/insurgent/rifleman/sl
 	name = "Инсургент-лидер ячейки"
 	desc = "Полевой командир небольшого отряда, ведущий людей как обычный стрелок."
+	path = /datum/equipment_preset/insurgent/rifleman/sl
+
+/datum/human_ai_equipment_preset/insurgent/sl
+	name = "Insurgent Cell Leader"
+	desc = "Alias for the HALO insurgent squad leader preset."
 	path = /datum/equipment_preset/insurgent/rifleman/sl
 
 /datum/human_ai_equipment_preset/insurgent/officer

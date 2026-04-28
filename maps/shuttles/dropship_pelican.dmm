@@ -1,40 +1,71 @@
 //MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aa" = (
+/obj/effect/roof_node/pelican,
+/obj/effect/decal/warning_stripes{
+	icon_state = "S";
+	pixel_y = -4;
+	pixel_x = -8
+	},
+/obj/effect/decal/warning_stripes{
+	icon_state = "S";
+	pixel_y = -4
+	},
+/turf/open/shuttle/pelican/paneling/left,
+/area/shuttle/pelican)
+"ab" = (
+/obj/effect/roof_node/pelican,
+/obj/effect/decal/warning_stripes{
+	icon_state = "S";
+	pixel_y = -4;
+	pixel_x = -8
+	},
+/obj/effect/decal/warning_stripes{
+	icon_state = "S";
+	pixel_y = -4
+	},
+/turf/open/shuttle/pelican/paneling/right,
+/area/shuttle/pelican)
 "bs" = (
-/obj/structure/shuttle/part/pelican/directional_density{
-	icon_state = "seatslot_e";
-	layer = 4.1135;
-	opacity = 0
-	},
-/obj/structure/bed/chair/dropship/pelican/west{
-	pixel_y = 6;
-	layer = 4.113;
-	buckling_y = 6;
-	non_north_layer = 4.113
-	},
 /obj/structure/shuttle/part/pelican/no_dense{
 	icon_state = "wsmoothe";
 	opacity = 0
 	},
 /obj/effect/roof_node/pelican,
+/obj/structure/bed/chair/dropship/pelican/west{
+	pixel_y = 6;
+	buckling_y = 3;
+	layer = 4.09;
+	non_north_layer = 4.09
+	},
+/obj/structure/shuttle/part/pelican/directional_density{
+	icon_state = "seatslot_e";
+	opacity = 0;
+	layer = 4.11
+	},
 /turf/open/shuttle/pelican/directional/west,
 /area/shuttle/pelican)
 "bw" = (
-/obj/structure/shuttle/part/pelican/directional_density{
-	icon_state = "seatslot_e";
-	layer = 4.1155;
-	opacity = 0
-	},
-/obj/structure/bed/chair/dropship/pelican/west{
-	pixel_y = 6;
-	layer = 4.115;
-	buckling_y = 6;
-	non_north_layer = 4.115
-	},
 /obj/structure/shuttle/part/pelican/no_dense{
 	icon_state = "wsmoothe";
 	opacity = 0
 	},
 /obj/effect/roof_node/pelican,
+/obj/structure/bed/chair/dropship/pelican/west{
+	pixel_y = 6;
+	buckling_y = 3;
+	layer = 4.15;
+	non_north_layer = 4.15
+	},
+/obj/structure/shuttle/part/pelican/directional_density{
+	icon_state = "seatslot_e";
+	opacity = 0;
+	layer = 4.17
+	},
+/obj/effect/decal/warning_stripes{
+	icon_state = "S";
+	pixel_y = -4;
+	pixel_x = -8
+	},
 /turf/open/shuttle/pelican/directional/west,
 /area/shuttle/pelican)
 "cw" = (
@@ -83,37 +114,41 @@
 	icon_state = "wsmoothw";
 	opacity = 0
 	},
+/obj/effect/roof_node/pelican,
 /obj/structure/shuttle/part/pelican/directional_density{
 	icon_state = "seatslot_w";
-	layer = 4.1155;
-	opacity = 0
+	opacity = 0;
+	layer = 4.17
 	},
 /obj/structure/bed/chair/dropship/pelican/east{
+	layer = 4.15;
+	non_north_layer = 4.15;
 	pixel_y = 6;
-	layer = 4.115;
-	buckling_y = 6;
-	non_north_layer = 4.115
+	buckling_y = 3
 	},
-/obj/effect/roof_node/pelican,
+/obj/effect/decal/warning_stripes{
+	icon_state = "S";
+	pixel_y = -4
+	},
 /turf/open/shuttle/pelican/directional/east,
 /area/shuttle/pelican)
 "le" = (
-/obj/structure/shuttle/part/pelican/directional_density{
-	icon_state = "seatslot_w";
-	layer = 4.1135;
-	opacity = 0
-	},
-/obj/structure/bed/chair/dropship/pelican/east{
-	pixel_y = 6;
-	layer = 4.113;
-	buckling_y = 6;
-	non_north_layer = 4.113
-	},
 /obj/structure/shuttle/part/pelican/no_dense{
 	icon_state = "wsmoothw";
 	opacity = 0
 	},
 /obj/effect/roof_node/pelican,
+/obj/structure/shuttle/part/pelican/directional_density{
+	icon_state = "seatslot_w";
+	opacity = 0;
+	layer = 4.11
+	},
+/obj/structure/bed/chair/dropship/pelican/east{
+	layer = 4.09;
+	non_north_layer = 4.09;
+	pixel_y = 6;
+	buckling_y = 3
+	},
 /turf/open/shuttle/pelican/directional/east,
 /area/shuttle/pelican)
 "lf" = (
@@ -159,22 +194,22 @@
 /turf/template_noop,
 /area/shuttle/pelican)
 "uR" = (
-/obj/structure/shuttle/part/pelican/directional_density{
-	icon_state = "seatslot_e";
-	layer = 4.1125;
-	opacity = 0
-	},
-/obj/structure/bed/chair/dropship/pelican/west{
-	pixel_y = 6;
-	layer = 4.112;
-	buckling_y = 6;
-	non_north_layer = 4.112
-	},
 /obj/structure/shuttle/part/pelican/no_dense{
 	icon_state = "wsmoothe";
 	opacity = 0
 	},
 /obj/effect/roof_node/pelican,
+/obj/structure/bed/chair/dropship/pelican/west{
+	pixel_y = 6;
+	buckling_y = 3;
+	layer = 4.06;
+	non_north_layer = 4.06
+	},
+/obj/structure/shuttle/part/pelican/directional_density{
+	icon_state = "seatslot_e";
+	opacity = 0;
+	layer = 4.08
+	},
 /turf/open/shuttle/pelican/directional/west,
 /area/shuttle/pelican)
 "xl" = (
@@ -184,12 +219,12 @@
 /turf/template_noop,
 /area/shuttle/pelican)
 "BE" = (
-/obj/effect/roof_node/pelican,
 /obj/structure/shuttle/part/pelican/no_dense{
 	icon_state = "1,3";
 	pixel_y = -32;
 	opacity = 0
 	},
+/obj/effect/roof_node/pelican,
 /turf/open/shuttle/pelican/paneling/left,
 /area/shuttle/pelican)
 "CR" = (
@@ -228,29 +263,29 @@
 /turf/template_noop,
 /area/shuttle/pelican)
 "Ed" = (
-/obj/structure/shuttle/part/pelican/directional_density{
-	icon_state = "seatslot_e";
-	layer = 4.1145;
-	opacity = 0
-	},
-/obj/structure/bed/chair/dropship/pelican/west{
-	pixel_y = 6;
-	layer = 4.114;
-	buckling_y = 6;
-	non_north_layer = 4.114
-	},
 /obj/structure/shuttle/part/pelican/no_dense{
 	icon_state = "wsmoothe";
 	opacity = 0
 	},
 /obj/effect/roof_node/pelican,
+/obj/structure/bed/chair/dropship/pelican/west{
+	pixel_y = 6;
+	buckling_y = 3;
+	layer = 4.12;
+	non_north_layer = 4.12
+	},
+/obj/structure/shuttle/part/pelican/directional_density{
+	icon_state = "seatslot_e";
+	opacity = 0;
+	layer = 4.14
+	},
 /turf/open/shuttle/pelican/directional/west,
 /area/shuttle/pelican)
 "Fw" = (
 /obj/structure/machinery/computer/dropship_weapons/pelican{
 	pixel_x = -2;
 	pixel_y = -3;
-	layer = 4.5
+	layer = 4.44
 	},
 /obj/structure/bed/chair/dropship/pelican/east{
 	dir = 1;
@@ -315,20 +350,22 @@
 /turf/template_noop,
 /area/shuttle/pelican)
 "Kc" = (
-/obj/structure/shuttle/part/pelican/directional_density{
-	icon_state = "seatslot_w";
-	layer = 4.11;
-	opacity = 0
-	},
-/obj/structure/bed/chair/dropship/pelican/east{
-	pixel_y = 6;
-	buckling_y = 6
-	},
 /obj/structure/shuttle/part/pelican/no_dense{
 	icon_state = "wsmoothw";
 	opacity = 0
 	},
 /obj/effect/roof_node/pelican,
+/obj/structure/shuttle/part/pelican/directional_density{
+	icon_state = "seatslot_w";
+	opacity = 0;
+	layer = 4.02
+	},
+/obj/structure/bed/chair/dropship/pelican/east{
+	layer = 4;
+	non_north_layer = 4;
+	pixel_y = 6;
+	buckling_y = 3
+	},
 /turf/open/shuttle/pelican/directional/east,
 /area/shuttle/pelican)
 "KU" = (
@@ -381,32 +418,32 @@
 /turf/open/shuttle/pelican/paneling/left,
 /area/shuttle/pelican)
 "NZ" = (
-/obj/effect/roof_node/pelican,
 /obj/structure/shuttle/part/pelican/no_dense{
 	icon_state = "1,3";
 	pixel_y = -32;
 	opacity = 0
 	},
+/obj/effect/roof_node/pelican,
 /obj/structure/roof/pelican_roof,
 /turf/open/shuttle/pelican/paneling/right,
 /area/shuttle/pelican)
 "Ox" = (
-/obj/structure/shuttle/part/pelican/directional_density{
-	icon_state = "seatslot_w";
-	layer = 4.1145;
-	opacity = 0
-	},
-/obj/structure/bed/chair/dropship/pelican/east{
-	pixel_y = 6;
-	layer = 4.114;
-	buckling_y = 6;
-	non_north_layer = 4.114
-	},
 /obj/structure/shuttle/part/pelican/no_dense{
 	icon_state = "wsmoothw";
 	opacity = 0
 	},
 /obj/effect/roof_node/pelican,
+/obj/structure/shuttle/part/pelican/directional_density{
+	icon_state = "seatslot_w";
+	opacity = 0;
+	layer = 4.14
+	},
+/obj/structure/bed/chair/dropship/pelican/east{
+	layer = 4.12;
+	non_north_layer = 4.12;
+	pixel_y = 6;
+	buckling_y = 3
+	},
 /turf/open/shuttle/pelican/directional/east,
 /area/shuttle/pelican)
 "OK" = (
@@ -414,16 +451,18 @@
 	icon_state = "wsmoothe";
 	opacity = 0
 	},
-/obj/structure/shuttle/part/pelican/directional_density{
-	icon_state = "seatslot_e";
-	layer = 4.11;
-	opacity = 0
-	},
 /obj/structure/bed/chair/dropship/pelican/west{
 	pixel_y = 6;
-	buckling_y = 6
+	buckling_y = 3;
+	layer = 4;
+	non_north_layer = 4
 	},
 /obj/effect/roof_node/pelican,
+/obj/structure/shuttle/part/pelican/directional_density{
+	icon_state = "seatslot_e";
+	opacity = 0;
+	layer = 4.02
+	},
 /turf/open/shuttle/pelican/directional/west,
 /area/shuttle/pelican)
 "Pw" = (
@@ -431,22 +470,22 @@
 /turf/open/shuttle/pelican/paneling/right,
 /area/shuttle/pelican)
 "Qa" = (
-/obj/structure/shuttle/part/pelican/directional_density{
-	icon_state = "seatslot_w";
-	layer = 4.1115;
-	opacity = 0
-	},
-/obj/structure/bed/chair/dropship/pelican/east{
-	pixel_y = 6;
-	layer = 4.111;
-	buckling_y = 6;
-	non_north_layer = 4.111
-	},
 /obj/structure/shuttle/part/pelican/no_dense{
 	icon_state = "wsmoothw";
 	opacity = 0
 	},
 /obj/effect/roof_node/pelican,
+/obj/structure/shuttle/part/pelican/directional_density{
+	icon_state = "seatslot_w";
+	opacity = 0;
+	layer = 4.05
+	},
+/obj/structure/bed/chair/dropship/pelican/east{
+	layer = 4.03;
+	non_north_layer = 4.03;
+	pixel_y = 6;
+	buckling_y = 3
+	},
 /turf/open/shuttle/pelican/directional/east,
 /area/shuttle/pelican)
 "Tb" = (
@@ -459,12 +498,12 @@
 	icon_state = "2,5";
 	opacity = 0
 	},
-/obj/effect/roof_node/pelican,
 /obj/structure/shuttle/part/pelican/no_dense{
 	icon_state = "1,5";
 	pixel_y = -32;
 	opacity = 0
 	},
+/obj/effect/roof_node/pelican,
 /turf/open/shuttle/pelican/directional/west,
 /area/shuttle/pelican)
 "UY" = (
@@ -474,22 +513,22 @@
 /turf/template_noop,
 /area/shuttle/pelican)
 "UZ" = (
-/obj/structure/shuttle/part/pelican/directional_density{
-	icon_state = "seatslot_e";
-	layer = 4.1115;
-	opacity = 0
-	},
-/obj/structure/bed/chair/dropship/pelican/west{
-	pixel_y = 6;
-	layer = 4.111;
-	buckling_y = 6;
-	non_north_layer = 4.111
-	},
 /obj/structure/shuttle/part/pelican/no_dense{
 	icon_state = "wsmoothe";
 	opacity = 0
 	},
 /obj/effect/roof_node/pelican,
+/obj/structure/bed/chair/dropship/pelican/west{
+	pixel_y = 6;
+	buckling_y = 3;
+	layer = 4.03;
+	non_north_layer = 4.03
+	},
+/obj/structure/shuttle/part/pelican/directional_density{
+	icon_state = "seatslot_e";
+	opacity = 0;
+	layer = 4.05
+	},
 /turf/open/shuttle/pelican/directional/west,
 /area/shuttle/pelican)
 "Vj" = (
@@ -497,13 +536,13 @@
 	icon_state = "2,2";
 	opacity = 0
 	},
-/obj/effect/roof_node/pelican,
 /obj/structure/shuttle/part/pelican/no_dense{
 	icon_state = "1,2";
 	pixel_y = -32;
 	opacity = 0
 	},
 /obj/structure/machinery/door/airlock/multi_tile/almayer/dropshiprear/pelican,
+/obj/effect/roof_node/pelican,
 /turf/open/shuttle/pelican/directional/east,
 /area/shuttle/pelican)
 "XR" = (
@@ -533,22 +572,22 @@
 /turf/template_noop,
 /area/template_noop)
 "ZD" = (
-/obj/structure/shuttle/part/pelican/directional_density{
-	icon_state = "seatslot_w";
-	layer = 4.1125;
-	opacity = 0
-	},
-/obj/structure/bed/chair/dropship/pelican/east{
-	pixel_y = 6;
-	layer = 4.112;
-	buckling_y = 6;
-	non_north_layer = 4.112
-	},
 /obj/structure/shuttle/part/pelican/no_dense{
 	icon_state = "wsmoothw";
 	opacity = 0
 	},
 /obj/effect/roof_node/pelican,
+/obj/structure/shuttle/part/pelican/directional_density{
+	icon_state = "seatslot_w";
+	opacity = 0;
+	layer = 4.08
+	},
+/obj/structure/bed/chair/dropship/pelican/east{
+	layer = 4.06;
+	non_north_layer = 4.06;
+	pixel_y = 6;
+	buckling_y = 3
+	},
 /turf/open/shuttle/pelican/directional/east,
 /area/shuttle/pelican)
 
@@ -806,7 +845,7 @@ NA
 NA
 NA
 NA
-NA
+aa
 BE
 Zo
 Zo
@@ -833,7 +872,7 @@ Pw
 Tb
 Pw
 Pw
-Pw
+ab
 NZ
 Zo
 Zo

@@ -685,7 +685,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/clothing/glasses/mgoggles/orange(new_human), WEAR_IN_HELMET)
 
 /datum/equipment_preset/synth/working_joe/upp/combat/canc/snowman
-	name = "CANC Dzho Automaton - Combat"
+	name = "CANC Dzho Automaton - Combat - Snowman" // SS220 EDIT: disambiguate snowman CANC synth preset lookup
 	faction = FACTION_CANC
 	faction_group = list(FACTION_LIST_CANC)
 

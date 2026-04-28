@@ -797,7 +797,10 @@ As sniper rifles have both and weapon mods can change them as well. ..() deals w
 	flags_item ^= WIELDED
 	name += " (Wielded)"
 	item_state += "_w"
-	slowdown = initial(slowdown) + aim_slowdown
+	if(user.skills && user.skills.get_skill_level(SKILL_GUN_HO) >= SKILL_GUN_HO_TRAINED && !is_civilian_usable(user))
+		slowdown = initial(slowdown) + (aim_slowdown / user.skills.get_skill_level(SKILL_GUN_HO))
+	else
+		slowdown = initial(slowdown) + aim_slowdown
 	place_offhand(user, initial(name))
 	wield_time = world.time + wield_delay
 	if(HAS_TRAIT(user, TRAIT_DAZED))
@@ -1336,6 +1339,14 @@ and you're good to go.
 		active_attachable.fire_attachment(target, src, user)
 		return TRUE
 
+	if(ishuman(user))
+		var/mob/living/carbon/human/human_user = user
+		if(human_user.skills?.get_skill_level(SKILL_GUN_HO) >= SKILL_GUN_HO_TRAINED)
+			if(tactical_reload(target, human_user))
+				return TRUE
+
+	return ..()
+
 
 /obj/item/weapon/gun/attack(mob/living/attacked_mob, mob/living/user, dual_wield)
 	if(active_attachable && (active_attachable.flags_attach_features & ATTACH_MELEE)) //this is expected to do something in melee.
@@ -1774,7 +1785,8 @@ not all weapons use normal magazines etc. load_into_chamber() itself is designed
 		if(user?.skills?.get_skill_level(SKILL_FIREARMS) == SKILL_FIREARMS_CIVILIAN && !is_civilian_usable(user))
 			skill_accuracy = -1
 		else
-			skill_accuracy = user.skills.get_skill_level(SKILL_FIREARMS)
+			var/gun_ho_bonus = max(user.skills.get_skill_level(SKILL_GUN_HO) - SKILL_GUN_HO_UNTRAINED, 0) // SS220 EDIT: keep Gun Ho as a linear bonus above the untrained baseline
+			skill_accuracy = user.skills.get_skill_level(SKILL_FIREARMS) + gun_ho_bonus
 		if(skill_accuracy)
 			gun_accuracy_mult += skill_accuracy * HIT_ACCURACY_MULT_TIER_3 // Accuracy mult increase/decrease per level is equal to attaching/removing a red dot sight
 
@@ -1834,7 +1846,8 @@ not all weapons use normal magazines etc. load_into_chamber() itself is designed
 		if(user?.skills?.get_skill_level(SKILL_FIREARMS) == SKILL_FIREARMS_CIVILIAN && !is_civilian_usable(user))
 			total_scatter_angle += SCATTER_AMOUNT_TIER_7
 		else
-			total_scatter_angle -= user.skills.get_skill_level(SKILL_FIREARMS)*SCATTER_AMOUNT_TIER_8
+			var/gun_ho_bonus = max(user.skills.get_skill_level(SKILL_GUN_HO) - SKILL_GUN_HO_UNTRAINED, 0) // SS220 EDIT: keep Gun Ho scatter reduction linear and preserve the untrained baseline
+			total_scatter_angle -= (user.skills.get_skill_level(SKILL_FIREARMS) + gun_ho_bonus) * SCATTER_AMOUNT_TIER_8
 
 
 	//Not if the gun doesn't scatter at all, or negative scatter.
@@ -1873,7 +1886,8 @@ not all weapons use normal magazines etc. load_into_chamber() itself is designed
 		if(user?.skills?.get_skill_level(SKILL_FIREARMS) == SKILL_FIREARMS_CIVILIAN && !is_civilian_usable(user))
 			total_recoil += RECOIL_AMOUNT_TIER_5
 		else
-			total_recoil -= user.skills.get_skill_level(SKILL_FIREARMS)*RECOIL_AMOUNT_TIER_5
+			var/gun_ho_bonus = max(user.skills.get_skill_level(SKILL_GUN_HO) - SKILL_GUN_HO_UNTRAINED, 0) // SS220 EDIT: keep Gun Ho recoil reduction linear and preserve the untrained baseline
+			total_recoil -= (user.skills.get_skill_level(SKILL_FIREARMS) + gun_ho_bonus) * RECOIL_AMOUNT_TIER_5
 
 	if(total_recoil > 0 && (ishuman(user) || HAS_TRAIT(user, TRAIT_OPPOSABLE_THUMBS)))
 		if(total_recoil >= 4)
@@ -2180,6 +2194,15 @@ not all weapons use normal magazines etc. load_into_chamber() itself is designed
 		return FALSE
 
 	return TRUE
+
+/obj/item/weapon/gun/proc/get_ai_followup_fire_callback(mob/living/carbon/human/user, atom/target)
+	return null
+
+/obj/item/weapon/gun/proc/get_ai_followup_fire_delay(mob/living/carbon/human/user, atom/target)
+	return null
+
+/obj/item/weapon/gun/proc/get_ai_followup_fire_cooldown(mob/living/carbon/human/user, atom/target)
+	return get_ai_followup_fire_delay(user, target)
 
 /// For ejecting the spent casing from corresponding guns
 /obj/item/weapon/gun/proc/eject_casing()

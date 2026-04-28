@@ -410,6 +410,9 @@
 	new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/halo/ma3a(new_human), WEAR_IN_R_STORE)
 	new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/halo/ma3a(new_human), WEAR_IN_R_STORE)
 
+/datum/equipment_preset/insurgent/specialist/ai_man
+	name = "Insurgent Specialist (AI)"
+
 /datum/equipment_preset/insurgent/specialist/sniper
 	name = "Инсургент-снайпер"
 	assignment = JOB_INSURGENT_SPECIALIST

@@ -24,6 +24,27 @@
 /tools/docker/ @Fira
 /Dockerfile @Fira
 
+# PhantornRU
+
+/modular/admin/ @PhantornRU
+/modular/cyrillic_fixes/ @PhantornRU
+/modular/fullscreen/ @PhantornRU
+/modular/game_master/ @PhantornRU
+/modular/game_rule_panel/ @PhantornRU
+/modular/halo/ @PhantornRU
+/modular/localization/ @PhantornRU
+/modular/player_survival/ @PhantornRU
+/modular/pony_xeno/ @PhantornRU
+/modular/rto_support/ @PhantornRU
+/modular/speech_filter/ @PhantornRU
+/modular/squads/ @PhantornRU
+/modular/supply_packs/ @PhantornRU
+/modular/text_to_speech/ @PhantornRU
+/modular/translations/ @PhantornRU
+/modular/weapons/ @PhantornRU
+/modular/world_edit/ @PhantornRU
+/modular/xeno_races/ @PhantornRU
+
 # Zonespace
 
 /code/datums/tutorial/ @Zonespace27

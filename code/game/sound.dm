@@ -494,6 +494,10 @@
 				sound = pick('sound/voice/unggoy/pain_1.ogg', 'sound/voice/unggoy/pain_2.ogg', 'sound/voice/unggoy/pain_3.ogg', 'sound/voice/unggoy/pain_4.ogg')
 			if("warcry_unggoy")
 				sound = pick('sound/voice/unggoy/warcry_1.ogg', 'sound/voice/unggoy/warcry_2.ogg', 'sound/voice/unggoy/warcry_3.ogg')
+			if("pain_ruuhtian")
+				sound = pick('sound/voice/ruuhtian/pain_1.ogg', 'sound/voice/ruuhtian/pain_2.ogg', 'sound/voice/ruuhtian/pain_3.ogg')
+			if("warcry_ruuhtian")
+				sound = pick('sound/voice/ruuhtian/warcry_1.ogg', 'sound/voice/ruuhtian/warcry_2.ogg')
 
 			// HALO guns COV
 			if("gun_lightplasma")

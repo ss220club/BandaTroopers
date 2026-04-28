@@ -108,6 +108,14 @@
 #define ACCESSORY_SLOT_SANG_WEBBING "Sang Webbing"
 #endif
 
+#ifndef ACCESSORY_SLOT_UNGGOY_SHOULDER
+#define ACCESSORY_SLOT_UNGGOY_SHOULDER "Unggoy Shoulder"
+#endif
+
+#ifndef ACCESSORY_SLOT_UNGGOY_BICEP
+#define ACCESSORY_SLOT_UNGGOY_BICEP "Unggoy Bicep"
+#endif
+
 #ifndef WINDOW_HEALTH_FRAMED
 #define WINDOW_HEALTH_FRAMED 100
 #endif

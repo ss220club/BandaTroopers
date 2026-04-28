@@ -1445,6 +1445,12 @@
 
 /mob/living/carbon/human/unggoy/Initialize(mapload)
 	. = ..(mapload, new_species = SPECIES_UNGGOY)
+
+/mob/living/carbon/human/ruuhtian/Initialize(mapload)
+	. = ..(mapload, new_species = SPECIES_RUUHTIAN)
+
+/mob/living/carbon/human/spartan/Initialize(mapload)
+	. = ..(mapload, new_species = SPECIES_SPARTAN)
 // SS220 EDIT - END
 
 /mob/living/carbon/human/synthetic/Initialize(mapload)

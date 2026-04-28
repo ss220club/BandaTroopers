@@ -377,6 +377,12 @@
 			return
 		visible_message(SPAN_WARNING("[src] has thrown [thrown_thing]."), null, null, 5)
 
+		var/list/throw_modifiers = list(
+			"range_modifier" = 0,
+			"speed_modifier" = 0,
+		)
+		SEND_SIGNAL(src, COMSIG_MOB_THROW, target, thrown_thing, throw_modifiers)
+
 		if(!lastarea)
 			lastarea = get_area(src.loc)
 		if(istype(loc, /turf/open/space))
@@ -389,10 +395,10 @@
 				to_chat(src, SPAN_WARNING("You need to set up the high toss!"))
 				return
 			drop_inv_item_on_ground(I, TRUE)
-			thrown_thing.throw_atom(target, thrown_thing.throw_range, SPEED_SLOW, src, spin_throw, HIGH_LAUNCH)
+			thrown_thing.throw_atom(target, thrown_thing.throw_range + throw_modifiers["range_modifier"], SPEED_SLOW, src, spin_throw, HIGH_LAUNCH)
 		else
 			drop_inv_item_on_ground(I, TRUE)
-			thrown_thing.throw_atom(target, thrown_thing.throw_range, thrown_thing.throw_speed, src, spin_throw)
+			thrown_thing.throw_atom(target, thrown_thing.throw_range + throw_modifiers["range_modifier"], max(1, thrown_thing.throw_speed + throw_modifiers["speed_modifier"]), src, spin_throw)
 
 /mob/living/carbon/fire_act(exposed_temperature, exposed_volume)
 	..()

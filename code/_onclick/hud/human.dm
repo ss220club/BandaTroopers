@@ -95,6 +95,7 @@
 	if(!iszombie(owner))
 		draw_nutrition(ui_datum)
 	draw_locator_spot(ui_datum)
+	draw_motion_sensor(ui_datum, ui_alpha) // SS220 EDIT: draw the modular HALO motion sensor HUD slot when helmets enable it.
 	draw_zone_sel(ui_datum, ui_alpha, ui_color)
 	draw_gun_related(ui_datum, ui_alpha)
 

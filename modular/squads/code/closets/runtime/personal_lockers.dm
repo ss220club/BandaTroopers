@@ -149,6 +149,63 @@
 			given_medal.recipient_rank = medal.recipient_role
 			given_medal.medal_citation = medal.citation
 
+	spawn_profile_personal_weapon(locker, new_human, real_client)
+
+/datum/equipment_preset/proc/normalize_profile_personal_weapon_choice(chosen_weapon, list/personal_weapon_profile)
+	var/list/personal_weapon_options = personal_weapon_profile?["options"] || GLOB.personal_weapons_list
+	var/list/personal_weapon_aliases = personal_weapon_profile?["aliases"]
+
+	if(islist(personal_weapon_aliases) && personal_weapon_aliases[chosen_weapon])
+		chosen_weapon = personal_weapon_aliases[chosen_weapon]
+
+	if(chosen_weapon == "None")
+		return "None"
+	if(chosen_weapon in personal_weapon_options)
+		return chosen_weapon
+
+	return personal_weapon_profile?["default"] || (length(personal_weapon_options) ? personal_weapon_options[1] : null)
+
+/datum/equipment_preset/proc/spawn_profile_personal_weapon(obj/structure/closet/secure_closet/marine_personal/locker, mob/living/carbon/human/new_human, client/real_client)
+	if(!locker || !new_human)
+		return FALSE
+
+	var/list/personal_weapon_profile = GLOB.RoleAuthority?.get_main_ship_personal_weapon_profile()
+	if(!islist(personal_weapon_profile))
+		return FALSE
+
+	var/required_faction = personal_weapon_profile?["required_faction"]
+	var/main_ship_faction = GLOB.RoleAuthority?.get_main_ship_faction()
+	if(required_faction && main_ship_faction != required_faction)
+		return FALSE
+
+	var/list/required_roles = personal_weapon_profile?["roles"]
+	if(islist(required_roles) && !required_roles.Find(GET_DEFAULT_ROLE(new_human.job)))
+		return FALSE
+
+	var/chosen_weapon = normalize_profile_personal_weapon_choice(real_client?.prefs?.personal_weapon, personal_weapon_profile)
+	if(!chosen_weapon || chosen_weapon == "None")
+		return FALSE
+
+	var/list/personal_weapon_spawn_types = personal_weapon_profile?["spawn_types"]
+	if(!islist(personal_weapon_spawn_types))
+		return FALSE
+
+	var/personal_weapon_type = personal_weapon_spawn_types[chosen_weapon]
+	if(!personal_weapon_type)
+		return FALSE
+
+	var/case_type = personal_weapon_profile?["case_type"] || /obj/item/storage/box/personalcase
+	var/obj/item/storage/box/personalcase/pcase = new case_type(locker)
+	pcase.assign_owner(new_human.real_name)
+	new personal_weapon_type(pcase)
+
+	var/notice_text = personal_weapon_profile?["notice_text"]
+	if(notice_text)
+		notice_text = replacetext(notice_text, "%weapon%", "[chosen_weapon]")
+		to_chat(new_human, SPAN_NOTICE(notice_text))
+
+	return TRUE
+
 /datum/equipment_preset/proc/log_personal_locker_spawn_miss(mob/living/carbon/human/new_human, late_join = FALSE)
 	if(!new_human)
 		return

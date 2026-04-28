@@ -243,6 +243,9 @@ GLOBAL_LIST_INIT_TYPED(map_type_list, /obj/item/map, setup_all_maps())
 		MAP_LV_671 = new /obj/item/map/lv_671(),
 		MAP_OIL_DEPOT = new /obj/item/map/oil_depot(),
 		MAP_DERELICT_ALMAYER_INFESTED = new /obj/item/map/almayer/infested(),
+		MAP_ONI_SHIELD_BASE = new /obj/item/map/lv522_map(),
+		MAP_VALOROUS_CHANT = new /obj/item/map/lv522_map(),
+		MAP_686_REGRETFUL_FLAME = new /obj/item/map/lv522_map(),
 		// SS220 EDIT - END
 	)
 

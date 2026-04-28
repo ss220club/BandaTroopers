@@ -18,6 +18,9 @@
 
 	flags_atom = NO_SNOW_TYPE|NO_NAME_OVERRIDE
 
+	valid_accessory_slots = list(ACCESSORY_SLOT_UNGGOY_BICEP, ACCESSORY_SLOT_UNGGOY_SHOULDER)
+	restricted_accessory_slots = list(ACCESSORY_SLOT_UNGGOY_BICEP, ACCESSORY_SLOT_UNGGOY_SHOULDER)
+
 /obj/item/clothing/suit/marine/unggoy/minor
 	name = "боевая сбруя унггоя-минора"
 	desc = "Боевая сбруя для воинов-унггоев, выполненная из прочного наноламинатного композита и окрашенная в соответствии с рангом владельца. Из-за веса метанового баллона, который обычно крепится к сбруе, реальная площадь бронирования остаётся сравнительно небольшой и прикрывает в основном грудь, талию и плечи. <b>Этот вариант указывает, что владелец - унггой-минор.</b>"
@@ -35,7 +38,7 @@
 	icon_state = "unggoy_heavy"
 	item_state = "unggoy_heavy"
 
-	armor_bomb = CLOTHING_ARMOR_HIGH
+	armor_bomb = CLOTHING_ARMOR_VERYHIGH
 
 /obj/item/clothing/suit/marine/unggoy/ultra
 	name = "боевая сбруя унггоя-ультры"
@@ -91,8 +94,8 @@
 /obj/item/clothing/suit/marine/stealth/unggoy_specops/ultra
 	name = "спецоперативная боевая сбруя унггоя-ультры"
 	desc = "Модификация сбруи Spec-Ops, используемая ветеранами и специалистами из Special Warfare Group. Это заметное улучшение по сравнению с обычной спецоперативной сбруей: усиленные композиты рассчитаны уже на прямой бой. Многие считают унггоев трусливыми и слабыми, но немногие из тех, кто увидел этот чёрный комплект, доживают до рассказа об этом - а те, кто доживает, меняют мнение."
-	icon_state = "unggoy_specops_ultra"
-	item_state = "unggoy_specops_ultra"
+	icon_state = "unggoy_specultra"
+	item_state = "unggoy_specultra"
 
 	armor_melee = CLOTHING_ARMOR_HIGH
 	armor_bullet = CLOTHING_ARMOR_HIGHPLUS

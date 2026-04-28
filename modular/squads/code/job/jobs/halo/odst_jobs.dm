@@ -43,3 +43,37 @@
 	title = JOB_SO_ODST
 	gear_preset = /datum/equipment_preset/unsc/platco/odst
 	gear_preset_secondary = /datum/equipment_preset/unsc/platco/odst/lesser_rank
+
+/obj/effect/landmark/late_join/odst
+	name = "odst late join"
+	squad = SQUAD_ODST
+
+/obj/effect/landmark/start/marine/odst
+	name = JOB_SQUAD_MARINE_ODST
+	squad = SQUAD_ODST
+	job = /datum/job/marine/standard/ai/halo/odst
+
+/obj/effect/landmark/start/marine/rto/odst
+	name = JOB_SQUAD_RTO_ODST
+	squad = SQUAD_ODST
+	job = /datum/job/marine/standard/ai/rto/halo/odst
+
+/obj/effect/landmark/start/marine/medic/odst
+	name = JOB_SQUAD_MEDIC_ODST
+	squad = SQUAD_ODST
+	job = /datum/job/marine/medic/ai/halo/odst
+
+/obj/effect/landmark/start/marine/tl/odst
+	name = JOB_SQUAD_TEAM_LEADER_ODST
+	squad = SQUAD_ODST
+	job = /datum/job/marine/tl/ai/halo/odst
+
+/obj/effect/landmark/start/marine/leader/odst
+	name = JOB_SQUAD_LEADER_ODST
+	squad = SQUAD_ODST
+	job = /datum/job/marine/leader/ai/halo/odst
+
+/obj/effect/landmark/start/marine/spec/odst
+	name = JOB_SQUAD_SPECIALIST_ODST
+	squad = SQUAD_ODST
+	job = /datum/job/marine/specialist/ai/halo/odst

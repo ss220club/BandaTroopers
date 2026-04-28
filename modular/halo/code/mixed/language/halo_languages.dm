@@ -19,3 +19,14 @@
 	key = "u"
 	syllables = list("wrab","gub","zub","graf","wraf","grub","wr","af","ah","wa","snr","ne","uh")
 	space_chance = 40
+
+/datum/language/ruuhtian
+	name = LANGUAGE_RUUHTIAN
+	desc = "The clipped and rasping speech of Kig-Yar warriors."
+	speech_verb = "rasps"
+	ask_verb = "clicks"
+	exclaim_verb = list("shrills", "hisses")
+	color = "ruuhtian"
+	key = "k"
+	syllables = list("car", "caz", "cak", "crik", "crith", "croth", "krut", "kup", "kut", "zhar", "zhak", "zad", "zak", "zik", "zeev")
+	space_chance = 35

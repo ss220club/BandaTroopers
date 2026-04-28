@@ -146,6 +146,18 @@ map halo_new_irvine
 	default # SS220 EDIT
 endmap
 
+map halo_new_irvine_covenant
+endmap
+
+map oni_shield_base
+endmap
+
+map valorous_chant
+endmap
+
+map 686_regretful_flame
+endmap
+
 map mackay_station
 endmap
 
@@ -155,11 +167,3 @@ endmap
 map traxus_gamma_zone
 endmap
 # SS220 EDIT - END
-map lv671
-endmap
-
-map oil_depot
-endmap
-
-map derelict_almayer_infested
-endmap

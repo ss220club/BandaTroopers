@@ -115,3 +115,11 @@
 
 /datum/authority/branch/role/proc/get_main_ship_lowpop_keep_types()
 	return get_active_ship_lowpop_keep_types()
+
+/datum/authority/branch/role/proc/get_main_ship_personal_weapon_profile()
+	var/platoon_type = get_active_ship_platoon_type()
+	var/datum/modular_ship_platoon_profile/profile = get_ship_platoon_profile_datum(platoon_type)
+	return profile?.get_lowpop_personal_weapon_profile()
+
+/datum/authority/branch/role/proc/get_main_ship_lowpop_personal_weapon_profile()
+	return get_main_ship_personal_weapon_profile()

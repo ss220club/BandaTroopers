@@ -95,6 +95,9 @@
 /datum/proc/handle_click(mob/living/carbon/human/user, atom/A, params) //Heres our handle click relay proc thing.
 	return HANDLE_CLICK_PASS_THRU
 
+/atom/proc/superstrength_interaction(mob/living/carbon/human/user)
+	return FALSE
+
 /atom/proc/attack_hand(mob/user)
 	SEND_SIGNAL(src, COMSIG_ATOM_ATTACK_HAND, user)
 	return
@@ -163,5 +166,4 @@
 
 	target.Move(user.loc, get_dir(target.loc, user.loc))
 	target.update_transform(TRUE)
-
 

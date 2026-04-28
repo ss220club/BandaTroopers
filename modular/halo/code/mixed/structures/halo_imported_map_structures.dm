@@ -12,6 +12,9 @@
 /obj/structure/barricade/handrail/type_nv_chain
 	icon_state = "handrail_chain_nv"
 
+/obj/structure/flora/tree/jungle/bigtreeBOT/nomac
+	icon_state = "bigtreeBOT_nomac"
+
 /obj/structure/bed/chair/dropship/pelican
 	name = "pelican seat"
 	desc = "A sturdy metal chair with a brace that lowers over your body. Holds you in place during high altitude drops and high-G maneuvers."
@@ -61,6 +64,15 @@
 	if(buckled_mob && buckled_mob.buckled == src)
 		buckled_mob.layer = MOB_LAYER
 	return ..()
+
+/obj/structure/machinery/prop/almayer/CICmap/table/horizontal/segment/seven
+	icon_state = "h_maptable7"
+
+/obj/structure/machinery/prop/almayer/CICmap/yautja/empty
+	name = "covenant globe"
+	desc = "A hologram projector designed by the covenant to display worlds."
+	icon_state = "globe_empty"
+	faction = FACTION_COVENANT
 
 /obj/structure/platform/stone/new_varadero
 	name = "raised rock edges"

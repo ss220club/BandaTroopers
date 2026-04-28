@@ -290,35 +290,7 @@ DEFINES in setup.dm, referenced here.
 	if(istype(dropping, /obj/item/ammo_magazine))
 		if(!user.Adjacent(dropping))
 			return
-		var/obj/item/ammo_magazine/magazine = dropping
-		if(!istype(user) || user.is_mob_incapacitated(TRUE))
-			return
-		if(src != user.r_hand && src != user.l_hand)
-			to_chat(user, SPAN_WARNING("[src] must be in your hand to do that."))
-			return
-		if(flags_gun_features & GUN_INTERNAL_MAG)
-			to_chat(user, SPAN_WARNING("Can't do tactical reloads with [src]."))
-			return
-		//no tactical reload for the untrained.
-		if(user.skills.get_skill_level(SKILL_FIREARMS) == 0)
-			to_chat(user, SPAN_WARNING("You don't know how to do tactical reloads."))
-			return
-		if(istype(src, magazine.gun_type) || (magazine.type in src.accepted_ammo))
-			if(current_mag)
-				if(user.client?.prefs && (user.client?.prefs?.toggle_prefs & TOGGLE_AUTO_EJECT_MAGAZINE_TO_HAND))
-					unload(user)
-				else
-					unload(user, FALSE, TRUE)
-			to_chat(user, SPAN_NOTICE("You start a tactical reload."))
-			var/old_mag_loc = magazine.loc
-			var/tac_reload_time = 15
-			if(user.skills)
-				tac_reload_time = max(15 - 5*user.skills.get_skill_level(SKILL_FIREARMS), 5)
-			if(do_after(user,tac_reload_time, (INTERRUPT_ALL & (~INTERRUPT_MOVED)) , BUSY_ICON_FRIENDLY) && magazine.loc == old_mag_loc && !current_mag)
-				if(isstorage(magazine.loc))
-					var/obj/item/storage/master_storage = magazine.loc
-					master_storage.remove_from_storage(magazine)
-				reload(user, magazine)
+		tactical_reload(dropping, user)
 	else
 		..()
 
@@ -744,6 +716,44 @@ DEFINES in setup.dm, referenced here.
 
 	else
 		gun_firemode = gun_firemode_list[1]
+
+/obj/item/weapon/gun/proc/tactical_reload(obj/item/ammo_magazine/new_magazine, mob/living/carbon/human/user)
+	if(!istype(new_magazine, /obj/item/ammo_magazine))
+		return FALSE
+	if(!istype(user) || user.is_mob_incapacitated(TRUE))
+		return FALSE
+	if(!(istype(src, new_magazine.gun_type) || (new_magazine.type in src.accepted_ammo)))
+		to_chat(user, SPAN_WARNING("[new_magazine] cannot fit into [src]!"))
+		return FALSE
+	if(src != user.r_hand && src != user.l_hand)
+		to_chat(user, SPAN_WARNING("[src] must be in your hand to do that."))
+		return FALSE
+	if(flags_gun_features & GUN_INTERNAL_MAG)
+		to_chat(user, SPAN_WARNING("Can't do tactical reloads with [src]."))
+		return FALSE
+	if(!user.skills || user.skills.get_skill_level(SKILL_FIREARMS) <= 0)
+		to_chat(user, SPAN_WARNING("You don't know how to do tactical reloads."))
+		return FALSE
+
+	to_chat(user, SPAN_NOTICE("You start a tactical reload."))
+	if(current_mag)
+		if(user.client?.prefs && (user.client?.prefs?.toggle_prefs & TOGGLE_AUTO_EJECT_MAGAZINE_TO_HAND))
+			unload(user)
+		else
+			unload(user, FALSE, TRUE)
+
+	var/old_mag_loc = new_magazine.loc
+	var/gun_ho_level = max(user.skills.get_skill_level(SKILL_GUN_HO), 1)
+	var/tac_reload_time = max(15 / gun_ho_level, 5)
+	if(!do_after(user, tac_reload_time, (INTERRUPT_ALL & (~INTERRUPT_MOVED)), BUSY_ICON_FRIENDLY))
+		return FALSE
+	if(new_magazine.loc != old_mag_loc || current_mag)
+		return FALSE
+	if(isstorage(new_magazine.loc))
+		var/obj/item/storage/master_storage = new_magazine.loc
+		master_storage.remove_from_storage(new_magazine)
+	reload(user, new_magazine)
+	return TRUE
 
 /obj/item/weapon/gun/verb/use_toggle_burst()
 	set category = "Weapons"

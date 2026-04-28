@@ -767,7 +767,7 @@ This function completely restores a damaged organ to perfect condition.
 		skin_color = owner.skin_color
 		body_type = owner.body_type
 
-	if(isspeciessangheili(owner) || isspeciesunggoy(owner)) // SS220 EDIT: HALO limb visuals
+	if(isspeciessangheili(owner) || isspeciesunggoy(owner) || isspeciesruuhtian(owner) || isspeciesspartan(owner)) // SS220 EDIT: HALO limb visuals
 		skin_color = owner.skin_color
 		body_type = owner.body_type
 

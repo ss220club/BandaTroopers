@@ -93,6 +93,27 @@ Contains most of the procs that are called when a mob is attacked by something
 				return TRUE
 	return FALSE
 
+/mob/living/carbon/human/proc/check_energy_shield(damage = 0, attack_text = "the attack")
+	if(damage <= 0)
+		return 0
+	if(istype(wear_suit, /obj/item/clothing/suit/marine/shielded))
+		var/obj/item/clothing/suit/marine/shielded/shield_harness = wear_suit
+		var/residual_damage = shield_harness.take_damage(damage, src)
+		if(residual_damage < damage)
+			visible_message(SPAN_NOTICE("[src]'s energy shield shimmers from [attack_text]."), SPAN_DANGER("Your energy shield shimmers from [attack_text]!"))
+		return residual_damage
+	return damage
+
+/mob/living/carbon/human/proc/armor_degrade(damage = 0)
+	if(istype(wear_suit, /obj/item/clothing/suit/marine/unsc/mjolnir))
+		var/obj/item/clothing/suit/marine/unsc/mjolnir/mjolnir_armor = wear_suit
+		if(mjolnir_armor.armor_status > 0)
+			var/armor_loss = max(damage * 0.005, 0.05) // SS220 EDIT: scale Mjolnir degradation by incoming damage while keeping a small minimum wear
+			mjolnir_armor.armor_status = max(mjolnir_armor.armor_status - armor_loss, 0)
+			mjolnir_armor.armor_check()
+			return TRUE
+	return FALSE
+
 /mob/living/carbon/human/proc/check_shields(damage = 0, attack_text = "the attack", combistick=0)
 	if(l_hand && istype(l_hand, /obj/item/weapon))//Current base is the prob(50-d/3)
 		if(combistick && istype(l_hand,/obj/item/weapon/yautja/combistick) && prob(66))
@@ -194,6 +215,10 @@ Contains most of the procs that are called when a mob is attacked by something
 	if((user != src) && check_shields(I.force, "the [I.name]"))
 		return FALSE
 
+	var/remaining_force = check_energy_shield(I.force, "the [I.name]")
+	if(!remaining_force)
+		return FALSE
+
 	if(LAZYLEN(I.attack_verb))
 		visible_message(SPAN_DANGER("<B>[src] has been [pick(I.attack_verb)] in the [hit_area] with [I.name] by [user]!</B>"), null, null, 5)
 	else
@@ -207,14 +232,14 @@ Contains most of the procs that are called when a mob is attacked by something
 		weapon_sharp = FALSE
 		weapon_edge = FALSE
 
-	if(!I.force)
+	if(!remaining_force)
 		return FALSE
 	if(weapon_sharp)
 		user.flick_attack_overlay(src, "punch")
 	else
 		user.flick_attack_overlay(src, "punch")
 
-	var/damage = armor_damage_reduction(GLOB.marine_melee, I.force, armor, (weapon_sharp?30:0) + (weapon_edge?10:0)) // no penetration frm punches
+	var/damage = armor_damage_reduction(GLOB.marine_melee, remaining_force, armor, (weapon_sharp?30:0) + (weapon_edge?10:0)) // no penetration frm punches
 	apply_damage(damage, I.damtype, affecting, sharp=weapon_sharp, edge=weapon_edge, used_weapon=I)
 
 	if(damage > 5)
@@ -301,6 +326,10 @@ Contains most of the procs that are called when a mob is attacked by something
 	O.throwing = FALSE //it hit, so stop moving
 
 	if ((thrower != src) && check_shields(impact_damage, "[O]"))
+		return
+
+	impact_damage = check_energy_shield(impact_damage, "[O]")
+	if(!impact_damage)
 		return
 
 	var/obj/limb/affecting = get_limb(zone)

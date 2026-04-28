@@ -623,7 +623,7 @@
 
 /obj/item/storage/box/explosive_mines
 	name = "\improper M20A2 mine box"
-	desc = "A secure box holding five M20 anti-personnel proximity mines."
+	desc = "A secure box holding five M20 proximity-fuzed intelligent claymores." // SS220 EDIT: sync HALO PR139 M20 mine wording.
 	icon = 'icons/obj/items/storage/packets.dmi'
 	icon_state = "minebox"
 	w_class = SIZE_MEDIUM

@@ -11,6 +11,10 @@
 		WEAR_HEAD = 'icons/halo/mob/humans/onmob/clothing/hats/hats_by_faction/hat_unsc.dmi',
 	)
 
+/obj/item/clothing/head/helmet/marine/unsc/Initialize(mapload, list/new_protection)
+	. = ..()
+	AddComponent(/datum/component/halo_motion_sensor_manager)
+
 /obj/item/clothing/head/helmet/marine/unsc/pilot
 	name = "\improper FH252 helmet"
 	desc = "Типичный шлем большинства пилотов ККОН благодаря полностью закрытой конструкции. Особенно ценится в боевых условиях, когда кабина может оказаться разгерметизированной."

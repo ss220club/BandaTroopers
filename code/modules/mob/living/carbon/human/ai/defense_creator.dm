@@ -74,7 +74,32 @@
 	var/list/data = list()
 
 	data["defenses"] = lazy_ui_data
-	data["valid_factions"] = list(FACTION_MARINE, FACTION_UA_REBEL, FACTION_UPP, FACTION_CANC, FACTION_WY, FACTION_FREELANCER, FACTION_TWE, FACTION_TWE_REBEL, FACTION_MERCENARY, FACTION_COVENANT)
+	// SS220 EDIT - START
+	// Expose HALO and split Covenant factions to the shared defense creator UI.
+	data["valid_factions"] = list(
+		FACTION_MARINE,
+		FACTION_UA_REBEL,
+		FACTION_UPP,
+		FACTION_CANC,
+		FACTION_WY,
+		FACTION_FREELANCER,
+		FACTION_TWE,
+		FACTION_TWE_REBEL,
+		FACTION_MERCENARY,
+		FACTION_COVENANT,
+		FACTION_UNSC,
+		FACTION_INSURGENT,
+		FACTION_ONI,
+		FACTION_UNSCN,
+		FACTION_UEG_POLICE,
+		FACTION_UNGGOY,
+		FACTION_SANGHEILI,
+		FACTION_KIGYAR,
+		FACTION_SPECOPS_SANGHEILI,
+		FACTION_SPECOPS_UNGGOY,
+		FACTION_SPECOPS_KIGYAR
+	)
+	// SS220 EDIT - END
 
 	return data
 
@@ -441,11 +466,13 @@
 	icon_state = "claymore_wy"
 	path_to_spawn = /obj/item/explosive/mine/pmc/active
 
-/datum/human_ai_defense/mine/claymore/wy
+// SS220 EDIT - START
+/datum/human_ai_defense/mine/claymore/wy/strong
 	name = "Strong PMC Claymore"
 	desc = /obj/item/explosive/mine/pmc/strong/active::desc
 	icon_state = "claymore_wy"
 	path_to_spawn = /obj/item/explosive/mine/pmc/strong/active
+// SS220 EDIT - END
 
 /datum/human_ai_defense/mine/sebb
 	name = "G2 Electroshock"

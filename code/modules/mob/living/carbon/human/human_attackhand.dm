@@ -94,11 +94,20 @@
 			var/obj/limb/affecting = get_limb(rand_zone(attacking_mob.zone_selected, 70))
 			var/armor = getarmor(affecting, ARMOR_MELEE)
 
-			playsound(loc, attack.attack_sound, 25, 1)
-
-			visible_message(SPAN_DANGER("[attacking_mob] [pick(attack.attack_verb)]ed [src]!"), null, null, 5)
-
 			raw_damage = attack.damage + extra_cqc_dmg
+			raw_damage = check_energy_shield(raw_damage, "the hit")
+			if(!raw_damage)
+				return
+
+			// SS220 EDIT - START: keep punch feedback even when Mjolnir absorbs the blow
+			// if(armor_degrade(raw_damage))
+			// 	return
+			playsound(loc, attack.attack_sound, 25, 1)
+			if(armor_degrade(raw_damage))
+				visible_message(SPAN_DANGER("[attacking_mob] [pick(attack.attack_verb)]ed [src], but the Mjolnir armor absorbs the blow!"), null, null, 5)
+				return
+			// SS220 EDIT - END
+			visible_message(SPAN_DANGER("[attacking_mob] [pick(attack.attack_verb)]ed [src]!"), null, null, 5)
 			var/final_damage = armor_damage_reduction(GLOB.marine_melee, raw_damage, armor, FALSE) // no penetration from punches
 			apply_damage(final_damage, BRUTE, affecting, sharp=attack.sharp, edge = attack.edge)
 

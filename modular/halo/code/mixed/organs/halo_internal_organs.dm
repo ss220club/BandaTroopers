@@ -30,3 +30,18 @@
 
 /datum/internal_organ/liver/unggoy
 	removed_type = /obj/item/organ/liver/unggoy
+
+/datum/internal_organ/brain/kigyar
+	removed_type = /obj/item/organ/brain/kigyar
+
+/datum/internal_organ/heart/kigyar
+	removed_type = /obj/item/organ/heart/kigyar
+
+/datum/internal_organ/lungs/kigyar
+	removed_type = /obj/item/organ/lungs/kigyar
+
+/datum/internal_organ/kidneys/kigyar
+	removed_type = /obj/item/organ/kidneys/kigyar
+
+/datum/internal_organ/liver/kigyar
+	removed_type = /obj/item/organ/liver/kigyar

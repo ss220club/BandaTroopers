@@ -6,7 +6,7 @@
 	name = "Throw Back Grenade"
 	action_flags = ACTION_USING_HANDS | ACTION_USING_LEGS
 	var/min_safe_throw_distance = 4 // SS220 EDIT: throw-back should not deliberately choose turf inside the expected grenade danger radius
-	var/throw_ready_time = 0 // SS220 EDIT: keep a short reaction delay before the actual throw
+	var/throw_ready_time = 0 // SS220 EDIT: picked-up timed grenades roll a random hold window before the actual throw
 	var/mid_throw = FALSE // SS220 EDIT: transient async state keeps trigger_action() no-sleep while the real throw runs separately
 	var/throw_finished = FALSE // SS220 EDIT: transient async state completes the action on the next scheduler tick
 
@@ -109,7 +109,11 @@
 			throw_ready_time = 0
 			return ONGOING_ACTION_COMPLETED
 
-		throw_ready_time = world.time + 1 SECONDS // SS220 EDIT: keep the PR's reaction delay before the throw actually happens
+		var/remaining_fuse_ticks = active_grenade_found.get_remaining_timed_fuse_ticks()
+		if(isnull(remaining_fuse_ticks) || (remaining_fuse_ticks <= 0))
+			throw_ready_time = world.time // SS220 EDIT: if this grenade does not expose a usable timed-fuse window, toss it back immediately after pickup
+		else
+			throw_ready_time = world.time + rand(1, remaining_fuse_ticks) // SS220 EDIT: picked-up timed grenades may be tossed instantly or held until they nearly explode
 		return ONGOING_ACTION_UNFINISHED
 
 	if(world.time < throw_ready_time)

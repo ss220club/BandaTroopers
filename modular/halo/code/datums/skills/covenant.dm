@@ -1,5 +1,4 @@
-/datum/skills/covenant/sangheili
-	name = "Ковенант, сангхейли"
+/datum/skills/covenant
 	skills = list(
 		SKILL_ENGINEER = SKILL_ENGINEER_TRAINED,
 		SKILL_FIREMAN = SKILL_FIREMAN_DEFAULT,
@@ -15,5 +14,11 @@
 		SKILL_ENDURANCE = SKILL_ENDURANCE_TRAINED,
 	)
 
+/datum/skills/covenant/sangheili
+	name = "РљРѕРІРµРЅР°РЅС‚, СЃР°РЅРіС…РµР№Р»Рё"
+
 /datum/skills/covenant/unggoy
-	name = "Ковенант, унггой"
+	name = "РљРѕРІРµРЅР°РЅС‚, СѓРЅРіРіРѕР№"
+
+/datum/skills/covenant/ruuhtian
+	name = "Covenant, Ruuhtian"

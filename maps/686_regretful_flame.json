@@ -1,0 +1,10 @@
+{
+	"map_name": "686 Regretful Flame",
+    "short_name": "686_regretful_flame",
+	"map_path": "map_files/686_regretful_flame",
+	"map_file": "686_regretful_flame.dmm",
+    "webmap_url": "LV552",
+    "map_item_type": "/obj/item/map/lv522_map",
+    "weather_holder": "/datum/weather_ss_map_holder/lv522_chances_claim",
+    "traits": [{ "Ground": true }]
+}

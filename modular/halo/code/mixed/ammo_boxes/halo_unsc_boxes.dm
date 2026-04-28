@@ -144,6 +144,17 @@
 	overlay_ammo_type = "_ext"
 	magazine_type = /obj/item/ammo_magazine/rifle/halo/br55/extended
 
+/obj/item/ammo_box/magazine/unsc/dmr
+	name = "UNSC magazine box (DMR x 24)"
+	desc = "Ящик с 24 магазинами для M392 DMR."
+	icon_state = "base_ammo"
+	overlay_gun_type = "_dmr"
+	magazine_type = /obj/item/ammo_magazine/rifle/halo/dmr
+	num_of_magazines = 24
+
+/obj/item/ammo_box/magazine/unsc/dmr/empty
+	empty = TRUE
+
 /obj/item/ammo_box/magazine/unsc/small
 	name = "UNSC magazine box"
 	icon_state = "base_ammosmall"

@@ -55,6 +55,14 @@
 	var/aa_cooldown_time = 7 SECONDS
 	var/cancel_sounds
 	var/atom/movable/overlay/ammo_overlay
+	starting_attachment_types = list(/obj/item/attachable/spnkr_handle)
+	attachable_allowed = list(
+		/obj/item/attachable/spnkr_handle,
+		/obj/item/attachable/scope/spnkr,
+	)
+
+/obj/item/weapon/gun/halo_launcher/spnkr/set_gun_attachment_offsets()
+	attachable_offset = list("under_x" = 48, "under_y" = 16)
 
 /obj/item/weapon/gun/halo_launcher/spnkr/set_gun_config_values()
 	..()
@@ -231,7 +239,7 @@
 		ammo_overlay.icon_state = "spnkr_rockets"
 		ammo_overlay.vis_flags = VIS_INHERIT_ID | VIS_INHERIT_PLANE
 		ammo_overlay.layer = src.layer - 0.1
-		ammo_overlay.pixel_x = -2
+		ammo_overlay.pixel_x = -5
 		ammo_overlay.pixel_y = 1
 		if(current_mag.current_rounds <= 0)
 			ammo_overlay.icon_state = "spnkr_rockets_e"

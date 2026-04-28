@@ -48,3 +48,16 @@
 	armor_bullet = CLOTHING_ARMOR_ULTRAHIGH
 	armor_laser = CLOTHING_ARMOR_VERYHIGH
 	armor_bomb = CLOTHING_ARMOR_HIGH
+
+/obj/item/clothing/gloves/marine/ruuhtian
+	name = "\improper Ruuhtian vambrace"
+	desc = "A protected weapon-hand vambrace designed for Kig-Yar warriors."
+	icon = 'icons/halo/obj/items/clothing/covenant/gloves.dmi'
+	icon_state = "ruuhtian_vambrace"
+	item_state = "ruuhtian_vambrace"
+
+	item_icons = list(
+		WEAR_HANDS = 'icons/halo/mob/humans/onmob/clothing/ruuhtian/gloves.dmi'
+	)
+
+	allowed_species_list = list(SPECIES_RUUHTIAN)

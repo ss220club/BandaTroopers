@@ -13,10 +13,11 @@
 	)
 
 /obj/structure/largecrate/supply/ammo/halo/marksman
-	name = "UNSC marksman ammunition case"
-	desc = "A UNSC ammunition case containing DMR magazines for designated marksmen."
+	name = "UNSC designated rifle ammunition case"
+	desc = "A UNSC ammunition case containing BR55 and M392 DMR ammunition for squad leaders and marksmen."
 	supplies = list(
-		/obj/item/ammo_magazine/rifle/halo/dmr = 5,
+		/obj/item/ammo_box/magazine/unsc/br55 = 2,
+		/obj/item/ammo_box/magazine/unsc/dmr = 2,
 	)
 
 /obj/structure/largecrate/supply/ammo/halo/pdw

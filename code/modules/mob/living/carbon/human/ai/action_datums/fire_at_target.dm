@@ -339,6 +339,21 @@
 		qdel(src)
 		return
 
+	// SS220 EDIT - START
+	// else if(istype(brain.primary_weapon, /obj/item/weapon/gun/energy/plasma/plasma_pistol))
+	// else if(istype(brain.primary_weapon, /obj/item/weapon/gun/rifle/covenant_carbine))
+	var/datum/callback/followup_fire_callback = brain.primary_weapon.get_ai_followup_fire_callback(tied_human, brain.current_target)
+	if(followup_fire_callback)
+		currently_firing = FALSE
+		var/followup_fire_delay = brain.primary_weapon.get_ai_followup_fire_delay(tied_human, brain.current_target)
+		var/followup_fire_cooldown = brain.primary_weapon.get_ai_followup_fire_cooldown(tied_human, brain.current_target)
+		addtimer(followup_fire_callback, followup_fire_delay)
+		COOLDOWN_START(brain, stop_fire_cooldown, max(followup_fire_cooldown, followup_fire_delay))
+		stop_firing(brain)
+		qdel(src)
+		return
+	// SS220 EDIT - END
+
 	else if(brain.primary_weapon.gun_firemode == GUN_FIREMODE_SEMIAUTO)
 		currently_firing = FALSE
 		addtimer(CALLBACK(brain.primary_weapon, TYPE_PROC_REF(/obj/item/weapon/gun, start_fire), null, brain.current_target, null, null, null, TRUE), brain.primary_weapon.get_fire_delay())

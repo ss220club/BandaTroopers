@@ -25,7 +25,7 @@
 /datum/ammo/energy/halo_plasma/plasma_rifle
 	name = "plasma bolt"
 	icon_state = "plasma_blue"
-	shell_speed = AMMO_SPEED_TIER_4
+	shell_speed = AMMO_SPEED_TIER_2
 	accurate_range = 14
 	max_range = 24
 	damage = 38
@@ -42,7 +42,7 @@
 	accurate_range = 16
 	accuracy = HIT_ACCURACY_TIER_MAX
 	scatter = SCATTER_AMOUNT_TIER_10
-	shell_speed = AMMO_SPEED_TIER_3
+	shell_speed = AMMO_SPEED_TIER_2
 	effective_range_max = 7
 	damage_falloff = DAMAGE_FALLOFF_TIER_7
 	max_range = 24

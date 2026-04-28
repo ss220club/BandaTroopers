@@ -95,6 +95,27 @@
 	ranking = 9
 	pay_multiplier = 5
 
+/datum/paygrade/covenant/sangheili_stealth
+	paygrade = PAY_SHORT_SANG_STEALTH
+	name = "Stealth Operative"
+	prefix = "Stealth Operative"
+	ranking = 6
+	pay_multiplier = 2
+
+/datum/paygrade/covenant/sangheili_honor_guard
+	paygrade = PAY_SHORT_SANG_HONOR_GUARD
+	name = "Honor Guard"
+	prefix = "Honor Guard"
+	ranking = 9
+	pay_multiplier = 5
+
+/datum/paygrade/covenant/sangheili_honor_guard_los
+	paygrade = PAY_SHORT_SANG_HONOR_GUARD_LOS
+	name = "Lights of Sanghelios"
+	prefix = "Helios"
+	ranking = 10
+	pay_multiplier = 6
+
 // HIGH COMMAND
 
 /datum/paygrade/covenant/sangheili_commander

@@ -1034,6 +1034,9 @@
 			return TRUE
 	// SS220 EDIT - END
 
+	if(istype(wear_suit, /obj/item/clothing/suit/marine/unsc/mjolnir))
+		armor_degrade(P.damage)
+
 	if(P.ammo.debilitate && stat != DEAD && ( damage || ( ammo_flags & AMMO_IGNORE_RESIST) ) )  //They can't be dead and damage must be inflicted (or it's a xeno toxin).
 		//Predators and synths are immune to these effects to cut down on the stun spam. This should later be moved to their apply_effects proc, but right now they're just humans.
 		if(!isspeciesyautja(src) && !isspeciessynth(src))
@@ -1045,7 +1048,8 @@
 		return
 
 	P.play_hit_effect(src)
-	if(damage || (ammo_flags & AMMO_SPECIAL_EMBED))
+	// if(damage || (ammo_flags & AMMO_SPECIAL_EMBED))
+	if(damage_result || (ammo_flags & AMMO_SPECIAL_EMBED)) // SS220 EDIT: gate bullet embedding effects on post-armor damage for HALO shield/shrapnel parity.
 
 		var/splatter_dir = get_dir(P.starting, loc)
 		handle_blood_splatter(splatter_dir)
@@ -1053,7 +1057,8 @@
 		. = TRUE
 		apply_damage(damage_result, P.ammo.damage_type, P.def_zone, firer = P.firer)
 
-		if(P.ammo.shrapnel_chance > 0 && prob(P.ammo.shrapnel_chance + floor(damage / 10)))
+		// if(P.ammo.shrapnel_chance > 0 && prob(P.ammo.shrapnel_chance + floor(damage / 10)))
+		if(P.ammo.shrapnel_chance > 0 && damage > 0 && (damage_result / damage) > 0.5 && prob(trunc(P.ammo.shrapnel_chance * damage_result / damage))) // SS220 EDIT: scale shrapnel chance by post-armor damage.
 			if(ammo_flags & AMMO_SPECIAL_EMBED)
 				P.ammo.on_embed(src, organ)
 

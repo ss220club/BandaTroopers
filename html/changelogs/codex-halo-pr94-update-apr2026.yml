@@ -1,0 +1,13 @@
+author: Codex
+delete-after: True
+changes:
+  - tweak: "Refreshed the HALO PR94 branch on top of the merged HALO main-wave master sync while preserving the SS220 modular split."
+  - rscadd: "Updated HALO Kig-Yar Ruuhtian loadouts from the latest upstream PR #97 tail, adding modular plasma pistol, needler, plasma rifle, carbine, marksman, and sniper variants."
+  - rscadd: "Completed modular Spartan HumanAI wrappers and added lore-oriented Spartan assault, sniper, hunter-killer, and strike-team squad presets."
+  - tweak: "Aligned HALO Sangheili, Unggoy, and Kig-Yar equipment presets with Covenant split-faction ownership so Create Humans, HumanAI Spawn, and Squad Spawner preserve the correct HALO subfactions."
+  - rscadd: "Expanded the HALO squad roster with refreshed Sangheili and Kig-Yar lances plus new Covenant SpecOps and honor-guard oriented squad variants."
+  - rscadd: "Expanded PR94 HumanAI and Squad Spawner coverage for Unggoy weapon aliases, richer UNSC and ODST support teams, ONI field cells, UEG police response teams, and insurgent breach or command groups."
+  - tweak: "Aligned UNSC Stalwart Frigate fireteam leader job lockers with the new HALO DMR leader baseline instead of legacy BR55 issue."
+  - rscadd: "Expanded targeted unit coverage for split-faction equipment contracts, Kig-Yar and Spartan species wiring, HumanAI faction exposure, and the new HALO squad presets."
+  - rscadd: "Ported the latest upstream PR #97 Unggoy armor and loadout tail, including accessory slots, heavy harness blast armor, deterministic public weapon presets, and Human AI machinegunner entries."
+  - rscadd: "Added targeted unit coverage for PR #97 Unggoy harness slots, heavy armor values, and plasma pistol/plasma rifle preset wiring."

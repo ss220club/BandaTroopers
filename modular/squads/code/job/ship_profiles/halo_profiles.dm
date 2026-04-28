@@ -26,6 +26,24 @@
 	)
 	distress_roles = JOB_HALO_UNSC_SHIPSIDE_LIST + GLOB.ROLES_GROUND
 	lowpop_roles = list(JOB_SO_UNSC) + JOB_HALO_UNSC_MARINES_LIST
+	lowpop_personal_weapon_options = get_default_personal_weapon_options()
+	lowpop_personal_weapon_spawn_types = list(
+		"Shotgun" = /obj/effect/essentials_set/m90caws,
+		"Compact shotgun" = /obj/effect/essentials_set/m90caws,
+		"Double-barrel shotgun" = /obj/effect/essentials_set/m90caws,
+		"Grenade launcher" = /obj/effect/essentials_set/ma5_launcher,
+		"Compact grenade launcher" = /obj/effect/essentials_set/ma5_launcher,
+		"Grenade pack" = /obj/effect/essentials_set/m9_frag_4_pack,
+	)
+	lowpop_personal_weapon_legacy_aliases = get_default_personal_weapon_legacy_aliases()
+	lowpop_personal_weapon_default = "Shotgun"
+	lowpop_personal_weapon_label = "Rifleman Support Weapon"
+	lowpop_personal_weapon_prompt = "Choose your character's support weapon:"
+	lowpop_personal_weapon_title = "Character Preference (HALO Only)"
+	lowpop_personal_weapon_notice_text = "You remember that your requisition for a <b>%weapon%</b> was approved. It's in your personal locker."
+	lowpop_personal_weapon_roles = list(JOB_SQUAD_MARINE)
+	lowpop_personal_weapon_required_faction = FACTION_UNSC
+	lowpop_personal_weapon_case_type = /obj/item/storage/box/personalcase/unsc
 	preview_presets = list(
 		JOB_SO = /datum/equipment_preset/unsc/platco/equipped,
 		JOB_SQUAD_MARINE = /datum/equipment_preset/unsc/pfc/equipped,
@@ -116,6 +134,24 @@
 	)
 	distress_roles = JOB_HALO_ODST_SHIPSIDE_LIST + GLOB.ROLES_GROUND
 	lowpop_roles = list(JOB_SO_ODST) + JOB_HALO_ODST_MARINES_LIST
+	lowpop_personal_weapon_options = get_default_personal_weapon_options()
+	lowpop_personal_weapon_spawn_types = list(
+		"Shotgun" = /obj/effect/essentials_set/m90caws,
+		"Compact shotgun" = /obj/effect/essentials_set/m90caws,
+		"Double-barrel shotgun" = /obj/effect/essentials_set/m90caws,
+		"Grenade launcher" = /obj/effect/essentials_set/ma5_launcher,
+		"Compact grenade launcher" = /obj/effect/essentials_set/ma5_launcher,
+		"Grenade pack" = /obj/effect/essentials_set/m9_frag_4_pack,
+	)
+	lowpop_personal_weapon_legacy_aliases = get_default_personal_weapon_legacy_aliases()
+	lowpop_personal_weapon_default = "Shotgun"
+	lowpop_personal_weapon_label = "Rifleman Support Weapon"
+	lowpop_personal_weapon_prompt = "Choose your character's support weapon:"
+	lowpop_personal_weapon_title = "Character Preference (HALO Only)"
+	lowpop_personal_weapon_notice_text = "You remember that your requisition for a <b>%weapon%</b> was approved. It's in your personal locker."
+	lowpop_personal_weapon_roles = list(JOB_SQUAD_MARINE)
+	lowpop_personal_weapon_required_faction = FACTION_UNSC
+	lowpop_personal_weapon_case_type = /obj/item/storage/box/personalcase/unsc
 	preview_presets = list(
 		JOB_SO = /datum/equipment_preset/unsc/platco/odst/equipped,
 		JOB_SQUAD_MARINE = /datum/equipment_preset/unsc/pfc/odst/equipped,

@@ -599,6 +599,12 @@
 /// Change the [body_position] to [LYING_DOWN] and update associated behavior.
 /mob/living/proc/set_lying_down(new_lying_angle)
 	set_body_position(LYING_DOWN)
+	if(body_position != LYING_DOWN)
+		return
+	if(!isnull(new_lying_angle))
+		set_lying_angle(new_lying_angle, TRUE) // SS220 EDIT: explicit prone callers must restore the visual lying transform immediately
+	else if(lying_angle == 0)
+		set_lying_angle(pick(90, 270), TRUE) // SS220 EDIT: rest/death-driven prone must not keep a stale standing transform
 
 /// Proc to append behavior related to lying down.
 /mob/living/proc/on_lying_down(new_lying_angle)

@@ -2,7 +2,7 @@
 #define ishuman(A) (istype(A, /mob/living/carbon/human) )
 
 //Check if the mob is an actual human (and not Yautja or Synth)
-#define ishuman_strict(A) (ishuman(A) && istype(A?:species, /datum/species/human))
+#define ishuman_strict(A) (ishuman(A) && (istype(A?:species, /datum/species/human) || istype(A?:species, /datum/species/spartan))) // SS220 EDIT: HALO Spartan counts as strict human for shared voice/emote flows
 
 //Check if the mob is an actual human or Synth
 #define ishumansynth_strict(A)   (ishuman(A) && (istype(A?:species, /datum/species/human) || istype(A?:species, /datum/species/synthetic)))
@@ -12,6 +12,8 @@
 #define isyautja(A) (ishuman(A) && istype(A?:species, /datum/species/yautja))
 #define issangheili(A) (ishuman(A) && istype(A?:species, /datum/species/sangheili)) // SS220 EDIT: HALO species helper
 #define isunggoy(A) (ishuman(A) && istype(A?:species, /datum/species/unggoy)) // SS220 EDIT: HALO species helper
+#define isruuhtian(A) (ishuman(A) && istype(A?:species, /datum/species/ruuhtian)) // SS220 EDIT: HALO species helper
+#define isspartan(A) (ishuman(A) && istype(A?:species, /datum/species/spartan)) // SS220 EDIT: HALO species helper
 #define isresearcher(A) (ishuman(A) && A.job == "Researcher")
 #define isSEA(A) (ishuman(A) && A.job == "Senior Enlisted Advisor")
 #define issynth(A) (ishuman(A) && istype(A?:species, /datum/species/synthetic))
@@ -30,6 +32,8 @@
 #define isspeciessynth(A) (A.species?.group == SPECIES_SYNTHETIC)
 #define isspeciessangheili(A) (A.species?.group == SPECIES_SANGHEILI) // SS220 EDIT: HALO species helper
 #define isspeciesunggoy(A) (A.species?.group == SPECIES_UNGGOY) // SS220 EDIT: HALO species helper
+#define isspeciesruuhtian(A) (A.species?.group == SPECIES_RUUHTIAN) // SS220 EDIT: HALO species helper
+#define isspeciesspartan(A) (A.species?.group == SPECIES_SPARTAN) // SS220 EDIT: HALO species helper
 
 //Size checks for carbon to use instead of typechecks. (Hellhounds are deprecated)
 #define iscarbonsizexeno(A) (A.mob_size >= MOB_SIZE_XENO_VERY_SMALL)

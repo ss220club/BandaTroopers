@@ -135,6 +135,16 @@
 
 // shotgun shells
 
+/obj/item/ammo_magazine/handful/shotgun/buckshot_unsc
+	name = "handful of MAG 15P-00B (8g)"
+	icon_state = "8g_shell_6"
+	handful_state = "8g_shell"
+	caliber = "8g"
+	default_ammo = /datum/ammo/bullet/shotgun/buckshot/unsc
+	max_rounds = 6
+	current_rounds = 6
+	transfer_handful_amount = 6
+
 /obj/item/ammo_magazine/shotgun/buckshot/unsc
 	name = "UNSC 8-gauge shotgun shell box"
 	desc = "Коробка, заполненная дробовыми патронами MAG 15P-00B 8-го калибра."

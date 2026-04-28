@@ -296,6 +296,15 @@
 			toggle_ammo()
 			qdel(overcharge_overlay)
 
+/obj/item/weapon/gun/energy/plasma/plasma_pistol/get_ai_followup_fire_callback(mob/living/carbon/human/user, atom/target)
+	return CALLBACK(src, TYPE_PROC_REF(/obj/item/weapon/gun/energy/plasma/plasma_pistol, start_fire), user)
+
+/obj/item/weapon/gun/energy/plasma/plasma_pistol/get_ai_followup_fire_delay(mob/living/carbon/human/user, atom/target)
+	return get_fire_delay() * 0.25
+
+/obj/item/weapon/gun/energy/plasma/plasma_pistol/get_ai_followup_fire_cooldown(mob/living/carbon/human/user, atom/target)
+	return get_fire_delay() + 0.25
+
 /obj/item/weapon/gun/energy/plasma/plasma_pistol/proc/toggle_ammo()
 	if(ammo == plasma_bolt)
 		ammo = overcharged_bolt
@@ -523,3 +532,12 @@
 
 /obj/item/weapon/gun/rifle/covenant_carbine/unload_chamber(mob/user)
 	return
+
+/obj/item/weapon/gun/rifle/covenant_carbine/get_ai_followup_fire_callback(mob/living/carbon/human/user, atom/target)
+	return CALLBACK(src, TYPE_PROC_REF(/obj/item/weapon/gun/rifle/covenant_carbine, start_fire), user)
+
+/obj/item/weapon/gun/rifle/covenant_carbine/get_ai_followup_fire_delay(mob/living/carbon/human/user, atom/target)
+	return get_fire_delay()
+
+/obj/item/weapon/gun/rifle/covenant_carbine/get_ai_followup_fire_cooldown(mob/living/carbon/human/user, atom/target)
+	return get_fire_delay() + 1

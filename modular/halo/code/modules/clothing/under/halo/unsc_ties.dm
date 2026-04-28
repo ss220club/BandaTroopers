@@ -188,6 +188,26 @@
 	new /obj/item/ammo_magazine/rifle/halo/ma5c(src)
 	new /obj/item/ammo_magazine/rifle/halo/ma5c(src)
 
+/obj/item/clothing/accessory/storage/webbing/m52b/mag/m7
+	hold = /obj/item/storage/internal/accessory/webbing/m52bmag/m7
+
+/obj/item/storage/internal/accessory/webbing/m52bmag/m7/fill_preset_inventory()
+	new /obj/item/ammo_magazine/smg/halo/m7(src)
+	new /obj/item/ammo_magazine/smg/halo/m7(src)
+	new /obj/item/ammo_magazine/smg/halo/m7(src)
+	new /obj/item/ammo_magazine/smg/halo/m7(src)
+	new /obj/item/ammo_magazine/smg/halo/m7(src)
+
+/obj/item/clothing/accessory/storage/webbing/m52b/mag/ma5b
+	hold = /obj/item/storage/internal/accessory/webbing/m52bmag/ma5b
+
+/obj/item/storage/internal/accessory/webbing/m52bmag/ma5b/fill_preset_inventory()
+	new /obj/item/ammo_magazine/rifle/halo/ma5b(src)
+	new /obj/item/ammo_magazine/rifle/halo/ma5b(src)
+	new /obj/item/ammo_magazine/rifle/halo/ma5b(src)
+	new /obj/item/ammo_magazine/rifle/halo/ma5b(src)
+	new /obj/item/ammo_magazine/rifle/halo/ma5b(src)
+
 //===
 
 /obj/item/clothing/accessory/storage/webbing/m52b/shotgun

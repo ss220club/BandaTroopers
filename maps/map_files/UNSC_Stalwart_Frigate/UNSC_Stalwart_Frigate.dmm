@@ -8696,7 +8696,8 @@
 /obj/structure/closet/secure_closet/halo/job_locker/squad_leader,
 /obj/item/device/binoculars/range/designator/sergeant,
 /obj/item/attachable/attached_gun/grenade/ma5c,
-/obj/item/weapon/gun/rifle/halo/br55/unloaded,
+/obj/item/ammo_box/magazine/unsc/dmr,
+/obj/item/weapon/gun/rifle/halo/dmr/unloaded,
 /turf/open/floor/almayer/plating_striped/east,
 /area/unsc_stalwart_frigate/armory)
 "aqd" = (
@@ -8725,7 +8726,8 @@
 /obj/structure/closet/secure_closet/halo/job_locker/squad_leader,
 /obj/item/device/binoculars/range/designator/sergeant,
 /obj/item/attachable/attached_gun/grenade/ma5c,
-/obj/item/weapon/gun/rifle/halo/br55/unloaded,
+/obj/item/ammo_box/magazine/unsc/dmr,
+/obj/item/weapon/gun/rifle/halo/dmr/unloaded,
 /turf/open/floor/almayer/plating_striped/west,
 /area/unsc_stalwart_frigate/armory)
 "aqi" = (
@@ -13289,7 +13291,7 @@
 "aBe" = (
 /obj/structure/closet/secure_closet/halo/job_locker/fireteam_leader/ft2,
 /obj/item/device/binoculars/range/monocular,
-/obj/item/weapon/gun/rifle/halo/br55/unloaded,
+/obj/item/weapon/gun/rifle/halo/dmr/unloaded,
 /obj/structure/sign/safety/two{
 	pixel_x = -16
 	},
@@ -22467,7 +22469,7 @@
 "mdn" = (
 /obj/structure/closet/secure_closet/halo/job_locker/fireteam_leader/ft2,
 /obj/item/device/binoculars/range/monocular,
-/obj/item/weapon/gun/rifle/halo/br55/unloaded,
+/obj/item/weapon/gun/rifle/halo/dmr/unloaded,
 /obj/structure/sign/safety/two{
 	pixel_x = 32
 	},
@@ -24717,7 +24719,7 @@
 "pkq" = (
 /obj/structure/closet/secure_closet/halo/job_locker/fireteam_leader/ft1,
 /obj/item/device/binoculars/range/monocular,
-/obj/item/weapon/gun/rifle/halo/br55/unloaded,
+/obj/item/weapon/gun/rifle/halo/dmr/unloaded,
 /obj/structure/sign/safety/one{
 	pixel_x = -16
 	},
@@ -25070,7 +25072,7 @@
 "pIL" = (
 /obj/structure/closet/secure_closet/halo/job_locker/fireteam_leader/ft1,
 /obj/item/device/binoculars/range/monocular,
-/obj/item/weapon/gun/rifle/halo/br55/unloaded,
+/obj/item/weapon/gun/rifle/halo/dmr/unloaded,
 /obj/structure/sign/safety/one{
 	pixel_x = 32
 	},

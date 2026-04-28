@@ -1,4 +1,5 @@
 #define HUMAN_AI_GRENADE_MIN_HOLD_DELAY (1 SECONDS)
+#define HUMAN_AI_GRENADE_POST_PRIME_THROW_DELAY (1 SECONDS)
 
 /datum/ai_action/throw_grenade
 	name = "Throw Grenade"
@@ -112,6 +113,68 @@
 
 	return TRUE
 
+/datum/ai_action/throw_grenade/proc/get_effective_throw_range(obj/item/explosive/grenade/grenade)
+	if(!grenade || QDELETED(grenade))
+		return null
+
+	var/effective_throw_range = isnum(grenade.throw_range) ? grenade.throw_range : throw_range_override
+	if(!isnum(effective_throw_range))
+		return null
+
+	return effective_throw_range
+
+/datum/ai_action/throw_grenade/proc/get_fallback_throw_directions(mob/living/carbon/human/tied_human, turf/original_target)
+	var/list/directions = list()
+	var/original_dir = original_target ? get_dir(tied_human, original_target) : 0
+
+	if(original_dir)
+		for(var/direction in make_dir_cardinal(original_dir))
+			if(!(direction in directions))
+				directions += direction
+
+	if(tied_human?.dir)
+		for(var/direction in make_dir_cardinal(tied_human.dir))
+			if(!(direction in directions))
+				directions += direction
+
+	for(var/direction in GLOB.cardinals)
+		if(!(direction in directions))
+			directions += direction
+
+	return directions
+
+/datum/ai_action/throw_grenade/proc/has_friendly_near_throw_target(turf/target_turf)
+	if(!brain || !target_turf)
+		return FALSE
+
+	for(var/mob/possible_friendly in range(3, target_turf))
+		if(!brain.can_target(possible_friendly))
+			return TRUE
+
+	return FALSE
+
+/datum/ai_action/throw_grenade/proc/resolve_throw_target(mob/living/carbon/human/tied_human, obj/item/explosive/grenade/grenade, turf/original_target)
+	if(can_throw_to_target(tied_human, grenade, original_target))
+		return original_target
+
+	var/effective_throw_range = get_effective_throw_range(grenade)
+	if(!isnum(effective_throw_range) || (effective_throw_range <= min_safe_throw_distance))
+		return null
+
+	var/list/fallback_directions = get_fallback_throw_directions(tied_human, original_target)
+	for(var/direction in fallback_directions)
+		var/turf/cardinal_target = get_ranged_target_turf(tied_human, direction, effective_throw_range)
+		if(can_throw_to_target(tied_human, grenade, cardinal_target) && !has_friendly_near_throw_target(cardinal_target))
+			return cardinal_target
+
+	for(var/direction in fallback_directions)
+		for(var/candidate_range = effective_throw_range; candidate_range > min_safe_throw_distance; candidate_range--)
+			var/turf/cardinal_target = get_ranged_target_turf(tied_human, direction, candidate_range)
+			if(can_throw_to_target(tied_human, grenade, cardinal_target))
+				return cardinal_target
+
+	return null
+
 /datum/ai_action/throw_grenade/proc/finish_async_throw()
 	mid_throw = FALSE
 	throw_finished = TRUE
@@ -141,26 +204,26 @@
 		return
 
 	brain.ensure_primary_hand(grenade)
-	sleep(grenade.det_time * 0.4)
+	brain.say_grenade_thrown_line() // SS220 EDIT: keep the voiceline inside the fixed one-second post-prime throw window
+	sleep(HUMAN_AI_GRENADE_POST_PRIME_THROW_DELAY) // SS220 EDIT: generic AI should release its own primed grenade after one second, not after burning most of the fuse in hand
 	if(QDELETED(grenade) || (grenade.loc != tied_human))
 		finish_async_throw()
 		return
 
-	brain.say_grenade_thrown_line()
-	sleep(grenade.det_time * 0.4)
-	if(QDELETED(grenade) || (grenade.loc != tied_human))
+	if(!try_hold_grenade(tied_human, grenade))
 		finish_async_throw()
 		return
 
-	if(!try_hold_grenade(tied_human, grenade) || !can_throw_to_target(tied_human, grenade, target_turf))
+	var/turf/final_target_turf = resolve_throw_target(tied_human, grenade, target_turf)
+	if(!final_target_turf)
 		finish_async_throw()
 		return
 
 	if(!tied_human.throw_mode)
 		tied_human.toggle_throw_mode(THROW_MODE_NORMAL)
 
-	tied_human.face_atom(target_turf)
-	tied_human.throw_item(target_turf) // SS220 EDIT: actual throw now stays inside the action-owned async tail instead of item ai_use()
+	tied_human.face_atom(final_target_turf)
+	tied_human.throw_item(final_target_turf) // SS220 EDIT: still release the primed grenade if the original target turf became invalid during the one-second wind-up
 	finish_async_throw()
 
 /datum/ai_action/throw_grenade/trigger_action()
@@ -199,3 +262,4 @@
 	return ONGOING_ACTION_UNFINISHED_BLOCK
 
 #undef HUMAN_AI_GRENADE_MIN_HOLD_DELAY
+#undef HUMAN_AI_GRENADE_POST_PRIME_THROW_DELAY
