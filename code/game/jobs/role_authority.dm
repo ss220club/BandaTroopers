@@ -966,6 +966,16 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 		if(ARACHNID_CASTE_BOMBARDIER)
 			M = /mob/living/carbon/xenomorph/arachnid/bombardier
 		// SS220 ADDITION End - Arachnid
+		// SS220 ADDITION Start - Pony xeno
+		if(PONY_XENO_CASTE_PEGASUS_SKIRMISHER)
+			M = /mob/living/carbon/xenomorph/pony/pegasus_skirmisher
+		if(PONY_XENO_CASTE_EARTH_BRUISER)
+			M = /mob/living/carbon/xenomorph/pony/earth_bruiser
+		if(PONY_XENO_CASTE_UNICORN_CASTER)
+			M = /mob/living/carbon/xenomorph/pony/unicorn_caster
+		if(PONY_XENO_CASTE_ALICORN_MATRIARCH)
+			M = /mob/living/carbon/xenomorph/pony/alicorn_matriarch
+		// SS220 ADDITION End - Pony xeno
 	return M
 
 

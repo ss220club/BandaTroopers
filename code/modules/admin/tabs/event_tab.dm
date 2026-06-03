@@ -876,6 +876,7 @@
 		var/hive_types = jointext(ALL_XENO_HIVES, ";")
 		var/xeno_types = jointext(ALL_XENO_CASTES, ";")
 		xeno_types += ";" + jointext(ALL_ARACHNID_CASTES, ";") // SS220 EDIT - Arachnid
+		xeno_types += ";" + jointext(ALL_PONY_XENO_CASTES, ";") // SS220 EDIT - Pony xeno
 		create_xenos_html = file2text('html/create_xenos.html')
 		create_xenos_html = replacetext(create_xenos_html, "null /* hive paths */", "\"[hive_types]\"")
 		create_xenos_html = replacetext(create_xenos_html, "null /* xeno paths */", "\"[xeno_types]\"")

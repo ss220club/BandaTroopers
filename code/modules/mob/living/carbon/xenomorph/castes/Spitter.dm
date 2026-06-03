@@ -79,9 +79,19 @@
 	xeno_cooldown = 16 SECONDS
 
 /datum/action/xeno_action/activable/spray_acid/spitter/ai/process_ai(mob/living/carbon/xenomorph/parent, delta_time)
-	return DT_PROB(ai_prob_chance, delta_time) && (get_dist(parent, parent.current_target) <= 4) && !check_for_obstacles_projectile(parent, parent.current_target) && use_ability_async(parent.current_target)
+	return DT_PROB(ai_prob_chance, delta_time) && (get_dist(parent, parent.current_target) <= 4) && !check_for_obstacles_projectile(parent, parent.current_target, parent.ammo) && use_ability_async(parent.current_target)
 
 /proc/check_for_obstacles_projectile(mob/firer, mob/target, datum/ammo/ammo_datum)
+	if(!firer || !target)
+		return TRUE
+
+	if(!ammo_datum && isxeno(firer))
+		var/mob/living/carbon/xenomorph/xeno_firer = firer
+		ammo_datum = xeno_firer.ammo
+
+	if(!ammo_datum)
+		return TRUE
+
 	var/list/turf/path = get_line(firer, target, include_start_atom = FALSE)
 	if(!length(path) || get_dist(firer, target) > ammo_datum.max_range)
 		return TRUE
