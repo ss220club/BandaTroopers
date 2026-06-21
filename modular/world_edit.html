@@ -1,0 +1,31 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../"><link rel="stylesheet" href="dmdoc.css"><title>modular/world_edit/README.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>World Edit Modpack <aside>modular/world_edit/README.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/world_edit/README.md"><img src="git.png" width="16" height="16" title="modular/world_edit/README.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><p>Модуль World Edit предоставляет live-only каркас для админских инструментов редактирования мира и генераторов структур.</p>
+<h2 id="основные-правила">Основные правила</h2>
+<ul>
+<li>В модуле нет исторических паспортов и старых контуров настройки.</li>
+<li>Новый код и документация живут только в <code>modular/world_edit/*</code>.</li>
+<li>Точка входа TGUI-панели: <code>tgui/packages/tgui/interfaces/WorldEditPanel/index.tsx</code>.</li>
+<li>Документация и комментарии в модуле ведутся на русском языке.</li>
+</ul>
+<h2 id="состав">Состав</h2>
+<ul>
+<li><code>_world_edit.dm</code>: регистрация модпака.</li>
+<li><code>code/core/world_edit_types.dm</code>: базовые типы, контракты и результаты операций.</li>
+<li><code>code/core/world_edit_logging.dm</code>: единый контракт audit-логов.</li>
+<li><code>code/core/world_edit_registry.dm</code>: реестр live-генераторов и проверок доступа.</li>
+<li><code>code/core/manager/lifecycle/*</code>, <code>state/*</code>, <code>runtime/*</code>, <code>session/*</code>, <code>ui/*</code>: менеджер сессии, runtime, интеграции и TGUI разложены по доменам ответственности.</li>
+<li><code>code/generators/outpost_radius/*</code>, <code>destruction_pack/*</code>, <code>blueprint_stamp/*</code>: live-генераторы сгруппированы по семействам, чтобы planner/runtime/ui split шел внутри своей папки.</li>
+<li><code>code/generators/shared/world_edit_generator_shared_helpers.dm</code>: общие helper-процедуры генераторов.</li>
+<li><code>code/effects/world_edit_persistent_fire.dm</code>: служебные эффекты модуля.</li>
+</ul>
+<h2 id="документация">Документация</h2>
+<ul>
+<li><code>docs/game_design.md</code>: live UX, права, guardrails, click-intercept.</li>
+<li><code>docs/ui_field_schema.md</code>: inline UI-контракт генераторов.</li>
+<li><code>docs/generator_document_template.md</code>: шаблон документации для live-генератора.</li>
+</ul>
+<h2 id="current-ready-surface">Current ready surface</h2>
+<ul>
+<li><code>outpost_radius</code></li>
+<li><code>destruction_pack</code></li>
+<li><code>blueprint_stamp</code></li>
+</ul></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

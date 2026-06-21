@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/halo/__docs/HALO_TTS_SEEDS.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>HALO TTS Seeds <aside>modular/halo/__docs/HALO_TTS_SEEDS.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/halo/__docs/HALO_TTS_SEEDS.md"><img src="git.png" width="16" height="16" title="modular/halo/__docs/HALO_TTS_SEEDS.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><p>Canonical HALO shortlist data for Covenant race defaults that use <code>Silero</code> seeds from the shared TTS module.</p>
+<h2 id="defaults">Defaults</h2>
+<ul>
+<li><code>Sangheili -&gt; Alarak</code></li>
+<li><code>Unggoy -&gt; Dobby</code></li>
+</ul>
+<h2 id="canonical-packs">Canonical packs</h2><h3 id="sangheili">Sangheili</h3>
+<ul>
+<li><code>Pack A (Recommended)</code>: <code>Alarak</code>, <code>Arthas</code>, <code>Malganis</code></li>
+<li><code>Pack B</code>: <code>Arthas</code>, <code>Alarak</code>, <code>Sion</code></li>
+</ul>
+<h3 id="unggoy">Unggoy</h3>
+<ul>
+<li><code>Pack A (Recommended)</code>: <code>Dobby</code>, <code>Ziggs</code>, <code>Twitch</code></li>
+<li><code>Pack B</code>: <code>Ziggs</code>, <code>Twitch</code>, <code>Gazlowe</code></li>
+<li><code>Pack C</code>: <code>Dobby</code>, <code>Gazlowe</code>, <code>Cicero</code></li>
+</ul>
+<h2 id="integration-rule">Integration rule</h2>
+<ul>
+<li>Halo race defaults apply automatically for <code>Sangheili</code> and <code>Unggoy</code>.</li>
+<li>Explicit player <code>prefs.tts_seed</code> wins over the Halo race default and is preserved.</li>
+<li>The default is reapplied after Halo equipment presets finish loading so randomized preset flows do not drift away from the species mapping.</li>
+</ul>
+<h2 id="audit-status">Audit status</h2>
+<ul>
+<li>Audited against repo state on <code>2026-03-13</code>.</li>
+<li>Runtime mapping lives in <code>modular/halo/code/mixed/compat/halo_tts.dm</code>.</li>
+<li>The default-apply path is called from both HALO species spawn handlers and HALO equipment preset loading.</li>
+<li><code>modular/text_to_speech/code/seeds/silero.dm</code> currently defines <code>848</code> <code>/datum/tts_seed/silero</code> entries.</li>
+<li>Approved shortlist registry buckets at audit time:
+<ul>
+<li><code>Alarak</code>, <code>Arthas</code>, <code>Malganis</code>, <code>Sion</code>, <code>Dobby</code>, <code>Ziggs</code>, <code>Twitch</code>, <code>Gazlowe</code>: <code>male</code></li>
+<li><code>Cicero</code>: <code>any</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="manual-audio-verification">Manual audio verification</h2>
+<ul>
+<li>Audio audition is an external manual step, not something that can be validated from repo state alone.</li>
+<li>Recommended Russian check lines:
+<ul>
+<li><code>Sangheili</code>: <code>Во имя Священного Круга!</code>, <code>Очистите их!</code>, <code>Клинки к бою!</code></li>
+<li><code>Unggoy</code>: <code>Ой-ой, враг!</code>, <code>Начальник, помоги!</code>, <code>Не бросайте меня.</code></li>
+</ul>
+</li>
+<li>Acceptance targets:
+<ul>
+<li><code>Sangheili</code>: low, clear, authoritative, not comedic</li>
+<li><code>Unggoy</code>: high, fast, nervous, slightly frantic, not child-cartoon</li>
+</ul>
+</li>
+</ul>
+<h2 id="rejected-defaults">Rejected defaults</h2>
+<ul>
+<li><code>Grunt</code> for <code>Unggoy</code>: too low and brutish for the repo-local <code>тараторит/пищит/визжит</code> speech profile.</li>
+<li><code>Diablo</code>, <code>Cho</code>, <code>Darth_Vader</code>, <code>Davy_Jones</code> for <code>Sangheili</code>: too monstrous or too recognizable for disciplined Covenant elites.</li>
+<li><code>Donkey</code> for <code>Unggoy</code>: too human-comedic.</li>
+</ul>
+<h2 id="references">References</h2>
+<ul>
+<li>Halo speech cues in repo:
+<ul>
+<li><code>modular/halo/code/mixed/language/halo_languages.dm</code></li>
+<li><code>modular/localization/code/modules/mob/living/carbon/human/ai/brain/human_ai_localization_halo.dm</code></li>
+</ul>
+</li>
+<li>External voice and lore references:
+<ul>
+<li>https://www.halopedia.org/Unggoy</li>
+<li>https://www.halopedia.org/Unggoy/Quotes</li>
+<li>https://www.halopedia.org/Sangheili/Quotes</li>
+<li>https://dedalvs.com/work/halo/miscellaneous/sangheili_pronunciation_v2.pdf</li>
+<li>https://files.lyberry.com/books/Halo%20Collection%20All%20Books/Halo%20Book%205%20-%20Contact%20Harvest.pdf</li>
+<li>https://heroesofthestorm.fandom.com/wiki/Alarak/Quotes</li>
+<li>https://heroesofthestorm.fandom.com/wiki/Arthas/Quotes</li>
+<li>https://heroesofthestorm.fandom.com/wiki/Mal%27Ganis/Quotes</li>
+<li>https://leagueoflegends.fandom.com/wiki/Sion/LoL/Audio</li>
+<li>https://leagueoflegends.fandom.com/wiki/Ziggs/LoL/Audio</li>
+<li>https://leagueoflegends.fandom.com/wiki/Twitch/LoL/Audio</li>
+<li>https://harrypotter.fandom.com/wiki/Dobby</li>
+<li>https://elderscrolls.fandom.com/wiki/Cicero</li>
+<li>https://news.blizzard.com/en-us/article/14355504/building-the-nexus-the-voice-of-gazlowe</li>
+</ul>
+</li>
+</ul></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

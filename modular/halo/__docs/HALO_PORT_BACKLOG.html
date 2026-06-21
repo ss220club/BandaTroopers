@@ -1,0 +1,246 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/halo/__docs/HALO_PORT_BACKLOG.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>HALO PORT BACKLOG <aside>modular/halo/__docs/HALO_PORT_BACKLOG.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/halo/__docs/HALO_PORT_BACKLOG.md"><img src="git.png" width="16" height="16" title="modular/halo/__docs/HALO_PORT_BACKLOG.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><p>Active tracking document for the HALO PVE update task on BandaTroopers.</p>
+<h2 id="current-track">Current Track</h2>
+<ul>
+<li>Source repositories:
+<ul>
+<li><code>https://github.com/cmss13-devs/cmss13-pve-halo</code> (CM-PVE-HALO)</li>
+<li><code>https://github.com/cmss13-devs/cmss13-pve</code> (CM-PVE)</li>
+</ul>
+</li>
+<li>Current merged BT master baseline: <code>upstream/master @ 5d2ad73b68727b88c7b02cf005a4af72f855babd</code> (PR #96)</li>
+<li>Target upstream master: <code>60dd61b32d</code></li>
+<li>Active task: <strong>COMPLETED</strong> — Comprehensive upstream sync: all 48 must-port PRs from CM-PVE and CM-PVE-HALO ported into <a href="modular/halo"><code>modular/halo</code></a> and <code>code/**</code> (with SS220 EDIT markers)</li>
+<li>Completion PR: <a href="https://github.com/ss220club/BandaTroopers/pull/102">#102</a> — <code>halo-pve-update-batch1-3b</code></li>
+<li>Porting date: 2026-06-05</li>
+<li>Task-state contract: <a href="../../__agents/.AI_AGENT/PLAN.md"><code>modular/__agents/.AI_AGENT/PLAN.md</code></a>, <a href="../../__agents/.AI_AGENT/TODO.md"><code>TODO.md</code></a>, <a href="../../__agents/.AI_AGENT/DECISIONS.md"><code>DECISIONS.md</code></a>, <a href="../../__agents/.AI_AGENT/EVIDENCE.md"><code>EVIDENCE.md</code></a></li>
+<li>Current audit plans: <a href="HALO_PVE_PORT_AUDIT_PLAN.md"><code>HALO_PVE_PORT_AUDIT_PLAN.md</code></a> and <a href="../../__docs/CM_PVE_PORT_AUDIT_PLAN.md"><code>CM_PVE_PORT_AUDIT_PLAN.md</code></a></li>
+</ul>
+<h2 id="historical-context">Historical Context</h2>
+<ul>
+<li>Previous task: PR #94 refresh after PR #96 merge (completed, see git history)</li>
+<li>2026-04-28 modular asset audit completed (HALO assets moved to <code>modular/halo/icons/**</code> and <code>modular/halo/sound/**</code>)</li>
+<li>PR #102 ported merged PRs from CM-PVE-HALO (#137, #153, #154, #170, #173, #162, #156 core preset/vendor/med file set)</li>
+<li>2026-06-05: All 48 must-port PRs ported and validated (compile 0 errors, maplint OK, path audit OK)</li>
+<li>Current task: <strong>COMPLETED</strong> — upstream refresh to <code>60dd61b32d</code> with targeted residual fixes and validation</li>
+<li>2026-06-18: Upstream refresh from <code>787d28227b</code> to <code>60dd61b32d</code>; post-target HALO PRs #152, #159, #180, #162, #185, #170, #173, and #172 rechecked. Residual gaps from #151 and #161 were fixed, and <code>gun_plasmarifle_triplefire.ogg</code> was imported as a byte-exact modular sound asset. <code>BUILD.cmd</code> passed with 0 errors and 0 warnings.</li>
+</ul>
+<h2 id="implementation-batches">Implementation Batches</h2><h3 id="batch-1-cm-pve-halo-priority-1-trivial-small">Batch 1: CM-PVE-HALO Priority 1 (Trivial/Small)</h3>
+<ul>
+<li><strong>Status</strong>: PORTED (2026-06-05, PR #102)</li>
+<li><strong>PRs</strong>:
+<ul>
+<li>#167 Muzzle Flash Attach Fix (1 line)</li>
+<li>#164 Titan rename to Voyager (7 lines)</li>
+<li>#155 ODST Drop Pod Intro Blurb (12 lines)</li>
+<li>#152 Fences (6 lines)</li>
+<li>#171 Shipmap lighting verb (38 lines)</li>
+</ul>
+</li>
+<li><strong>Dependencies</strong>: None</li>
+<li><strong>Stop criteria</strong>: ✅ All 5 PRs ported, compile check passes, no upstream path references remain</li>
+</ul>
+<h3 id="batch-2-cm-pve-halo-priority-2-medium">Batch 2: CM-PVE-HALO Priority 2 (Medium)</h3>
+<ul>
+<li><strong>Status</strong>: PORTED (2026-06-05, PR #102)</li>
+<li><strong>PRs</strong>:
+<ul>
+<li>#143 BR55 Recoil (gameplay fix)</li>
+<li>#165 SPNKR A-A Random Outcome</li>
+<li>#163 Halo Minimap Fix</li>
+<li>#176 Thermite Grenades</li>
+<li>#179 CE-like uniforms</li>
+<li>#159 Shotgun &amp; sniper ammo boxes (item/code only)</li>
+</ul>
+</li>
+<li><strong>Dependencies</strong>: Batch 1 complete</li>
+<li><strong>Stop criteria</strong>: ✅ All 6 PRs ported, compile check passes, gameplay balance reviewed</li>
+</ul>
+<h3 id="batch-3-cm-pve-halo-priority-3-large">Batch 3: CM-PVE-HALO Priority 3 (Large)</h3>
+<ul>
+<li><strong>Status</strong>: PORTED (2026-06-05, PR #102)</li>
+<li><strong>PRs</strong>:
+<ul>
+<li>#166 ODST VISR (163 lines)</li>
+<li>#178 Chemlights &amp; Flares (379 lines)</li>
+<li>#174 UNSC loose-ammo packets (326 lines)</li>
+<li>#158 Fire Support Binos Support (543 lines)</li>
+<li>#157 UNSC Medals Enabled (688 lines)</li>
+<li>#150 Loadout selection changes (686 lines)</li>
+<li>#160 Holy Redoubts (3300 lines, map templates)</li>
+</ul>
+</li>
+<li><strong>Dependencies</strong>: Batch 2 complete</li>
+<li><strong>Stop criteria</strong>: ✅ All 7 PRs ported, compile check passes, map validation for #160, loadout system tested</li>
+</ul>
+<h3 id="batch-4-cm-pve-must-port">Batch 4: CM-PVE Must-Port</h3>
+<ul>
+<li><strong>Status</strong>: PORTED (2026-06-05, PR #102)</li>
+<li><strong>PRs</strong>:
+<ul>
+<li>#1289 Observer Faction Categories (+37/-1, QoL)</li>
+<li>#1288 Anti Air - GM Choice (+143/-23, SPNKR AA)</li>
+<li>#1287 Gas Mask Vision Impairment (+41/-3, balance)</li>
+</ul>
+</li>
+<li><strong>Dependencies</strong>: Batch 3 complete (to avoid conflicts with HALO changes)</li>
+<li><strong>Stop criteria</strong>: ✅ All 3 PRs ported, compile check passes, GM verbs tested</li>
+<li><strong>Note</strong>: These PRs modify <code>code/**</code> and require <code>SS220 EDIT</code> markers</li>
+</ul>
+<h3 id="batch-5-cm-pve-full-port-expanded">Batch 5: CM-PVE Full Port (Expanded)</h3>
+<ul>
+<li><strong>Status</strong>: PORTED (2026-06-05, PR #102)</li>
+<li><strong>PRs</strong>:
+<ul>
+<li>#1284 Lazy Bunker Shipmaps (maps + code)</li>
+<li>#1283 Movie-ish Sections (maps + code)</li>
+<li>#1282 The Straya War (TWE warcry sounds)</li>
+<li>#1280 Dog war atomized (maps + code)</li>
+<li>#1278 Call ur hits (LARP items)</li>
+<li>#1277 Movie-like Xeno Castes (buffed castes)</li>
+<li>#1276 FV150 'Hobelar' (TWE tank)</li>
+<li>#1275 Vanguard's Arrow (VAI clothing)</li>
+<li>#1273 Gibson &amp; Kloos (Bodyburster/Lanky)</li>
+<li>#1272 Koishi's landmines (new mines)</li>
+<li>#1271 Itsy Bitsy Buggers (Spider/Lizard)</li>
+<li>#1270 Featueless (featureless maps)</li>
+<li>#1269 Snowman (CANC presets)</li>
+<li>#1268 Active prox_sensor (proximity sensor)</li>
+<li>#1267 Wolfpack (Wolfpack APC)</li>
+<li>#1266 D66-44 (Ridgeway tank)</li>
+<li>#1265 Auriga's Folly (hybrid species)</li>
+<li>#1264 Shipmap lighting GM verb</li>
+</ul>
+</li>
+<li><strong>Dependencies</strong>: Batch 4 complete</li>
+<li><strong>Stop criteria</strong>: ✅ All 18 PRs ported, SS220 EDIT markers added, compile check passes</li>
+</ul>
+<h3 id="batch-6-final-validation-and-docs-sync">Batch 6: Final Validation and Docs Sync</h3>
+<ul>
+<li><strong>Status</strong>: COMPLETED (2026-06-05, PR #102)</li>
+<li><strong>Actions</strong>:
+<ul>
+<li>Full compile check with <code>BUILD.cmd</code> or <code>tools/build/build</code></li>
+<li>Update <a href="HALO_PORT_STATE.md"><code>HALO_PORT_STATE.md</code></a> with new baseline</li>
+<li>Update <a href="../../__docs/CM_PVE_PORT_STATE.md"><code>CM_PVE_PORT_STATE.md</code></a> with new baseline</li>
+<li>Update <a href="../../__docs/VARIOUS_FIXES_PORTING_MAP.md"><code>VARIOUS_FIXES_PORTING_MAP.md</code></a> with PR #102 context</li>
+<li>Update task-state files with implementation status</li>
+<li>Old path audit: verify no <code>modular_pve_halo/</code> or root <code>icons/halo/</code> references remain</li>
+<li>Map validation for PR #160 (Holy Redoubts)</li>
+<li>Loadout system test for PR #150</li>
+<li>GM verb test for CM-PVE PRs #1288, #1289</li>
+</ul>
+</li>
+</ul>
+<h2 id="previously-ported-prs-from-pr-102">Previously Ported PRs (from PR #102)</h2>
+<ul>
+<li>#137 Weapon Modularization (split/adapt)</li>
+<li>#153 <code>iscovenant</code> typecheck</li>
+<li>#154 New UNSC grenades</li>
+<li>#183 UNSC/ODST flags and banners</li>
+<li>#185 Specialist items indestructible</li>
+<li>#186 UNSC headsets default tracks</li>
+<li>#170 New covenant squads</li>
+<li>#173 Unggoy plasma grenade loadouts</li>
+<li>#162 Elite Hero subtypes</li>
+<li>#156 Presets/vendor/med updates (core file set)</li>
+</ul>
+<h2 id="path-remapping-rules">Path Remapping Rules</h2>
+<ul>
+<li>All upstream <code>modular_pve_halo/</code> paths remap to <a href="modular/halo"><code>modular/halo</code></a></li>
+<li>Root <code>icons/halo/</code> paths remap to <a href="../icons"><code>modular/halo/icons/**</code></a></li>
+<li>Root HALO sound paths remap to <a href="../sound"><code>modular/halo/sound/**</code></a></li>
+<li>Minimal glue changes in <a href="../../code"><code>code/**</code></a> require <code>SS220 EDIT</code> markers per <a href="../../__docs/SS220_DEVELOPMENT_RULES.md"><code>SS220_DEVELOPMENT_RULES.md</code></a></li>
+</ul>
+<h2 id="explicit-non-goals">Explicit Non-Goals</h2>
+<ul>
+<li>Do not replace split/adapt with wrapper, fallback, or compatibility patch</li>
+<li>Do not leave upstream <code>modular_pve_halo/</code> paths in ported code</li>
+<li>Do not use root <code>icons/halo/</code> or root HALO sound paths for new/ported assets</li>
+<li>Do not blindly duplicate existing covenant content</li>
+<li>Do not collapse HALO modular code back into <code>code/**</code></li>
+<li>Do not reintroduce wholesale upstream layout just to mirror filenames</li>
+<li>Do not skip compile check after any batch</li>
+<li>Do not replace path remapping with runtime translation</li>
+</ul>
+<h2 id="known-technical-debt-from-pr-102-review">Known Technical Debt (from PR #102 review)</h2><table><thead><tr><th>#</th><th>Item</th><th>Path</th><th>Severity</th><th>Plan</th></tr></thead><tbody>
+<tr><td>T1</td><td>HALO <code>cov</code> icon_state in shared root DMI</td><td><a href="../../icons/turf/areas.dmi"><code>icons/turf/areas.dmi</code></a></td><td>Medium</td><td>Extract to separate modular DMI per <a href="HALO_PORT_STATE.md:30"><code>HALO_PORT_STATE.md:30</code></a> — &quot;HALO-only states must not be injected into existing generic root .dmi files&quot;</td></tr>
+<tr><td>T2</td><td>Legacy map imports use root <code>icons/turf/</code></td><td><a href="../code/mixed/structures/halo_imported_map_windows.dm"><code>halo_imported_map_windows.dm</code></a>, <a href="../code/mixed/turfs/halo_imported_map_turfs.dm"><code>halo_imported_map_turfs.dm</code></a>, <a href="../code/mixed/turfs/halo_imported_map_walls.dm"><code>halo_imported_map_walls.dm</code></a></td><td>Low</td><td>New Varadero assets — not HALO-specific, shared with other maps. Migration requires cross-map coordination.</td></tr>
+</tbody></table>
+<h2 id="remaining-root-glue-to-watch">Remaining Root Glue To Watch</h2>
+<ul>
+<li><code>code/game/sound.dm</code>: routes shared sound keys to modular HALO voice files</li>
+<li><code>code/modules/mob/living/carbon/human/{emote,human_attackhand,human_defense,human_helpers}.dm</code>: shared species/combat hooks</li>
+<li><code>code/modules/projectiles/{gun,gun_helpers,projectile}.dm</code>: shared Gun Ho and Mjolnir integration hooks</li>
+<li><code>code/modules/mob/living/carbon/human/ai/action_datums/{mg_nest,sniper_nest}.dm</code>: Game Master menu exposure</li>
+<li><code>code/modules/mob/living/carbon/human/death.dm</code>: pre-existing shared Warthog death/ejection callsite</li>
+<li><code>code/__DEFINES/bandamarines/halo_species_support.dm</code>: shared compile-time HALO constants</li>
+</ul>
+<h2 id="completion-check">Completion Check</h2>
+<ul>
+<li>✅ All must-port PRs are ported with correct path remapping</li>
+<li>✅ No upstream <code>modular_pve_halo/</code> paths remain in ported code</li>
+<li>✅ No root <code>icons/halo/</code> or root HALO sound paths are used for new/ported assets</li>
+<li>✅ All <code>code/**</code> changes have <code>SS220 EDIT</code> markers</li>
+<li>✅ All ported files compile cleanly (0 errors, 0 warnings)</li>
+<li>✅ <code>HALO_PORT_STATE.md</code> reflects the new baseline</li>
+<li>✅ <code>CM_PVE_PORT_STATE.md</code> reflects the new baseline</li>
+<li>✅ <code>VARIOUS_FIXES_PORTING_MAP.md</code> updated with PR #102 context</li>
+<li>✅ Task-state files are updated with implementation status</li>
+<li>✅ Map validation passes for PR #160 (all 14 templates OK)</li>
+<li>✅ Loadout system works after PR #150</li>
+<li>✅ GM verbs work after CM-PVE PRs #1288, #1289</li>
+</ul>
+<h2 id="pr-summary-table">PR Summary Table</h2><h3 id="cm-pve-halo-must-port-27-prs">CM-PVE-HALO Must-Port (27 PRs)</h3><table><thead><tr><th>Priority</th><th>PR</th><th>Title</th><th>Lines</th><th>Risk</th><th>Status</th></tr></thead><tbody>
+<tr><td>1</td><td>#167</td><td>Muzzle Flash Attach Fix</td><td>1</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>1</td><td>#164</td><td>Titan rename to Voyager</td><td>7</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>1</td><td>#155</td><td>ODST Drop Pod Intro Blurb</td><td>12</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>1</td><td>#152</td><td>Fences</td><td>6</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>1</td><td>#171</td><td>Shipmap lighting verb</td><td>38</td><td>Low-Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>2</td><td>#143</td><td>BR55 Recoil</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>2</td><td>#165</td><td>SPNKR A-A Random Outcome</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>2</td><td>#163</td><td>Halo Minimap Fix</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>2</td><td>#176</td><td>Thermite Grenades</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>2</td><td>#179</td><td>CE-like uniforms</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>2</td><td>#159</td><td>Shotgun &amp; sniper ammo boxes (item/code only)</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>3</td><td>#166</td><td>ODST VISR</td><td>163</td><td>High</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>3</td><td>#178</td><td>Chemlights &amp; Flares</td><td>379</td><td>High</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>3</td><td>#174</td><td>UNSC loose-ammo packets</td><td>326</td><td>High</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>3</td><td>#158</td><td>Fire Support Binos Support</td><td>543</td><td>High</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>3</td><td>#157</td><td>UNSC Medals Enabled</td><td>688</td><td>High</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>3</td><td>#150</td><td>Loadout selection changes</td><td>686</td><td>High</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>3</td><td>#160</td><td>Holy Redoubts</td><td>3300</td><td>Very High</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>4</td><td>#180</td><td>Wort wort wort, lohbaba!</td><td>-</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>4</td><td>#172</td><td>RTO-bag sprite issues</td><td>-</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>4</td><td>#169</td><td>Featureless Biomes</td><td>-</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>4</td><td>#170</td><td>New covenant squads</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>4</td><td>#173</td><td>Plasma grenade loadouts for Unggoy</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>4</td><td>#162</td><td>Elite &quot;Hero&quot; subtypes</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>4</td><td>#156</td><td>Presets updates, Vendor tweaks (core file set)</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>4</td><td>#168</td><td>Jumping and Leaping</td><td>-</td><td>Low</td><td>ALREADY PRESENT</td></tr>
+<tr><td>4</td><td>#145</td><td>bumblebee</td><td>-</td><td>Low</td><td>ALREADY PRESENT</td></tr>
+</tbody></table>
+<h3 id="cm-pve-must-port-21-prs">CM-PVE Must-Port (21 PRs)</h3>
+<p>See <a href="../../__docs/CM_PVE_PORT_STATE.md"><code>CM_PVE_PORT_STATE.md</code></a> for full table.</p>
+<table><thead><tr><th>PR</th><th>Title</th><th>Lines</th><th>Risk</th><th>Status</th></tr></thead><tbody>
+<tr><td>#1289</td><td>Observer Faction Categories</td><td>+37/-1</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1288</td><td>Anti Air - GM Choice</td><td>+143/-23</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1287</td><td>Gas Mask Vision Impairment</td><td>+41/-3</td><td>Low-Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1284</td><td>Lazy Bunker Shipmaps</td><td>-</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1283</td><td>Movie-ish Sections</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1282</td><td>The Straya War</td><td>-</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1280</td><td>Dog war atomized</td><td>-</td><td>High</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1278</td><td>Call ur hits</td><td>+104</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1277</td><td>Movie-like Xeno Castes</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1276</td><td>FV150 'Hobelar'</td><td>-</td><td>High</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1275</td><td>Vanguard's Arrow</td><td>-</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1273</td><td>Gibson &amp; Kloos</td><td>-</td><td>High</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1272</td><td>Koishi's landmines</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1271</td><td>Itsy Bitsy Buggers</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1270</td><td>Featueless</td><td>-</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1269</td><td>Snowman</td><td>+565/-3</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1268</td><td>Active prox_sensor</td><td>+16</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1267</td><td>Wolfpack</td><td>-</td><td>High</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1266</td><td>D66-44</td><td>-</td><td>High</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1265</td><td>Auriga's Folly</td><td>-</td><td>Medium</td><td>PORTED (2026-06-05)</td></tr>
+<tr><td>#1264</td><td>Shipmap lighting GM verb</td><td>+28/-3</td><td>Low</td><td>PORTED (2026-06-05)</td></tr>
+</tbody></table></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

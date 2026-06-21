@@ -1,0 +1,118 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/__docs/SS220_DEVELOPMENT_RULES.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>SS220: Overlay над &lt;code&gt;.AI_AGENT&lt;/code&gt; <aside>modular/__docs/SS220_DEVELOPMENT_RULES.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/__docs/SS220_DEVELOPMENT_RULES.md"><img src="git.png" width="16" height="16" title="modular/__docs/SS220_DEVELOPMENT_RULES.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><p>Канонический entrypoint для AI-агента находится в <a href="../../AGENTS.md"><code>../../AGENTS.md</code></a>.
+Stable agent rules живут в <a href="../__agents/.AI_AGENT/README.md"><code>../__agents/.AI_AGENT/</code></a>.
+Этот документ больше не является общим глобальным сводом правил: он содержит только BandaTroopers/SS220-specific deltas для модульности, сопровождения апстрима и применения <code>SS220 EDIT</code>.</p>
+<h2 id="1-матрица-путей">1. Матрица путей</h2><h3 id=""><code>modular/**</code></h3>
+<ul>
+<li>Основное место для новой бизнес-логики.</li>
+<li>Здесь живут новые подсистемы, расширения и большая часть адаптеров BandaTroopers.</li>
+<li>Новые <code>SS220 EDIT</code> внутри <code>modular/**</code> по умолчанию не добавляются.</li>
+<li>Уже существующие <code>SS220 EDIT</code> в <code>modular/**</code> считаются legacy-исключениями и не задают новый стандарт.</li>
+</ul>
+<h3 id="и-другие-пути-вне"><code>code/**</code> и другие пути вне <code>modular/**</code></h3>
+<ul>
+<li>Это апстрим-хардкод и интеграционный слой.</li>
+<li>Сюда вносятся только минимальные точки интеграции:
+<ul>
+<li>вызовы модульных хуков,</li>
+<li>адаптеры,</li>
+<li>безопасные fallback-ветки,</li>
+<li>неизбежный glue-код совместимости.</li>
+</ul>
+</li>
+<li>Если задачу можно закрыть через отдельный injector-proc, hook или adapter, полное переписывание существующего upstream-proc не допускается.</li>
+<li>Любая крупная бизнес-логика должна оставаться в <code>modular/**</code>, если это технически возможно.</li>
+</ul>
+<h3 id="и"><code>maps/**</code> и <code>map_config/**</code></h3>
+<ul>
+<li>
+<p>Изменения карт, JSON-конфигов и ignore-списков должны рассматриваться совместно.</p>
+</li>
+<li>
+<p>Если задача меняет тестовую матрицу, ротацию или набор карт, нужно проверить связанные файлы вроде <code>.github/maps_to_ignore.txt</code>.</p>
+</li>
+<li>
+<p>Для map-sensitive изменений использовать релевантные map/build-проверки из <code>.AI_AGENT/WORKFLOW_RULES.md</code>.</p>
+</li>
+<li>
+<p>Для <code>map_config/**</code> и других согласованных config surfaces <code>SS220 EDIT</code> допускается, если это часть сопровождаемого апстрим-диффа.</p>
+</li>
+<li>
+<p>For data-only World Edit seed-blueprint tasks, prefer exact schema/JSON verification and scope audit over broad test rewrites; expand tests only when the task explicitly requires it.</p>
+</li>
+<li>
+<p>Документация и конфиги должны оставаться в UTF-8 и без mojibake.</p>
+</li>
+<li>
+<p>Не дублировать здесь общие agent-процессы, уже описанные в <code>.AI_AGENT</code>, если правило не является SS220-specific.</p>
+</li>
+</ul>
+<h2 id="2-для-апстрим-хардкода">2. <code>SS220 EDIT</code> для апстрим-хардкода</h2>
+<p>Область действия:</p>
+<ul>
+<li><code>code/**</code> как основной слой сопровождаемого апстрим-диффа.</li>
+<li><code>map_config/**</code> и другие согласованные config surfaces, если там ведется тот же сопровождаемый дифф.</li>
+<li>Existing markers в <code>modular/**</code> считаются legacy debt и подлежат инвентаризации, но не расширяются без крайней причины.</li>
+</ul>
+<p>Правила:</p>
+<ol>
+<li>Удаляемые строки не удаляются полностью, если сохраняется смысл сравнения со старой логикой.</li>
+<li>Старая логика остается рядом в виде закомментированных строк там, где это помогает сопровождать апстрим-дифф.</li>
+<li>Если изменена одна строка, на этой же строке ставится:
+<ul>
+<li><code>// SS220 EDIT: &lt;краткое описание&gt;</code></li>
+</ul>
+</li>
+<li>Для мелкой одноcтрочной правки используется inline-маркер без <code>START/END</code>.</li>
+<li>Если изменено несколько соседних строк, блок оборачивается:
+<ul>
+<li><code>// SS220 EDIT - START</code></li>
+<li><code>// SS220 EDIT - END</code></li>
+</ul>
+</li>
+<li>Если строка заменяется, старая строка по возможности остается сразу над новой в закомментированном виде.</li>
+<li>Inline-маркер должен содержать короткое и конкретное описание изменения.</li>
+<li><code>SS220 EDIT</code> используется там, где реально ведется сопровождаемый апстрим/config-дифф; existing markers в <code>modular/**</code> не считать шаблоном для новых правок.</li>
+</ol>
+<p>Пример одной строки:</p>
+<pre><code class="language-dm">value = new_value // SS220 EDIT: источник значения изменен old_value -&gt; new_value
+</code></pre>
+<p>Пример с добавленным аргументом:</p>
+<pre><code class="language-dm">target_proc(arg1, arg2, extra_arg) // SS220 EDIT: добавлен extra_arg для latejoin-контекста
+</code></pre>
+<p>Пример блока:</p>
+<pre><code class="language-dm">// SS220 EDIT - START
+// old_call(arg1, arg2)
+new_call(arg1, arg2, arg3)
+if(new_condition)
+	handle_new_flow()
+// SS220 EDIT - END
+</code></pre>
+<p>Рекомендуемая проверка:</p>
+<pre><code class="language-bash">rg -n &quot;SS220 EDIT&quot; code map_config
+rg -n &quot;SS220 EDIT&quot; modular -g &quot;!modular/__agents/**&quot; -g &quot;!modular/__docs/**&quot;
+</code></pre>
+<p>Вторая команда нужна для инвентаризации legacy-маркеров в <code>modular/**</code>, а не как разрешение размечать ими новые модульные изменения.</p>
+<h2 id="3-правила-модульности-и-сопровождения-апстрима">3. Правила модульности и сопровождения апстрима</h2>
+<p>Этот раздел дополняет <a href="../__agents/.AI_AGENT/POLICIES.md"><code>../__agents/.AI_AGENT/POLICIES.md</code></a> и <a href="../__agents/.AI_AGENT/WORKFLOW_RULES.md"><code>../__agents/.AI_AGENT/WORKFLOW_RULES.md</code></a>.</p>
+<ol>
+<li>Новая бизнес-логика сначала реализуется в <code>modular/**</code>.</li>
+<li>Перед правкой апстрим-хардкода проверяются существующие extension points, signals, wrappers и modular hooks.</li>
+<li>Предпочтение отдается адаптерам и оберткам, а не переписыванию апстрим-подсистем.</li>
+<li>Дифф в апстрим-файлах должен быть минимальным и без несвязанных рефакторингов.</li>
+<li>Стабильные апстрим-контракты и ключи не ломаются без критической необходимости и явного scope.</li>
+<li>После синка с апстримом перепроверяются все маркеры <code>SS220</code> и соответствующие точки интеграции.</li>
+<li>Если модуль можно отключить без ломки апстрима, это предпочти тельный дизайн.</li>
+<li>Если модуль и хардкод разделяют стабильные <code>#define</code>/string-id контракты, такие константы выносятся в <code>code/__DEFINES/bandamarines/...</code>, а не держатся только в <code>modular/_*.dm</code>.</li>
+<li>Новые helper-proc в <code>code/**</code> не должны вводиться как глобальные <code>/proc</code>, если их можно привязать к владельцу (<code>datum</code>, <code>atom</code>, <code>subsystem</code>, menu/controller datum и т.п.); глобальные proc допустимы только как реально общие cross-system primitives.</li>
+<li>При необходимости менять upstream сначала добавляется минимальная точка модульной инъекции, если это возможно; полное переписывание существующего proc допустимо только когда меньшая правка технически не решает задачу или приводит к еще более инвазивному diff.</li>
+</ol>
+<h2 id="4-ss220-specific-чеклист-перед-сдачей">4. SS220-specific чеклист перед сдачей</h2>
+<ol>
+<li>Новая логика живет в <code>modular/**</code>, а не размазана по апстриму без причины.</li>
+<li>В апстриме оставлены только минимальные точки интеграции.</li>
+<li><code>SS220 EDIT</code> размечен только там, где это действительно требуется.</li>
+<li>Если upstream proc пришлось переписать целиком или крупным блоком, это было действительно неизбежно, а не заменяло более узкий injector, hook или adapter.</li>
+<li>Удаленные или замененные строки апстрима сохранены в комментариях там, где это помогает сопровождать дифф.</li>
+<li>Map/config изменения синхронизированы, если задача затрагивала карты или ротацию.</li>
+<li>Дифф локальный, читаемый и без лишних изменений.</li>
+</ol></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

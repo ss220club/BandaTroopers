@@ -1,0 +1,109 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/rto_support/__docs/RTO_SUPPORT_GAME_DESIGN.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>RTO Support: геймдизайн <aside>modular/rto_support/__docs/RTO_SUPPORT_GAME_DESIGN.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/rto_support/__docs/RTO_SUPPORT_GAME_DESIGN.md"><img src="git.png" width="16" height="16" title="modular/rto_support/__docs/RTO_SUPPORT_GAME_DESIGN.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><h2 id="1-цель-роли">1. Цель роли</h2>
+<p><code>RTO Support</code> делает RTO отдельной support-ролью с четырьмя разными ритмами игры:</p>
+<ol>
+<li>выбрать пакет;</li>
+<li>занять позицию;</li>
+<li>развернуть сектор, если пакет боевой;</li>
+<li>отработать своё окно эффективности;</li>
+<li>уйти в recovery и пережить откат.</li>
+</ol>
+<p>Точные цифры вынесены в <a href="RTO_SUPPORT_BALANCE.md">RTO_SUPPORT_BALANCE.md</a>. Этот документ фиксирует игровые роли пакетов.</p>
+<h2 id="2-базовые-правила">2. Базовые правила</h2>
+<ul>
+<li>Один пресет на жизнь моба.</li>
+<li>Один активный сектор на оператора.</li>
+<li>Поддержка вызывается только через RTO-бинокль.</li>
+<li><code>Mortar</code>, <code>CAS</code>, <code>Heavy Strike</code> требуют активный сектор.</li>
+<li><code>Logistics</code> сектора не использует.</li>
+</ul>
+<h2 id="3-стартовые-пресеты">3. Стартовые пресеты</h2><h2 id="mortar">Mortar</h2>
+<p>Роль пакета:</p>
+<ul>
+<li>частая утилита;</li>
+<li>длинное окно сектора для последовательной работы одиночными минами;</li>
+<li>одиночные HE, дымовые и зажигательные мины;</li>
+<li>очень длинная перезарядка сектора после окончания окна.</li>
+</ul>
+<p>Параметры:</p>
+<ul>
+<li>радиус сектора: <code>7</code></li>
+<li>длительность сектора: <code>100 секунд</code></li>
+<li>кулдаун сектора: <code>300 секунд</code></li>
+</ul>
+<p>Способности:</p>
+<ul>
+<li><code>HE mortar</code>: <code>1</code> снаряд, scatter <code>4</code>, shared <code>4</code>, personal <code>8</code></li>
+<li><code>Smoke mortar</code>: <code>1</code> снаряд, scatter <code>3</code>, shared <code>3</code>, personal <code>5</code></li>
+<li><code>Incendiary mortar</code>: <code>1</code> снаряд, scatter <code>4</code>, shared <code>6</code>, personal <code>10</code></li>
+</ul>
+<p>Особенность:</p>
+<ul>
+<li>при развёртывании сектора используется illumination payload с фальшфейером;</li>
+<li>сами mortar-вызовы у RTO не повторяют апстримовый barrage и работают как одиночные выстрелы;</li>
+<li>пакет построен так, чтобы игрок успел отработать серию одиночных мин за длинное окно, после чего ушёл в тяжёлую recovery-фазу.</li>
+</ul>
+<h2 id="cas">CAS</h2>
+<p>Роль пакета:</p>
+<ul>
+<li>средний по темпу авиационный пакет;</li>
+<li>точечное сопровождение штурма;</li>
+<li>заметно сильнее mortar по точности, но без heavy-инерции.</li>
+</ul>
+<p>Параметры:</p>
+<ul>
+<li>радиус сектора: <code>5</code></li>
+<li>длительность сектора: <code>200 секунд</code></li>
+<li>кулдаун сектора: <code>500 секунд</code></li>
+</ul>
+<p>Способности:</p>
+<ul>
+<li><code>Gun run</code>: scatter <code>3</code>, shared <code>12</code>, personal <code>16</code></li>
+<li><code>Laser run</code>: scatter <code>2</code>, shared <code>14</code>, personal <code>18</code></li>
+<li><code>Rocket barrage</code>: scatter <code>4</code>, shared <code>16</code>, personal <code>20</code></li>
+</ul>
+<h2 id="heavy-strike">Heavy Strike</h2>
+<p>Роль пакета:</p>
+<ul>
+<li>дорогой ударный пакет;</li>
+<li>длинное, но контролируемое окно применения;</li>
+<li>умеренно длинные интервалы между ударами и длинная recovery-фаза сектора.</li>
+</ul>
+<p>Параметры:</p>
+<ul>
+<li>радиус сектора: <code>4</code></li>
+<li>длительность сектора: <code>300 секунд</code></li>
+<li>кулдаун сектора: <code>800 секунд</code></li>
+</ul>
+<p>Способности:</p>
+<ul>
+<li><code>Missile strike</code>: scatter <code>2</code>, shared <code>16</code>, personal <code>20</code></li>
+<li><code>Napalm strike</code>: scatter <code>3</code>, shared <code>18</code>, personal <code>22</code></li>
+</ul>
+<p>Особенность:</p>
+<ul>
+<li>пакет использует самое длинное окно и самую тяжёлую recovery-фазу среди боевых пресетов;</li>
+<li>окно рассчитано на дорогую, редкую поддержку, а не на частое повторное включение.</li>
+</ul>
+<h2 id="logistics">Logistics</h2>
+<p>Роль пакета:</p>
+<ul>
+<li>долгий стратегический utility support;</li>
+<li>снабжение, мины и турели;</li>
+<li>пакет &quot;на потом&quot;, а не для постоянного спама инфраструктурой.</li>
+</ul>
+<p>Параметры:</p>
+<ul>
+<li>сектора нет</li>
+</ul>
+<p>Способности:</p>
+<ul>
+<li><code>Supply drop</code>: scatter <code>1</code>, shared <code>120</code>, personal <code>600</code></li>
+<li><code>Mine crate drop</code>: scatter <code>1</code>, shared <code>90</code>, personal <code>420</code></li>
+<li><code>Mini-sentry drop</code>: scatter <code>1</code>, shared <code>120</code>, personal <code>540</code></li>
+<li><code>Full sentry drop</code>: scatter <code>1</code>, shared <code>180</code>, personal <code>780</code></li>
+</ul>
+<p>Особенность:</p>
+<ul>
+<li>выгрузка запрещена в закрытые тайлы;</li>
+<li><code>Full sentry drop</code> остаётся самой дорогой логистической кнопкой.</li>
+</ul></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

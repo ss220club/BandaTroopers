@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/rto_support/__docs/RTO_SUPPORT_DESIGN.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>RTO Support: карта документации <aside>modular/rto_support/__docs/RTO_SUPPORT_DESIGN.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/rto_support/__docs/RTO_SUPPORT_DESIGN.md"><img src="git.png" width="16" height="16" title="modular/rto_support/__docs/RTO_SUPPORT_DESIGN.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><h2 id="назначение">Назначение</h2>
+<p><code>RTO Support</code> больше не является проектной заготовкой. Модуль реализован и описывается набором отдельных документов по разным зонам ответственности.</p>
+<p>Документация разделена, чтобы:</p>
+<ul>
+<li>не смешивать архитектуру, продуктовые правила, интерфейс и сопровождение;</li>
+<li>держать в явном виде реальные ограничения текущей реализации;</li>
+<li>соблюдать <code>SS220_DEVELOPMENT_RULES</code>, OOP и SOLID при дальнейшем развитии модуля.</li>
+</ul>
+<h2 id="текущий-статус">Текущий статус</h2>
+<p>На текущем этапе в модуле уже реализованы:</p>
+<ul>
+<li>runtime-контур контроллера RTO;</li>
+<li>выбор одного пресета через TGUI;</li>
+<li>action-кнопки для сектора наведения и способностей пакета;</li>
+<li>наведение только через отдельный <code>RTO binoculars</code>;</li>
+<li>серверная валидация сектора, LOS, потолков и кулдаунов;</li>
+<li>dispatch через свежие экземпляры <code>datum/fire_support</code>;</li>
+<li>модульная интеграция с loadout и шкафчиком RTO;</li>
+<li>документация по архитектуре, UI, балансу, player-flow и сопровождению.</li>
+</ul>
+<p>Не реализованы:</p>
+<ul>
+<li>круговой world-overlay радиуса сектора;</li>
+<li>отдельные UI-экраны для расширенной аналитики кулдаунов;</li>
+<li>межфракционные вариации dispatch-слоя;</li>
+<li>автоматическое восстановление контроллера при экзотических сменах роли вне стандартного loadout-flow.</li>
+</ul>
+<h2 id="что-читать">Что читать</h2>
+<ol>
+<li><a href="RTO_SUPPORT_GAME_DESIGN.md">RTO_SUPPORT_GAME_DESIGN.md</a>
+Продуктовая модель роли и назначение стартовых пакетов.</li>
+<li><a href="RTO_SUPPORT_PLAYER_GUIDE.md">RTO_SUPPORT_PLAYER_GUIDE.md</a>
+Короткая памятка для игрока: как реально пользоваться системой в раунде.</li>
+<li><a href="RTO_SUPPORT_BALANCE.md">RTO_SUPPORT_BALANCE.md</a>
+Численные параметры пакетов, приоритеты тюнинга и балансные риски.</li>
+<li><a href="RTO_SUPPORT_TECHNICAL_DESIGN.md">RTO_SUPPORT_TECHNICAL_DESIGN.md</a>
+Архитектура модуля, runtime-flow, контракты datums и точки интеграции.</li>
+<li><a href="RTO_SUPPORT_INTERFACE_DESIGN.md">RTO_SUPPORT_INTERFACE_DESIGN.md</a>
+Реализованный интерфейс выбора пресета, состояние action-кнопок и binocular-flow.</li>
+<li><a href="RTO_SUPPORT_MAINTENANCE.md">RTO_SUPPORT_MAINTENANCE.md</a>
+Правила расширения, анти-паттерны, checklist сопровождения и команды проверки.</li>
+</ol>
+<h2 id="краткий-словарь">Краткий словарь</h2>
+<p><code>RTO</code>
+: <code>Radio Telephone Operator</code>.</p>
+<p><code>Пресет</code>
+: один выбранный на жизнь моба набор поддержки.</p>
+<p><code>Сектор наведения</code>
+: активная временная зона, внутри которой разрешены вызовы способностей.</p>
+<p><code>Armed mode</code>
+: состояние контроллера, когда следующая цель должна быть получена через бинокль.</p>
+<p><code>Shared cooldown</code>
+: общий кулдаун всех ударных способностей оператора.</p>
+<p><code>Personal cooldown</code>
+: длинный кулдаун конкретной способности.</p>
+<h2 id="основные-файлы-реализации">Основные файлы реализации</h2>
+<ul>
+<li><code>modular/rto_support/code/controller/controller.dm</code></li>
+<li><code>modular/rto_support/code/actions/rto_actions.dm</code></li>
+<li><code>modular/rto_support/code/items/rto_binoculars.dm</code></li>
+<li><code>modular/rto_support/code/services/validation_service.dm</code></li>
+<li><code>modular/rto_support/code/services/dispatch_service.dm</code></li>
+<li><code>modular/rto_support/code/job/rto_integration.dm</code></li>
+<li><code>modular/rto_support/code/ui/preset_menu.dm</code></li>
+<li><code>tgui/packages/tgui/interfaces/RtoSupportPresetMenu.jsx</code></li>
+</ul>
+<h2 id="базовые-ограничения-модуля">Базовые ограничения модуля</h2>
+<ul>
+<li>Основная логика остаётся в <code>modular/rto_support/...</code>.</li>
+<li>Модуль не зависит от <code>GLOB.fire_support_points</code> и GM fire support menu.</li>
+<li>Текущий backend использует существующие <code>datum/fire_support</code> только как исполнительный слой.</li>
+<li>Один RTO имеет один контроллер, один выбранный пресет и один активный сектор одновременно.</li>
+</ul></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

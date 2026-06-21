@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/world_edit/docs/generator_document_template.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>Шаблон документации live-генератора World Edit <aside>modular/world_edit/docs/generator_document_template.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/world_edit/docs/generator_document_template.md"><img src="git.png" width="16" height="16" title="modular/world_edit/docs/generator_document_template.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><h2 id="1-метаданные">1. Метаданные</h2>
+<ol>
+<li><code>id</code></li>
+<li><code>name_ru</code></li>
+<li><code>category_ru</code></li>
+<li><code>status</code> (<code>draft|ready</code>)</li>
+<li><code>execution_mode</code> (<code>batch|click</code>)</li>
+<li><code>version</code></li>
+</ol>
+<h2 id="2-runtime-контракт">2. Runtime-контракт</h2>
+<ol>
+<li><code>generator_type</code></li>
+<li><code>required_rights</code></li>
+<li><code>supports_preview</code></li>
+<li><code>default_params</code></li>
+<li><code>description_ru</code></li>
+</ol>
+<h2 id="3-назначение">3. Назначение</h2>
+<ol>
+<li>Что делает генератор.</li>
+<li>Какие админские сценарии он закрывает.</li>
+<li>Что явно вне scope.</li>
+</ol>
+<h2 id="4-параметры">4. Параметры</h2>
+<ol>
+<li>Обязательные параметры.</li>
+<li>Опциональные параметры.</li>
+<li>Значения по умолчанию.</li>
+<li>Диапазоны, enum и whitelist.</li>
+<li>Пример валидного набора.</li>
+</ol>
+<h2 id="5-ui-fields-contract">5. UI fields contract</h2>
+<ol>
+<li>Используется схема <code>ui_field_schema</code>.</li>
+<li>Поля <code>get_ui_fields</code>: <code>id</code>, <code>label</code>, <code>kind</code>, <code>value</code>.</li>
+<li>Допустимые метаданные: <code>options</code>, <code>min</code>, <code>max</code>, <code>step</code>, <code>description</code>, <code>validate_hint</code>, <code>group</code>, <code>visible</code>, <code>disabled</code>, <code>required</code>, <code>placeholder</code>.</li>
+<li><code>set_ui_param</code> должен возвращать обновленный <code>list</code>, строку ошибки или <code>null</code>.</li>
+<li>Если генератор динамический, опиши <code>refresh_ui_state</code>.</li>
+</ol>
+<h2 id="6-validation-and-guardrails">6. Validation and guardrails</h2>
+<ol>
+<li>Правила <code>validate_params</code>.</li>
+<li>Лимиты по объему операции.</li>
+<li>Что считается destructive.</li>
+<li>Какие подтверждения обязательны.</li>
+</ol>
+<h2 id="7-preview-apply">7. Preview / Apply</h2>
+<ol>
+<li>Что делает preview.</li>
+<li>Что делает apply.</li>
+<li>Какие данные попадают в <code>preview_meta</code>.</li>
+<li>Какой результат считается успешным.</li>
+</ol>
+<h2 id="8-click-intercept">8. Click-intercept</h2>
+<ol>
+<li>Когда генератор захватывает click-mode.</li>
+<li>Когда click-mode освобождается.</li>
+<li>Что происходит при закрытии панели и <code>Destroy()</code> менеджера.</li>
+</ol>
+<h2 id="9-audit-and-telemetry">9. Audit and telemetry</h2>
+<p>Обязательные поля apply-события:</p>
+<ol>
+<li><code>generator_id</code></li>
+<li><code>actor_ckey</code></li>
+<li><code>rights_used</code></li>
+<li><code>center_turf</code></li>
+<li><code>created_count</code></li>
+<li><code>deleted_count</code></li>
+<li><code>duration_ms</code></li>
+<li><code>result</code></li>
+<li><code>params_short</code></li>
+<li><code>params_hash</code></li>
+</ol>
+<h2 id="10-test-cases">10. Test cases</h2>
+<ol>
+<li>Позитивные сценарии.</li>
+<li>Негативные сценарии.</li>
+<li>Проверка прав.</li>
+<li>Проверка preview без мутаций.</li>
+<li>Проверка apply с мутациями.</li>
+<li>Проверка click-intercept.</li>
+<li>Проверка логов и истории.</li>
+</ol>
+<h2 id="11-criteria-for-ready">11. Criteria for ready</h2>
+<ol>
+<li>Пройдены обязательные тесты и smoke-checklist.</li>
+<li>Логи соответствуют контракту.</li>
+<li>Документация синхронизирована с live runtime surface.</li>
+</ol></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

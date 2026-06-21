@@ -1,0 +1,150 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/rto_support/__docs/RTO_SUPPORT_INTERFACE_DESIGN.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>RTO Support: дизайн интерфейса <aside>modular/rto_support/__docs/RTO_SUPPORT_INTERFACE_DESIGN.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/rto_support/__docs/RTO_SUPPORT_INTERFACE_DESIGN.md"><img src="git.png" width="16" height="16" title="modular/rto_support/__docs/RTO_SUPPORT_INTERFACE_DESIGN.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><h2 id="1-главный-ux-принцип">1. Главный UX-принцип</h2>
+<p>Игрок должен без чтения кода понимать три вещи:</p>
+<ol>
+<li>какие пакеты сейчас выбраны;</li>
+<li>почему кнопка доступна или недоступна;</li>
+<li>что произойдет после <code>Ctrl+Click</code> через бинокль.</li>
+</ol>
+<h2 id="2-когда-видны-rto-кнопки">2. Когда видны RTO-кнопки</h2>
+<p>RTO HUD показывается только если:</p>
+<ul>
+<li>у владельца есть <code>RTO binoculars</code> в левой или правой руке;</li>
+<li>владелец жив;</li>
+<li>владелец является <code>JOB_SQUAD_RTO</code>.</li>
+</ul>
+<p>Если бинокль убран:</p>
+<ul>
+<li>кнопки не сереют;</li>
+<li>кнопки именно скрываются.</li>
+</ul>
+<p>Это касается и <code>Выбрать пакеты поддержки</code>, и utility-режимов, и support abilities.</p>
+<h2 id="3-preset-selection">3. Preset selection</h2>
+<p>Меню выбора пакетов остается отдельным TGUI.</p>
+<p>Кнопка входа:</p>
+<ul>
+<li><code>Выбрать пакеты поддержки</code></li>
+</ul>
+<p>Кнопка должна оставаться доступной всегда, пока:</p>
+<ul>
+<li>support не отключен Game Rule Panel;</li>
+<li>у роли есть доступ к <code>rto_support</code>;</li>
+<li>бинокль в руке и HUD видим.</li>
+</ul>
+<p>Меню должно явно показывать:</p>
+<ul>
+<li><code>Slot 1</code></li>
+<li><code>Slot 2</code></li>
+<li>уже выбранные пакеты</li>
+<li>countdown до полного reset</li>
+<li>возможность полного reset обоих слотов</li>
+<li>solo-бонус на cooldown сектора для одиночного боевого пакета</li>
+</ul>
+<p>Игрок не должен угадывать, что второй пакет влияет на cooldown сектора. Это нужно писать в интерфейсе явно.</p>
+<h2 id="4-что-показывать-в-карточке-пакета">4. Что показывать в карточке пакета</h2>
+<p>В карточке пакета должны читаться:</p>
+<ul>
+<li>роль пакета;</li>
+<li>нужен ли сектор;</li>
+<li>радиус, длительность и cooldown сектора;</li>
+<li>reduced solo cooldown сектора, если пакет поддерживает сектор;</li>
+<li>список support-ability;</li>
+<li>общие и личные cooldown'ы support-ability;</li>
+<li>ограничения по открытому небу и целевому тайлу.</li>
+</ul>
+<p><code>Logistics</code>, <code>Medical</code>, <code>Technical</code> и HALO utility-пакеты в UI явно помечаются как пакеты без сектора.</p>
+<h2 id="5-порядок-кнопок-на-hud">5. Порядок кнопок на HUD</h2>
+<p>Порядок должен быть стабильным:</p>
+<ol>
+<li><code>Выбрать пакеты поддержки</code></li>
+<li>кнопки секторов в порядке слотов</li>
+<li><code>Координаты</code></li>
+<li><code>Лазерная отметка</code></li>
+<li>support-кнопки первого пакета</li>
+<li>support-кнопки второго пакета</li>
+</ol>
+<h2 id="6-visibility-actions">6. Visibility actions</h2>
+<p>У каждого выбранного zone-based пакета своя отдельная кнопка сектора.</p>
+<p>Кнопка сектора показывает только состояние самого сектора:</p>
+<ul>
+<li><code>Наведение</code></li>
+<li><code>Активна: Ns</code></li>
+<li><code>Общий КД: Ns</code></li>
+<li><code>Личный КД: Ns</code></li>
+<li><code>Готово</code></li>
+</ul>
+<p>Она не должна:</p>
+<ul>
+<li>показывать общий cooldown support-пакета;</li>
+<li>выглядеть так, будто делит cooldown с support ability;</li>
+<li>скрывать факт solo-бонуса в меню пакетов.</li>
+</ul>
+<h2 id="7-support-abilities">7. Support abilities</h2><h3 id="zone-based-templates">Zone-based templates</h3>
+<p>Для <code>Mortar</code>, <code>CAS</code>, <code>Heavy Strike</code> support button ведет себя так:</p>
+<ol>
+<li>если сектора нет или он не активен:
+primary label <code>Нет сектора</code></li>
+<li>если сектор активен и у ability есть cooldown:
+primary label показывает только таймер самой ability</li>
+<li>если сектор активен и cooldown нет:
+primary label <code>Готово</code></li>
+</ol>
+<p>Shared и personal cooldown'ы не рисуются как secondary labels.</p>
+<p>Если одновременно активны local и shared cooldown:</p>
+<ul>
+<li>на кнопке показывается больший из двух;</li>
+<li>при равенстве приоритет отдается local cooldown.</li>
+</ul>
+<h3 id="no-zone-templates">No-zone templates</h3>
+<p>Для <code>Logistics</code>, <code>Medical</code>, <code>Technical</code>, <code>HALO Logistics</code>, <code>HALO Medical</code>, <code>HALO Technical</code> zone labels запрещены полностью.</p>
+<p>Primary label:</p>
+<ul>
+<li><code>Лок: Ns</code>, если активен personal lockout</li>
+<li><code>Нужно: X (есть Y)</code>, если не хватает shared charges пакета</li>
+<li><code>Заряды: Y/Z</code>, если ability готова и использует shared pool</li>
+<li><code>Готово</code>, только если пакет не использует charges</li>
+</ul>
+<h2 id="8-utility-modes">8. Utility modes</h2><h3 id=""><code>Координаты</code></h3>
+<ul>
+<li>persistent mode;</li>
+<li>без cooldown;</li>
+<li>после клика остается включенным;</li>
+<li>в интерфейсе показывает только:
+<ul>
+<li><code>Наведение</code>, если режим активен</li>
+<li><code>Готово</code>, если режим не активен</li>
+</ul>
+</li>
+</ul>
+<h3 id=""><code>Лазерная отметка</code></h3>
+<ul>
+<li>persistent mode;</li>
+<li>без cooldown;</li>
+<li>после клика остается включенной;</li>
+<li>подсветка живет, пока сохраняется реальное ведение цели через бинокль.</li>
+</ul>
+<p>Интерфейс показывает режим как <code>Наведение</code>, пока marker mode активен.</p>
+<h2 id="9-binocular-ux">9. Binocular UX</h2>
+<p>Бинокль является финальной точкой interaction flow:</p>
+<ul>
+<li>action-кнопка выбирает режим;</li>
+<li>бинокль принимает цель через <code>Ctrl+Click</code> во время зума;</li>
+<li><code>Ctrl+Click</code> по самому биноклю снимает текущий armed mode.</li>
+</ul>
+<p>Examine у бинокля должен объяснять:</p>
+<ul>
+<li>выбранные пакеты;</li>
+<li>состояние активного сектора;</li>
+<li>текущий armed mode;</li>
+<li>активна ли ручная лазерная отметка;</li>
+<li>countdown до полного reset слотов;</li>
+<li>активен ли solo-бонус на сектор.</li>
+</ul>
+<h2 id="10-ролевой-ux">10. Ролевой UX</h2>
+<p>UI не должен обещать одинаковый набор пакетов всем RTO.</p>
+<p>Текущий контракт:</p>
+<ul>
+<li><code>USCM</code>: <code>mortar</code>, <code>cas</code>, <code>heavy</code>, <code>logistics</code>, <code>medical</code>, <code>technical</code></li>
+<li><code>UNSC</code>: <code>mortar</code>, <code>halo_logistics</code>, <code>halo_medical</code>, <code>halo_technical</code></li>
+<li><code>ODST</code>: <code>cas</code>, <code>heavy</code>, <code>halo_logistics</code>, <code>halo_medical</code>, <code>halo_technical</code></li>
+</ul>
+<p>Именно доступные пакеты должны попадать в preset menu конкретного игрока.</p></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

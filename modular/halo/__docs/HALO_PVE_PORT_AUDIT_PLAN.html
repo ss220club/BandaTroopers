@@ -1,0 +1,240 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/halo/__docs/HALO_PVE_PORT_AUDIT_PLAN.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>HALO PVE PORT AUDIT PLAN <aside>modular/halo/__docs/HALO_PVE_PORT_AUDIT_PLAN.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/halo/__docs/HALO_PVE_PORT_AUDIT_PLAN.md"><img src="git.png" width="16" height="16" title="modular/halo/__docs/HALO_PVE_PORT_AUDIT_PLAN.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><p>Reproducible audit plan for the CM-PVE-HALO part of BandaTroopers PR #102.</p>
+<p>This document is a plan, not a completion record. The status source of truth is
+<a href="HALO_PORT_STATE.md"><code>HALO_PORT_STATE.md</code></a>. Historical batch context lives in
+<a href="HALO_PORT_BACKLOG.md"><code>HALO_PORT_BACKLOG.md</code></a> and
+<a href="../../__docs/VARIOUS_FIXES_PORTING_MAP.md"><code>../../__docs/VARIOUS_FIXES_PORTING_MAP.md</code></a>.</p>
+<h2 id="audit-target">Audit Target</h2>
+<ul>
+<li>BandaTroopers PR: <a href="https://github.com/ss220club/BandaTroopers/pull/102">https://github.com/ss220club/BandaTroopers/pull/102</a></li>
+<li>Current observed local branch head before the 2026-06-18 refresh worktree edits:
+<code>5454f313cc436822c605a8bbcc98cba1e6a8c85d</code></li>
+<li>HALO upstream: <a href="https://github.com/cmss13-devs/cmss13-pve-halo">https://github.com/cmss13-devs/cmss13-pve-halo</a></li>
+<li>Current HALO audit source from state doc:
+<code>cmss13-devs/cmss13-pve-halo/master @ 60dd61b32df3c9f4b6ed0f646743ce8884399e43</code></li>
+<li>Local branch: <code>halo-pve-update-batch1-3b</code></li>
+</ul>
+<h2 id="non-goals">Non-Goals</h2>
+<ul>
+<li>Do not fix implementation during the audit-planning pass.</li>
+<li>Do not add HALO-only states to generic root <code>.dmi</code> files unless a later task
+explicitly accepts that debt.</li>
+<li>Do not treat <code>BUILD.cmd</code> success as proof of DMI state or sound reference
+parity.</li>
+<li>Do not treat a file rename as proof that every DM/DMM reference was remapped.</li>
+</ul>
+<h2 id="source-list-reconciliation">Source List Reconciliation</h2>
+<p>Before per-PR verification, build a single HALO source list from:</p>
+<ol>
+<li>PR #102 body.</li>
+<li><code>HALO_PORT_STATE.md</code>.</li>
+<li><code>HALO_PORT_BACKLOG.md</code>.</li>
+<li><code>VARIOUS_FIXES_PORTING_MAP.md</code>.</li>
+<li>GitHub changed-file list for PR #102.</li>
+<li>Local <code>origin/master...HEAD</code> diff.</li>
+<li>Upstream CM-PVE-HALO pull requests and merge commits.</li>
+</ol>
+<p>The source list must cover:</p>
+<ul>
+<li>baseline HALO PRs from earlier PR #96/#94 context when still present in the
+current branch;</li>
+<li>PR #102 table entries such as #145, #150, #152, #155-#182;</li>
+<li>backlog-only entries such as #137, #143, #153, #154, and #156 core;</li>
+<li>later PR body extension entries #183, #185, #186, and repeated #159;</li>
+<li>every &quot;ALREADY PRESENT&quot; claim.</li>
+</ul>
+<p>Current known mismatch:</p>
+<ul>
+<li>older docs describe 27 CM-PVE-HALO PRs;</li>
+<li>the PR body now also mentions #183, #185, #186, and #159 as newly ported;</li>
+<li>local commits after <code>5f1e274056</code> changed DMI/sound/modularity state.</li>
+</ul>
+<p>2026-06-18 refresh note:</p>
+<ul>
+<li>upstream <code>cm-pve-halo/master</code> now resolves to <code>60dd61b32d</code>;</li>
+<li>post-<code>787d28227b</code> PRs #152, #159, #180, #162, #185, #170, #173, and #172 were rechecked against modular BT paths;</li>
+<li>residual implementation gaps from #151 and #161 were fixed in the refresh worktree;</li>
+<li>upstream <code>sound/weapons/halo/gun_plasmarifle_triplefire.ogg</code> was imported to <code>modular/halo/sound/weapons/gun_plasmarifle_triplefire.ogg</code> as byte-exact parity, although no live DM/DMM/JSON reference currently uses it.</li>
+</ul>
+<h2 id="audit-phases">Audit Phases</h2><h3 id="phase-1-halo-manifest">Phase 1: HALO Manifest</h3>
+<p>For every HALO upstream PR in the reconciled list:</p>
+<ul>
+<li>record upstream PR number, title, merge/head commit, and changed files;</li>
+<li>classify changed files as DM, DME, DMI, OGG/WAV, DMM, JSON, tgui, docs, or
+no-op;</li>
+<li>map upstream <code>modular_pve_halo/**</code>, <code>icons/halo/**</code>, root HALO sound paths,
+and root map/template paths to BandaTroopers target owners;</li>
+<li>record intentional local divergence and dependency on CM-PVE content.</li>
+</ul>
+<p>Acceptance:</p>
+<ul>
+<li>every claimed HALO PR has one manifest row;</li>
+<li>every upstream binary asset has an expected local path;</li>
+<li>every deferred/changed map portion has explicit status and reason.</li>
+</ul>
+<h3 id="phase-2-modularity-gates">Phase 2: Modularity Gates</h3>
+<p>HALO ownership rules:</p>
+<ul>
+<li>HALO code and assets live in <code>modular/halo/**</code> by default.</li>
+<li>Root <code>code/**</code> contains only explicit shared glue and required compile-time
+contracts.</li>
+<li>Root <code>icons/halo/**</code> is forbidden for new/ported HALO assets.</li>
+<li>Root HALO-only sounds are forbidden unless explicitly classified as shared
+upstream content.</li>
+<li>HALO-only states must not be injected into generic root <code>.dmi</code> files without
+a documented exception.</li>
+<li><code>modular/cm_pve/**</code> must not own HALO-specific behavior.</li>
+</ul>
+<p>Required path gates:</p>
+<pre><code class="language-powershell">rg -n &quot;modular_pve_halo&quot; code modular maps map_config colonialmarines.dme colonialmarines.test.dme
+rg -n &quot;'icons/halo/|\&quot;icons/halo/&quot; code modular maps map_config -g &quot;*.dm&quot; -g &quot;*.dmm&quot; -g &quot;*.json&quot;
+rg -n &quot;sound/weapons/halo|sound/voice/(sangheili|unggoy|ruuhtian)|sound/vehicles/warthog&quot; code modular maps -g &quot;*.dm&quot; -g &quot;*.dmm&quot;
+git diff --name-status origin/master...HEAD -- .codex_tmp .roo modular/halo/HALO_PORT_BACKLOG.md sound
+</code></pre>
+<p>Known gate candidates from the first execution pass:</p>
+<ul>
+<li><code>.codex_tmp/**</code> and <code>.roo/**</code> appear in the current PR diff.</li>
+<li>Both <code>modular/halo/HALO_PORT_BACKLOG.md</code> and
+<code>modular/halo/__docs/HALO_PORT_BACKLOG.md</code> appear in the current PR diff.</li>
+<li>6 root <code>sound/weapons/fire_support/spnkr_aa_*.ogg</code> files appeared in the PR
+diff before cleanup; runtime references use
+<code>modular/halo/sound/weapons/spnkr_locking/**</code>.</li>
+<li><code>sound/weapons/gun_dropship_minigun.ogg</code> appears in the PR diff and is a
+referenced CM-PVE/Dog War root sound, not a HALO-owned duplicate.</li>
+<li>Matching modular SPNKR AA files exist under
+<code>modular/halo/sound/weapons/spnkr_locking/</code>.</li>
+<li><code>HALO_PORT_STATE.md</code> had a typo mentioning
+<code>modular/halo/modular/halo/sound/...</code>; the audit pass corrected it to the
+actual <code>sound/weapons/halo/**</code> -&gt; <code>modular/halo/sound/**</code> migration.</li>
+</ul>
+<p>Acceptance:</p>
+<ul>
+<li>no forbidden path remains in final diff or runtime references;</li>
+<li>every root exception is documented and justified;</li>
+<li>duplicate docs/tooling artifacts are removed in a later implementation task
+or explicitly accepted.</li>
+</ul>
+<h3 id="phase-3-dmi-file-and-state-parity">Phase 3: DMI File and State Parity</h3>
+<p>For every upstream HALO DMI:</p>
+<ul>
+<li>compare upstream and local file ownership;</li>
+<li>record whether a byte-exact match, local superset, or local fallback is
+expected;</li>
+<li>dump upstream and local icon_state manifests;</li>
+<li>compare required icon_state presence;</li>
+<li>scan DM/DMM/JSON for <code>icon</code>, <code>icon_state</code>, <code>base_icon_state</code>, <code>item_state</code>,
+<code>worn_state</code>, overlay/radial/HUD state names, and generated state strings.</li>
+</ul>
+<p>High-risk HALO asset groups:</p>
+<ul>
+<li>#183: UNSC/ODST flags and banners, including <code>banners.dmi</code>.</li>
+<li>#150: loadout items, <code>devices.dmi</code>, <code>unsc_melee.dmi</code>, VISR/loadout states.</li>
+<li>#174: loose-ammo packets and <code>packets.dmi</code>.</li>
+<li>#159: shotgun/sniper ammo boxes, <code>boxes_and_lids.dmi</code>,
+<code>magazines.dmi</code>, <code>handful.dmi</code>, and <code>handful_state</code> values; treat this as
+item/code evidence unless a concrete map file is added to the audit.</li>
+<li>#158: fire support radial/HUD/sound icon assets.</li>
+<li>#160: Holy Redoubts map templates and template DMI references.</li>
+<li>#179/#172/#166: uniforms, RTO bag, VISR states.</li>
+<li>New Varadero and <code>areas_covenant.dmi</code> modularized turf/area states.</li>
+</ul>
+<p>Acceptance:</p>
+<ul>
+<li>every HALO DMI required by upstream/local code exists in the correct owner
+path;</li>
+<li>every referenced state exists in the selected local DMI;</li>
+<li>root generic DMI changes are either shared, extracted, or recorded as debt;</li>
+<li>local fallbacks are clearly documented and not misattributed to upstream.</li>
+</ul>
+<h3 id="phase-4-sound-parity">Phase 4: Sound Parity</h3>
+<p>For every upstream HALO OGG/WAV:</p>
+<ul>
+<li>compare source path, local target path, and local references;</li>
+<li>verify every referenced local sound exists;</li>
+<li>verify no HALO-only reference points at root <code>sound/weapons/halo/**</code>,
+<code>sound/voice/{sangheili,unggoy,ruuhtian}/</code>, or root Warthog sound paths;</li>
+<li>compare hashes where byte-exact parity is expected;</li>
+<li>classify intentionally shared root sounds separately from HALO-only sounds.</li>
+</ul>
+<p>High-risk HALO sound groups:</p>
+<ul>
+<li>covenant race pain/warcry sounds;</li>
+<li>UNSC/Covenant gun sounds;</li>
+<li>SPNKR AA sounds;</li>
+<li>fire support aircraft/flyby/impact sounds;</li>
+<li>ODST pod sounds;</li>
+<li>Pelican and Phantom gun sounds;</li>
+<li>dropship hover looping sounds;</li>
+<li>Warthog sounds.</li>
+</ul>
+<p>Acceptance:</p>
+<ul>
+<li>no sound reference points at a missing file;</li>
+<li>duplicate root/modular copies are justified or removed in a later task;</li>
+<li>path ownership matches <code>HALO_PORT_STATE.md</code>.</li>
+</ul>
+<h3 id="phase-5-maps-templates-and-configs">Phase 5: Maps, Templates, and Configs</h3>
+<p>For every HALO map/template PR:</p>
+<ul>
+<li>compare upstream DMM, JSON, template, and map config file presence;</li>
+<li>verify template paths and all referenced area/turf/obj icon states;</li>
+<li>check map config and JSON references;</li>
+<li>run targeted maplint for templates before broader all-map checks;</li>
+<li>document deferred map changes as explicit deviations only when still true.</li>
+</ul>
+<p>High-risk HALO map groups:</p>
+<ul>
+<li>#160 Holy Redoubts templates.</li>
+<li>#169/#182 featureless biomes.</li>
+<li>#150/#174 map placements if they were deferred or later ported; do not carry
+a deferred-map note for #159 without a concrete map file.</li>
+<li>New Irvine/New Varadero imported map asset ownership.</li>
+</ul>
+<p>Acceptance:</p>
+<ul>
+<li>every included HALO map/template compiles and references existing assets;</li>
+<li>docs no longer claim a map portion is deferred if it was later ported;</li>
+<li>deferred map portions have current evidence and owner approval.</li>
+</ul>
+<h3 id="phase-6-code-dme-and-review-threads">Phase 6: Code, DME, and Review Threads</h3>
+<p>For every HALO DM/DME change:</p>
+<ul>
+<li>compare upstream intent with local modular implementation;</li>
+<li>verify DME include reachability through <code>modular/halo/_halo.dme</code>;</li>
+<li>verify <code>code/**</code> glue has SS220 EDIT markers and minimal scope;</li>
+<li>verify HALO-specific code was not placed in <code>modular/cm_pve/**</code>;</li>
+<li>review unresolved GitHub threads.</li>
+</ul>
+<p>Current PR #102 review risk:</p>
+<ul>
+<li>unresolved SRS99 barrel detach thread in
+<code>modular/halo/code/modules/projectiles/guns/specialist/sniper/unsc.dm</code>.</li>
+</ul>
+<p>Acceptance:</p>
+<ul>
+<li>every moved HALO file is reachable once;</li>
+<li>every shared root glue change is marked and justified;</li>
+<li>every unresolved review thread is fixed in a later implementation task or
+explicitly accepted with evidence.</li>
+</ul>
+<h3 id="phase-7-final-verification-gates">Phase 7: Final Verification Gates</h3>
+<p>After audit fixes are implemented in a separate task, run:</p>
+<pre><code class="language-powershell">git diff --check
+tools/bootstrap/python -m dmi.test
+tools/bootstrap/python -m tools.maplint.source --github
+tools/build/build --ci dm -DCIBUILDING -DANSICOLORS -Werror
+</code></pre>
+<p>For map-sensitive HALO work, add the relevant all-map compile stages from
+<code>.AI_AGENT/WORKFLOW_RULES.md</code>. For runtime-sensitive HALO behavior, add focused
+unit/runtime checks rather than relying on compile only.</p>
+<h2 id="completion-criteria">Completion Criteria</h2>
+<p>The HALO PVE audit is complete only when:</p>
+<ul>
+<li>the HALO PR source list is reconciled and documented;</li>
+<li>every HALO PR has a manifest row with target paths and asset ownership;</li>
+<li>every HALO DMI file and required icon_state is verified;</li>
+<li>every HALO sound file and reference is verified;</li>
+<li>all maps/templates/configs are verified;</li>
+<li>forbidden root and duplicate paths are cleared or explicitly justified;</li>
+<li>unresolved PR comments are closed, accepted, or recorded as residual risk;</li>
+<li>verification gates are run or explicitly deferred with evidence.</li>
+</ul></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

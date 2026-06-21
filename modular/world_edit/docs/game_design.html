@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/world_edit/docs/game_design.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>World Edit live design <aside>modular/world_edit/docs/game_design.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/world_edit/docs/game_design.md"><img src="git.png" width="16" height="16" title="modular/world_edit/docs/game_design.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><h2 id="цель">Цель</h2>
+<p>World Edit дает администраторам один in-game интерфейс для выбора live-генератора, редактирования inline-параметров, preview, apply и просмотра истории сессии. Точка входа TGUI-панели: <code>tgui/packages/tgui/interfaces/WorldEditPanel/index.tsx</code>.</p>
+<h2 id="current-live-surface">Current live surface</h2>
+<p>Панель показывает только ready-генераторы:</p>
+<ul>
+<li><code>outpost_radius</code></li>
+<li><code>destruction_pack</code></li>
+<li><code>blueprint_stamp</code></li>
+</ul>
+<h2 id="workflow">Workflow</h2>
+<ol>
+<li><code>Select</code> - выбор генератора из каталога.</li>
+<li><code>Parameters</code> - редактирование inline-полей через <code>get_ui_fields</code> и <code>set_ui_param</code>.</li>
+<li><code>Preview</code> - dry-run без мутаций карты.</li>
+<li><code>Apply</code> - применение подтвержденного плана.</li>
+<li><code>History</code> - session history с операциями и undo/cleanup-метаданными.</li>
+</ol>
+<h2 id="ui-contract">UI contract</h2>
+<ol>
+<li>Живой UI строится только из <code>ui_fields</code>.</li>
+<li>Поддерживаемые <code>kind</code>: <code>select</code>, <code>number</code>, <code>boolean</code>, <code>text</code>.</li>
+<li>Метаданные поля: <code>description</code>, <code>validate_hint</code>, <code>group</code>, <code>placeholder</code>, <code>visible</code>, <code>disabled</code>, <code>required</code>, <code>min</code>, <code>max</code>, <code>step</code>, <code>options</code>.</li>
+<li>Невалидные, скрытые или неподдерживаемые поля backend отбрасывает.</li>
+<li>Для динамических каталогов используется <code>refresh_ui_state</code>.</li>
+<li>Отдельного альтернативного пути настройки нет.</li>
+</ol>
+<h2 id="rights-and-safety">Rights and safety</h2>
+<ol>
+<li>Открытие панели требует <code>R_DEBUG</code>.</li>
+<li>Доступ к генератору определяется <code>required_rights</code> из registry.</li>
+<li>Preview/apply и placement controls дополнительно блокируются backend-флагами, если генератор или состояние сессии не готовы.</li>
+<li>Click-intercept должен освобождаться при остановке режима, сбросе генератора и закрытии панели.</li>
+</ol>
+<h2 id="logging-and-errors">Logging and errors</h2>
+<ol>
+<li>Каждое <code>apply</code> пишет административный лог и <code>message_admins</code>.</li>
+<li><code>last_ui_error</code> показывает ошибки валидации или недоступные действия.</li>
+<li><code>preview_meta</code> и <code>last_changeset</code> используются как структурированный след для UI и history.</li>
+</ol>
+<h2 id="integration-notes">Integration notes</h2>
+<ol>
+<li>Реестр live-генераторов должен оставаться компактным и явно ready-only для панели.</li>
+<li><code>outpost_radius</code> и <code>blueprint_stamp</code> используют placement-aware flow.</li>
+<li><code>destruction_pack</code> остается destructive-профилем с явными ограничениями по безопасности и cleanup.</li>
+</ol></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

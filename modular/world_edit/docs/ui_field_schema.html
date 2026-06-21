@@ -1,0 +1,69 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/world_edit/docs/ui_field_schema.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>UI Field Schema для World Edit <aside>modular/world_edit/docs/ui_field_schema.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/world_edit/docs/ui_field_schema.md"><img src="git.png" width="16" height="16" title="modular/world_edit/docs/ui_field_schema.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><h2 id="назначение">Назначение</h2>
+<p>Схема описывает live inline-поля генераторов для <code>WorldEditPanel</code>. Это единственный пользовательский путь настройки параметров для готовых генераторов.</p>
+<h2 id="базовый-объект-поля">Базовый объект поля</h2>
+<pre><code class="language-dm">list(
+    &quot;id&quot; = &quot;field_id&quot;,
+    &quot;label&quot; = &quot;Название поля&quot;,
+    &quot;kind&quot; = &quot;select|number|boolean|text&quot;,
+    &quot;value&quot; = &lt;текущее значение&gt;
+)
+</code></pre>
+<h2 id="обязательные-ключи">Обязательные ключи</h2>
+<ol>
+<li><code>id</code> - строковый идентификатор параметра.</li>
+<li><code>label</code> - отображаемое название поля.</li>
+<li><code>kind</code> - тип виджета.</li>
+<li><code>value</code> - текущее значение.</li>
+</ol>
+<h2 id="поддерживаемые">Поддерживаемые <code>kind</code></h2>
+<ol>
+<li><code>select</code></li>
+<li><code>number</code></li>
+<li><code>boolean</code></li>
+<li><code>text</code></li>
+</ol>
+<h2 id="optional-ключи">Optional ключи</h2>
+<ol>
+<li><code>options</code> - только для <code>select</code>.</li>
+<li><code>min</code>, <code>max</code>, <code>step</code> - только для <code>number</code>.</li>
+<li><code>description</code> - короткое описание поля.</li>
+<li><code>validate_hint</code> - подсказка по ограничениям.</li>
+<li><code>placeholder</code> - placeholder для <code>text</code>.</li>
+<li><code>group</code> - логическая группа полей в UI.</li>
+<li><code>visible</code> - скрыть поле при <code>FALSE</code>.</li>
+<li><code>disabled</code> - сделать поле read-only.</li>
+<li><code>required</code> - визуальная маркировка обязательного поля.</li>
+</ol>
+<h2 id="формат">Формат <code>options</code></h2>
+<pre><code class="language-dm">list(
+    list(&quot;label&quot; = &quot;Вариант A&quot;, &quot;value&quot; = &quot;a&quot;, &quot;description&quot; = &quot;Комментарий&quot;),
+    list(&quot;label&quot; = &quot;Вариант B&quot;, &quot;value&quot; = &quot;b&quot;)
+)
+</code></pre>
+<h2 id="правила-backend-нормализации">Правила backend-нормализации</h2>
+<ol>
+<li>Поля без <code>id</code> отбрасываются.</li>
+<li>Поля с <code>visible=FALSE</code> отбрасываются.</li>
+<li>Поля с неподдерживаемым <code>kind</code> отбрасываются.</li>
+<li>Для <code>select</code> options нормализуются, label-коллизии устраняются.</li>
+<li>При отсутствии <code>group</code> используется <code>Основные</code>.</li>
+</ol>
+<h2 id="правила">Правила <code>set_ui_param</code></h2>
+<ol>
+<li>Возврат <code>list</code> - успешное обновление параметров.</li>
+<li>Возврат <code>string</code> - пользовательская ошибка, показывается в UI и <code>to_chat</code>.</li>
+<li>Возврат <code>null</code> - операция не изменила состояние.</li>
+</ol>
+<h2 id="live-only-правила">Live-only правила</h2>
+<ol>
+<li>Если генератор возвращает пустой набор полей, UI не подставляет другой экран настройки.</li>
+<li><code>refresh_ui_state</code> используется для динамических каталогов и пересборки <code>ui_fields</code>.</li>
+<li>Валидация и фильтрация выполняются backend-ом, а не отдельным запасным экраном.</li>
+</ol>
+<h2 id="рекомендации-по-качеству">Рекомендации по качеству</h2>
+<ol>
+<li>Использовать <code>group</code> для длинных форм.</li>
+<li>Для каждого числового лимита задавать <code>validate_hint</code>.</li>
+<li>Для динамических каталогов обновлять поля через <code>refresh_ui_state</code>.</li>
+<li>Для условных полей использовать <code>disabled</code> или <code>visible</code>.</li>
+</ol></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

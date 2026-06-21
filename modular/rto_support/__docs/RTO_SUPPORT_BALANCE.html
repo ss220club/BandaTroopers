@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/rto_support/__docs/RTO_SUPPORT_BALANCE.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>RTO Support: баланс и тюнинг <aside>modular/rto_support/__docs/RTO_SUPPORT_BALANCE.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/rto_support/__docs/RTO_SUPPORT_BALANCE.md"><img src="git.png" width="16" height="16" title="modular/rto_support/__docs/RTO_SUPPORT_BALANCE.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><h2 id="1-принципы">1. Принципы</h2>
+<ul>
+<li><code>Mortar</code> работает как частая утилита: короткие интервалы между одиночными выстрелами внутри сектора, затем долгая перезарядка сектора.</li>
+<li><code>CAS</code> остаётся серединой: без экстремального темпа mortar и без тяжёлой инерции heavy.</li>
+<li><code>Heavy Strike</code> даёт длинное окно на принятие решения, но за это платит длинными кулдаунами способностей и сектора.</li>
+<li><code>Logistics</code> не использует сектор и остаётся самым долгим пакетом, потому что его эффект оставляет прогресс в мире.</li>
+</ul>
+<h2 id="2-текущая-матрица-кулдаунов">2. Текущая матрица кулдаунов</h2><h3 id="mortar">Mortar</h3>
+<p>Сектор:</p>
+<ul>
+<li>радиус: <code>7</code></li>
+<li>длительность: <code>30 сек.</code></li>
+<li>восстановление после завершения: <code>300 сек.</code></li>
+</ul>
+<p>Способности:</p>
+<table><thead><tr><th>Способность</th><th style="text-align: right">Снарядов</th><th style="text-align: right">Scatter</th><th style="text-align: right">Shared CD</th><th style="text-align: right">Personal CD</th></tr></thead><tbody>
+<tr><td>HE mortar</td><td style="text-align: right">1</td><td style="text-align: right">4</td><td style="text-align: right">4 сек.</td><td style="text-align: right">8 сек.</td></tr>
+<tr><td>Smoke mortar</td><td style="text-align: right">1</td><td style="text-align: right">3</td><td style="text-align: right">3 сек.</td><td style="text-align: right">5 сек.</td></tr>
+<tr><td>Incendiary mortar</td><td style="text-align: right">1</td><td style="text-align: right">4</td><td style="text-align: right">6 сек.</td><td style="text-align: right">10 сек.</td></tr>
+</tbody></table>
+<h3 id="cas">CAS</h3>
+<p>Сектор:</p>
+<ul>
+<li>радиус: <code>5</code></li>
+<li>длительность: <code>60 сек.</code></li>
+<li>восстановление после завершения: <code>500 сек.</code></li>
+<li>ограничение: требуется открытое небо</li>
+</ul>
+<p>Способности:</p>
+<table><thead><tr><th>Способность</th><th style="text-align: right">Scatter</th><th style="text-align: right">Shared CD</th><th style="text-align: right">Personal CD</th></tr></thead><tbody>
+<tr><td>Gun run</td><td style="text-align: right">3</td><td style="text-align: right">12 сек.</td><td style="text-align: right">16 сек.</td></tr>
+<tr><td>Laser run</td><td style="text-align: right">2</td><td style="text-align: right">14 сек.</td><td style="text-align: right">18 сек.</td></tr>
+<tr><td>Rocket barrage</td><td style="text-align: right">4</td><td style="text-align: right">20 сек.</td><td style="text-align: right">35 сек.</td></tr>
+</tbody></table>
+<h3 id="heavy-strike">Heavy Strike</h3>
+<p>Сектор:</p>
+<ul>
+<li>радиус: <code>4</code></li>
+<li>длительность: <code>80 сек.</code></li>
+<li>восстановление после завершения: <code>800 сек.</code></li>
+<li>ограничение: требуется открытое небо</li>
+</ul>
+<p>Способности:</p>
+<table><thead><tr><th>Способность</th><th style="text-align: right">Scatter</th><th style="text-align: right">Shared CD</th><th style="text-align: right">Personal CD</th></tr></thead><tbody>
+<tr><td>Missile strike</td><td style="text-align: right">2</td><td style="text-align: right">16 сек.</td><td style="text-align: right">20 сек.</td></tr>
+<tr><td>Napalm strike</td><td style="text-align: right">3</td><td style="text-align: right">18 сек.</td><td style="text-align: right">22 сек.</td></tr>
+</tbody></table>
+<h3 id="logistics">Logistics</h3>
+<p>Сектора нет.</p>
+<p>Особые правила:</p>
+<ul>
+<li>все сбросы вызываются напрямую через RTO-бинокль;</li>
+<li>для всех дропов нужна открытая точка и доступное небо;</li>
+<li><code>Full sentry drop</code> имеет самый длинный personal cooldown в пакете.</li>
+</ul>
+<p>Способности:</p>
+<table><thead><tr><th>Способность</th><th style="text-align: right">Scatter</th><th style="text-align: right">Shared CD</th><th style="text-align: right">Personal CD</th></tr></thead><tbody>
+<tr><td>Supply drop</td><td style="text-align: right">1</td><td style="text-align: right">120 сек.</td><td style="text-align: right">600 сек.</td></tr>
+<tr><td>Mine crate drop</td><td style="text-align: right">1</td><td style="text-align: right">90 сек.</td><td style="text-align: right">420 сек.</td></tr>
+<tr><td>Mini-sentry drop</td><td style="text-align: right">1</td><td style="text-align: right">120 сек.</td><td style="text-align: right">540 сек.</td></tr>
+<tr><td>Full sentry drop</td><td style="text-align: right">1</td><td style="text-align: right">180 сек.</td><td style="text-align: right">780 сек.</td></tr>
+</tbody></table>
+<h2 id="3-что-тюнить-первым-после-плейтеста">3. Что тюнить первым после плейтеста</h2>
+<ol>
+<li><code>Mortar</code> scatter: если короткое окно ощущается правильно, но прилёты всё ещё слишком случайные, первым делом уменьшается scatter, а не режется recovery сектора.</li>
+<li><code>CAS</code> tempo: если авиация всё ещё ощущается слишком медленной, сначала уменьшается цена ability или ускоряется recharge charges, а не зона.</li>
+<li><code>Heavy Strike</code> tempo: если пакет снова становится слишком тяжёлым по ритму, первым тюнингом должен быть charge cost или recharge пакета, а не recovery сектора.</li>
+<li><code>Logistics</code> tempo: если пакет слишком тяжёлый по темпу, сначала тюнятся capacity/recharge charges, а не максимальный personal lockout у <code>Full sentry drop</code>.</li>
+</ol>
+<h2 id="4-чего-не-делать-без-причины">4. Чего не делать без причины</h2>
+<ul>
+<li>Не возвращать <code>Mortar</code> к многоснарядному залпу для RTO.</li>
+<li>Не переносить балансные числа в controller или validation.</li>
+<li>Не возвращать <code>Logistics</code> в механику зон ради унификации.</li>
+<li>Не делать <code>CAS</code> и <code>Heavy Strike</code> такими же частыми, как новый burst-<code>Mortar</code>.</li>
+</ul></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

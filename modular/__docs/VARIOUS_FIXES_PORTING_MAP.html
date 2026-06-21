@@ -1,0 +1,133 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/__docs/VARIOUS_FIXES_PORTING_MAP.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>VARIOUS FIXES PORTING MAP <aside>modular/__docs/VARIOUS_FIXES_PORTING_MAP.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/__docs/VARIOUS_FIXES_PORTING_MAP.md"><img src="git.png" width="16" height="16" title="modular/__docs/VARIOUS_FIXES_PORTING_MAP.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><p>Master porting map for all upstream PRs ported into BandaTroopers from CM-PVE and CM-PVE-HALO repositories.</p>
+<h2 id="document-hierarchy">Document Hierarchy</h2>
+<ul>
+<li><a href="CM_PVE_PORT_STATE.md"><code>CM_PVE_PORT_STATE.md</code></a> — canonical tracking for CM-PVE PRs (21 PRs, all PORTED)</li>
+<li><a href="../halo/__docs/HALO_PORT_STATE.md"><code>HALO_PORT_STATE.md</code></a> — canonical tracking for CM-PVE-HALO PRs (27 PRs, all PORTED)</li>
+<li><a href="../halo/__docs/HALO_PORT_BACKLOG.md"><code>HALO_PORT_BACKLOG.md</code></a> — implementation batches and backlog for HALO content</li>
+<li><a href="CM_PVE_PORT_AUDIT_PLAN.md"><code>CM_PVE_PORT_AUDIT_PLAN.md</code></a> — reproducible CM-PVE parity, asset, sound, map, and modularity audit plan</li>
+<li><a href="../halo/__docs/HALO_PVE_PORT_AUDIT_PLAN.md"><code>HALO_PVE_PORT_AUDIT_PLAN.md</code></a> — reproducible CM-PVE-HALO parity, asset, sound, map, and modularity audit plan</li>
+<li><strong>This file</strong> — historical context, split decisions, and cross-references</li>
+</ul>
+<hr />
+<h2 id="pr-102-comprehensive-upstream-sync">PR #102: Comprehensive Upstream Sync (<code>halo-pve-update-batch1-3b</code>)</h2><h3 id="scope">Scope</h3>
+<ul>
+<li><strong>CM-PVE</strong>: 21 PRs (#1264–#1289) — all PORTED</li>
+<li><strong>CM-PVE-HALO</strong>: 27 PRs (#137–#180) — all PORTED</li>
+<li><strong>Branch</strong>: <code>halo-pve-update-batch1-3b</code></li>
+<li><strong>PR</strong>: https://github.com/ss220club/BandaTroopers/pull/102</li>
+<li><strong>Last sync commit</strong>: <code>5f1e274056</code> (2026-06-09)</li>
+<li><strong>Latest HALO upstream refresh</strong>: <code>cmss13-devs/cmss13-pve-halo/master @ 60dd61b32df3c9f4b6ed0f646743ce8884399e43</code> (2026-06-18)</li>
+</ul>
+<h3 id="cm-pve-prs-21">CM-PVE PRs (21)</h3><table><thead><tr><th>PR</th><th>Title</th><th>Type</th><th>Key Changes</th></tr></thead><tbody>
+<tr><td>#1289</td><td>Observer Faction Categories</td><td>Code</td><td>Orbit menu faction categories</td></tr>
+<tr><td>#1288</td><td>Anti Air - GM Choice</td><td>Code</td><td>GM verb for AA launcher</td></tr>
+<tr><td>#1287</td><td>Gas Mask Vision Impairment</td><td>Code</td><td>Vision impair + scope allowance</td></tr>
+<tr><td>#1284</td><td>Lazy Bunker Shipmaps</td><td>Maps</td><td>uscm_bunker, upp_bunker</td></tr>
+<tr><td>#1283</td><td>Movie-ish Sections</td><td>Code + Maps</td><td>chapaev_movie, golden_arrow_movie, new roles</td></tr>
+<tr><td>#1282</td><td>The Straya War</td><td>Code</td><td>TWE warcry sounds</td></tr>
+<tr><td>#1280</td><td>Dog war atomized</td><td>Code + Maps</td><td>golden_arrow_dog_war, M38 ammo, dog war MRE; local-fallback DMI states are documented in <code>CM_PVE_PORT_STATE.md</code></td></tr>
+<tr><td>#1278</td><td>Call ur hits</td><td>Code</td><td>LARP/airsoft items</td></tr>
+<tr><td>#1277</td><td>Movie-like Xeno Castes</td><td>Code</td><td>Buffed Runner/Drone/Soldier/Lurker/Crusher</td></tr>
+<tr><td>#1276</td><td>FV150 'Hobelar'</td><td>Code</td><td>TWE tank/APC</td></tr>
+<tr><td>#1275</td><td>Vanguard's Arrow</td><td>Code</td><td>VAI faction clothing</td></tr>
+<tr><td>#1273</td><td>Gibson &amp; Kloos</td><td>Code</td><td>Bodyburster/Lanky castes</td></tr>
+<tr><td>#1272</td><td>Koishi's landmines</td><td>Code</td><td>New mine types</td></tr>
+<tr><td>#1271</td><td>Itsy Bitsy Buggers</td><td>Code</td><td>Spider/Lizard castes</td></tr>
+<tr><td>#1270</td><td>Featueless</td><td>Maps</td><td>Featureless biomes</td></tr>
+<tr><td>#1269</td><td>Snowman</td><td>Code</td><td>CANC presets</td></tr>
+<tr><td>#1268</td><td>Active prox_sensor</td><td>Code</td><td>Proximity sensor UI</td></tr>
+<tr><td>#1267</td><td>Wolfpack</td><td>Code</td><td>Wolfpack APC</td></tr>
+<tr><td>#1266</td><td>D66-44</td><td>Code</td><td>Ridgeway tank</td></tr>
+<tr><td>#1265</td><td>Auriga's Folly</td><td>Code</td><td>Hybrid species</td></tr>
+<tr><td>#1264</td><td>Shipmap lighting GM verb</td><td>Code</td><td>GM lighting verb</td></tr>
+</tbody></table>
+<h3 id="cm-pve-halo-prs-27">CM-PVE-HALO PRs (27)</h3>
+<p>See <a href="../halo/__docs/HALO_PORT_STATE.md"><code>HALO_PORT_STATE.md</code></a> for full table.</p>
+<p>2026-06-18 refresh:</p>
+<ul>
+<li>Fresh post-<code>787d28227b</code> CM-PVE-HALO PRs #152, #159, #180, #162, #185, #170, #173, and #172 were rechecked against BT modular paths.</li>
+<li>Residual gaps from #151 and #161 were fixed in BT.</li>
+<li><code>sound/weapons/halo/gun_plasmarifle_triplefire.ogg</code> was imported to <code>modular/halo/sound/weapons/gun_plasmarifle_triplefire.ogg</code> as a byte-exact upstream sound asset; it has no live reference at the time of import.</li>
+</ul>
+<h3 id="path-remapping-rules">Path Remapping Rules</h3>
+<ul>
+<li>All upstream <code>modular_pve_halo/</code> paths → <code>modular/halo/</code></li>
+<li>Root <code>icons/halo/</code> paths → <code>modular/halo/icons/**</code></li>
+<li>Root HALO sound paths → <code>modular/halo/sound/**</code></li>
+<li>All <code>code/**</code> changes require <code>SS220 EDIT</code> markers</li>
+</ul>
+<h3 id="validation">Validation</h3>
+<ul>
+<li><strong>Compile</strong>: <code>BUILD.cmd</code> — 0 errors, 0 warnings</li>
+<li><strong>SS220 EDIT audit (code/)</strong>: All files properly marked</li>
+<li><strong>modular_pve_halo/ path audit</strong>: 0 occurrences</li>
+<li><strong>Root icons/halo/ path audit</strong>: 0 occurrences</li>
+<li><strong>Binary assets</strong>: 12 .dmi icons + 9 .ogg sounds downloaded from upstream</li>
+<li><strong>Files changed</strong>: 56 files, +4541/-312 lines</li>
+</ul>
+<hr />
+<h2 id="historical-halo-follow-up-apr2026-pr-94-pr-96">Historical: HALO Follow-up Apr2026 (PR #94 / PR #96)</h2><h3 id="source-of-truth">Source of Truth</h3>
+<ul>
+<li>Upstream repo: <code>https://github.com/cmss13-devs/cmss13-pve-halo</code></li>
+<li>Latest historical PR94 verification fetch: <code>cm-pve-halo/master</code> at <code>2ec6b82a5b</code> (2026-04-27)</li>
+<li>Latest PR102/HALO refresh fetch: <code>cm-pve-halo/master</code> at <code>60dd61b32df3c9f4b6ed0f646743ce8884399e43</code> (2026-06-18)</li>
+<li>Merged BT baseline: <code>ss220club/BandaTroopers#93</code></li>
+<li>Base main-wave branch: <code>ss220club/master</code> at <code>66bf244f0ecf925736d9081053d35abb59fb6c6e</code></li>
+</ul>
+<h3 id="main-wave-scope-pr-96">Main Wave Scope (PR #96)</h3>
+<ol>
+<li><code>cmss13-pve-halo#46</code> — Mackay lighting tail, ONI Digsite shuttle IDs</li>
+<li><code>cmss13-pve-halo#126</code> — r_wall/bunker/hull, New Irvine auto-turfs</li>
+<li><code>cmss13-pve-halo#134</code> — ONI Shield Base</li>
+<li><code>cmss13-pve-halo#135</code> — Valorous Chant</li>
+<li><code>cmss13-pve-halo#136</code> — 686 Regretful Flame</li>
+<li><code>cmss13-pve-halo#139</code> — Covenant landmines</li>
+<li><code>cmss13-pve-halo#140</code> — Weapon sprite/state wave</li>
+<li><code>cmss13-pve-halo#141</code> — Shrapnel/projectile follow-up</li>
+<li><code>cmss13-pve-halo#143</code> — BR55 recoil follow-up</li>
+<li><code>cmss13-pve-halo#145</code> — Bumblebee escape pod</li>
+<li><code>cmss13-pve-halo#146</code> — UNSC helmet motion sensor HUD</li>
+<li><code>cmss13-pve-halo#137</code> — Audit-only modularization</li>
+<li><code>cmss13-pve-halo#113</code> — Prime rolling removal</li>
+<li><code>cmss13-pve-halo#118</code> — Flavor fixes</li>
+<li><code>cmss13-pve-halo#129</code> — Covenant HAI/faction split</li>
+<li><code>cmss13-pve-halo#132</code> — Covenant AI rate-of-fire limits</li>
+<li><code>cmss13-pve-halo#138</code> — Covenant gear update</li>
+<li><code>cmss13-pve-halo#142</code> — Pelican roof fix (audited)</li>
+<li><code>cmss13-pve-halo#144</code> — CODEOWNERS/changelog (no-op)</li>
+</ol>
+<h3 id="pr94-update-scope">PR94 Update Scope</h3>
+<p>Branch <code>halo_jackal_spartan_wave_apr2026</code>:</p>
+<ul>
+<li>Kig-Yar/Unggoy tail from <code>PR #97</code></li>
+<li>Spartan base from <code>#100</code></li>
+<li>Branch-local gameplay completion for Kig-Yar, Sangheili, Unggoy, Spartan</li>
+<li>Preset/HumanAI/squad coverage</li>
+</ul>
+<h3 id="follow-up-ports-2026-05-02">Follow-up Ports (2026-05-02)</h3>
+<ul>
+<li><code>PR #149</code> — RTO and ODST SL fixes (modular proc overrides)</li>
+<li><code>PR #146/#150</code> — Motion sensor refresh, universal naming refresh</li>
+<li><code>PR #148</code> — Grenade throwback rules (brain capability flag)</li>
+</ul>
+<h3 id="key-hotspots">Key Hotspots</h3>
+<ol>
+<li>HALO UNSC guns/magazines are owned by granular files under <code>modular/halo/code/modules/projectiles/guns/{rifle,smg,pistol,shotgun,specialist,magazines}/</code>; legacy aggregate files were removed.</li>
+<li><code>modular/halo/code/game/objects/items/weapons/halo_shields.dm</code></li>
+<li><code>modular/halo/code/modules/gear_presets/Halo/{ruuhtian,unggoy}.dm</code></li>
+<li><code>code/game/objects/items/explosives/mine.dm</code></li>
+<li><code>code/datums/ammo/shrapnel.dm</code></li>
+<li><code>code/modules/projectiles/projectile.dm</code></li>
+<li><code>code/modules/mob/living/carbon/human/ai/defense_creator.dm</code></li>
+<li><code>maps/map_files/halo_new_irvine_covenant/</code></li>
+<li><code>maps/shuttles/bumblebee_west.dmm</code></li>
+<li><code>modular/halo/code/modules/shuttle/halo/bumblebee.dm</code></li>
+<li><code>code/_onclick/hud/human.dm</code></li>
+<li><code>modular/halo/code/mixed/components/halo_motion_sensor.dm</code></li>
+</ol>
+<hr />
+<h2 id="update-protocol">Update Protocol</h2>
+<ul>
+<li>When new upstream PRs are ported, update this file with the batch context.</li>
+<li>If this file disagrees with older port notes, <a href="CM_PVE_PORT_STATE.md"><code>CM_PVE_PORT_STATE.md</code></a> and <a href="../halo/__docs/HALO_PORT_STATE.md"><code>HALO_PORT_STATE.md</code></a> win.</li>
+</ul></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

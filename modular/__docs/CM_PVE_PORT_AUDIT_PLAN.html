@@ -1,0 +1,192 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/__docs/CM_PVE_PORT_AUDIT_PLAN.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>CM-PVE PORT AUDIT PLAN <aside>modular/__docs/CM_PVE_PORT_AUDIT_PLAN.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/__docs/CM_PVE_PORT_AUDIT_PLAN.md"><img src="git.png" width="16" height="16" title="modular/__docs/CM_PVE_PORT_AUDIT_PLAN.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><p>Reproducible audit plan for the CM-PVE part of BandaTroopers PR #102.</p>
+<p>This document is a plan, not a completion record. The status source of truth
+remains <a href="CM_PVE_PORT_STATE.md"><code>CM_PVE_PORT_STATE.md</code></a>. The cross-project map is
+<a href="VARIOUS_FIXES_PORTING_MAP.md"><code>VARIOUS_FIXES_PORTING_MAP.md</code></a>.</p>
+<h2 id="audit-target">Audit Target</h2>
+<ul>
+<li>BandaTroopers PR: <a href="https://github.com/ss220club/BandaTroopers/pull/102">https://github.com/ss220club/BandaTroopers/pull/102</a></li>
+<li>Current observed PR head: <code>37590aa0dd5da5317d833b90ef0a7946bf67bd2e</code></li>
+<li>CM-PVE upstream: <a href="https://github.com/cmss13-devs/cmss13-pve">https://github.com/cmss13-devs/cmss13-pve</a></li>
+<li>Local branch: <code>halo-pve-update-batch1-3b</code></li>
+</ul>
+<h2 id="non-goals">Non-Goals</h2>
+<ul>
+<li>Do not fix implementation during the audit-planning pass.</li>
+<li>Do not infer DMI parity from file presence alone.</li>
+<li>Do not mark a PR as fully audited until code paths, assets, maps/configs,
+docs, and relevant verification gates are checked.</li>
+<li>Do not treat compile success as proof that DMI states or sound references are
+correct.</li>
+</ul>
+<h2 id="source-list-reconciliation">Source List Reconciliation</h2>
+<p>Before per-PR verification, build a single CM-PVE source list from:</p>
+<ol>
+<li>PR #102 body.</li>
+<li><code>CM_PVE_PORT_STATE.md</code>.</li>
+<li><code>VARIOUS_FIXES_PORTING_MAP.md</code>.</li>
+<li>GitHub changed-file list for PR #102.</li>
+<li>Local <code>origin/master...HEAD</code> diff.</li>
+<li>Upstream CM-PVE pull requests and merge commits.</li>
+</ol>
+<p>Current known mismatch:</p>
+<ul>
+<li><code>VARIOUS_FIXES_PORTING_MAP.md</code> still describes 21 CM-PVE PRs.</li>
+<li><code>CM_PVE_PORT_STATE.md</code> currently lists 30 total entries.</li>
+<li>The audit must classify whether each extra entry is a later addition, legacy
+map-related PR, duplicate, or documentation drift.</li>
+</ul>
+<h2 id="audit-phases">Audit Phases</h2><h3 id="phase-1-pr-manifest">Phase 1: PR Manifest</h3>
+<p>For every CM-PVE PR in the reconciled source list:</p>
+<ul>
+<li>record upstream PR number, title, merge/head commit, and changed files;</li>
+<li>classify changed files as DM, DME, DMI, OGG/WAV, DMM, JSON, tgui, docs, or
+no-op;</li>
+<li>map upstream file paths to BandaTroopers target paths;</li>
+<li>record whether the target owner is <code>modular/cm_pve/**</code>, <code>code/**</code>, root
+<code>icons/**</code>, root <code>sound/**</code>, maps, map config, or tgui.</li>
+</ul>
+<p>Acceptance:</p>
+<ul>
+<li>every claimed CM-PVE PR has one manifest row;</li>
+<li>every upstream binary asset has an expected local owner;</li>
+<li>every &quot;already present&quot; or &quot;local fallback&quot; claim has explicit evidence.</li>
+</ul>
+<h3 id="phase-2-modularity-and-include-graph">Phase 2: Modularity and Include Graph</h3>
+<p>Check the modular split:</p>
+<ul>
+<li>pure CM-PVE implementation should live in <code>modular/cm_pve/**</code> when it is not
+required as shared glue;</li>
+<li><code>code/**</code> changes must be limited to shared upstream diff, integration glue,
+or unavoidable root contracts;</li>
+<li>HALO-specific content must not live in <code>modular/cm_pve/**</code>;</li>
+<li>moved files must be included through <code>modular/modular.dme</code> and
+<code>modular/cm_pve/_cm_pve.dme</code>;</li>
+<li>no dead duplicate <code>code/**</code> implementation should remain reachable when a
+modular file owns the behavior.</li>
+</ul>
+<p>Read-only commands to use:</p>
+<pre><code class="language-powershell">rg -n &quot;modular/cm_pve|modular/halo|#include&quot; colonialmarines.dme colonialmarines.test.dme modular/modular.dme modular/cm_pve/_cm_pve.dme modular/halo/_halo.dme
+rg -n &quot;SS220 EDIT&quot; code map_config
+rg -n &quot;modular/halo&quot; modular/cm_pve code/modules/vehicles/twe_tank code/modules/clothing/under/vai.dm
+</code></pre>
+<p>Acceptance:</p>
+<ul>
+<li>every included CM-PVE modular file is reachable once;</li>
+<li>every retained root <code>code/**</code> CM-PVE change has a reason and SS220 EDIT
+markers when required;</li>
+<li><code>modular/cm_pve/**</code> has no HALO-only implementation.</li>
+</ul>
+<h3 id="phase-3-dmi-file-and-state-parity">Phase 3: DMI File and State Parity</h3>
+<p>For every upstream DMI touched by a CM-PVE PR:</p>
+<ul>
+<li>compare upstream and local file ownership;</li>
+<li>record whether a byte-exact match is expected or a local superset/fallback is
+expected;</li>
+<li>dump upstream and local icon_state manifests;</li>
+<li>compare required icon_state presence, not only file presence;</li>
+<li>check states referenced by DM, DMM, JSON, overlay code, <code>item_state</code>,
+<code>worn_state</code>, <code>handful_state</code>, and HUD/radial code.</li>
+</ul>
+<p>High-risk CM-PVE asset groups:</p>
+<ul>
+<li>PR #1280: Dog War clothing, MRE, ammo, attachments, fallback PMC/WY states.</li>
+<li>PR #1278: LARP/airsoft hand sprites and crosses.</li>
+<li>PR #1267/#1266/#1276: vehicle DMIs and hardpoint/interior states.</li>
+<li>PR #1257: <code>icons/mob/hud/screen2_full.dmi</code> local superset.</li>
+<li>PR #1255: UPP/CANC camouflage clothing and onmob states.</li>
+<li>Xeno PRs #1271/#1273/#1277: xeno caste DMIs and typecheck/caste state usage.</li>
+</ul>
+<p>Acceptance:</p>
+<ul>
+<li>every upstream-required state is present in the local target DMI;</li>
+<li>every local fallback state is documented as fallback and not falsely
+attributed to upstream;</li>
+<li>root generic DMI modifications are justified as shared CM-PVE content or
+recorded as follow-up debt.</li>
+</ul>
+<h3 id="phase-4-sound-parity">Phase 4: Sound Parity</h3>
+<p>For every upstream sound touched by a CM-PVE PR:</p>
+<ul>
+<li>compare filename, expected local path, and reference path;</li>
+<li>verify every referenced sound path exists in the working tree;</li>
+<li>classify root sounds as shared upstream assets or forbidden port leaks;</li>
+<li>compare hashes where byte-exact parity is expected.</li>
+</ul>
+<p>Known CM-PVE sound groups:</p>
+<ul>
+<li>PR #1288: SPNKR AA lock/crash/damage/fail sounds.</li>
+<li>PR #1282: TWE warcry sounds.</li>
+<li>PR #1280: dropship/gun-related sounds if referenced by ported code.</li>
+</ul>
+<p>Acceptance:</p>
+<ul>
+<li>no sound reference points at a missing file;</li>
+<li>root sound additions are either documented shared assets or moved/remapped;</li>
+<li>duplicate root and modular copies are either justified or removed in a later
+implementation task.</li>
+</ul>
+<h3 id="phase-5-maps-and-configs">Phase 5: Maps and Configs</h3>
+<p>For every CM-PVE map/config PR:</p>
+<ul>
+<li>compare upstream DMM/JSON/map_config file presence;</li>
+<li>validate JSON keys that BT requires, including <code>nightmare_path</code>, map name,
+faction fields, weather/camouflage/webmap fields where applicable;</li>
+<li>check DMM references to icons, areas, turfs, decals, and templates;</li>
+<li>compare <code>map_config/maps.txt</code>, <code>map_config/shipmaps.txt</code>, and related ignore
+lists if map rotation/test matrix changes.</li>
+</ul>
+<p>High-risk map PRs:</p>
+<ul>
+<li>#1284 Lazy Bunker Shipmaps.</li>
+<li>#1283 Movie-ish Sections.</li>
+<li>#1280 Dog War map.</li>
+<li>#1270 Featureless maps.</li>
+<li>#1253 Tethered USS Rover.</li>
+</ul>
+<p>Acceptance:</p>
+<ul>
+<li>map configs reference existing JSON/DMM files;</li>
+<li>DMM referenced DMI/icon_state pairs exist;</li>
+<li>maplint/build verification is selected for every map-sensitive fix.</li>
+</ul>
+<h3 id="phase-6-code-behavior-and-review-threads">Phase 6: Code Behavior and Review Threads</h3>
+<p>For every PR with DM/tgui behavior changes:</p>
+<ul>
+<li>compare upstream intent with local implementation;</li>
+<li>check callsites and side effects;</li>
+<li>verify any intentional divergence has a documented reason;</li>
+<li>review GitHub unresolved threads and local known warnings.</li>
+</ul>
+<p>Current PR #102 review risk:</p>
+<ul>
+<li>unresolved SRS99 barrel detach thread in
+<code>modular/halo/code/modules/projectiles/guns/specialist/sniper/unsc.dm</code>.</li>
+</ul>
+<p>Acceptance:</p>
+<ul>
+<li>every unresolved thread is either fixed in a later implementation task or
+explicitly accepted with evidence;</li>
+<li>every intentional divergence is recorded in <code>CM_PVE_PORT_STATE.md</code> or linked
+evidence.</li>
+</ul>
+<h3 id="phase-7-final-gates">Phase 7: Final Gates</h3>
+<p>After audit fixes are implemented in a separate task, run:</p>
+<pre><code class="language-powershell">git diff --check
+tools/bootstrap/python -m dmi.test
+tools/bootstrap/python -m tools.maplint.source --github
+tools/build/build --ci dm -DCIBUILDING -DANSICOLORS -Werror
+</code></pre>
+<p>For map-sensitive changes, add the relevant all-map compile stages from
+<code>.AI_AGENT/WORKFLOW_RULES.md</code>.</p>
+<h2 id="completion-criteria">Completion Criteria</h2>
+<p>The CM-PVE audit is complete only when:</p>
+<ul>
+<li>the CM-PVE PR source list is reconciled and documented;</li>
+<li>every CM-PVE PR has a manifest row with target paths and asset ownership;</li>
+<li>all DMI files and required icon_states are verified;</li>
+<li>all sound files and references are verified;</li>
+<li>all map/config changes are verified;</li>
+<li>modularity and SS220 EDIT requirements are checked;</li>
+<li>unresolved PR comments are closed, accepted, or recorded as residual risk;</li>
+<li>verification gates are run or explicitly deferred with evidence.</li>
+</ul></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

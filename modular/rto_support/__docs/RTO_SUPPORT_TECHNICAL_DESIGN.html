@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/rto_support/__docs/RTO_SUPPORT_TECHNICAL_DESIGN.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>RTO Support: технический дизайн <aside>modular/rto_support/__docs/RTO_SUPPORT_TECHNICAL_DESIGN.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/rto_support/__docs/RTO_SUPPORT_TECHNICAL_DESIGN.md"><img src="git.png" width="16" height="16" title="modular/rto_support/__docs/RTO_SUPPORT_TECHNICAL_DESIGN.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><h2 id="1-назначение">1. Назначение</h2>
+<p><code>RTO Support</code> реализует персональную modular-систему вызова поддержки для роли <code>RTO</code> без привязки к singleton-runtime существующего <code>fire_support</code>.</p>
+<p>Модуль держит:</p>
+<ul>
+<li>персональный controller на конкретного RTO;</li>
+<li>конфигурационные шаблоны пакетов;</li>
+<li>серверную валидацию;</li>
+<li>dispatch в <code>datum/fire_support</code>;</li>
+<li>action-кнопки и targeting через отдельный <code>RTO binoculars</code>;</li>
+<li>отдельное TGUI preset menu.</li>
+</ul>
+<h2 id="2-главная-архитектура">2. Главная архитектура</h2>
+<p>Система разбита на четыре слоя:</p>
+<ol>
+<li><code>config</code>
+<code>rto_support_template</code> и <code>rto_support_action_template</code></li>
+<li><code>runtime</code>
+<code>rto_support_controller</code>, <code>rto_visibility_zone</code></li>
+<li><code>services</code>
+<code>rto_support_validation_service</code>, <code>rto_support_dispatch_service</code></li>
+<li><code>interaction</code>
+<code>human_action</code>-кнопки, <code>RTO binoculars</code>, preset menu</li>
+</ol>
+<h2 id="3-support-profiles">3. Support profiles</h2>
+<p>Доступность пакетов data-driven и зависит от <code>support_profile</code>.</p>
+<p>Текущий профильный контракт:</p>
+<ul>
+<li><code>uscm</code></li>
+<li><code>unsc</code></li>
+<li><code>odst</code></li>
+</ul>
+<p>Текущая доступность:</p>
+<ul>
+<li><code>USCM</code>: <code>mortar</code>, <code>cas</code>, <code>heavy</code>, <code>logistics</code>, <code>medical</code>, <code>technical</code></li>
+<li><code>UNSC</code>: <code>mortar</code>, <code>halo_logistics</code>, <code>halo_medical</code>, <code>halo_technical</code></li>
+<li><code>ODST</code>: <code>cas</code>, <code>heavy</code>, <code>halo_logistics</code>, <code>halo_medical</code>, <code>halo_technical</code></li>
+</ul>
+<p>Профиль должен определяться через dedicated RTO binocular variant, а fallback по job остается только резервным путем.</p>
+<h2 id="4-controller-и-runtime-контракты">4. Controller и runtime-контракты</h2>
+<p>Controller хранит:</p>
+<ul>
+<li>владельца;</li>
+<li><code>selected_templates</code></li>
+<li><code>active_zone</code></li>
+<li><code>armed_action_id</code></li>
+<li><code>armed_template_id</code></li>
+<li><code>shared_cooldowns_by_template[template_id]</code></li>
+<li><code>zone_shared_cooldown_until</code></li>
+<li><code>zone_cooldowns_by_template[template_id]</code></li>
+<li><code>action_cooldowns[action_id]</code></li>
+<li>reset-state выбора слотов</li>
+<li>ссылки на RTO action-кнопки</li>
+</ul>
+<p>Controller больше не живет в модели singular <code>active_template</code>.</p>
+<p>Основной контракт:</p>
+<ul>
+<li>по умолчанию можно выбрать до <code>2</code> уникальных пакетов;</li>
+<li>второй слот необязателен;</li>
+<li>первый выбор по умолчанию запускает timer полного reset на <code>60 минут</code>;</li>
+<li>лимит слотов и время полного reset читаются из <code>Game Rule Panel</code>;</li>
+<li>reset всегда полный и очищает все выбранные слоты;</li>
+<li>select-preset action остается доступным и после первого выбора.</li>
+</ul>
+<h2 id="5-cooldown-model">5. Cooldown model</h2>
+<p>Runtime-модель cooldown'ов:</p>
+<ul>
+<li><code>shared_cooldowns_by_template[template_id]</code></li>
+<li><code>action_cooldowns[action_id]</code></li>
+<li><code>zone_shared_cooldown_until</code></li>
+<li><code>zone_cooldowns_by_template[template_id]</code></li>
+</ul>
+<h3 id="support-cooldowns">Support cooldowns</h3>
+<ul>
+<li><code>shared_cooldown</code> относится к конкретному пакету;</li>
+<li>вызов из пакета A не блокирует пакет B;</li>
+<li><code>personal_cooldown</code> относится только к одной ability.</li>
+</ul>
+<h3 id="zone-cooldowns">Zone cooldowns</h3>
+<ul>
+<li>активный сектор в рантайме всегда только один;</li>
+<li>после окончания сектора стартует общий zone cooldown;</li>
+<li>одновременно стартует личный zone cooldown только пакета-источника;</li>
+<li>чужой пакет не наследует личный zone cooldown чужого сектора.</li>
+</ul>
+<h3 id="solo-discount">Solo discount</h3>
+<p>Если выбран ровно один пакет и он zone-based, effective cooldown его сектора уменьшается в <code>2 раза</code>.</p>
+<p>Для этого controller использует:</p>
+<ul>
+<li><code>get_solo_visibility_zone_cooldown()</code></li>
+<li><code>uses_single_template_zone_discount()</code></li>
+<li><code>get_effective_visibility_zone_cooldown()</code></li>
+</ul>
+<p>Применять zone cooldown нужно через effective-value, а не напрямую через <code>template.visibility_zone_cooldown</code>.</p>
+<h2 id="6-zone-ownership">6. Zone ownership</h2>
+<p>Zone-based actions работают только через сектор своего пакета.</p>
+<p>Правила:</p>
+<ul>
+<li>у <code>Mortar</code>, <code>CAS</code>, <code>Heavy Strike</code> свой template-owned sector flow;</li>
+<li>активный сектор пакета A не валидирует actions пакета B;</li>
+<li>второй сектор нельзя развернуть, пока существует первый;</li>
+<li><code>validation_service</code> и HUD state builder должны опираться на <code>source_template</code>.</li>
+</ul>
+<h2 id="7-hud-и-action-lifecycle">7. HUD и action lifecycle</h2>
+<p>HUD остается <code>human_action</code>-based.</p>
+<p>Порядок action handles должен быть стабильным:</p>
+<ol>
+<li><code>select_preset</code></li>
+<li>visibility actions по слотам</li>
+<li><code>coordinates</code></li>
+<li><code>manual_marker</code></li>
+<li>support actions пакета 1</li>
+<li>support actions пакета 2</li>
+</ol>
+<p>Не переносить этот HUD на <code>item_action</code> без отдельного архитектурного решения.</p>
+<h2 id="8-preset-menu-contract">8. Preset menu contract</h2>
+<p>Preset menu должен получать от controller:</p>
+<ul>
+<li><code>selected_templates</code></li>
+<li><code>selected_count</code></li>
+<li><code>max_selected_templates</code></li>
+<li><code>can_add_template</code></li>
+<li><code>can_reset_templates</code></li>
+<li><code>reset_ready_in</code></li>
+</ul>
+<p>Для zone-based пакетов preset UI DTO также должен уметь показать:</p>
+<ul>
+<li>полный <code>visibility_zone_cooldown</code></li>
+<li>reduced <code>visibility_zone_cooldown_solo</code></li>
+<li>текущий <code>visibility_zone_cooldown_current</code></li>
+<li>активен ли <code>solo_zone_cooldown_active</code></li>
+</ul>
+<p>Игрок не должен узнавать про solo-бонус только через код или случайный gameplay.</p>
+<h2 id="9-halo-support-catalog">9. HALO support catalog</h2>
+<p>HALO admin bridge держится отдельно в modular compat layer.</p>
+<p>Текущий HALO контракт:</p>
+<ul>
+<li><code>halo_logistics</code></li>
+<li><code>halo_medical</code></li>
+<li><code>halo_technical</code></li>
+</ul>
+<p><code>halo_engineering</code> и <code>halo_command</code> больше не являются публичными UI/admin template-id. Их payload-группы слиты в <code>halo_technical</code>.</p>
+<h2 id="10-uscm-payload-model">10. USCM payload model</h2>
+<p>USCM utility support использует shared weighted charges:</p>
+<ul>
+<li>часть новых действий переиспользует existing upstream crates;</li>
+<li>часть заведена как compact modular payloads в <code>modular/rto_support/code/fire_support/uscm_support_payloads.dm</code>.</li>
+</ul>
+<p>Текущие новые USCM utility-секции:</p>
+<ul>
+<li><code>logistics</code></li>
+<li><code>medical</code></li>
+<li><code>technical</code></li>
+</ul>
+<h2 id="11-что-не-менять-без-причины">11. Что не менять без причины</h2>
+<ul>
+<li>не возвращать singular <code>active_template</code>-контракт наружу;</li>
+<li>не смешивать zone cooldown и support cooldown в одном primary label;</li>
+<li>не убирать постоянную доступность select-preset action;</li>
+<li>не делать zone cooldown глобально одинаковым для всех пакетов без учета template ownership;</li>
+<li>не скрывать solo-бонус от игрока;</li>
+<li>не разносить runtime-логику <code>rto_support</code> в upstream-пути без жесткой необходимости.</li>
+</ul></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

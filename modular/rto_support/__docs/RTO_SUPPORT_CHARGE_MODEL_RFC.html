@@ -1,0 +1,910 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/rto_support/__docs/RTO_SUPPORT_CHARGE_MODEL_RFC.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>RTO Support: RFC for Shared Weighted Charges <aside>modular/rto_support/__docs/RTO_SUPPORT_CHARGE_MODEL_RFC.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/rto_support/__docs/RTO_SUPPORT_CHARGE_MODEL_RFC.md"><img src="git.png" width="16" height="16" title="modular/rto_support/__docs/RTO_SUPPORT_CHARGE_MODEL_RFC.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><h2 id="1-purpose">1. Purpose</h2>
+<p>This RFC defines the next-stage RTO support model where support abilities consume shared weighted charges instead of relying on package-wide cooldown timers.</p>
+<p>The intended gameplay result is:</p>
+<ul>
+<li>sibling abilities inside one package share a single resource pool;</li>
+<li>light calls can be used several times instead of one heavy call;</li>
+<li>heavy calls are blocked if the remaining package resource is too low;</li>
+<li>GMs can switch recharge off and issue charges manually to specific RTO players through Game Rule Panel.</li>
+</ul>
+<p>This RFC does <strong>not</strong> implement the system. It defines the contract for future runtime, config, UI, and GM workflows.</p>
+<h2 id="2-goals">2. Goals</h2>
+<ul>
+<li>Replace support package <code>shared cooldown</code> with a shared weighted charge pool.</li>
+<li>Keep <code>zone</code> runtime time-based in the first migration stage.</li>
+<li>Reduce current <code>personal cooldown</code> into an optional short <code>personal lockout</code>.</li>
+<li>Support both automatic recharge and manual-only GM control.</li>
+<li>Let Game Rule Panel manage:
+<ul>
+<li>global charge mode and recharge rules;</li>
+<li>per-template default values;</li>
+<li>current charge state of active RTO players.</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-non-goals">3. Non-goals</h2>
+<ul>
+<li>Do not convert visibility-zone runtime to charges in stage one.</li>
+<li>Do not remove legacy cooldown fields in the first migration step.</li>
+<li>Do not force every package to migrate at once.</li>
+<li>Do not move package balance data out of <code>modular/rto_support/code/config/**</code>.</li>
+</ul>
+<h2 id="4-current-problem">4. Current problem</h2>
+<p>Today the controller in <code>modular/rto_support/code/controller/controller.dm</code> uses three different cooldown families:</p>
+<ul>
+<li>package shared cooldown;</li>
+<li>ability personal cooldown;</li>
+<li>zone cooldown.</li>
+</ul>
+<p>This works for simple throttling, but it is a poor fit for resource tradeoffs such as:</p>
+<ul>
+<li>logistics: one expensive crate vs one light drop;</li>
+<li>mortar: one incendiary round vs several cheaper shells;</li>
+<li>heavy strike: one very heavy call vs several smaller ones.</li>
+</ul>
+<p>The desired gameplay model is not &quot;wait N seconds after any use&quot;, but &quot;spend a shared package resource with different ability weights&quot;.</p>
+<h2 id="5-high-level-design">5. High-level design</h2><h3 id="5-1-resource-split">5.1 Resource split</h3>
+<p>Stage one should split RTO runtime into two independent layers:</p>
+<ul>
+<li><code>support resource layer</code>
+<ul>
+<li>shared weighted charges per package</li>
+<li>optional per-ability lockout</li>
+</ul>
+</li>
+<li><code>zone layer</code>
+<ul>
+<li>current timed active-sector flow</li>
+<li>current shared/personal zone cooldown model</li>
+</ul>
+</li>
+</ul>
+<p>The zone layer remains unchanged in stage one because it already has separate ownership, validation, and UI semantics.</p>
+<h3 id="5-2-player-facing-model">5.2 Player-facing model</h3>
+<p>Each selected support package owns one common pool.</p>
+<p>Examples:</p>
+<ul>
+<li><code>logistics</code>
+<ul>
+<li>one pool for all logistics drops</li>
+<li>if the pool has <code>1/1</code>, using any logistics ability empties the package</li>
+</ul>
+</li>
+<li><code>mortar</code>
+<ul>
+<li>one pool for all mortar shots</li>
+<li>if the pool has <code>5/5</code> and incendiary costs <code>2</code>, spending one incendiary leaves <code>3/5</code></li>
+<li>HE and smoke then consume from the same remaining amount</li>
+</ul>
+</li>
+<li><code>heavy</code>
+<ul>
+<li>one heavy strike may cost <code>3</code></li>
+<li>a lighter strike may cost <code>1</code> or <code>2</code></li>
+<li>if a lighter strike is used first, the heavier one can become unavailable until recharge restores enough resource</li>
+</ul>
+</li>
+</ul>
+<h2 id="6-proposed-config-contract">6. Proposed config contract</h2><h3 id="6-1-template-level-fields">6.1 Template-level fields</h3>
+<p>Add package-level resource fields to <code>modular/rto_support/code/config/template.dm</code>.</p>
+<p>Recommended fields:</p>
+<ul>
+<li><code>support_resource_mode</code>
+<ul>
+<li><code>legacy_cooldown</code></li>
+<li><code>charges</code></li>
+<li><code>hybrid</code></li>
+</ul>
+</li>
+<li><code>support_pool_id</code>
+<ul>
+<li>defaults to <code>template_id</code></li>
+<li>allows multiple templates to share one pool later if needed</li>
+</ul>
+</li>
+<li><code>support_pool_capacity</code>
+<ul>
+<li>maximum amount of package resource</li>
+</ul>
+</li>
+<li><code>support_pool_starting_charges</code>
+<ul>
+<li>initial amount when the pool is created or fully reset</li>
+</ul>
+</li>
+<li><code>support_pool_recharge_interval</code>
+<ul>
+<li>time between recharge ticks</li>
+</ul>
+</li>
+<li><code>support_pool_recharge_amount</code>
+<ul>
+<li>how much one recharge tick restores</li>
+</ul>
+</li>
+<li><code>support_pool_auto_recharge</code>
+<ul>
+<li>default auto-recharge behavior for this package</li>
+</ul>
+</li>
+</ul>
+<p>Stage one recommendation:</p>
+<ul>
+<li>keep <code>support_pool_id = template_id</code></li>
+<li>keep package pools independent</li>
+<li>use integer charges</li>
+</ul>
+<h3 id="6-2-action-level-fields">6.2 Action-level fields</h3>
+<p>Add ability-level resource fields to <code>modular/rto_support/code/config/action_template.dm</code>.</p>
+<p>Recommended fields:</p>
+<ul>
+<li><code>support_pool_cost</code>
+<ul>
+<li>weighted cost paid from the package pool</li>
+</ul>
+</li>
+<li><code>personal_lockout</code>
+<ul>
+<li>short local anti-spam timer</li>
+</ul>
+</li>
+<li>keep legacy fields for compatibility:
+<ul>
+<li><code>shared_cooldown</code></li>
+<li><code>personal_cooldown</code></li>
+</ul>
+</li>
+</ul>
+<p>Interpretation:</p>
+<ul>
+<li><code>shared_cooldown</code> remains the legacy package throttle</li>
+<li><code>support_pool_cost</code> becomes the new package resource cost</li>
+<li><code>personal_lockout</code> replaces <code>personal_cooldown</code> only for migrated templates</li>
+</ul>
+<h2 id="7-proposed-runtime-contract">7. Proposed runtime contract</h2><h3 id="7-1-new-pool-datum">7.1 New pool datum</h3>
+<p>Introduce a dedicated runtime datum, for example:</p>
+<ul>
+<li><code>/datum/rto_support_resource_pool_state</code></li>
+</ul>
+<p>Recommended state:</p>
+<ul>
+<li><code>pool_id</code></li>
+<li><code>owner</code></li>
+<li><code>template_id</code></li>
+<li><code>capacity</code></li>
+<li><code>current_charges</code></li>
+<li><code>starting_charges</code></li>
+<li><code>recharge_interval</code></li>
+<li><code>recharge_amount</code></li>
+<li><code>auto_recharge_enabled</code></li>
+<li><code>manual_override_enabled</code></li>
+<li><code>next_recharge_at</code></li>
+<li><code>last_modified_by_admin_ckey</code></li>
+</ul>
+<h3 id="7-2-controller-integration">7.2 Controller integration</h3>
+<p><code>modular/rto_support/code/controller/controller.dm</code> should gain:</p>
+<ul>
+<li><code>support_pools_by_id</code></li>
+<li>pool lookup helpers</li>
+<li>recharge tick/update helpers</li>
+<li>GM override application helpers</li>
+</ul>
+<p>The existing maps should remain during migration:</p>
+<ul>
+<li><code>shared_cooldowns_by_template</code></li>
+<li><code>action_cooldowns</code></li>
+<li><code>zone_shared_cooldown_until</code></li>
+<li><code>zone_cooldowns_by_template</code></li>
+</ul>
+<h3 id="7-3-runtime-rules">7.3 Runtime rules</h3>
+<p>For <code>charges</code> or <code>hybrid</code> templates:</p>
+<ul>
+<li><code>can_arm_action()</code> must check:
+<ul>
+<li>template exists</li>
+<li>zone requirements are satisfied</li>
+<li>enough pool resource exists</li>
+<li>local lockout, if any, is clear</li>
+</ul>
+</li>
+<li>successful support dispatch must:
+<ul>
+<li>subtract <code>support_pool_cost</code></li>
+<li>start <code>personal_lockout</code> if configured</li>
+<li>leave zone runtime untouched</li>
+</ul>
+</li>
+<li>HUD refresh must tick while:
+<ul>
+<li>a zone is active</li>
+<li>zone cooldowns are active</li>
+<li>local lockouts are active</li>
+<li>charge recharge is pending</li>
+</ul>
+</li>
+</ul>
+<h2 id="8-balance-model">8. Balance model</h2>
+<p>Weighted charges are the core balancing unit.</p>
+<p>Illustrative package patterns:</p>
+<ul>
+<li><code>logistics</code>
+<ul>
+<li><code>capacity = 1</code></li>
+<li>every use costs <code>1</code></li>
+<li>gameplay: one logistics drop before refill</li>
+</ul>
+</li>
+<li><code>mortar</code>
+<ul>
+<li><code>capacity = 5</code></li>
+<li>smoke <code>1</code></li>
+<li>HE <code>1</code></li>
+<li>incendiary <code>2</code></li>
+</ul>
+</li>
+<li><code>cas</code>
+<ul>
+<li><code>capacity = 3..4</code></li>
+<li>gun run <code>1</code></li>
+<li>laser run <code>1</code></li>
+<li>rocket barrage <code>2</code></li>
+</ul>
+</li>
+<li><code>heavy</code>
+<ul>
+<li><code>capacity = 3</code></li>
+<li>napalm <code>2</code></li>
+<li>missile strike <code>3</code></li>
+</ul>
+</li>
+</ul>
+<p>These exact numbers are examples, not final balance.</p>
+<p>The implementation should derive initial migration values from current cooldown balance, then tune by playtest.</p>
+<h2 id="9-ui-contract">9. UI contract</h2><h3 id="9-1-support-hud-buttons">9.1 Support HUD buttons</h3>
+<p>For charge-based templates, support buttons should stop presenting the package state as <code>Общий КД</code>.</p>
+<p>Recommended primary labels:</p>
+<ul>
+<li><code>Готово</code></li>
+<li><code>Заряды: X/Y</code></li>
+<li><code>Нужно: N</code></li>
+<li><code>Лок: Ns</code> for a short personal lockout</li>
+<li><code>Нет сектора</code> for zone-based actions without a valid active sector</li>
+</ul>
+<p>If the package has some charge but not enough for a heavy ability:</p>
+<ul>
+<li>the button should be disabled</li>
+<li>the label should explain the shortage directly</li>
+<li>example: <code>Нужно: 3 (есть 2)</code></li>
+</ul>
+<h3 id="9-2-preset-menu">9.2 Preset menu</h3>
+<p><code>tgui/packages/tgui/interfaces/RtoSupportPresetMenu.jsx</code> and <code>modular/rto_support/code/ui/ui_contracts.dm</code> should eventually expose:</p>
+<ul>
+<li><code>resource_mode</code></li>
+<li><code>pool_capacity</code></li>
+<li><code>pool_starting_charges</code></li>
+<li><code>pool_current_charges</code> when viewing a live selected package</li>
+<li><code>pool_recharge_interval</code></li>
+<li><code>pool_recharge_amount</code></li>
+<li><code>pool_auto_recharge</code></li>
+<li><code>support_pool_cost</code> per action</li>
+</ul>
+<p>Stage one requirement:</p>
+<ul>
+<li>legacy templates may continue to show cooldown values</li>
+<li>migrated templates should show charge cost and recharge behavior instead</li>
+</ul>
+<h3 id="9-3-binocular-examine-text">9.3 Binocular examine text</h3>
+<p><code>modular/rto_support/code/items/rto_binoculars.dm</code> should eventually describe:</p>
+<ul>
+<li>selected packages</li>
+<li>current pool amount for each selected package</li>
+<li>whether recharge is active or disabled</li>
+<li>whether the controller is in manual-only mode</li>
+<li>zone state separately from support resource</li>
+</ul>
+<h2 id="10-game-rule-panel-design">10. Game Rule Panel design</h2>
+<p>Game Rule Panel must support two distinct surfaces:</p>
+<ul>
+<li>global RTO resource rules</li>
+<li>live active-RTO management</li>
+</ul>
+<p>These should not be merged into one flat form, because they affect different scopes and carry different GM intent.</p>
+<h2 id="11-game-rule-panel-global-resource-rules">11. Game Rule Panel: global resource rules</h2>
+<p>Global RTO resource rules belong in <code>modular/game_rule_panel/code/state/game_rule_state.dm</code>.</p>
+<p>Recommended new rule fields:</p>
+<ul>
+<li><code>rto_support_resource_mode</code>
+<ul>
+<li><code>legacy_cooldown</code></li>
+<li><code>hybrid</code></li>
+<li><code>charges</code></li>
+</ul>
+</li>
+<li><code>rto_charge_recharge_enabled</code>
+<ul>
+<li>master auto-recharge toggle</li>
+</ul>
+</li>
+<li><code>rto_charge_recharge_multiplier</code>
+<ul>
+<li>scales recharge speed</li>
+</ul>
+</li>
+<li><code>rto_charge_capacity_multiplier</code>
+<ul>
+<li>optional capacity scaling knob</li>
+</ul>
+</li>
+<li><code>rto_charge_manual_only</code>
+<ul>
+<li>if true, recharge is disabled and charge issuance is manual by GM</li>
+</ul>
+</li>
+</ul>
+<p>Recommended per-template default override table in Game Rule Panel:</p>
+<ul>
+<li>template id</li>
+<li>default capacity</li>
+<li>default starting charges</li>
+<li>default recharge interval</li>
+<li>default recharge amount</li>
+<li>default auto-recharge enabled</li>
+</ul>
+<p>This table should override template defaults at runtime without moving balance source-of-truth out of modular config.</p>
+<h3 id="11-1-behavior-of-global-edits">11.1 Behavior of global edits</h3>
+<p>Recommended live behavior:</p>
+<ul>
+<li>changing <code>capacity</code>
+<ul>
+<li>updates active pools immediately</li>
+<li>clamps <code>current_charges</code> down if above the new maximum</li>
+<li>does not grant free charges automatically</li>
+</ul>
+</li>
+<li>changing <code>recharge interval</code> or <code>recharge amount</code>
+<ul>
+<li>applies immediately to active pools</li>
+</ul>
+</li>
+<li>changing <code>starting charges</code>
+<ul>
+<li>affects only future pool creation/reset by default</li>
+</ul>
+</li>
+<li>toggling master recharge off
+<ul>
+<li>freezes future recharge ticks</li>
+<li>preserves current charges</li>
+</ul>
+</li>
+<li>enabling <code>manual-only</code>
+<ul>
+<li>disables recharge regardless of template defaults</li>
+<li>exposes that state in live player rows and HUD text</li>
+</ul>
+</li>
+</ul>
+<h2 id="12-game-rule-panel-active-player-management">12. Game Rule Panel: active player management</h2>
+<p>Game Rule Panel also needs a live list of current RTO controllers.</p>
+<p>Recommended row data for each active RTO:</p>
+<ul>
+<li>player name / ckey</li>
+<li>job / support profile</li>
+<li>selected templates</li>
+<li>one row per active package pool</li>
+<li>current charges</li>
+<li>max charges</li>
+<li>auto-recharge enabled</li>
+<li>next recharge in</li>
+<li>manual-only flag</li>
+</ul>
+<p>Recommended GM actions per player per pool:</p>
+<ul>
+<li>set current charges</li>
+<li>add charges</li>
+<li>subtract charges</li>
+<li>set max charges</li>
+<li>refill to max</li>
+<li>empty to zero</li>
+<li>toggle auto-recharge</li>
+<li>toggle manual-only for this player or this pool</li>
+<li>reset player pool to template default</li>
+</ul>
+<p>Recommended GM actions per player:</p>
+<ul>
+<li>refill all selected pools</li>
+<li>empty all selected pools</li>
+<li>enable recharge for all pools</li>
+<li>disable recharge for all pools</li>
+</ul>
+<h3 id="12-1-manual-only-gm-workflow">12.1 Manual-only GM workflow</h3>
+<p>The required moderation workflow is:</p>
+<ol>
+<li>GM enables <code>manual-only</code> globally or disables recharge for a specific player.</li>
+<li>Player charge pools stop refilling.</li>
+<li>GM monitors current pool state in Game Rule Panel.</li>
+<li>GM manually grants charges to one or more RTO players as needed.</li>
+</ol>
+<p>In this mode:</p>
+<ul>
+<li>runtime must not silently refill resource</li>
+<li>HUD and panel must clearly show that recharge is disabled</li>
+<li>the player should understand that the package is waiting for command authorization, not natural recharge</li>
+</ul>
+<p>Recommended player-facing wording:</p>
+<ul>
+<li><code>Пополнение отключено</code></li>
+<li><code>Заряды выдаются вручную</code></li>
+</ul>
+<h2 id="13-validation-and-runtime-messaging">13. Validation and runtime messaging</h2>
+<p><code>modular/rto_support/code/services/validation_service.dm</code> will need new failure reasons for migrated templates:</p>
+<ul>
+<li>not enough package charges</li>
+<li>recharge disabled</li>
+<li>manual-only mode active</li>
+<li>local lockout still active</li>
+</ul>
+<p>Examples:</p>
+<ul>
+<li><code>Недостаточно зарядов пакета: нужно 3, доступно 2.</code></li>
+<li><code>Пополнение пакета отключено. Заряды выдаются вручную.</code></li>
+<li><code>Способность ещё стабилизируется: 2 сек.</code></li>
+</ul>
+<h2 id="14-migration-strategy">14. Migration strategy</h2><h3 id="stage-1">Stage 1</h3>
+<ul>
+<li>add new config fields</li>
+<li>add runtime pool datum</li>
+<li>keep legacy cooldown runtime intact</li>
+<li>keep zone runtime timed</li>
+<li>support both legacy and migrated templates</li>
+</ul>
+<h3 id="stage-2">Stage 2</h3>
+<ul>
+<li>update UI DTO and HUD builders to branch by resource mode</li>
+<li>migrate one or two packages first</li>
+<li>recommended first packages:
+<ul>
+<li><code>logistics</code></li>
+<li><code>mortar</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="stage-3">Stage 3</h3>
+<ul>
+<li>expand Game Rule Panel with:
+<ul>
+<li>global charge settings</li>
+<li>live player pool management</li>
+</ul>
+</li>
+<li>add unit tests for hybrid and manual-only flows</li>
+</ul>
+<h3 id="stage-4">Stage 4</h3>
+<ul>
+<li>migrate more packages:
+<ul>
+<li><code>heavy</code></li>
+<li><code>cas</code></li>
+<li>utility/HALO packages</li>
+</ul>
+</li>
+</ul>
+<h3 id="stage-5">Stage 5</h3>
+<ul>
+<li>revisit whether zone runtime needs a second independent pool</li>
+<li>only after support pools prove stable</li>
+</ul>
+<h2 id="15-implementation-notes">15. Implementation notes</h2>
+<p>Expected code touchpoints for the future implementation:</p>
+<ul>
+<li><code>modular/rto_support/code/config/template.dm</code></li>
+<li><code>modular/rto_support/code/config/action_template.dm</code></li>
+<li><code>modular/rto_support/code/controller/controller.dm</code></li>
+<li><code>modular/rto_support/code/services/validation_service.dm</code></li>
+<li><code>modular/rto_support/code/ui/ui_contracts.dm</code></li>
+<li><code>modular/rto_support/code/ui/preset_menu.dm</code></li>
+<li><code>modular/rto_support/code/actions/rto_actions.dm</code></li>
+<li><code>modular/rto_support/code/items/rto_binoculars.dm</code></li>
+<li><code>modular/game_rule_panel/code/state/game_rule_state.dm</code></li>
+<li><code>modular/game_rule_panel/code/ui/game_rule_panel.dm</code></li>
+<li><code>tgui/packages/tgui/interfaces/RtoSupportPresetMenu.jsx</code></li>
+<li><code>tgui/packages/tgui/interfaces/GameRulePanel.jsx</code></li>
+<li><code>code/modules/unit_tests/game_rule_panel.dm</code></li>
+<li><code>code/modules/unit_tests/halo_ammo_drops.dm</code></li>
+</ul>
+<h2 id="16-key-risks">16. Key risks</h2>
+<ul>
+<li>mixing support resource with zone resource too early</li>
+<li>confusing players with half-changed cooldown and charge language</li>
+<li>accidental free refill when a GM changes capacity or recharge values</li>
+<li>hidden per-player overrides that are not visible in Game Rule Panel</li>
+</ul>
+<h2 id="17-recommended-follow-up">17. Recommended follow-up</h2>
+<p>The next practical step after this RFC is a code-oriented implementation plan that lists:</p>
+<ul>
+<li>new datum names</li>
+<li>new controller proc names</li>
+<li>UI DTO additions</li>
+<li>exact unit test cases</li>
+<li>rollout order for the first migrated packages</li>
+</ul>
+<h2 id="18-concrete-implementation-plan">18. Concrete implementation plan</h2>
+<p>This section breaks the RFC into code-sized work slices.</p>
+<h3 id="18-1-phase-0-groundwork">18.1 Phase 0: groundwork</h3>
+<p>Goal:</p>
+<ul>
+<li>add the new resource model without changing live gameplay yet</li>
+</ul>
+<p>Files:</p>
+<ul>
+<li><code>modular/rto_support/code/config/template.dm</code></li>
+<li><code>modular/rto_support/code/config/action_template.dm</code></li>
+<li><code>modular/rto_support/code/controller/controller.dm</code></li>
+<li><code>modular/rto_support/code/services/validation_service.dm</code></li>
+<li><code>code/modules/unit_tests/halo_ammo_drops.dm</code></li>
+</ul>
+<p>Deliverables:</p>
+<ul>
+<li>new config fields compile and have safe defaults</li>
+<li>controller can hold pool state</li>
+<li>legacy templates still behave exactly as before</li>
+</ul>
+<h3 id="18-2-phase-1-runtime-pool-state">18.2 Phase 1: runtime pool state</h3>
+<p>Goal:</p>
+<ul>
+<li>introduce runtime support pools without switching any package to them yet</li>
+</ul>
+<p>Recommended new file:</p>
+<ul>
+<li><code>modular/rto_support/code/runtime/resource_pool_state.dm</code></li>
+</ul>
+<p>Recommended datum:</p>
+<ul>
+<li><code>/datum/rto_support_resource_pool_state</code></li>
+</ul>
+<p>Recommended proc surface:</p>
+<ul>
+<li><code>sync_from_template(template, rules)</code></li>
+<li><code>get_current_charges()</code></li>
+<li><code>get_capacity()</code></li>
+<li><code>can_pay(cost)</code></li>
+<li><code>pay(cost)</code></li>
+<li><code>set_current_charges(value)</code></li>
+<li><code>adjust_current_charges(delta)</code></li>
+<li><code>set_capacity(value, clamp_current = TRUE)</code></li>
+<li><code>set_auto_recharge_enabled(enabled)</code></li>
+<li><code>get_next_recharge_in()</code></li>
+<li><code>process_recharge(world_time)</code></li>
+<li><code>reset_to_starting_charges()</code></li>
+</ul>
+<h3 id="18-3-phase-2-controller-integration">18.3 Phase 2: controller integration</h3>
+<p>Goal:</p>
+<ul>
+<li>let controllers manage support pools in parallel with legacy cooldown state</li>
+</ul>
+<p>Recommended controller additions in <code>modular/rto_support/code/controller/controller.dm</code>:</p>
+<ul>
+<li>vars:
+<ul>
+<li><code>list/support_pools_by_id</code></li>
+<li><code>support_pool_tick_timer_id</code></li>
+</ul>
+</li>
+<li>helpers:
+<ul>
+<li><code>get_template_resource_mode(template_type = null)</code></li>
+<li><code>get_support_pool_id(template_type)</code></li>
+<li><code>get_support_pool(template_type, create_if_missing = FALSE)</code></li>
+<li><code>ensure_support_pools_for_selected_templates()</code></li>
+<li><code>remove_support_pool(template_type)</code></li>
+<li><code>process_support_pool_recharge()</code></li>
+<li><code>apply_support_pool_rules_update()</code></li>
+<li><code>apply_support_pool_admin_override(...)</code></li>
+<li><code>get_support_pool_current_charges(template_type)</code></li>
+<li><code>get_support_pool_capacity(template_type)</code></li>
+<li><code>get_support_pool_cost(action_template)</code></li>
+<li><code>get_support_pool_next_recharge_in(template_type)</code></li>
+<li><code>is_support_pool_manual_only(template_type)</code></li>
+</ul>
+</li>
+</ul>
+<p>Existing proc changes:</p>
+<ul>
+<li><code>ensure_runtime()</code>
+<ul>
+<li>initialize <code>support_pools_by_id</code></li>
+</ul>
+</li>
+<li><code>select_template()</code>
+<ul>
+<li>create pool if the selected template uses charges</li>
+</ul>
+</li>
+<li><code>reset_templates()</code>
+<ul>
+<li>clear pools</li>
+</ul>
+</li>
+<li><code>prune_selected_templates_to_limit()</code>
+<ul>
+<li>remove pool state for pruned templates</li>
+</ul>
+</li>
+<li><code>apply_rules_update()</code>
+<ul>
+<li>propagate runtime rule changes into active pools</li>
+</ul>
+</li>
+<li><code>needs_hud_tick()</code>
+<ul>
+<li>return <code>TRUE</code> if recharge or local lockout is ticking</li>
+</ul>
+</li>
+</ul>
+<h3 id="18-4-phase-3-support-action-execution-path">18.4 Phase 3: support action execution path</h3>
+<p>Goal:</p>
+<ul>
+<li>branch support execution by template resource mode</li>
+</ul>
+<p>Recommended split in <code>controller.dm</code>:</p>
+<ul>
+<li>new proc <code>try_execute_support_call_with_legacy_cooldowns(...)</code></li>
+<li>new proc <code>try_execute_support_call_with_charges(...)</code></li>
+<li>new proc <code>apply_support_call_lockout(action_template)</code></li>
+</ul>
+<p>Recommended runtime rule:</p>
+<ul>
+<li>if template mode is <code>legacy_cooldown</code>
+<ul>
+<li>keep current flow</li>
+</ul>
+</li>
+<li>if template mode is <code>charges</code> or <code>hybrid</code>
+<ul>
+<li>validate pool</li>
+<li>subtract <code>support_pool_cost</code></li>
+<li>apply <code>personal_lockout</code></li>
+<li>skip package shared cooldown write</li>
+</ul>
+</li>
+</ul>
+<p>The current post-dispatch block:</p>
+<ul>
+<li>write to <code>shared_cooldowns_by_template</code></li>
+<li>write to <code>action_cooldowns</code></li>
+</ul>
+<p>should become mode-aware instead of being unconditional.</p>
+<h3 id="18-5-phase-4-validation-service">18.5 Phase 4: validation service</h3>
+<p>Goal:</p>
+<ul>
+<li>make validation understand charge-based support actions</li>
+</ul>
+<p>File:</p>
+<ul>
+<li><code>modular/rto_support/code/services/validation_service.dm</code></li>
+</ul>
+<p>Recommended additions:</p>
+<ul>
+<li><code>validate_support_resource(controller, template, action_template)</code></li>
+<li><code>build_support_resource_failure(...)</code></li>
+</ul>
+<p>Recommended branch:</p>
+<ul>
+<li>legacy templates keep <code>get_remaining_shared_cooldown()</code> checks</li>
+<li>migrated templates check:
+<ul>
+<li>enough pool charges</li>
+<li>recharge state</li>
+<li>manual-only state</li>
+<li>local lockout state</li>
+</ul>
+</li>
+</ul>
+<p>Zone validation should stay separate.</p>
+<h3 id="18-6-phase-5-ui-dto-and-hud-state">18.6 Phase 5: UI DTO and HUD state</h3>
+<p>Goal:</p>
+<ul>
+<li>expose both legacy cooldown and charge data without breaking old templates</li>
+</ul>
+<p>Files:</p>
+<ul>
+<li><code>modular/rto_support/code/ui/ui_contracts.dm</code></li>
+<li><code>modular/rto_support/code/config/template.dm</code></li>
+<li><code>modular/rto_support/code/config/action_template.dm</code></li>
+<li><code>modular/rto_support/code/actions/rto_actions.dm</code></li>
+<li><code>modular/rto_support/code/items/rto_binoculars.dm</code></li>
+<li><code>tgui/packages/tgui/interfaces/RtoSupportPresetMenu.jsx</code></li>
+</ul>
+<p>Recommended DTO additions:</p>
+<ul>
+<li>on preset entry:
+<ul>
+<li><code>resource_mode</code></li>
+<li><code>pool_capacity</code></li>
+<li><code>pool_starting_charges</code></li>
+<li><code>pool_current_charges</code></li>
+<li><code>pool_recharge_interval</code></li>
+<li><code>pool_recharge_amount</code></li>
+<li><code>pool_auto_recharge</code></li>
+<li><code>pool_manual_only</code></li>
+<li><code>pool_next_recharge_in</code></li>
+</ul>
+</li>
+<li>on action entry:
+<ul>
+<li><code>support_pool_cost</code></li>
+<li><code>personal_lockout</code></li>
+</ul>
+</li>
+</ul>
+<p>Recommended new controller state builders:</p>
+<ul>
+<li><code>build_support_resource_state(action_id, template_type)</code></li>
+<li><code>get_support_button_primary_label(action_id, template_type)</code></li>
+</ul>
+<p>Recommended label priority for charge templates:</p>
+<ol>
+<li><code>Наведение</code></li>
+<li><code>Нет сектора</code></li>
+<li><code>Нужно: N</code></li>
+<li><code>Лок: Ns</code></li>
+<li><code>Заряды: X/Y</code></li>
+<li><code>Готово</code></li>
+</ol>
+<h3 id="18-7-phase-6-game-rule-panel-global-settings">18.7 Phase 6: Game Rule Panel global settings</h3>
+<p>Goal:</p>
+<ul>
+<li>add global charge controls before live player editing</li>
+</ul>
+<p>Files:</p>
+<ul>
+<li><code>modular/game_rule_panel/code/state/game_rule_state.dm</code></li>
+<li><code>modular/game_rule_panel/code/ui/game_rule_panel.dm</code></li>
+<li><code>tgui/packages/tgui/interfaces/GameRulePanel.jsx</code></li>
+<li><code>code/modules/unit_tests/game_rule_panel.dm</code></li>
+</ul>
+<p>Recommended new state fields:</p>
+<ul>
+<li><code>rto_support_resource_mode</code></li>
+<li><code>rto_charge_recharge_enabled</code></li>
+<li><code>rto_charge_recharge_multiplier</code></li>
+<li><code>rto_charge_capacity_multiplier</code></li>
+<li><code>rto_charge_manual_only</code></li>
+<li><code>rto_template_charge_overrides</code></li>
+</ul>
+<p>Recommended state helpers:</p>
+<ul>
+<li><code>sanitize_rto_resource_mode(value)</code></li>
+<li><code>sanitize_rto_charge_multiplier(value)</code></li>
+<li><code>get_rto_template_charge_override(template_id)</code></li>
+<li><code>set_rto_template_charge_override(template_id, field, value)</code></li>
+<li><code>reset_rto_charge_rules()</code></li>
+</ul>
+<p>Recommended UI actions:</p>
+<ul>
+<li><code>set_rto_support_resource_mode</code></li>
+<li><code>set_rto_charge_recharge_enabled</code></li>
+<li><code>set_rto_charge_recharge_multiplier</code></li>
+<li><code>set_rto_charge_capacity_multiplier</code></li>
+<li><code>set_rto_charge_manual_only</code></li>
+<li><code>set_rto_template_charge_override</code></li>
+<li><code>reset_rto_charge_rules</code></li>
+</ul>
+<h3 id="18-8-phase-7-game-rule-panel-live-player-management">18.8 Phase 7: Game Rule Panel live player management</h3>
+<p>Goal:</p>
+<ul>
+<li>let GMs inspect and edit active RTO charge state per player</li>
+</ul>
+<p>Files:</p>
+<ul>
+<li><code>modular/rto_support/code/controller/registry.dm</code></li>
+<li><code>modular/game_rule_panel/code/ui/game_rule_panel.dm</code></li>
+<li><code>tgui/packages/tgui/interfaces/GameRulePanel.jsx</code></li>
+<li><code>code/modules/unit_tests/game_rule_panel.dm</code></li>
+</ul>
+<p>Recommended registry additions:</p>
+<ul>
+<li><code>build_active_rto_charge_admin_data()</code></li>
+<li><code>find_controller_by_ckey(ckey)</code></li>
+</ul>
+<p>Recommended controller admin procs:</p>
+<ul>
+<li><code>build_admin_charge_data()</code></li>
+<li><code>set_template_pool_current_charges(template_id, value, admin_ckey = null)</code></li>
+<li><code>adjust_template_pool_current_charges(template_id, delta, admin_ckey = null)</code></li>
+<li><code>set_template_pool_capacity(template_id, value, admin_ckey = null)</code></li>
+<li><code>set_template_pool_auto_recharge(template_id, enabled, admin_ckey = null)</code></li>
+<li><code>set_template_pool_manual_only(template_id, enabled, admin_ckey = null)</code></li>
+<li><code>reset_template_pool_to_defaults(template_id, admin_ckey = null)</code></li>
+<li><code>refill_all_template_pools(admin_ckey = null)</code></li>
+<li><code>empty_all_template_pools(admin_ckey = null)</code></li>
+</ul>
+<p>Recommended UI actions in <code>game_rule_panel.dm</code>:</p>
+<ul>
+<li><code>set_rto_player_pool_current_charges</code></li>
+<li><code>adjust_rto_player_pool_current_charges</code></li>
+<li><code>set_rto_player_pool_capacity</code></li>
+<li><code>set_rto_player_pool_auto_recharge</code></li>
+<li><code>set_rto_player_pool_manual_only</code></li>
+<li><code>reset_rto_player_pool</code></li>
+<li><code>refill_rto_player_pools</code></li>
+<li><code>empty_rto_player_pools</code></li>
+</ul>
+<h3 id="18-9-phase-8-first-migrated-packages">18.9 Phase 8: first migrated packages</h3>
+<p>Recommended rollout order:</p>
+<ol>
+<li><code>logistics</code></li>
+<li><code>mortar</code></li>
+<li><code>heavy</code></li>
+<li><code>cas</code></li>
+</ol>
+<p>Reasoning:</p>
+<ul>
+<li><code>logistics</code> is the simplest and best for validating manual-only GM supply flows</li>
+<li><code>mortar</code> is the clearest example of weighted shared ammo</li>
+<li><code>heavy</code> and <code>cas</code> are more sensitive to UX wording and “need X charges” states</li>
+</ul>
+<h2 id="19-suggested-file-map">19. Suggested file map</h2>
+<p>Suggested write set for the first implementation branch:</p>
+<ul>
+<li><code>modular/rto_support/code/runtime/resource_pool_state.dm</code></li>
+<li><code>modular/rto_support/code/config/template.dm</code></li>
+<li><code>modular/rto_support/code/config/action_template.dm</code></li>
+<li><code>modular/rto_support/code/controller/controller.dm</code></li>
+<li><code>modular/rto_support/code/controller/registry.dm</code></li>
+<li><code>modular/rto_support/code/services/validation_service.dm</code></li>
+<li><code>modular/rto_support/code/ui/ui_contracts.dm</code></li>
+<li><code>modular/rto_support/code/ui/preset_menu.dm</code></li>
+<li><code>modular/rto_support/code/actions/rto_actions.dm</code></li>
+<li><code>modular/rto_support/code/items/rto_binoculars.dm</code></li>
+<li><code>modular/game_rule_panel/code/state/game_rule_state.dm</code></li>
+<li><code>modular/game_rule_panel/code/ui/game_rule_panel.dm</code></li>
+<li><code>tgui/packages/tgui/interfaces/RtoSupportPresetMenu.jsx</code></li>
+<li><code>tgui/packages/tgui/interfaces/GameRulePanel.jsx</code></li>
+<li><code>code/modules/unit_tests/game_rule_panel.dm</code></li>
+<li><code>code/modules/unit_tests/halo_ammo_drops.dm</code></li>
+</ul>
+<h2 id="20-test-matrix">20. Test matrix</h2>
+<p>Recommended test additions:</p>
+<h3 id="20-1-controller-runtime">20.1 Controller runtime</h3>
+<ul>
+<li>creating a charge pool when a charge-based template is selected</li>
+<li>not creating a charge pool for a legacy template</li>
+<li>subtracting cost on successful dispatch</li>
+<li>refusing a heavy action if current charges are too low</li>
+<li>local lockout blocking only the triggering action</li>
+<li>recharge restoring charges over time</li>
+<li>manual-only mode preventing recharge</li>
+</ul>
+<h3 id="20-2-package-behavior">20.2 Package behavior</h3>
+<ul>
+<li>logistics <code>1/1</code> pool empties after one use</li>
+<li>mortar shared pool decreases across HE, smoke, and incendiary together</li>
+<li>heavy large-cost action is blocked after spending lighter-cost action</li>
+</ul>
+<h3 id="20-3-game-rule-panel">20.3 Game Rule Panel</h3>
+<ul>
+<li>toggling global recharge off freezes active pools</li>
+<li>enabling manual-only prevents future refill</li>
+<li>changing capacity clamps current charges but does not gift charges</li>
+<li>editing current charges of an active RTO updates controller state immediately</li>
+<li>per-player manual-only override does not affect another RTO</li>
+</ul>
+<h3 id="20-4-legacy-compatibility">20.4 Legacy compatibility</h3>
+<ul>
+<li>non-migrated templates still use legacy cooldown logic</li>
+<li>zone cooldown behavior is unchanged for migrated and non-migrated templates</li>
+<li>preset slot reset logic remains unchanged</li>
+</ul>
+<h2 id="21-recommended-first-implementation-ticket-split">21. Recommended first implementation ticket split</h2>
+<p>The first coding pass should be split into these tickets:</p>
+<ol>
+<li>Runtime pool datum and template/action config fields</li>
+<li>Controller integration with legacy-compatible branching</li>
+<li>Support HUD and preset DTO changes</li>
+<li>Game Rule Panel global charge settings</li>
+<li>Game Rule Panel live player charge management</li>
+<li>Migrate <code>logistics</code></li>
+<li>Migrate <code>mortar</code></li>
+<li>Expand tests and docs</li>
+</ol></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

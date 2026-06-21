@@ -1,0 +1,173 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/rto_support/__docs/RTO_SUPPORT_PLAYER_GUIDE.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>RTO Support: памятка игроку <aside>modular/rto_support/__docs/RTO_SUPPORT_PLAYER_GUIDE.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/rto_support/__docs/RTO_SUPPORT_PLAYER_GUIDE.md"><img src="git.png" width="16" height="16" title="modular/rto_support/__docs/RTO_SUPPORT_PLAYER_GUIDE.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><h2 id="1-что-у-тебя-есть">1. Что у тебя есть</h2>
+<p>RTO получает:</p>
+<ul>
+<li><code>RTO binoculars</code></li>
+<li><code>RTO sling pouch</code> с жесткой привязкой к этим биноклям</li>
+</ul>
+<p>Кнопки RTO видны только пока бинокль у тебя в руке.</p>
+<h2 id="2-как-выбирать-пакеты-поддержки">2. Как выбирать пакеты поддержки</h2>
+<p>По умолчанию RTO может держать <strong>до двух уникальных пакетов одновременно</strong>.</p>
+<p>Правила выбора:</p>
+<ol>
+<li>возьми <code>RTO binoculars</code> в руку;</li>
+<li>нажми <code>Выбрать пакеты поддержки</code>;</li>
+<li>выбери один или два пакета;</li>
+<li>полный сброс всех слотов по умолчанию станет доступен через <code>60 минут</code> от первого выбора в текущем цикле.</li>
+</ol>
+<p>Важно:</p>
+<ul>
+<li>дубликаты пакетов выбрать нельзя;</li>
+<li>второй слот необязателен;</li>
+<li><code>Game Rule Panel</code> может менять и число слотов, и время полного сброса;</li>
+<li>если выбран только один боевой пакет с сектором, его <code>cooldown сектора</code> уменьшается в <code>2 раза</code>;</li>
+<li>если потом выбрать второй пакет, solo-бонус пропадает и возвращается обычный cooldown сектора.</li>
+</ul>
+<h2 id="3-какие-пакеты-доступны">3. Какие пакеты доступны</h2><h3 id=""><code>USCM</code></h3>
+<ul>
+<li><code>Mortar</code></li>
+<li><code>CAS</code></li>
+<li><code>Heavy Strike</code></li>
+<li><code>Logistics</code></li>
+<li><code>Medical</code></li>
+<li><code>Technical</code></li>
+</ul>
+<h3 id=""><code>UNSC</code></h3>
+<ul>
+<li><code>Mortar</code></li>
+<li><code>HALO Logistics</code></li>
+<li><code>HALO Medical</code></li>
+<li><code>HALO Technical</code></li>
+</ul>
+<h3 id=""><code>ODST</code></h3>
+<ul>
+<li><code>CAS</code></li>
+<li><code>Heavy Strike</code></li>
+<li><code>HALO Logistics</code></li>
+<li><code>HALO Medical</code></li>
+<li><code>HALO Technical</code></li>
+</ul>
+<h2 id="4-боевые-пакеты-через-сектор">4. Боевые пакеты через сектор</h2>
+<p>Для <code>Mortar</code>, <code>CAS</code> и <code>Heavy Strike</code> цикл такой:</p>
+<ol>
+<li>возьми бинокль в руку;</li>
+<li>выбери пакет;</li>
+<li>нажми кнопку сектора этого пакета;</li>
+<li>во время зума через бинокль поставь сектор <code>Ctrl+Click</code>;</li>
+<li>нажми нужную ability;</li>
+<li>снова наведи точку через бинокль <code>Ctrl+Click</code>.</li>
+</ol>
+<p>Коротко:</p>
+<p><code>взял бинокль -&gt; выбрал пакет -&gt; развернул сектор -&gt; выбрал ability -&gt; навёл через бинокль</code></p>
+<p>Важно:</p>
+<ul>
+<li>одновременно может существовать только <strong>один</strong> активный сектор;</li>
+<li>sector-based abilities работают только через сектор <strong>своего</strong> пакета;</li>
+<li>сектор <code>Mortar</code> не подходит для <code>CAS</code>, и наоборот;</li>
+<li>после окончания сектора запускается общий zone cooldown и личный zone cooldown пакета-источника.</li>
+</ul>
+<h2 id="5-пакеты-без-сектора">5. Пакеты без сектора</h2><h3 id=""><code>USCM Logistics</code></h3>
+<ul>
+<li><code>Supply drop</code></li>
+<li><code>Mine crate drop</code></li>
+<li><code>Mini-sentry drop</code></li>
+<li><code>Full sentry drop</code></li>
+<li><code>Grenade crate drop</code></li>
+<li><code>Sentry ammo drop</code></li>
+</ul>
+<h3 id=""><code>USCM Medical</code></h3>
+<ul>
+<li><code>Medkits drop</code></li>
+<li><code>Blood reserve drop</code></li>
+<li><code>IV stand drop</code></li>
+<li><code>Operation table drop</code></li>
+</ul>
+<h3 id=""><code>USCM Technical</code></h3>
+<ul>
+<li><code>Fortification drop</code></li>
+<li><code>Power drop</code></li>
+<li><code>Recon utility drop</code></li>
+<li><code>Powerloader drop</code></li>
+</ul>
+<h3 id=""><code>HALO Logistics</code></h3>
+<p>Ammo drops для rifle, marksman, pdw, shotgun, sniper, spnkr и grenadier.</p>
+<h3 id=""><code>HALO Medical</code></h3>
+<ul>
+<li><code>Medical packets</code></li>
+<li><code>Corpsman kit</code></li>
+<li><code>Biofoam reserve</code></li>
+</ul>
+<h3 id=""><code>HALO Technical</code></h3>
+<ul>
+<li><code>Toolbox</code></li>
+<li><code>Fortification</code></li>
+<li><code>Breaching</code></li>
+<li><code>Vehicle service</code></li>
+<li><code>Signal</code></li>
+<li><code>Recon</code></li>
+<li><code>RTO command</code></li>
+</ul>
+<p>Эти пакеты не требуют сектора: выбери ability и наведи открытую точку через <code>Ctrl+Click</code> во время зума.</p>
+<h2 id="6-как-работают-cooldownы">6. Как работают cooldown'ы</h2>
+<p>У RTO теперь есть три разных вида cooldown'ов:</p>
+<h3 id=""><code>Общий КД пакета</code></h3>
+<ul>
+<li>общий для всех support-ability внутри одного пакета;</li>
+<li>вызов из пакета A не блокирует пакет B.</li>
+</ul>
+<h3 id=""><code>Личный КД ability</code></h3>
+<ul>
+<li>относится только к одной конкретной кнопке.</li>
+</ul>
+<h3 id=""><code>КД сектора</code></h3>
+<ul>
+<li>есть только у боевых пакетов;</li>
+<li>состоит из общего zone cooldown и личного zone cooldown пакета-источника;</li>
+<li>если выбран только один боевой пакет, effective cooldown сектора уменьшается в <code>2 раза</code>.</li>
+</ul>
+<h2 id="7-utility-режимы">7. Utility-режимы</h2><h3 id=""><code>Координаты</code></h3>
+<ul>
+<li>это не ability с cooldown;</li>
+<li>это постоянный режим;</li>
+<li><code>Ctrl+Click</code> просто пишет координаты точки;</li>
+<li>лазерной точки у этого режима нет.</li>
+</ul>
+<h3 id=""><code>Лазерная отметка</code></h3>
+<ul>
+<li>это тоже постоянный режим без cooldown;</li>
+<li><code>Ctrl+Click</code> ставит или переносит живую подсветку;</li>
+<li>лазер держится только пока ты реально ведешь цель через бинокль.</li>
+</ul>
+<h2 id="8-как-читать-кнопки">8. Как читать кнопки</h2><h3 id="кнопка-сектора">Кнопка сектора</h3>
+<ul>
+<li><code>Готово</code> - сектор можно развернуть</li>
+<li><code>Наведение</code> - ждёт <code>Ctrl+Click</code></li>
+<li><code>Активна: Ns</code> - сектор уже работает</li>
+<li><code>Общий КД: Ns</code> - идет общий zone cooldown</li>
+<li><code>Личный КД: Ns</code> - идет личный zone cooldown этого пакета</li>
+</ul>
+<h3 id="support-abilities-у-боевых-пакетов">Support abilities у боевых пакетов</h3>
+<ul>
+<li><code>Нет сектора</code> - сектор нужен, но не выставлен</li>
+<li><code>Личный КД: Ns</code> - cooldown именно этой кнопки</li>
+<li><code>Общий КД: Ns</code> - общий cooldown пакета поддержки</li>
+</ul>
+<p>Если одновременно активны личный и общий cooldown ability, на кнопке показывается больший из двух.</p>
+<h3 id="support-abilities-у-пакетов-без-сектора">Support abilities у пакетов без сектора</h3>
+<p>У <code>Logistics</code>, <code>Medical</code>, <code>Technical</code> и HALO utility-пакетов нет статусов сектора.</p>
+<p>Ты видишь только:</p>
+<ul>
+<li>больший из <code>Личный КД: Ns</code> и <code>Общий КД: Ns</code>, если активны оба</li>
+<li><code>Личный КД: Ns</code>, если активен только личный cooldown</li>
+<li><code>Общий КД: Ns</code>, если активен только общий cooldown пакета</li>
+<li><code>Готово</code></li>
+</ul>
+<h2 id="9-что-показывает-examine-у-бинокля">9. Что показывает examine у бинокля</h2>
+<p>Examine у <code>RTO binoculars</code> объясняет:</p>
+<ul>
+<li>какие пакеты сейчас выбраны;</li>
+<li>кто сейчас владеет активным сектором;</li>
+<li>сколько осталось до полного reset слотов;</li>
+<li>активен ли solo-бонус на cooldown сектора;</li>
+<li>какой режим сейчас armed;</li>
+<li>активна ли ручная лазерная отметка.</li>
+</ul></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>

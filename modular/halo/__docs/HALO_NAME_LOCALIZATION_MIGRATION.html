@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><base href="../../../"><link rel="stylesheet" href="dmdoc.css"><title>modular/halo/__docs/HALO_NAME_LOCALIZATION_MIGRATION.md - byond</title></head><body><header><a href="index.html">byond</a> - <a href="index.html#modules">Modules</a> - <a href="index.html#types">Types</a></header><main><h1>HALO NAME LOCALIZATION MIGRATION <aside>modular/halo/__docs/HALO_NAME_LOCALIZATION_MIGRATION.md</aside> <a href="https://github.com/ss220club/BandaTroopers/blob/711df4e5e7426d43f7a8c6207b565dfdd803d60b/modular/halo/__docs/HALO_NAME_LOCALIZATION_MIGRATION.md"><img src="git.png" width="16" height="16" title="modular/halo/__docs/HALO_NAME_LOCALIZATION_MIGRATION.md"></a></h1><table class="summary" cellspacing="0"><tr><td colspan="2"><p>Canonical baseline for moving HALO <code>name</code> localization toward <code>translation_data</code> without regressing current player-facing Russian text.</p>
+<h2 id="current-model">Current model</h2>
+<ul>
+<li><code>translation_data/ru_names</code> is metadata for Russian forms and declensions.</li>
+<li>It is not a global replacement for <code>name</code>.</li>
+<li>A player-facing surface must explicitly ask for the localized form through a hook/helper such as <code>get_display_name_ru()</code> or <code>get_display_name_ru_initial()</code>.</li>
+</ul>
+<h2 id="halo-migration-buckets">HALO migration buckets</h2><h3 id=""><code>safe_now</code></h3>
+<ul>
+<li>Surfaces that already use an explicit localization hook.</li>
+<li>Current confirmed example: vendor entry rewriting through <code>translate_vendor_entries_to_ru()</code> and <code>get_display_name_ru_initial()</code>.</li>
+<li>Current pilot package: HALO UNSC medical vendor entries in <code>modular/halo/code/game/machinery/vending/vendor_types/halo/misc.dm</code>, backed by <code>modular/translations/code/translation_data/ru_names/halo_vendors.toml</code>.</li>
+<li>Only names that are shown exclusively through such hooks are eligible for English-canonical <code>name</code> plus <code>translation_data</code> migration right now.</li>
+</ul>
+<h3 id=""><code>needs_hook</code></h3>
+<ul>
+<li>Any HALO atom name that can reach players or admins through raw <code>.name</code>, <code>[src]</code>, <code>[item]</code>, or generic display helpers that still read canonical <code>name</code>.</li>
+<li>This includes the current high-risk HALO surfaces:
+<ul>
+<li>generic examine/display flows</li>
+<li>visible chat/combat/use messages</li>
+<li>admin-visible attack/debug messages</li>
+<li>inventory and UI lists that still read <code>name</code> directly</li>
+<li>mapped objects and items whose in-game interactions interpolate <code>[src]</code> or <code>[item.name]</code></li>
+</ul>
+</li>
+<li>These names must stay localized in DM until the specific surface is moved to an explicit display-name hook.</li>
+</ul>
+<h3 id=""><code>never_move</code></h3>
+<ul>
+<li>Non-atom and map/UI labels that are outside the <code>ru_names</code> model.</li>
+<li>Keep localized directly in DM/DMM:
+<ul>
+<li>map-instance strings in <code>.dmm</code></li>
+<li>area names</li>
+<li>datum names and preset names</li>
+<li><code>assignment</code></li>
+<li><code>prefix</code></li>
+<li><code>phone_id</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="migration-protocol">Migration protocol</h2>
+<ol>
+<li>Identify the exact player-facing surface for a candidate HALO name.</li>
+<li>Convert that surface to an explicit localized display-name helper.</li>
+<li>Verify that the surface no longer exposes canonical English <code>name</code>.</li>
+<li>Only then move the atom to English-canonical <code>name</code> plus <code>translation_data</code>.</li>
+<li>Review <code>ru_names</code> TOML key collisions before adding common English base names, because the keys are global and may affect non-HALO content.</li>
+</ol>
+<h2 id="non-goals-for-this-baseline">Non-goals for this baseline</h2>
+<ul>
+<li>No mass revert of current HALO Russian <code>name</code>.</li>
+<li>No attempt to move <code>desc</code>, map labels, or datum strings into <code>translation_data</code>.</li>
+<li>No assumption that a <code>ru_names</code> TOML entry is sufficient unless the target surface explicitly consumes localized display names.</li>
+</ul></td></tr></table></main><footer>colonialmarines.dme <a href="https://github.com/ss220club/BandaTroopers/tree/711df4e5e7426d43f7a8c6207b565dfdd803d60b">711df4e</a> (master) — <a href="https://github.com/SpaceManiac/SpacemanDMM/blob/master/crates/dmdoc/README.md">dmdoc 1.11.0</a></footer></body></html>
