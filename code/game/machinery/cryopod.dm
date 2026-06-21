@@ -452,7 +452,24 @@ GLOBAL_LIST_INIT(frozen_items, list(SQUAD_MARINE_1 = list(), SQUAD_MARINE_2 = li
 /obj/structure/machinery/cryopod/relaymove(mob/user)
 	if(user.is_mob_incapacitated(TRUE))
 		return
+	if(is_cryo_intro_exit_locked(user))
+		return
 	eject()
+
+/obj/structure/machinery/cryopod/proc/is_cryo_intro_exit_locked(mob/living/user, show_warning = TRUE)
+	if(!ishuman(user))
+		return FALSE
+
+	var/mob/living/carbon/human/H = user
+	if(!H.cryo_intro_sequence_running)
+		return FALSE
+
+	if(show_warning && H.cryo_intro_exit_warn_cooldown <= world.time)
+		H.cryo_intro_exit_warn_cooldown = world.time + 10
+		to_chat(H, SPAN_WARNING("Цикл пробуждения еще не завершен. Дождитесь окончания заставки."))
+		playsound(src, 'sound/machines/buzz-two.ogg', 15, FALSE)
+
+	return TRUE
 
 /obj/structure/machinery/cryopod/verb/eject()
 	set name = "Eject Pod"
@@ -463,6 +480,9 @@ GLOBAL_LIST_INIT(frozen_items, list(SQUAD_MARINE_1 = list(), SQUAD_MARINE_2 = li
 
 	if(occupant != usr)
 		to_chat(usr, SPAN_WARNING("You can't drag people out of hypersleep!"))
+		return
+
+	if(is_cryo_intro_exit_locked(usr))
 		return
 
 	if(!silent_exit && alert(usr, "Would you like eject out of the hypersleep chamber?", "Confirm", "Yes", "No") != "Yes")
@@ -541,6 +561,8 @@ GLOBAL_LIST_INIT(frozen_items, list(SQUAD_MARINE_1 = list(), SQUAD_MARINE_2 = li
 
 /obj/structure/machinery/cryopod/proc/go_out()
 	if(!occupant)
+		return
+	if(is_cryo_intro_exit_locked(occupant, FALSE))
 		return
 	occupant.forceMove(get_turf(src))
 	occupant = null

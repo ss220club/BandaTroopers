@@ -1677,20 +1677,31 @@
 
 	target.sec_hud_set_ID()
 	target.hud_set_squad()
+	if(SSticker.intro_sequence)
+		target.cryo_intro_sequence_running = TRUE
 
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living/carbon/human, regenerate_icons))
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living/carbon/human, update_body), 1, 0)
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living/carbon/human, update_hair))
 	INVOKE_ASYNC(target, TYPE_PROC_REF(/mob/living/carbon/human, play_opening_sequence))
 
+/mob/living/carbon/human/proc/start_cryo_intro_hud_lock()
+	return modular_start_cryo_intro_hud_lock()
+
+/mob/living/carbon/human/proc/is_cryo_intro_screen_allowed(thing)
+	return modular_is_cryo_intro_screen_allowed(thing)
+
+/mob/living/carbon/human/proc/enforce_cryo_intro_hud_lock()
+	return modular_enforce_cryo_intro_hud_lock()
+
+/mob/living/carbon/human/proc/wait_for_cryo_intro_hud_unlock()
+	return modular_wait_for_cryo_intro_hud_unlock()
+
+/mob/living/carbon/human/proc/finish_cryo_intro_hud_lock()
+	return modular_finish_cryo_intro_hud_lock()
+
 /mob/living/carbon/human/proc/play_opening_sequence()
-	if(SSticker.intro_sequence)
-		sleeping = 11
-		addtimer(CALLBACK(src, PROC_REF(play_screen_text), "HYPERSLEEP MONITOR<br><br>SYSTEM STATUS<br>LIFE SUPPORT:ONLINE<br>THAWING SYSTEMS:ONLINE<br>IMMUNIZATION:COMPLETE<br>OCCUPANT REM:NOMINAL", /atom/movable/screen/text/screen_text/hypersleep_status), 1.25 SECONDS)
-		addtimer(CALLBACK(src, PROC_REF(play_manifest)), 13 SECONDS)
-		overlay_fullscreen_timer(13 SECONDS, 10, "roundstart1", /atom/movable/screen/fullscreen/black)
-		overlay_fullscreen_timer(13 SECONDS, 10, "roundstartcrt1", /atom/movable/screen/fullscreen/crt)
-		addtimer(CALLBACK(GLOBAL_PROC, GLOBAL_PROC_REF(playsound_client), src.client, 'sound/effects/cryo_intro.ogg', src, 90), 12 SECONDS)
+	return modular_play_opening_sequence()
 
 /mob/living/carbon/human/proc/play_manifest()
 	var/human_manifest
