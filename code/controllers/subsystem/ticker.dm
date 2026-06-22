@@ -124,6 +124,11 @@ SUBSYSTEM_DEF(ticker)
 				mode.declare_completion(force_ending)
 				REDIS_PUBLISH("byond.round", "type" = "round-complete", "round_name" = GLOB.round_statistics.round_name)
 				flash_clients()
+				// SS220 EDIT - START: invoke round end callbacks for modular subscribers
+				for(var/datum/callback/cb as anything in round_end_events)
+					cb.InvokeAsync()
+				round_end_events.Cut()
+				// SS220 EDIT - END
 				Master.SetRunLevel(RUNLEVEL_POSTGAME)
 
 /// Attempt to start game asynchronously if applicable

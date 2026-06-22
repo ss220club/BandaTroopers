@@ -245,6 +245,14 @@ GLOBAL_LIST_INIT(admin_verbs_debug, list(
 	/datum/admins/proc/view_href_log, /*shows the server HREF log for this round*/
 	/datum/admins/proc/view_tgui_log, /*shows the server TGUI log for this round*/
 	/client/proc/admin_blurb,
+	// SS220 EDIT: round cinematics debug tools — normal flow uses End Round dialog
+	/client/proc/preview_cryo_intro, // SS220 EDIT
+	/client/proc/preview_round_outro, // SS220 EDIT
+	/client/proc/force_stop_round_cinematics, // SS220 EDIT
+	/client/proc/set_round_outro_outcome_auto,
+	/client/proc/set_round_outro_outcome_marine_victory,
+	/client/proc/set_round_outro_outcome_marine_defeat,
+	/client/proc/set_round_outro_outcome_inconclusive,
 	/datum/admins/proc/open_shuttlepanel,
 	/client/proc/allow_browser_inspect,
 ))

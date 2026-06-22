@@ -12,7 +12,7 @@
 #include "text_to_speech/_tts.dme"
 #include "game_master/_game_master.dme"
 #include "game_rule_panel/_game_rule_panel.dme"
-#include "fullscreen/_fullscreen.dme"
+#include "round_cinematics/_round_cinematics.dme"
 #include "squads/_squads.dme"
 #include "world_edit/_world_edit.dme"
 #include "weapons/_weapons.dme"

@@ -452,30 +452,37 @@ GLOBAL_LIST_INIT(frozen_items, list(SQUAD_MARINE_1 = list(), SQUAD_MARINE_2 = li
 /obj/structure/machinery/cryopod/relaymove(mob/user)
 	if(user.is_mob_incapacitated(TRUE))
 		return
-	eject()
-
-/obj/structure/machinery/cryopod/verb/eject()
-	set name = "Eject Pod"
-	set category = "Object"
-	set src in oview(1)
-	if(usr.stat != 0)
+	// SS220 EDIT - START
+	if(GLOB.round_cinematics?.handle_cryo_exit_attempt(src, user))
 		return
+	// SS220 EDIT - END
+	attempt_eject(user, FALSE, FALSE)
 
-	if(occupant != usr)
-		to_chat(usr, SPAN_WARNING("You can't drag people out of hypersleep!"))
-		return
+/obj/structure/machinery/cryopod/proc/attempt_eject(mob/user, check_cinematics = TRUE, prompt_user = TRUE)
+	if(!user)
+		return FALSE
+	if(user.stat != 0)
+		return FALSE
+	if(occupant != user)
+		to_chat(user, SPAN_WARNING("You can't drag people out of hypersleep!"))
+		return FALSE
 
-	if(!silent_exit && alert(usr, "Would you like eject out of the hypersleep chamber?", "Confirm", "Yes", "No") != "Yes")
-		return
+	if(prompt_user && !silent_exit && alert(user, "Would you like eject out of the hypersleep chamber?", "Confirm", "Yes", "No") != "Yes")
+		return FALSE
+
+	// SS220 EDIT - START
+	if(check_cinematics && GLOB.round_cinematics?.handle_cryo_exit_attempt(src, user))
+		return FALSE
+	// SS220 EDIT - END
 
 	go_out() //Not adding a delay for this because for some reason it refuses to work. Not a big deal imo
-	add_fingerprint(usr)
+	add_fingerprint(user)
 
-	to_chat(usr, SPAN_NOTICE("You get out of \the [src]."))
+	to_chat(user, SPAN_NOTICE("You get out of \the [src]."))
 	if(!silent_exit)
 		visible_message(SPAN_WARNING("\The [src]'s casket starts moving!"))
-		var/mob/living/M = usr
 		var/area/location = get_area(src) //Logs the exit
+		var/mob/living/M = user
 		message_admins("[key_name_admin(M)], [M.job], has left [src] at [location].")
 
 	var/list/items = src.contents //-Removes items from the chamber
@@ -484,6 +491,14 @@ GLOBAL_LIST_INIT(frozen_items, list(SQUAD_MARINE_1 = list(), SQUAD_MARINE_2 = li
 
 	for(var/obj/item/W in items)
 		W.forceMove(get_turf(src))
+
+	return TRUE
+
+/obj/structure/machinery/cryopod/verb/eject()
+	set name = "Eject Pod"
+	set category = "Object"
+	set src in oview(1)
+	attempt_eject(usr)
 
 /obj/structure/machinery/cryopod/verb/move_inside()
 	set name = "Enter Pod"
