@@ -1,0 +1,14 @@
+{
+    "map_name": "Goone Amide",
+    "short_name": "Amide",
+    "map_path": "map_files/swamp_1",
+    "map_file": "swamp_1.dmm",
+    "webmap_url": "Solaris",
+
+    "weather_holder": "/datum/weather_ss_map_holder/lv624",
+
+    "map_item_type": "/obj/item/map/big_red_map",
+
+    "camouflage": "jungle"
+
+}
