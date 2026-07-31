@@ -1,0 +1,20 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"a" = (
+/obj/structure/bed/chair,
+/turf/template_noop,
+/area/template_noop)
+
+"b" = (
+/obj/structure/surface/table,
+/turf/template_noop,
+/area/template_noop)
+
+(1,1,1) = {"
+b
+"}
+(2,1,1) = {"
+a
+"}
+(1,2,1) = {"
+a
+"}

@@ -157,7 +157,8 @@ const HistoryWorkspace = (props: {
           />
           <Box color="label" mt={0.25}>
             Создано: {data.last_changeset.created_entries} · Перемещено:{' '}
-            {data.last_changeset.moved_entries} · Эффекты:{' '}
+            {data.last_changeset.moved_entries} · Тайлы:{' '}
+            {data.last_changeset.changed_turf_entries ?? 0} · Эффекты:{' '}
             {data.last_changeset.owned_effect_entries}
           </Box>
         </Box>

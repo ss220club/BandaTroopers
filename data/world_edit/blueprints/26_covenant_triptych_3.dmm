@@ -1,0 +1,20 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aaa" = (
+/turf/template_noop,
+/area/template_noop)
+"bbb" = (
+/obj/structure/covenant_barricade/wide{
+	dir = 1
+	},
+/turf/template_noop,
+/area/template_noop)
+
+(1,1,1) = {"
+aaa
+"}
+(2,1,1) = {"
+bbb
+"}
+(3,1,1) = {"
+aaa
+"}

@@ -11,6 +11,13 @@
 /datum/world_edit_manager/proc/invalidate_active_blueprint_revision_cache()
 	active_blueprint_revision_id = null
 	active_blueprint_revision_hash = ""
+	invalidate_active_blueprint_sprite_preview_cache()
+	return TRUE
+
+/datum/world_edit_manager/proc/invalidate_active_blueprint_sprite_preview_cache()
+	active_blueprint_sprite_preview_revision_id = null
+	active_blueprint_sprite_preview_revision_hash = ""
+	active_blueprint_sprite_preview_cache = null
 	return TRUE
 
 /datum/world_edit_manager/proc/record_blueprint_usage(blueprint_id)
@@ -78,8 +85,54 @@
 	if(!length("[file_path]") || !fexists(file_path))
 		return ""
 
-	var/json_text = file2text(file_path)
-	if(!length(json_text))
+	var/dmm_text = file2text(file_path)
+	if(!length(dmm_text))
 		return ""
-	active_blueprint_revision_hash = md5(json_text)
+	active_blueprint_revision_hash = md5(dmm_text)
 	return active_blueprint_revision_hash
+
+/datum/world_edit_manager/proc/get_active_blueprint_sprite_preview_for_ui(mob/user)
+	if(!holder || !user?.client || holder != user.client)
+		return null
+
+	var/blueprint_id = get_active_blueprint_id()
+	if(!length("[blueprint_id]"))
+		return null
+
+	var/list/entry = find_cached_blueprint_entry(blueprint_id)
+	if(!islist(entry) || !entry["valid"])
+		return GLOB.world_edit_blueprints.world_edit_build_sprite_preview_fallback("invalid")
+
+	if(text2num("[entry["entry_count"]]") > WORLD_EDIT_BLUEPRINT_COMPACT_PREVIEW_ENTRY_THRESHOLD || "[entry["preview_mode"]]" == "compact")
+		return GLOB.world_edit_blueprints.world_edit_build_sprite_preview_fallback("budget")
+
+	var/revision_hash = get_active_blueprint_revision()
+	if(!length(revision_hash))
+		return GLOB.world_edit_blueprints.world_edit_build_sprite_preview_fallback("missing_revision")
+
+	if(
+		active_blueprint_sprite_preview_revision_id == "[blueprint_id]" \
+		&& active_blueprint_sprite_preview_revision_hash == revision_hash \
+		&& islist(active_blueprint_sprite_preview_cache)
+	)
+		var/asset_key = active_blueprint_sprite_preview_cache["asset_key"]
+		if(length("[asset_key]"))
+			SSassets.transport.send_assets(user.client, asset_key)
+		return active_blueprint_sprite_preview_cache.Copy()
+
+	var/file_path = entry["file_path"]
+	if(!length("[file_path]") || !fexists(file_path))
+		return GLOB.world_edit_blueprints.world_edit_build_sprite_preview_fallback("missing_file")
+
+	var/list/load_result = GLOB.world_edit_blueprints.world_edit_load_blueprint_from_file(file_path)
+	if(load_result["error"] || !islist(load_result["blueprint"]))
+		return GLOB.world_edit_blueprints.world_edit_build_sprite_preview_fallback("load_failed")
+
+	var/list/preview = GLOB.world_edit_blueprints.world_edit_build_blueprint_sprite_preview_payload(load_result["blueprint"], user.client)
+	if(!islist(preview))
+		preview = GLOB.world_edit_blueprints.world_edit_build_sprite_preview_fallback("render_failed")
+
+	active_blueprint_sprite_preview_revision_id = "[blueprint_id]"
+	active_blueprint_sprite_preview_revision_hash = revision_hash
+	active_blueprint_sprite_preview_cache = preview.Copy()
+	return preview

@@ -1,0 +1,10 @@
+{
+  "id": "building_ritual_chamber_representative",
+  "generator": "building_layout",
+  "seed": 3106,
+  "canvas": { "preset": "blank_96", "width": 96, "height": 96 },
+  "shape": { "id": "point", "anchors": [{ "x": 48, "y": 48 }] },
+  "config": { "program": "ritual_chamber", "faction_preset": "colony", "direction": "east", "auto_size": false, "half_width": 11, "half_depth": 10, "target_room_count": 6, "detail_budget": 80, "respect_blockers": false, "replace_blocked_turfs": true },
+  "expect": { "status": "supported", "direction_honored": true, "hard_error_count": 0, "target_room_count": 6, "room_count_satisfied": true, "has_interior_objects": true, "post_emit_validation_error_count": 0 },
+  "render": { "semantic_png": true, "after_dmm": false, "debug_overlays": true }
+}

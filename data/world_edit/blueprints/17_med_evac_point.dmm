@@ -1,0 +1,94 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aaa" = (
+/turf/template_noop,
+/area/template_noop)
+"bbb" = (
+/obj/structure/barricade/sandbags/full{
+	dir = 1
+	},
+/turf/template_noop,
+/area/template_noop)
+"ccc" = (
+/obj/structure/barricade/metal{
+	dir = 8
+	},
+/turf/template_noop,
+/area/template_noop)
+"ddd" = (
+/obj/structure/barricade/metal{
+	dir = 4
+	},
+/turf/template_noop,
+/area/template_noop)
+"eee" = (
+/obj/structure/barricade/sandbags/full{
+	dir = 8
+	},
+/turf/template_noop,
+/area/template_noop)
+"fff" = (
+/obj/structure/bed/medevac_stretcher{
+	dir = 1
+	},
+/turf/template_noop,
+/area/template_noop)
+"ggg" = (
+/obj/structure/closet/crate/medical{
+	dir = 4
+	},
+/turf/template_noop,
+/area/template_noop)
+"hhh" = (
+/obj/structure/barricade/sandbags/full{
+	dir = 4
+	},
+/turf/template_noop,
+/area/template_noop)
+"iii" = (
+/obj/structure/barricade/metal{
+	dir = 2
+	},
+/turf/template_noop,
+/area/template_noop)
+"jjj" = (
+/obj/structure/barricade/sandbags/full{
+	dir = 2
+	},
+/turf/template_noop,
+/area/template_noop)
+
+(1,1,1) = {"
+aaa
+ccc
+eee
+aaa
+aaa
+"}
+(2,1,1) = {"
+bbb
+aaa
+aaa
+iii
+aaa
+"}
+(3,1,1) = {"
+aaa
+aaa
+fff
+jjj
+aaa
+"}
+(4,1,1) = {"
+bbb
+aaa
+ggg
+iii
+aaa
+"}
+(5,1,1) = {"
+aaa
+ddd
+hhh
+aaa
+aaa
+"}

@@ -1,0 +1,25 @@
+﻿# Runtime mirrors are not source.
+#
+# The canonical Workbench runtime state lives under repo-root
+# `tools/world_edit_visual`, but it is easy to accidentally create a local
+# `tools/world_edit_visual/data/...` tree while experimenting from this folder.
+# Keep that mirror out of git so `enabled.txt`, inbox cases, and generated
+# reports do not appear as review noise.
+/data/
+/enabled.txt
+/inbox/
+/out/
+
+# `build_index.py` regenerates this file from runtime reports.
+# Keep only the generator script in source control; the Markdown sheet reflects
+# the last local DreamDaemon run and should not be reviewed as stable input.
+/index.md
+
+# Python bytecode is local cache.
+/__pycache__/
+
+# DMI frames extracted by render_sprites.py are generated local cache.
+/.cache/
+
+# Locally generated case wizard output is user/runtime state.
+/cases/generated/

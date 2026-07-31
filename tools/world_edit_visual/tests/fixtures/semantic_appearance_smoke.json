@@ -1,0 +1,167 @@
+{
+  "schema": "world_edit_visual_semantic/v1",
+  "appearance_schema": 1,
+  "features": {
+    "appearance": true
+  },
+  "case_id": "appearance_smoke",
+  "width": 2,
+  "height": 2,
+  "origin": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+  },
+  "tiles": [
+    {
+      "x": 1,
+      "y": 1,
+      "local_x": 1,
+      "local_y": 1,
+      "turf": "/turf/open/floor",
+      "area": "/area",
+      "density": false,
+      "opacity": false,
+      "appearance": {
+        "icon": "icons/turf/floors/floors.dmi",
+        "icon_state": "wood",
+        "dir_value": 2,
+        "dir": "south",
+        "pixel_x": 0,
+        "pixel_y": 0,
+        "layer": 2,
+        "plane": 0,
+        "alpha": 255,
+        "color": null
+      },
+      "flags": {
+        "floor": true,
+        "wall": false,
+        "door": false,
+        "reserved_walk": false,
+        "blocked": false,
+        "changed": true,
+        "error": false
+      },
+      "objects": [
+        {
+          "path": "/obj/structure/table",
+          "density": true,
+          "dir": "south",
+          "appearance": {
+            "icon": "icons/obj/structures/tables.dmi",
+            "icon_state": "table",
+            "dir_value": 2,
+            "dir": "south",
+            "pixel_x": 0,
+            "pixel_y": 0,
+            "layer": 3,
+            "plane": 0,
+            "alpha": 255,
+            "color": null
+          }
+        }
+      ]
+    },
+    {
+      "x": 2,
+      "y": 1,
+      "local_x": 2,
+      "local_y": 1,
+      "turf": "/turf/open/floor",
+      "area": "/area",
+      "density": false,
+      "opacity": false,
+      "appearance": {
+        "icon": "icons/turf/floors/floors.dmi",
+        "icon_state": "wood",
+        "dir_value": 2,
+        "dir": "south",
+        "pixel_x": 0,
+        "pixel_y": 0,
+        "layer": 2,
+        "plane": 0,
+        "alpha": 255,
+        "color": null
+      },
+      "flags": {
+        "floor": true,
+        "wall": false,
+        "door": false,
+        "reserved_walk": false,
+        "blocked": false,
+        "changed": true,
+        "error": false
+      },
+      "objects": []
+    },
+    {
+      "x": 1,
+      "y": 2,
+      "local_x": 1,
+      "local_y": 2,
+      "turf": "/turf/open/floor",
+      "area": "/area",
+      "density": false,
+      "opacity": false,
+      "appearance": {
+        "icon": "icons/turf/floors/floors.dmi",
+        "icon_state": "wood",
+        "dir_value": 2,
+        "dir": "south",
+        "pixel_x": 0,
+        "pixel_y": 0,
+        "layer": 2,
+        "plane": 0,
+        "alpha": 255,
+        "color": null
+      },
+      "flags": {
+        "floor": true,
+        "wall": false,
+        "door": false,
+        "reserved_walk": false,
+        "blocked": false,
+        "changed": true,
+        "error": false
+      },
+      "objects": []
+    },
+    {
+      "x": 2,
+      "y": 2,
+      "local_x": 2,
+      "local_y": 2,
+      "turf": "/turf/open/floor",
+      "area": "/area",
+      "density": false,
+      "opacity": false,
+      "appearance": {
+        "icon": "icons/turf/floors/floors.dmi",
+        "icon_state": "wood",
+        "dir_value": 2,
+        "dir": "south",
+        "pixel_x": 0,
+        "pixel_y": 0,
+        "layer": 2,
+        "plane": 0,
+        "alpha": 255,
+        "color": null
+      },
+      "flags": {
+        "floor": true,
+        "wall": false,
+        "door": false,
+        "reserved_walk": false,
+        "blocked": false,
+        "changed": true,
+        "error": false
+      },
+      "objects": []
+    }
+  ],
+  "rooms": [],
+  "routes": [],
+  "markers": [],
+  "errors": []
+}

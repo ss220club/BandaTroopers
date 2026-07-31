@@ -34,7 +34,7 @@
 	ensure_blueprint_cache_loaded()
 	ensure_default_generator_selected()
 	var/ui_data_started_at = REALTIMEOFDAY
-	var/list/payload = build_ui_data_payload()
+	var/list/payload = build_ui_data_payload(user)
 	var/field_count = islist(payload["ui_fields"]) ? length(payload["ui_fields"]) : 0
 	var/history_count = islist(payload["history_entries"]) ? length(payload["history_entries"]) : 0
 	record_runtime_diagnostic_duration("ui_data", ui_data_started_at)

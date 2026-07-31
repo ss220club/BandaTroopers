@@ -1,0 +1,64 @@
+{
+  "id": "building_hydroponics_target_rooms_7",
+  "generator": "building_layout",
+  "seed": 2307,
+  "canvas": {
+    "preset": "blank_96",
+    "width": 96,
+    "height": 96
+  },
+  "shape": {
+    "id": "point",
+    "anchors": [
+      { "x": 48, "y": 48 }
+    ]
+  },
+  "config": {
+    "program": "hydroponics",
+    "faction_preset": "colony",
+    "direction": "south",
+    "auto_size": false,
+    "half_width": 10,
+    "half_depth": 9,
+    "target_room_count": 7,
+    "detail_budget": 85,
+    "respect_blockers": false,
+    "replace_blocked_turfs": true
+  },
+  "expect": {
+    "status": "supported",
+    "direction_honored": true,
+    "hard_error_count": 0,
+    "target_room_count": 7,
+    "room_count_satisfied": true,
+    "has_interior_objects": true,
+    "has_template_chunks": true,
+    "post_emit_validation_error_count": 0,
+    "semantic_credit_without_emitted_slots_count": 0,
+    "reserved_walk_blocked_count": 0,
+    "mandatory_pattern_failure_count": 0,
+		"forbidden_fallback_count": 0
+		,"layout_unassigned_interior_excess_count": 0
+		,"layout_ownerless_open_bay_count": 0
+		,"layout_route_component_count": 1
+		,"layout_route_component_error_count": 0
+		,"layout_required_adjacency_geometry_missing_count": 0
+		,"layout_room_composition_missing_count": 0
+		,"layout_room_capacity_shortfall_count": 0
+		,"layout_wall_stub_count": 0
+		,"layout_wall_notch_count": 0
+		,"layout_wall_stair_step_count": 0
+		,"layout_wall_misaligned_join_count": 0
+		,"layout_atomic_module_fragmentation_count": 0
+  },
+  "render": {
+    "semantic_png": true,
+    "after_dmm": false,
+    "debug_overlays": true
+  },
+  "profile": {
+    "enabled": true,
+    "include_stage_timings": true,
+    "include_loop_counters": true
+  }
+}

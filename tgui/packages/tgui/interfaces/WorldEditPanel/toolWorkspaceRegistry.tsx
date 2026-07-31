@@ -33,6 +33,7 @@ const renderToolWorkspace = (props: ToolWorkspaceProps) => {
 
   return (
     <GenericToolWorkspace
+      data={props.data}
       act={props.act}
       groupedFields={props.groupedFields}
       groupNames={props.groupNames}

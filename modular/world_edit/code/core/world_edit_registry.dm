@@ -119,6 +119,29 @@
 	)
 	status = WORLD_EDIT_STATUS_READY
 
+/datum/world_edit_generator_definition/building_layout
+	id = "building_layout"
+	name_ru = "Постройки"
+	category_ru = "Строительство"
+	description_ru = "Генератор живых построек по прямоугольнику или форме панели размещения."
+	required_rights = R_EVENT
+	supports_preview = TRUE
+	execution_mode = WORLD_EDIT_EXECUTION_BATCH
+	generator_type = /datum/world_edit_generator/building_layout
+	default_params = list(
+		"archetype_id" = "living",
+		"faction_preset" = "colony",
+		"building_seed" = 0,
+		"half_width" = 4,
+		"half_depth" = 4,
+		"window_density" = 40,
+		"detail_budget" = 60,
+		"back_exit" = FALSE,
+		"respect_blockers" = TRUE,
+		"replace_blocked_turfs" = FALSE,
+	)
+	status = WORLD_EDIT_STATUS_READY
+
 GLOBAL_DATUM_INIT(world_edit_registry, /datum/world_edit_registry_service, new)
 
 /datum/world_edit_registry_service

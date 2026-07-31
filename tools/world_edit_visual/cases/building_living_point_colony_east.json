@@ -1,0 +1,75 @@
+{
+  "id": "building_living_point_colony_east",
+  "generator": "building_layout",
+  "seed": 2,
+  "canvas": {
+    "preset": "blank_96",
+    "width": 96,
+    "height": 96
+  },
+  "shape": {
+    "id": "point",
+    "anchors": [
+      { "x": 48, "y": 48 }
+    ]
+  },
+  "config": {
+    "program": "living",
+    "faction_preset": "colony",
+    "direction": "east",
+    "respect_blockers": false,
+    "replace_blocked_turfs": true
+  },
+  "expect": {
+    "status": "supported",
+    "layout_enabled": true,
+    "direction_honored": true,
+    "hard_error_count": 0,
+    "post_emit_validation_error_count": 0,
+    "counter_wrong_facing_count": 0,
+    "semantic_credit_without_emitted_slots_count": 0,
+    "reserved_walk_blocked_count": 0,
+    "unclaimed_interior_wall_count": 0,
+    "wall_outside_footprint_count": 0,
+    "wall_orphan_island_count": 0,
+    "wall_unmapped_interior_count": 0,
+    "wall_single_sided_internal_count": 0,
+    "thin_room_strip_count": 0,
+    "large_sparse_room_count": 0,
+    "corridor_ribbon_count": 0,
+    "layout_underfurnished_room_count": 0,
+    "layout_required_connection_missing_count": 0,
+    "layout_door_not_shared_wall_count": 0,
+    "layout_room_without_door_count": 0,
+    "layout_forbidden_room_window_count": 0,
+    "layout_public_room_hard_closed_count": 0,
+    "layout_public_opening_missing_count": 0,
+    "layout_corridor_wall_canyon_count": 0,
+    "layout_opposing_route_door_pair_count_max": 1,
+    "layout_template_geometry_reject_count_max": 80,
+    "layout_missing_wall_context_reject_count_max": 80,
+    "layout_hard_valid_candidate_shortage_count": 0,
+    "semantic_scene_route_block_count": 0,
+    "semantic_scene_door_clearance_block_count": 0,
+    "semantic_scene_required_missing_count": 0,
+    "semantic_room_primary_scene_missing_count": 0,
+    "semantic_major_object_without_scene_count": 0,
+    "semantic_pairing_error_count": 0,
+    "legacy_fixture_after_scene_count": 0,
+    "semantic_distribution_noise_score_max": 10,
+    "semantic_functional_coverage_percent_min": 90,
+    "structured_scene_count_min": 1,
+    "structured_primary_scene_count_min": 1,
+    "semantic_route_clearance_percent_min": 100
+  },
+  "render": {
+    "semantic_png": true,
+    "after_dmm": false,
+    "debug_overlays": true
+  },
+  "profile": {
+    "enabled": true,
+    "include_stage_timings": true,
+    "include_loop_counters": true
+  }
+}

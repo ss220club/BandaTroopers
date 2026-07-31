@@ -1,0 +1,33 @@
+{
+  "id": "building_line_locked",
+  "generator": "building_layout",
+  "seed": 1001,
+  "canvas": {
+    "preset": "blank_64",
+    "width": 64,
+    "height": 64
+  },
+  "shape": {
+    "id": "line",
+    "anchors": [
+      { "x": 10, "y": 10 },
+      { "x": 40, "y": 10 }
+    ]
+  },
+  "config": {
+    "program": "living",
+    "faction_preset": "colony"
+  },
+  "expect": {
+    "status": "locked",
+    "reason_code": "shape.unsupported_for_building_layout",
+    "canvas_changed": false
+  },
+  "render": {
+    "semantic_png": true,
+    "debug_overlays": true
+  },
+  "profile": {
+    "enabled": true
+  }
+}

@@ -1,13 +1,25 @@
-# DECISIONS
+# DECISIONS - Canonical Building Layout correctness continuation
 
-## D-001: Use one normalized workflow instead of additive exceptions
-- Decision: rewrite the affected instruction sections so approved-plan execution has one order and one set of blocking statuses.
-- Why: adding extra warnings without removing old thresholds left escape hatches such as "small hotfix", "tests passed", and "not a large task".
+## D-001: The `91afe9c71c` verdict supersedes the July 17 task-state
 
-## D-002: Treat task-state edits as the allowed planning mutation
-- Decision: after read-only discovery, updating `PLAN/TODO/DECISIONS/EVIDENCE` is the only mutation allowed before implementation edits.
-- Why: the previous wording required task-state updates before mutating edits while also classifying every file edit as mutating.
+The original `cc210d` rewrite contract remains architectural context, but the appended head review is the active implementation contract. M4-M10 are partially scaffolded, not pending-from-zero and not complete.
 
-## D-003: Verification is separate from plan fidelity
-- Decision: tests and compile checks remain expected evidence, but they cannot close `MUST/KEEP/REJECT` items by themselves.
-- Why: the user's current priority is adherence to approved plans; verification should not become a substitute for requested architecture work.
+## D-002: Preserve the scaffold, replace its weak guarantees
+
+Keep topology/program datums, bounded beam/A*, composition contract, quality vector and one canonical entrypoint. Rework their internals; do not revert to `cc210d` and do not add another solver.
+
+## D-003: Correctness proceeds in dependency order
+
+Delete masking/dead paths and fix residual first, then normalize typed contracts, families, allocation, route/partitions, compositions, and finally reporting/legacy includes. Red cases during intermediate slices are valid evidence and must not be hidden.
+
+## D-004: Current CI status is separate from generator acceptance
+
+For HEAD, Windows Build and unit matrices passed, while linter/OpenDream/MapDiffBot checks failed. Those checks are tracked as final verification fallout; they do not prove or disprove spatial correctness.
+
+## D-005: Baseline artifacts must be SHA-bound
+
+Existing July 17-18 reports do not include a commit SHA. Regenerate the seven fixed cases before product-code changes and add/report an exact SHA field rather than relying on timestamps.
+
+## D-006: The main agent performs the plan challenge
+
+No subagents are used because repository and collaboration rules require explicit user authorization for delegation.

@@ -69,7 +69,96 @@
 		"label" = label,
 	)
 
+/datum/world_edit_blueprint_service/proc/world_edit_register_blueprint_building_object_type(list/rules, path_value, label = "Building object", allow_wall_turf = FALSE)
+	var/obj_path = ispath(path_value, /obj) ? path_value : text2path("[path_value]")
+	if(!ispath(obj_path, /obj))
+		return
+	world_edit_register_blueprint_type(rules, obj_path, "building_object", label)
+	var/list/rule = rules["[obj_path]"]
+	if(islist(rule) && allow_wall_turf)
+		rule["allow_wall_turf"] = TRUE
+
+/datum/world_edit_blueprint_service/proc/world_edit_register_blueprint_building_turf_type(list/rules, path_value, category = "building_turf", label = "Building turf")
+	var/turf_path = ispath(path_value, /turf) ? path_value : text2path("[path_value]")
+	if(!ispath(turf_path, /turf))
+		return
+	rules["[turf_path]"] = list(
+		"turf_path" = turf_path,
+		"category" = category,
+		"label" = label,
+	)
+
+/datum/world_edit_blueprint_service/proc/world_edit_collect_building_preset_blueprint_rules(list/object_rules, list/turf_rules, list/preset)
+	if(!islist(preset))
+		return
+	world_edit_register_blueprint_building_turf_type(turf_rules, preset["wall_path"], "building_wall", "Building wall")
+	world_edit_register_blueprint_building_turf_type(turf_rules, preset["floor_path"], "building_floor", "Building floor")
+	world_edit_register_blueprint_building_object_type(object_rules, preset["door_path"], "Building door")
+	world_edit_register_blueprint_building_object_type(object_rules, preset["window_path"], "Building window")
+	var/list/interior_paths = preset["interior_paths"]
+	if(islist(interior_paths))
+		for(var/interior_id as anything in interior_paths)
+			world_edit_register_blueprint_building_object_type(object_rules, interior_paths[interior_id], "Building fixture")
+
+/datum/world_edit_blueprint_service/proc/world_edit_build_blueprint_building_type_rules()
+	. = list()
+
+	var/datum/world_edit_generator/building_layout/building_generator = new
+	if(istype(building_generator) && hascall(building_generator, "get_building_faction_catalog"))
+		var/list/catalog = call(building_generator, "get_building_faction_catalog")()
+		if(islist(catalog))
+			for(var/preset_id as anything in catalog)
+				world_edit_collect_building_preset_blueprint_rules(., list(), catalog[preset_id])
+	qdel(building_generator)
+
+	for(var/path_value as anything in list(
+		"/obj/effect/decal/warning_stripes",
+		"/obj/effect/decal/hefa_cult_decals",
+		"/obj/effect/decal/hefa_cult_decals/d32",
+		"/obj/effect/decal/hefa_cult_decals/d96",
+		"/obj/effect/decal/cleanable/crayon",
+		"/obj/effect/decal/cleanable/dirt",
+		"/obj/effect/decal/cleanable/dirt/greenglow",
+		"/obj/effect/decal/strata_decals/grime/grime1",
+		"/obj/effect/decal/strata_decals/grime/grime2",
+	))
+		world_edit_register_blueprint_building_object_type(., path_value, "Building detail", TRUE)
+
+/datum/world_edit_blueprint_service/proc/world_edit_build_blueprint_building_turf_rules()
+	. = list()
+
+	var/list/object_rules = list()
+	var/datum/world_edit_generator/building_layout/building_generator = new
+	if(istype(building_generator) && hascall(building_generator, "get_building_faction_catalog"))
+		var/list/catalog = call(building_generator, "get_building_faction_catalog")()
+		if(islist(catalog))
+			for(var/preset_id as anything in catalog)
+				world_edit_collect_building_preset_blueprint_rules(object_rules, ., catalog[preset_id])
+	qdel(building_generator)
+
+	for(var/path_value as anything in list(
+		"/turf/open/floor/prison/sterile_white",
+		"/turf/open/floor/prison/greenblue",
+		"/turf/open/floor/prison/green",
+		"/turf/open/floor/prison/kitchen",
+		"/turf/open/floor/interior/wood/alt",
+		"/turf/open/floor/prison/blue_plate",
+		"/turf/open/floor/prison/cell_stripe",
+		"/turf/open/floor/prison/blue",
+		"/turf/open/floor/almayer/orange",
+		"/turf/open/floor/almayer/cargo",
+	))
+		world_edit_register_blueprint_building_turf_type(., path_value, "building_floor", "Building floor")
+
 /datum/world_edit_blueprint_service/proc/world_edit_get_blueprint_type_rule(obj_path)
 	if(!ispath(obj_path, /obj))
 		return null
-	return world_edit_blueprint_type_rules["[obj_path]"]
+	var/list/rule = world_edit_blueprint_type_rules["[obj_path]"]
+	if(islist(rule))
+		return rule
+	return world_edit_blueprint_building_type_rules["[obj_path]"]
+
+/datum/world_edit_blueprint_service/proc/world_edit_get_blueprint_turf_rule(turf_path)
+	if(!ispath(turf_path, /turf))
+		return null
+	return world_edit_blueprint_building_turf_rules["[turf_path]"]

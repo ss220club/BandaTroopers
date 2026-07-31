@@ -8,6 +8,7 @@ World Edit дает администраторам один in-game интерф
 - `outpost_radius`
 - `destruction_pack`
 - `blueprint_stamp`
+- `building_layout`
 
 ## Workflow
 1. `Select` - выбор генератора из каталога.
@@ -37,5 +38,5 @@ World Edit дает администраторам один in-game интерф
 
 ## Integration notes
 1. Реестр live-генераторов должен оставаться компактным и явно ready-only для панели.
-2. `outpost_radius` и `blueprint_stamp` используют placement-aware flow.
+2. `outpost_radius`, `blueprint_stamp` и `building_layout` используют placement-aware flow.
 3. `destruction_pack` остается destructive-профилем с явными ограничениями по безопасности и cleanup.

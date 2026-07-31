@@ -77,6 +77,7 @@
 	meta["undo_policy"] = changeset.undo_policy
 	meta["created_entries"] = length(changeset.created_entries)
 	meta["moved_entries"] = length(changeset.moved_entries)
+	meta["changed_turf_entries"] = length(changeset.changed_turf_entries)
 	meta["owned_effect_entries"] = length(changeset.owned_effect_entries)
 	meta["undo_status"] = changeset.can_undo() ? "available" : (changeset.can_cleanup_owned_effects() ? "cleanup_available" : "not_available")
 	return meta
@@ -92,6 +93,7 @@
 		"undo_policy" = changeset.undo_policy,
 		"created_entries" = length(changeset.created_entries),
 		"moved_entries" = length(changeset.moved_entries),
+		"changed_turf_entries" = length(changeset.changed_turf_entries),
 		"owned_effect_entries" = length(changeset.owned_effect_entries),
 		"created_at" = changeset.created_at,
 		"can_undo" = changeset.can_undo() ? TRUE : FALSE,

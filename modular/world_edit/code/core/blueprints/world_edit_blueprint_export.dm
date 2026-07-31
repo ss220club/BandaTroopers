@@ -165,16 +165,128 @@
 	var/list/bounds = world_edit_compute_blueprint_bounds(entries)
 	if(bounds["radius"] > WORLD_EDIT_BLUEPRINT_MAX_RADIUS)
 		return list("error" = "Текущий план превышает лимит радиуса Blueprint Lite.")
+	var/footprint_error = world_edit_validate_blueprint_footprint_bounds(bounds)
+	if(footprint_error)
+		return list("error" = footprint_error)
 
-	var/list/outpost_recipe = world_edit_build_outpost_recipe_from_plan(plan, anchor_turf)
+	var/blueprint_id = sanitize_filename(trim("[blueprint_name]"))
+	if(!length(blueprint_id))
+		blueprint_id = world_edit_build_blueprint_id()
+	blueprint_id = copytext(blueprint_id, 1, WORLD_EDIT_BLUEPRINT_ID_LEN + 1)
+	var/blueprint_display_name = trim(sanitize_text("[blueprint_name]", ""))
+	if(!length(blueprint_display_name))
+		blueprint_display_name = blueprint_id
+	blueprint_display_name = copytext(blueprint_display_name, 1, WORLD_EDIT_BLUEPRINT_NAME_MAX_LEN + 1)
 
 	return list("blueprint" = list(
-		"id" = world_edit_build_blueprint_id(),
-		"name" = copytext(trim(sanitize_text("[blueprint_name]", "Форпостный шаблон")), 1, WORLD_EDIT_BLUEPRINT_NAME_MAX_LEN + 1),
+		"id" = blueprint_id,
+		"name" = blueprint_display_name,
 		"created_at" = time_stamp(),
 		"created_by" = ckey("[actor_ckey]"),
 		"source" = "outpost_radius_plan",
 		"bounds" = bounds,
 		"entries" = entries,
-		"outpost_recipe" = outpost_recipe,
 	))
+
+/datum/world_edit_blueprint_service/proc/world_edit_export_blueprint_from_building_layout_plan(datum/world_edit_plan/plan, turf/anchor_turf, blueprint_name, actor_ckey)
+	if(!istype(plan))
+		return list("error" = "No building plan is available for export.")
+	if(!istype(anchor_turf))
+		return list("error" = "Unable to resolve the building blueprint anchor turf.")
+	if(!length(plan.placements))
+		return list("error" = "Current building plan has no placements to export.")
+
+	var/list/entries = list()
+	var/list/turf_slot_lookup = list()
+	var/list/object_slot_lookup = list()
+	for(var/list/placement as anything in plan.placements)
+		var/placement_kind = "[placement["kind"]]"
+		var/turf/target_turf = placement["turf"]
+		if(!istype(target_turf) || target_turf.z != anchor_turf.z)
+			return list("error" = "Current building plan contains a placement outside the anchor z-level.")
+		var/dx = target_turf.x - anchor_turf.x
+		var/dy = target_turf.y - anchor_turf.y
+
+		if(placement_kind in list("floor", "wall"))
+			var/turf_path = placement["turf_path"]
+			if(!world_edit_get_blueprint_turf_rule(turf_path))
+				return list("error" = "Current building plan contains an unsupported turf type.")
+			var/turf_key = "turf:[dx],[dy],0"
+			if(turf_slot_lookup[turf_key])
+				return list("error" = "Current building plan contains multiple turfs for one blueprint cell.")
+			turf_slot_lookup[turf_key] = TRUE
+			entries += list(list(
+				"kind" = "turf",
+				"type" = "[turf_path]",
+				"dx" = dx,
+				"dy" = dy,
+				"dz" = 0,
+				"dir" = SOUTH,
+				"vars" = list(),
+			))
+			continue
+
+		if(!(placement_kind in list("door", "window", "interior", "microvariation")))
+			return list("error" = "Current building plan contains an unsupported placement kind.")
+		var/obj_path = placement["obj_path"]
+		if(!world_edit_get_blueprint_type_rule(obj_path))
+			return list("error" = "Current building plan contains an unsupported object type.")
+		var/dir_value = text2num("[placement["dir"]]")
+		if(!(dir_value in GLOB.cardinals))
+			return list("error" = "Current building plan contains a non-cardinal object direction.")
+		var/list/coord_keys = world_edit_build_blueprint_relative_slot_keys(obj_path, dx, dy, 0, dir_value)
+		if(!length(coord_keys))
+			return list("error" = "Current building plan contains an invalid directed object slot.")
+		for(var/coord_key as anything in coord_keys)
+			if(object_slot_lookup[coord_key])
+				return list("error" = "Current building plan contains duplicate object slots.")
+			object_slot_lookup[coord_key] = TRUE
+		entries += list(list(
+			"kind" = "object",
+			"type" = "[obj_path]",
+			"dx" = dx,
+			"dy" = dy,
+			"dz" = 0,
+			"dir" = dir_value,
+			"vars" = list(),
+		))
+
+	if(length(entries) > WORLD_EDIT_BLUEPRINT_MAX_ENTRIES)
+		return list("error" = "Current building plan exceeds the Blueprint Lite entry limit.")
+
+	var/list/bounds = world_edit_compute_blueprint_bounds(entries)
+	if(bounds["radius"] > WORLD_EDIT_BLUEPRINT_MAX_RADIUS)
+		return list("error" = "Current building plan exceeds the Blueprint Lite radius limit.")
+	var/footprint_error = world_edit_validate_blueprint_footprint_bounds(bounds)
+	if(footprint_error)
+		return list("error" = footprint_error)
+
+	var/blueprint_id = sanitize_filename(trim("[blueprint_name]"))
+	if(!length(blueprint_id))
+		blueprint_id = world_edit_build_blueprint_id()
+	blueprint_id = copytext(blueprint_id, 1, WORLD_EDIT_BLUEPRINT_ID_LEN + 1)
+	var/blueprint_display_name = trim(sanitize_text("[blueprint_name]", ""))
+	if(!length(blueprint_display_name))
+		blueprint_display_name = blueprint_id
+	blueprint_display_name = copytext(blueprint_display_name, 1, WORLD_EDIT_BLUEPRINT_NAME_MAX_LEN + 1)
+
+	var/list/validation_result = world_edit_validate_blueprint_definition(list(
+		"id" = blueprint_id,
+		"name" = blueprint_display_name,
+		"created_at" = time_stamp(),
+		"created_by" = ckey("[actor_ckey]"),
+		"source" = "building_layout_plan",
+		"bounds" = bounds,
+		"entries" = entries,
+	))
+	if(validation_result["error"])
+		return validation_result
+	return list("blueprint" = validation_result["blueprint"])
+
+/datum/world_edit_blueprint_service/proc/world_edit_export_blueprint_from_plan(generator_id, datum/world_edit_plan/plan, turf/anchor_turf, blueprint_name, actor_ckey)
+	switch("[generator_id]")
+		if("outpost_radius")
+			return world_edit_export_blueprint_from_outpost_plan(plan, anchor_turf, blueprint_name, actor_ckey)
+		if("building_layout")
+			return world_edit_export_blueprint_from_building_layout_plan(plan, anchor_turf, blueprint_name, actor_ckey)
+	return list("error" = "Current generator cannot be saved as a DMM blueprint.")

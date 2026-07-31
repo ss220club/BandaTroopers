@@ -16,7 +16,7 @@ data/*
 data/world_edit/*
 !data/world_edit/blueprints/
 data/world_edit/blueprints/*
-!data/world_edit/blueprints/*.json
+!data/world_edit/blueprints/*.dmm
 cfg/
 !cfg/.keep
 tmp/

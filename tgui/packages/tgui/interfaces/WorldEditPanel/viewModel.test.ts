@@ -4,6 +4,9 @@ import {
   buildWorldEditViewModel,
   filterAndSortBlueprintEntries,
   getBlueprintActionState,
+  getBlueprintLibraryActions,
+  getBlueprintPreviewMode,
+  getBuildingLayoutCapabilityStatus,
   getDestructionPreviewLegendItems,
   getDestructionWorkspaceViewModel,
   getHistoryMetrics,
@@ -59,6 +62,7 @@ const BASE_BACKEND_DATA: BackendData = {
   current_generator_supports_preview: true,
   requires_preview_before_apply: false,
   ui_fields: [],
+  generator_payload: {},
   placement_supported: true,
   placement_active: false,
   placement_mode: 'single',
@@ -207,6 +211,230 @@ describe('WorldEditPanel view model', () => {
       action: 'run_apply',
       label: 'Разм.',
     });
+  });
+
+  it('keeps locked shapes visible while disabling preview/apply actions', () => {
+    const data = makeData({
+      placement_shape_supported: true,
+      placement_shape: 'line',
+      placement_shape_options: [
+        {
+          value: 'point',
+          label: 'point',
+          locked: false,
+        },
+        {
+          value: 'line',
+          label: 'line',
+          locked: true,
+          lockReason: 'Building layout does not support line yet.',
+        },
+      ],
+      placement_supported: true,
+      placement_supports_direction: true,
+    });
+    const actions = getToolbarActions(data);
+    const shared = getSharedModeViewModel(data, 'editor');
+
+    expect(shared.shapeOptions.map((option) => option.value)).toEqual([
+      'point',
+      'line',
+    ]);
+    expect(shared.selectedShape).toBe('line');
+    expect(actions.previewAction?.disabled).toBe(true);
+    expect(actions.placementAction?.disabled).toBe(true);
+  });
+
+  it('disables preview/apply for request-level locks without hiding the shape row', () => {
+    const data = makeData({
+      placement_shape_supported: true,
+      placement_shape: 'point',
+      placement_shape_options: [
+        {
+          value: 'point',
+          label: 'point',
+          locked: false,
+          shape_locked: false,
+          request_locked: true,
+          can_preview: false,
+          can_apply: false,
+          lockReason: 'Selected area is too small.',
+        },
+      ],
+      placement_supported: true,
+      placement_supports_direction: true,
+    });
+    const actions = getToolbarActions(data);
+    const shared = getSharedModeViewModel(data, 'editor');
+
+    expect(shared.shapeOptions.map((option) => option.value)).toEqual([
+      'point',
+    ]);
+    expect(shared.selectedShape).toBe('point');
+    expect(actions.previewAction?.disabled).toBe(true);
+    expect(actions.placementAction?.disabled).toBe(true);
+  });
+
+  it('uses the building layout capability matrix to block unsupported program/style rows', () => {
+    const data = makeData({
+      current_generator_id: 'building_layout',
+      placement_shape: 'point',
+      placement_shape_options: [
+        {
+          value: 'point',
+          label: 'point',
+          can_preview: true,
+          can_apply: true,
+        },
+      ],
+      generator_payload: {
+        building_layout: {
+          current_program_id: 'living',
+          current_style_id: 'covenant',
+          capability_matrix: {
+            compatibility: {
+              by_key: {
+                'living|covenant': {
+                  program_id: 'living',
+                  style_id: 'covenant',
+                  supported: false,
+                  lock_code: 'style.missing_capability',
+                  missing_capabilities: ['sleep_surface'],
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const actions = getToolbarActions(data);
+    const status = getBuildingLayoutCapabilityStatus(data);
+
+    expect(status?.visible).toBe(true);
+    expect(status?.message).toContain('обязательные функции');
+    expect(status?.items).toContainEqual({
+      label: 'Нет функций',
+      value: 'sleep_surface',
+      color: 'bad',
+    });
+    expect(actions.previewAction?.disabled).toBe(true);
+    expect(actions.placementAction?.disabled).toBe(true);
+  });
+
+  it('does not block building layout actions when the capability matrix supports the row', () => {
+    const data = makeData({
+      current_generator_id: 'building_layout',
+      placement_shape: 'point',
+      placement_shape_options: [
+        {
+          value: 'point',
+          label: 'point',
+          can_preview: true,
+          can_apply: true,
+        },
+      ],
+      generator_payload: {
+        building_layout: {
+          current_program_id: 'living',
+          current_style_id: 'colony',
+          capability_matrix: {
+            compatibility: {
+              by_key: {
+                'living|colony': {
+                  program_id: 'living',
+                  style_id: 'colony',
+                  supported: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const actions = getToolbarActions(data);
+
+    expect(getBuildingLayoutCapabilityStatus(data)).toBeUndefined();
+    expect(actions.previewAction?.disabled).toBe(false);
+    expect(actions.placementAction?.disabled).toBe(false);
+  });
+
+  it('decorates building layout program and style options with capability locks', () => {
+    const model = buildWorldEditViewModel(
+      makeData({
+        current_generator_id: 'building_layout',
+        ui_fields: [
+          makeField({
+            id: 'archetype_id',
+            kind: 'select',
+            value: 'living',
+            options: [
+              { label: 'Living', value: 'living' },
+              { label: 'Medical', value: 'medical' },
+            ],
+          }),
+          makeField({
+            id: 'faction_preset',
+            kind: 'select',
+            value: 'covenant',
+            options: [
+              { label: 'Colony', value: 'colony' },
+              { label: 'Covenant', value: 'covenant' },
+            ],
+          }),
+        ],
+        generator_payload: {
+          building_layout: {
+            current_program_id: 'living',
+            current_style_id: 'covenant',
+            capability_matrix: {
+              compatibility: {
+                by_key: {
+                  'living|colony': {
+                    program_id: 'living',
+                    style_id: 'colony',
+                    supported: true,
+                  },
+                  'living|covenant': {
+                    program_id: 'living',
+                    style_id: 'covenant',
+                    supported: false,
+                    lock_code: 'style.missing_capability',
+                    missing_capabilities: ['sleep_surface'],
+                  },
+                  'medical|covenant': {
+                    program_id: 'medical',
+                    style_id: 'covenant',
+                    supported: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      }),
+    );
+
+    const programField = model.groupedFields['Основные'].find(
+      (field) => field.id === 'archetype_id',
+    );
+    const styleField = model.groupedFields['Основные'].find(
+      (field) => field.id === 'faction_preset',
+    );
+
+    expect(
+      programField?.options?.find((option) => option.value === 'medical')
+        ?.disabled,
+    ).not.toBe(true);
+    expect(
+      styleField?.options?.find((option) => option.value === 'covenant')
+        ?.disabled,
+    ).toBe(true);
+    expect(
+      styleField?.options?.find((option) => option.value === 'covenant')
+        ?.lockReason,
+    ).toContain('обязательные функции');
   });
 
   it('normalizes shared mode shell state and keeps blueprint-specific extras', () => {
@@ -629,6 +857,51 @@ describe('WorldEditPanel view model', () => {
         'entries_desc',
       ).map((entry) => entry.id),
     ).toEqual(['bp-unused', 'bp-large', 'bp-small']);
+  });
+
+  it('exposes DMM blueprint library actions and compact preview state', () => {
+    const data = makeData({
+      active_blueprint_id: 'bp-1',
+      preview_valid: true,
+      can_run_apply: true,
+    });
+    const blueprint = {
+      id: 'bp-1',
+      name: 'Heavy',
+      entry_count: 256,
+      radius: 8,
+      created_at: '',
+      created_by: '',
+      source: 'server',
+      valid: true,
+      error: '',
+      preview_mode: 'compact' as const,
+    };
+
+    expect(getBlueprintPreviewMode(blueprint)).toBe('compact');
+    expect(
+      getBlueprintPreviewMode({ ...blueprint, preview_mode: undefined }),
+    ).toBe('detail');
+    expect(getBlueprintLibraryActions(data, blueprint)).toEqual([
+      { action: 'load_blueprint', disabled: true },
+      { action: 'preview_blueprint', disabled: false },
+      { action: 'apply_blueprint', disabled: false },
+      { action: 'export_blueprint', disabled: false },
+      { action: 'rename_blueprint', disabled: false },
+      { action: 'delete_blueprint', disabled: false },
+    ]);
+    expect(
+      getBlueprintLibraryActions(data, { ...blueprint, valid: false }).filter(
+        (entry) =>
+          ['export_blueprint', 'rename_blueprint', 'delete_blueprint'].includes(
+            entry.action,
+          ),
+      ),
+    ).toEqual([
+      { action: 'export_blueprint', disabled: true },
+      { action: 'rename_blueprint', disabled: true },
+      { action: 'delete_blueprint', disabled: true },
+    ]);
   });
 
   it('uses preview meta to derive destruction legend state', () => {

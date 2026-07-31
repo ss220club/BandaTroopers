@@ -1,0 +1,56 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aaa" = (
+/obj/structure/barricade/sandbags/full{
+	dir = 8
+	},
+/turf/template_noop,
+/area/template_noop)
+"bbb" = (
+/turf/template_noop,
+/area/template_noop)
+"ccc" = (
+/obj/structure/barricade/sandbags/full{
+	dir = 4
+	},
+/turf/template_noop,
+/area/template_noop)
+"ddd" = (
+/obj/structure/barricade/sandbags/full{
+	dir = 2
+	},
+/obj/structure/barricade/sandbags/full{
+	dir = 8
+	},
+/turf/template_noop,
+/area/template_noop)
+"eee" = (
+/obj/structure/barricade/sandbags/full{
+	dir = 2
+	},
+/turf/template_noop,
+/area/template_noop)
+"fff" = (
+/obj/structure/barricade/sandbags/full{
+	dir = 2
+	},
+/obj/structure/barricade/sandbags/full{
+	dir = 4
+	},
+/turf/template_noop,
+/area/template_noop)
+
+(1,1,1) = {"
+aaa
+ddd
+bbb
+"}
+(2,1,1) = {"
+bbb
+eee
+bbb
+"}
+(3,1,1) = {"
+ccc
+fff
+bbb
+"}

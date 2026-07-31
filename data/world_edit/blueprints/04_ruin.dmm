@@ -1,0 +1,78 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aaa" = (
+/turf/template_noop,
+/area/template_noop)
+"bbb" = (
+/obj/structure/barricade/metal/plasteel{
+	dir = 1
+	},
+/turf/template_noop,
+/area/template_noop)
+"ccc" = (
+/obj/structure/barricade/metal/plasteel/wired{
+	dir = 1
+	},
+/turf/template_noop,
+/area/template_noop)
+"ddd" = (
+/obj/structure/barricade/wooden{
+	dir = 1
+	},
+/turf/template_noop,
+/area/template_noop)
+"eee" = (
+/obj/structure/barricade/wooden{
+	dir = 8
+	},
+/turf/template_noop,
+/area/template_noop)
+"fff" = (
+/obj/structure/barricade/metal{
+	dir = 4
+	},
+/turf/template_noop,
+/area/template_noop)
+"ggg" = (
+/obj/structure/barricade/wooden{
+	dir = 2
+	},
+/turf/template_noop,
+/area/template_noop)
+"hhh" = (
+/obj/structure/barricade/metal/plasteel{
+	dir = 2
+	},
+/turf/template_noop,
+/area/template_noop)
+"iii" = (
+/obj/structure/barricade/metal/plasteel/wired{
+	dir = 2
+	},
+/turf/template_noop,
+/area/template_noop)
+
+(1,1,1) = {"
+aaa
+eee
+aaa
+"}
+(2,1,1) = {"
+bbb
+aaa
+ggg
+"}
+(3,1,1) = {"
+ccc
+aaa
+hhh
+"}
+(4,1,1) = {"
+ddd
+aaa
+iii
+"}
+(5,1,1) = {"
+aaa
+fff
+aaa
+"}

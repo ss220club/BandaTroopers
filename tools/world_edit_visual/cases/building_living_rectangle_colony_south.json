@@ -1,0 +1,42 @@
+{
+  "id": "building_living_rectangle_colony_south",
+  "generator": "building_layout",
+  "seed": 1003,
+  "canvas": {
+    "preset": "blank_96",
+    "width": 96,
+    "height": 96
+  },
+  "shape": {
+    "id": "rectangle",
+    "anchors": [
+      { "x": 20, "y": 20 },
+      { "x": 43, "y": 39 }
+    ]
+  },
+  "config": {
+    "program": "living",
+    "faction_preset": "colony",
+    "direction": "south",
+    "respect_blockers": false,
+    "replace_blocked_turfs": true
+  },
+  "expect": {
+    "status": "supported",
+    "direction_honored": true,
+    "post_emit_validation_error_count": 0,
+    "counter_wrong_facing_count": 0,
+    "semantic_credit_without_emitted_slots_count": 0,
+    "reserved_walk_blocked_count": 0
+  },
+  "render": {
+    "semantic_png": true,
+    "after_dmm": false,
+    "debug_overlays": true
+  },
+  "profile": {
+    "enabled": true,
+    "include_stage_timings": true,
+    "include_loop_counters": true
+  }
+}

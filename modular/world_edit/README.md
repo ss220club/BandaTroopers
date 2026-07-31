@@ -14,7 +14,7 @@
 - `code/core/world_edit_logging.dm`: единый контракт audit-логов.
 - `code/core/world_edit_registry.dm`: реестр live-генераторов и проверок доступа.
 - `code/core/manager/lifecycle/*`, `state/*`, `runtime/*`, `session/*`, `ui/*`: менеджер сессии, runtime, интеграции и TGUI разложены по доменам ответственности.
-- `code/generators/outpost_radius/*`, `destruction_pack/*`, `blueprint_stamp/*`: live-генераторы сгруппированы по семействам, чтобы planner/runtime/ui split шел внутри своей папки.
+- `code/generators/outpost_radius/*`, `destruction_pack/*`, `blueprint_stamp/*`, `building_layout/*`: live-генераторы сгруппированы по семействам, чтобы planner/runtime/ui split шел внутри своей папки.
 - `code/generators/shared/world_edit_generator_shared_helpers.dm`: общие helper-процедуры генераторов.
 - `code/effects/world_edit_persistent_fire.dm`: служебные эффекты модуля.
 
@@ -27,3 +27,4 @@
 - `outpost_radius`
 - `destruction_pack`
 - `blueprint_stamp`
+- `building_layout`

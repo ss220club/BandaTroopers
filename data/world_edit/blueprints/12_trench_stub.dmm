@@ -1,0 +1,52 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aaa" = (
+/turf/template_noop,
+/area/template_noop)
+"bbb" = (
+/obj/structure/barricade/metal{
+	dir = 1
+	},
+/turf/template_noop,
+/area/template_noop)
+"ccc" = (
+/obj/structure/barricade/sandbags/full{
+	dir = 1
+	},
+/turf/template_noop,
+/area/template_noop)
+
+(1,1,1) = {"
+aaa
+ccc
+aaa
+"}
+(2,1,1) = {"
+aaa
+ccc
+aaa
+"}
+(3,1,1) = {"
+bbb
+aaa
+aaa
+"}
+(4,1,1) = {"
+ccc
+aaa
+aaa
+"}
+(5,1,1) = {"
+aaa
+bbb
+aaa
+"}
+(6,1,1) = {"
+aaa
+ccc
+ccc
+"}
+(7,1,1) = {"
+aaa
+aaa
+bbb
+"}

@@ -98,8 +98,20 @@
 
 /datum/world_edit_manager/proc/build_placement_shape_options()
 	var/list/options = list()
+	var/list/effective_params = build_effective_generator_params()
 	for(var/shape_id in get_supported_placement_shapes())
-		options += list(GLOB.world_edit_shape_catalog.build_placement_shape_option(shape_id))
+		var/list/option = GLOB.world_edit_shape_catalog.build_placement_shape_option(shape_id)
+		var/list/support_report = current_generator?.get_placement_shape_support_report(shape_id, effective_params, null)
+		if(islist(support_report))
+			option["status"] = support_report["status"]
+			option["locked"] = support_report["locked"] ? TRUE : FALSE
+			option["shape_locked"] = support_report["shape_locked"] ? TRUE : FALSE
+			option["request_locked"] = support_report["request_locked"] ? TRUE : FALSE
+			option["lock_code"] = support_report["lock_code"] || support_report["reason_code"] || ""
+			option["lockReason"] = support_report["reason"] || support_report["lock_reason"] || ""
+			option["can_preview"] = support_report["can_preview"] ? TRUE : FALSE
+			option["can_apply"] = support_report["can_apply"] ? TRUE : FALSE
+		options += list(option)
 	return options
 
 /datum/world_edit_manager/proc/build_current_placement_shape_fields()

@@ -76,10 +76,11 @@
 
 	var/list/affected_lookup = list()
 	var/list/placement_lookup = list()
+	var/list/turf_lookup = list()
 	var/blocked_entry_count = 0
 	var/duplicate_entry_count = 0
 	for(var/list/entry as anything in entries)
-		var/obj_path = text2path("[entry["type"]]")
+		var/atom_path = text2path("[entry["type"]]")
 		var/list/rotated_offset = world_edit_rotate_blueprint_offset(text2num("[entry["dx"]]"), text2num("[entry["dy"]]"), placement_dir)
 		var/turf/target_turf = locate(anchor_turf.x + rotated_offset["dx"], anchor_turf.y + rotated_offset["dy"], anchor_turf.z)
 		if(!istype(target_turf))
@@ -87,6 +88,25 @@
 			return plan
 
 		var/dir_value = world_edit_rotate_blueprint_dir(text2num("[entry["dir"]]"), placement_dir)
+		if(ispath(atom_path, /turf))
+			var/turf_key = "[target_turf.x],[target_turf.y],[target_turf.z]"
+			if(turf_lookup[turf_key])
+				duplicate_entry_count++
+				continue
+			turf_lookup[turf_key] = TRUE
+			affected_lookup[target_turf] = TRUE
+			plan.placements += list(list(
+				"kind" = "blueprint_turf",
+				"turf_path" = atom_path,
+				"turf" = target_turf,
+				"x" = target_turf.x,
+				"y" = target_turf.y,
+				"z" = target_turf.z,
+				"dir" = SOUTH,
+			))
+			continue
+
+		var/obj_path = atom_path
 		var/list/placement_keys = world_edit_build_blueprint_target_slot_keys(target_turf, obj_path, dir_value)
 		if(!length(placement_keys))
 			plan.metadata["error"] = "Шаблон содержит недопустимый слот направленного размещения."
@@ -102,7 +122,7 @@
 
 		var/error_text = world_edit_validate_blueprint_target_turf(target_turf, obj_path, dir_value)
 		if(error_text)
-			if(error_text == "Шаблон содержит неподдерживаемый тип размещения.")
+			if(error_text == "Blueprint contains an unsupported placement type." || error_text == "Шаблон содержит неподдерживаемый тип размещения.")
 				plan.metadata["error"] = error_text
 				return plan
 			if(isnull(plan.metadata["first_blocked_turf"]))
@@ -116,6 +136,9 @@
 			"kind" = "blueprint_spawn",
 			"obj_path" = obj_path,
 			"turf" = target_turf,
+			"x" = target_turf.x,
+			"y" = target_turf.y,
+			"z" = target_turf.z,
 			"dir" = dir_value,
 			"vars" = entry["vars"] || list(),
 		))
