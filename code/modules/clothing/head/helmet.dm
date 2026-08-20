@@ -913,6 +913,15 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 	built_in_visors = list()
 	start_down_visor_type = null
 
+/obj/item/clothing/head/helmet/marine/old
+	name = "\improper M118 APPS pattern helmet"
+	desc = "Advanced Personnel Protective System armored helmet designed by NAMCo. While durable and easy to produce, this helmet featured a simple night-vision capable shooting optic, basic radio microphone and rudimentary tactical camera."
+	icon_state = "old_helmet"
+	flags_atom = NO_SNOW_TYPE
+	specialty = "M4 pattern marine"
+	built_in_visors = list()
+	start_down_visor_type = null
+
 /obj/item/clothing/head/helmet/marine/grenadier
 	name = "\improper M12 grenadier helmet"
 	desc = "Strictly speaking, the M12 is more of an offshoot of the B-series armor systems, and is fully enclosed, with hearing protection and anti-impact liquid armor layers to cushion blast. USCMC assault teams sometimes use these in close combat, grenade heavy operations."
@@ -1072,6 +1081,25 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 	desc = "Outdated CANC-style helmet."
 	icon_state = "canc"
 	flags_inv_hide = HIDEEARS|HIDETOPHAIR
+
+/obj/item/clothing/head/helmet/marine/veteran/canc/old
+	name = "\improper Type 60 helmet"
+	desc = "Outdated CANC kettle helmet. At least it's not as heavy."
+	icon_state = "canc_old"
+	flags_inv_hide = HIDEEARS|HIDETOPHAIR
+	armor_melee = CLOTHING_ARMOR_MEDIUMHIGH
+	armor_bullet = CLOTHING_ARMOR_MEDIUMLOW
+	armor_energy = CLOTHING_ARMOR_MEDIUMLOW
+	armor_bio = CLOTHING_ARMOR_MEDIUMLOW
+
+/obj/item/clothing/head/helmet/marine/veteran/canc/ghillie
+	name = "'Bashe' ghillie hood"
+	desc = "A simple camouflaged cloth hood."
+	icon_state = "ghillie_canc"
+	armor_melee = CLOTHING_ARMOR_LOW
+	armor_bullet = CLOTHING_ARMOR_LOW
+	armor_energy = CLOTHING_ARMOR_LOW
+	armor_bio = CLOTHING_ARMOR_LOW
 
 /obj/item/clothing/head/helmet/marine/veteran/canc/specops
 	built_in_visors = list(new /obj/item/device/helmet_visor/night_vision/canc)
@@ -1995,6 +2023,12 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 	desc = "Standard issue peaked cap of the Chinese-Asian Nation Cooperative."
 	icon_state = "canc_peaked"
 	flags_atom = NO_SNOW_TYPE
+
+/obj/item/clothing/head/uppcap/canc
+	name = "\improper CANC officer peaked cap"
+	desc = "Standard issue peaked service cap of the CANC's military."
+	icon_state = "canc_peaked"
+
 
 /obj/item/clothing/head/uppcap/ushanka
 	name = "\improper UL2 ushanka"

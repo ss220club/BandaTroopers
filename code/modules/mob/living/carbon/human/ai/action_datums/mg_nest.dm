@@ -106,6 +106,7 @@
 		/datum/equipment_preset/oni/security::name = /datum/equipment_preset/oni/security,
 		/datum/equipment_preset/insurgent/rifleman::name = /datum/equipment_preset/insurgent/rifleman,
 		// SS220 EDIT - END
+		/datum/equipment_preset/canc/remnant/old/commando/machinegunner::name = /datum/equipment_preset/canc/remnant/old/commando/machinegunner,
 	)
 
 	if(!check_rights(R_DEBUG))

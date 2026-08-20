@@ -14,7 +14,7 @@
 /datum/fire_support/supply_drop/uscm/shotgun/compact
 	name = "Сброс дробовых патронов USCM"
 	fire_support_type = "rto_uscm_shotgun_ammo_compact_drop"
-	delivered = /obj/structure/largecrate/supply/ammo/shotgun/half
+	delivered = /obj/structure/largecrate/supply/ammo/shotgun/sixteen
 
 /datum/fire_support/supply_drop/uscm/smg/compact
 	name = "Сброс боеприпасов для M39 USCM"

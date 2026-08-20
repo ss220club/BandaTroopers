@@ -101,6 +101,9 @@
 		/datum/equipment_preset/covenant/ruuhtian/marksman/carbine::name = /datum/equipment_preset/covenant/ruuhtian/marksman/carbine,
 		/datum/equipment_preset/covenant/ruuhtian/sniper/carbine::name = /datum/equipment_preset/covenant/ruuhtian/sniper/carbine,
 		// SS220 EDIT - END
+		/datum/equipment_preset/canc/remnant/old/marksman::name = /datum/equipment_preset/canc/remnant/old/marksman,
+		/datum/equipment_preset/canc/remnant/old/marksman/ghillie::name = /datum/equipment_preset/canc/remnant/old/marksman/ghillie,
+		/datum/equipment_preset/canc/remnant/old/commando/sniper::name = /datum/equipment_preset/canc/remnant/old/commando/sniper,
 	)
 
 	if(!check_rights(R_DEBUG))

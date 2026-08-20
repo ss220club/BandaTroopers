@@ -557,6 +557,7 @@
 	icon_state = "canc"
 	flags_atom = NO_SNOW_TYPE|NO_NAME_OVERRIDE
 	flags_armor_protection = BODY_FLAG_CHEST|BODY_FLAG_GROIN|BODY_FLAG_LEGS
+	flags_marine_armor = NO_FLAGS
 	slowdown = SLOWDOWN_ARMOR_LIGHT
 	armor_melee = CLOTHING_ARMOR_MEDIUM
 	armor_bullet = CLOTHING_ARMOR_MEDIUM
@@ -570,11 +571,36 @@
 	valid_accessory_slots = list(ACCESSORY_SLOT_MEDAL, ACCESSORY_SLOT_DECORARMOR,ACCESSORY_SLOT_DECORSHIN, ACCESSORY_SLOT_DECORBRACER, ACCESSORY_SLOT_DECORNECK, ACCESSORY_SLOT_PAINT, ACCESSORY_SLOT_M3UTILITY, ACCESSORY_SLOT_PONCHO, ACCESSORY_SLOT_DECORKNEE)
 	restricted_accessory_slots = list(ACCESSORY_SLOT_DECORARMOR,ACCESSORY_SLOT_DECORBRACER, ACCESSORY_SLOT_DECORNECK, ACCESSORY_SLOT_DECORSHIN, ACCESSORY_SLOT_M3UTILITY, ACCESSORY_SLOT_PAINT, ACCESSORY_SLOT_DECORKNEE)
 	specialty = "\improper Type 12"
+	has_light = FALSE
+	actions_types = list()
+	var/spawn_webbing = TRUE
 
 /obj/item/clothing/suit/marine/faction/UPP/CANC/Initialize(mapload)
 	. = ..()
-	var/obj/item/clothing/accessory/storage/webbing/m3/uppsmall/webbing = new()
-	src.attach_accessory(null, webbing, TRUE)
+	if(spawn_webbing)
+		var/obj/item/clothing/accessory/storage/webbing/m3/uppsmall/webbing = new()
+		src.attach_accessory(null, webbing, TRUE)
+
+/obj/item/clothing/suit/marine/faction/UPP/CANC/old
+	name = "\improper Type 3 armored cuirass"
+	desc = "Extremely cheap and easy to produce CANC designed armored vest made of two layers of steel and ceramics, encased in a rad-absorbent venlar carrier. It's bad, heavy, but it's certainly better than nothing."
+	icon_state = "canc_old"
+	flags_armor_protection = BODY_FLAG_CHEST|BODY_FLAG_GROIN|BODY_FLAG_LEGS
+	slowdown = SLOWDOWN_ARMOR_MEDIUM
+	armor_melee = CLOTHING_ARMOR_MEDIUM
+	armor_bullet = CLOTHING_ARMOR_MEDIUMLOW
+	armor_bomb = CLOTHING_ARMOR_LOW
+	armor_bio = CLOTHING_ARMOR_MEDIUMLOW
+	armor_rad = CLOTHING_ARMOR_LOW
+	armor_internaldamage = CLOTHING_ARMOR_LOW
+	time_to_unequip = 10
+	time_to_equip = 10
+	flags_inventory = null
+	valid_accessory_slots = list(ACCESSORY_SLOT_MEDAL, ACCESSORY_SLOT_DECORARMOR,ACCESSORY_SLOT_DECORSHIN, ACCESSORY_SLOT_DECORBRACER, ACCESSORY_SLOT_DECORNECK, ACCESSORY_SLOT_PAINT, ACCESSORY_SLOT_M3UTILITY, ACCESSORY_SLOT_PONCHO, ACCESSORY_SLOT_DECORKNEE)
+	restricted_accessory_slots = list(ACCESSORY_SLOT_DECORARMOR,ACCESSORY_SLOT_DECORBRACER, ACCESSORY_SLOT_DECORNECK, ACCESSORY_SLOT_DECORSHIN, ACCESSORY_SLOT_M3UTILITY, ACCESSORY_SLOT_PAINT, ACCESSORY_SLOT_DECORKNEE)
+	specialty = "\improper Type 3"
+	has_light = FALSE
+	spawn_webbing = FALSE
 
 /obj/item/clothing/suit/marine/faction/UPP/CANC/specops
 

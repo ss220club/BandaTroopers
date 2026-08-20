@@ -737,6 +737,31 @@
 	current_mag = null
 	starting_attachment_types = list(/obj/item/attachable/stock/m20a,/obj/item/attachable/attached_gun/shotgun/m20a/unloaded)
 
+/obj/item/weapon/gun/rifle/m20a/old
+	desc = "USCMC assault rifle chambered in 10x24 caseless, complete with an integrated 20mm grenade launcher and an integrated flashlight."
+	starting_attachment_types = list(/obj/item/attachable/stock/m20a)
+	start_automatic = TRUE
+
+/obj/item/weapon/gun/rifle/m20a/old/handle_starting_attachment()
+	..()
+	var/obj/item/attachable/attached_gun/grenade/m20a/S = new(src)
+	S.flags_attach_features &= ~ATTACH_REMOVABLE
+	S.hidden = TRUE
+	S.Attach(src)
+	var/obj/item/attachable/flashlight/m20a/flashlight = new(src)
+	flashlight.flags_attach_features &= ~ATTACH_REMOVABLE
+	flashlight.Attach(src)
+	update_attachable(flashlight.slot)
+
+/obj/item/weapon/gun/rifle/m20a/a2
+	name = "\improper M20A2 pulse rifle"
+	desc = "A variant of M20A pulse rifle, this model was intended for use with law enforcement agencies and during riot control operations, as it features a 16g shotgun instead of a grenade launcher. This one is painted in a tasteful metallic black color."
+	icon_state = "m20a2"
+	item_state = "m20a2"
+
+/obj/item/weapon/gun/rifle/m20a/a2/unloaded
+	current_mag = null
+
 /obj/item/weapon/gun/rifle/m20a/merc
 	name = "\improper M20CW pulse carbine"
 	desc = "A heavily modified black market version of the M20A pulse rifle, often used for CQC scenarios where SMGs just aren't cutting it. Comes with an integrated grip instead of an underbarrel shotgun and downsized barrel, alongside the removed stock. It can also now shoot in automatic!"
@@ -1725,8 +1750,9 @@
 		/obj/item/attachable/verticalgrip, // Underbarrel
 		/obj/item/attachable/verticalgrip/upp,
 		/obj/item/attachable/flashlight/grip/upp,
+		/obj/item/attachable/flashlight/lw317,
 		)
-
+	starting_attachment_types = list(/obj/item/attachable/flashlight/lw317)
 	flags_gun_features = GUN_AUTO_EJECTOR|GUN_CAN_POINTBLANK|GUN_AMMO_COUNTER
 	flags_equip_slot = SLOT_BACK
 	start_automatic = TRUE
@@ -1760,6 +1786,7 @@
 		/obj/item/attachable/verticalgrip/upp,
 		/obj/item/attachable/flashlight/grip/upp,
 		)
+	starting_attachment_types = list()
 
 /obj/item/weapon/gun/rifle/lw317/dmr/set_gun_config_values()
 	..()
@@ -2131,6 +2158,34 @@
 	random_under_chance = 50
 	random_spawn_under = list(/obj/item/attachable/flashlight/grip)
 
+/obj/item/weapon/gun/rifle/l42a/abr40/canc
+	name = "Type 40 marksman rifle"
+	desc = "CANC licensed and manufactured modification of TWE's L42A rifle, chambered in the newest CANC 6x38mm caliber. Extremely common during the Dog War, but nowadays extremely rare due to the UPP destroying most of the remaining stockpiles, thus valued by collectors."
+	icon = 'icons/obj/items/weapons/guns/guns_by_faction/upp.dmi'
+	icon_state = "type40"
+	item_state = "type40"
+	fire_sound = 'sound/weapons/gun_mar40.ogg'
+	current_mag = /obj/item/ammo_magazine/rifle/type40
+	attachable_allowed = list(
+		//Barrel,
+		/obj/item/attachable/bayonet/canc,
+		//Rail,
+		/obj/item/attachable/scope/mini/hunting/upp,
+		/obj/item/attachable/flashlight,
+		//Under,
+		//Stock,
+		/obj/item/attachable/stock/carbine/wood/canc,
+	)
+	starting_attachment_types = list(/obj/item/attachable/stock/carbine/wood/canc, /obj/item/attachable/scope/mini/hunting/upp)
+
+/obj/item/weapon/gun/rifle/l42a/abr40/canc/set_gun_attachment_offsets()
+	attachable_offset = list("muzzle_x" = 34, "muzzle_y" = 21,"rail_x" = 12, "rail_y" = 21, "under_x" = 18, "under_y" = 15, "stock_x" = 22, "stock_y" = 10, "side_rail_x" = 22, "side_rail_y" = 17)
+
+/obj/item/weapon/gun/rifle/l42a/abr40/canc/sniper
+	current_mag = /obj/item/ammo_magazine/rifle/type40/ap
+
+/obj/item/weapon/gun/rifle/l42a/abr40/canc/infantry
+	starting_attachment_types = list(/obj/item/attachable/stock/carbine/wood/canc, /obj/item/attachable/bayonet/canc, /obj/item/attachable/flashlight)
 
 //-------------------------------------------------------
 // R81M1A Rifle

@@ -631,6 +631,11 @@ Defined in conflicts.dm of the #defines folder.
 	accuracy_mod = HIT_ACCURACY_MULT_TIER_3
 	scatter_mod = -SCATTER_AMOUNT_TIER_8
 
+/obj/item/attachable/m60barrel/m38
+	name = "M38 barrel"
+	icon_state = "m38_barrel"
+	hud_offset_mod = -6
+
 /obj/item/attachable/mar50barrel
 	name = "MAR-50 barrel"
 	icon = 'icons/obj/items/weapons/guns/attachments/barrel.dmi'
@@ -945,7 +950,6 @@ Defined in conflicts.dm of the #defines folder.
 	else
 		. = ..()
 
-// SS220 EDIT - START: Tactical flashlight and M20A flashlight for Dog War
 /obj/item/attachable/flashlight/tactical
 	name = "tactical flashlight"
 	desc = "Robust and handy tactical flashlight, produced by WiseFire Inc."
@@ -963,7 +967,16 @@ Defined in conflicts.dm of the #defines folder.
 	attach_icon = "m20a_flashlight_a"
 	original_state = "m20a_flashlight"
 	original_attach = "m20a_flashlight_a"
-// SS220 EDIT - END
+
+/obj/item/attachable/flashlight/lw317
+	name = "integrated flashlight"
+	desc = "shouldnt be seeing this. . ."
+	icon = 'icons/obj/items/weapons/guns/attachments/rail.dmi'
+	icon_state = "lw317_flashlight"
+	slot = "special"
+	attach_icon = "lw317_flashlight_a"
+	original_state = "lw317_flashlight"
+	original_attach = "lw317_flashlight_a"
 
 /obj/item/attachable/flashlight/grip //Grip Light is here because it is a child object. Having it further down might cause a future coder a headache.
 	name = "underbarrel flashlight grip"
@@ -1436,6 +1449,8 @@ Defined in conflicts.dm of the #defines folder.
 /obj/item/attachable/scope/mini/army
 	desc = "An ARMAT S4 scope, type designation AN/PVQ-45. 2x magnification optic, increases accuracy while scoped, decreases RoF and increased wield speed."
 	zoom_offset = 4
+
+/obj/item/attachable/scope/mini/canc
 
 //Mini-scope for the scout rifle
 
@@ -2474,9 +2489,56 @@ Defined in conflicts.dm of the #defines folder.
 	pixel_shift_x = 40
 	pixel_shift_y = 14
 	hud_offset_mod = 3
+	collapsible = TRUE
+	stock_activated = FALSE
+	collapse_delay = 0.5 SECONDS
+	flags_attach_features = ATTACH_ACTIVATION
+	attachment_action_type = /datum/action/item_action/toggle
 
 /obj/item/attachable/stock/m20a/New()
 	..()
+	//rifle stock starts collapsed so we zero out everything
+	accuracy_mod = 0
+	recoil_mod = 0
+	scatter_mod = 0
+	movement_onehanded_acc_penalty_mod = 0
+	accuracy_unwielded_mod = 0
+	recoil_unwielded_mod = 0
+	scatter_unwielded_mod = 0
+	aim_speed_mod = 0
+	wield_delay_mod = WIELD_DELAY_NONE
+
+/obj/item/attachable/stock/m20a/apply_on_weapon(obj/item/weapon/gun/gun)
+	if(stock_activated)
+		accuracy_mod = HIT_ACCURACY_MULT_TIER_2
+		recoil_mod = -RECOIL_AMOUNT_TIER_5
+		scatter_mod = -SCATTER_AMOUNT_TIER_9
+		//it makes stuff worse when one handed
+		movement_onehanded_acc_penalty_mod = -MOVEMENT_ACCURACY_PENALTY_MULT_TIER_5
+		accuracy_unwielded_mod = -HIT_ACCURACY_MULT_TIER_3
+		recoil_unwielded_mod = RECOIL_AMOUNT_TIER_4
+		scatter_unwielded_mod = SCATTER_AMOUNT_TIER_8
+		aim_speed_mod = CONFIG_GET(number/slowdown_med)
+		hud_offset_mod = 5
+		attach_icon = "m20astock_a_on"
+		wield_delay_mod = WIELD_DELAY_VERY_FAST //added 0.2 seconds for wield, basic solid stock adds 0.4
+
+	else
+		accuracy_mod = 0
+		recoil_mod = 0
+		scatter_mod = 0
+		movement_onehanded_acc_penalty_mod = 0
+		accuracy_unwielded_mod = 0
+		recoil_unwielded_mod = 0
+		scatter_unwielded_mod = 0
+		aim_speed_mod = 0
+		hud_offset_mod = 3
+		attach_icon = "m20astock_a"
+		wield_delay_mod = WIELD_DELAY_NONE //stock is folded so no wield delay
+
+	gun.recalculate_attachment_bonuses()
+	gun.update_overlays(src, "stock")
+
 
 /obj/item/attachable/stock/rifle/ag80/collapsible
 	name = "\improper AG80 extendable stock"
@@ -2755,6 +2817,13 @@ Defined in conflicts.dm of the #defines folder.
 	icon_state = "abr40stock_tac"
 	attach_icon = "abr40stock_tac_a"
 
+/obj/item/attachable/stock/carbine/wood/canc
+	name = "\improper Type 40 \"wooden\" stock"
+	desc = "The default \"wooden\" stock for the Type 40 marksman rifle, the CANC modification of the  L42A battle rifle. Theoretically compatible with an L42. Can't be removed."
+	icon_state = "type40_a"
+	attach_icon = "type40_a"
+	flags_attach_features = NO_FLAGS
+
 /obj/item/attachable/stock/rifle/marksman
 	name = "\improper M41A marksman stock"
 	icon_state = "m4markstock"
@@ -2959,7 +3028,7 @@ Defined in conflicts.dm of the #defines folder.
 	melee_mod = 15
 	size_mod = 0
 
-/obj/item/attachable/stock/m60/m38 // SS220 EDIT: M38 stock for Dog War
+/obj/item/attachable/stock/m60/m38
 	name = "M38 stock"
 	icon_state = "m38_stock"
 	attach_icon = "m38_stock"
@@ -3762,7 +3831,6 @@ Defined in conflicts.dm of the #defines folder.
 	current_rounds = 1
 	loaded_grenades = list(new/obj/item/explosive/grenade/high_explosive/impact/upp(src))
 
-// SS220 EDIT: M20 integrated grenade launcher for Dog War
 /obj/item/attachable/attached_gun/grenade/m20a
 	name = "\improper M20 integrated grenade launcher"
 	desc = "Unorthodox design, this single-round grenade launchers was made specifically for use with Type 71 pulse rifles. It can be quickly connected to electronic firing mechanism of the rifle, albeit wiring is prone to failures."
@@ -3945,6 +4013,7 @@ Defined in conflicts.dm of the #defines folder.
 	max_rounds = 5
 	current_rounds = 5
 	ammo = /datum/ammo/bullet/shotgun/buckshot/masterkey
+	var/accepted_ammo = /datum/ammo/bullet/shotgun/buckshot
 	slot = "under"
 	pixel_shift_y = 18
 	fire_sound = 'sound/weapons/gun_shotgun_u7.ogg'
@@ -3969,7 +4038,7 @@ Defined in conflicts.dm of the #defines folder.
 
 /obj/item/attachable/attached_gun/shotgun/reload_attachment(obj/item/ammo_magazine/handful/mag, mob/user)
 	if(istype(mag) && mag.flags_magazine & AMMUNITION_HANDFUL)
-		if(mag.default_ammo == /datum/ammo/bullet/shotgun/buckshot)
+		if(mag.default_ammo == accepted_ammo)
 			if(current_rounds >= max_rounds)
 				to_chat(user, SPAN_WARNING("[src] is full."))
 			else
@@ -3988,13 +4057,18 @@ Defined in conflicts.dm of the #defines folder.
 	current_rounds = 0
 
 /obj/item/attachable/attached_gun/shotgun/m20a
-	name = "\improper U3 underbarrel shotgun"
-	desc = "An ARMAT U3 tactical shotgun. Integrated into the M20A Harrington rifle. Only capable of loading up to five buckshot shells."
+	name = "\improper U3 16-gauge overslung shotgun"
+	desc = "An ARMAT U3 tactical shotgun. Integrated into the M20A Harrington rifle. Only capable of loading up to five 16g buckshot shells."
 	icon_state = "masterkey"
 	attach_icon = "masterkey_a"
+	max_rounds = 5
+	current_rounds = 5
 	flags_attach_features = ATTACH_ACTIVATION|ATTACH_PROJECTILE|ATTACH_RELOADABLE|ATTACH_WEAPON
 	hidden = TRUE
-
+	ammo = /datum/ammo/bullet/shotgun/buckshot/light
+	accepted_ammo = /datum/ammo/bullet/shotgun/buckshot/light
+	fire_sound = 'sound/weapons/gun_shotgun_xm51.ogg'
+	attachment_firing_delay = 6
 
 /obj/item/attachable/attached_gun/shotgun/m20a/set_bullet_traits()
 	return
@@ -4551,7 +4625,7 @@ Defined in conflicts.dm of the #defines folder.
 
 	flags_attach_features = ATTACH_ACTIVATION
 
-/obj/item/attachable/bipod/m60/m38 // SS220 EDIT: M38 bipod for Dog War
+/obj/item/attachable/bipod/m60/m38
 	attach_icon = "bipod_m38_a"
 
 /obj/item/attachable/bipod/r81

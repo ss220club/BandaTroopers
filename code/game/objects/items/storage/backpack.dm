@@ -613,8 +613,16 @@ GLOBAL_LIST_EMPTY_TYPED(radio_packs, /obj/item/storage/backpack/marine/satchel/r
 /obj/item/storage/backpack/marine/satchel/rto/io
 	phone_category = PHONE_IO
 
+/obj/item/storage/backpack/marine/satchel/rto/canc
+	name = "\improper Type 559 Radio Telephone Pack"
+	icon_state = "upp_rto_backpack"
+	item_state = "upp_rto_backpack"
+	phone_category = PHONE_CANC_SOLDIER
+	networks_receive = list(FACTION_UPP)
+	networks_transmit = list(FACTION_UPP)
+
 /obj/item/storage/backpack/marine/smock
-	name = "\improper M3 sniper's smock"
+	name = "\improper camo smock"
 	desc = "A specially-designed smock with pockets for all your sniper needs."
 	icon_state = "smock"
 	worn_accessible = TRUE
@@ -642,6 +650,11 @@ GLOBAL_LIST_EMPTY_TYPED(radio_packs, /obj/item/storage/backpack/marine/satchel/r
 	worn_accessible = TRUE
 	has_gamemode_skin = FALSE //monkeysfist101 never sprited a snowtype but included duplicate icons. Why?? Recolor and touch up sprite at a later date.
 	xeno_types = null
+
+/obj/item/storage/backpack/marine/rocketpack/upp
+	name = "\improper 57-Sh-100 rocket bag"
+	desc = "A UPP-designed rocket bag that fits several types of rockets, grenades and missiles."
+	icon_state = "upp_rocketpack"
 
 /obj/item/storage/backpack/marine/grenadepack
 	name = "\improper USCM IMP M63A1 grenade satchel"
