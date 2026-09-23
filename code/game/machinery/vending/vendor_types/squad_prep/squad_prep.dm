@@ -138,7 +138,7 @@
 		list("M3 Pattern Gorget", round(scale * 15), /obj/item/clothing/accessory/pads/neckguard, VENDOR_ITEM_REGULAR),
 
 		list("BACKPACK", -1, null, null, null),
-		list("Lightweight IMP Backpack", floor(scale * 15), /obj/item/storage/backpack/marine, VENDOR_ITEM_REGULAR),
+		list("Lightweight IMP Backpack", floor(scale * 15), /obj/item/storage/backpack/marine/imp, VENDOR_ITEM_REGULAR),
 		list("Technician Backpack", floor(scale * 15), /obj/item/storage/backpack/marine/tech, VENDOR_ITEM_REGULAR),
 		list("USCM Satchel", floor(scale * 15), /obj/item/storage/backpack/marine/satchel, VENDOR_ITEM_REGULAR),
 		list("USCM Technical Satchel", floor(scale * 15), /obj/item/storage/backpack/marine/satchel/tech, VENDOR_ITEM_REGULAR),
@@ -594,7 +594,7 @@
 		list("M3 Pattern Kneepads", round(scale * 10), /obj/item/clothing/accessory/pads/kneepads/standard, VENDOR_ITEM_REGULAR),
 
 		list("BACKPACK", -1, null, null, null),
-		list("Lightweight IMP Backpack", round(scale * 15), /obj/item/storage/backpack/marine/standard, VENDOR_ITEM_REGULAR),
+		list("Lightweight IMP Backpack", round(scale * 15), /obj/item/storage/backpack/marine/imp, VENDOR_ITEM_REGULAR),
 		list("USCM Satchel", round(scale * 15), /obj/item/storage/backpack/marine/satchel, VENDOR_ITEM_REGULAR),
 		list("USCM Technical Satchel", floor(scale * 15), /obj/item/storage/backpack/marine/satchel/tech, VENDOR_ITEM_REGULAR),
 
@@ -933,7 +933,7 @@
 		list("Plastic Explosives", round(scale * 2), /obj/item/explosive/plastic, VENDOR_ITEM_REGULAR),
 		list("Breaching Charge", round(scale * 2), /obj/item/explosive/plastic/breaching_charge, VENDOR_ITEM_REGULAR),
 		list("RPG M83A2-C", floor(scale * 2.5), /obj/item/prop/folded_anti_tank_sadar/common, VENDOR_ITEM_REGULAR), // SS220 EDIT - RPG WEAPON
-		
+
 		list("FLARE AND LIGHT", -1, null, null),
 		list("Combat Flashlight", round(scale * 5), /obj/item/device/flashlight/combat, VENDOR_ITEM_REGULAR),
 		list("Box of Flashlight", round(scale * 1), /obj/item/ammo_box/magazine/misc/flashlight, VENDOR_ITEM_REGULAR),

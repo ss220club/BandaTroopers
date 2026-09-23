@@ -309,3 +309,52 @@
 
 ///The Zombie specifc multiplier to damage when calculating organ damage probability
 #define ZOMBIE_ORGAN_DAM_PROB_MULT 0.5
+
+// Armor level progression helpers
+/proc/get_next_armor_level(current_value)
+	var/static/list/armor_levels = list(
+		CLOTHING_ARMOR_NONE,
+		CLOTHING_ARMOR_VERYLOW,
+		CLOTHING_ARMOR_LOW,
+		CLOTHING_ARMOR_MEDIUMLOW,
+		CLOTHING_ARMOR_MEDIUM,
+		CLOTHING_ARMOR_MEDIUMHIGH,
+		CLOTHING_ARMOR_HIGH,
+		CLOTHING_ARMOR_HIGHPLUS,
+		CLOTHING_ARMOR_VERYHIGH,
+		CLOTHING_ARMOR_VERYHIGHPLUS,
+		CLOTHING_ARMOR_ULTRAHIGH,
+		CLOTHING_ARMOR_ULTRAHIGHPLUS,
+		CLOTHING_ARMOR_GIGAHIGH,
+		CLOTHING_ARMOR_GIGAHIGHPLUS,
+		CLOTHING_ARMOR_GIGAHIGHDOUBLEPLUSGOOD,
+		CLOTHING_ARMOR_HARDCORE
+	)
+	var/index = armor_levels.Find(current_value)
+	if(index && index < length(armor_levels))
+		return armor_levels[index + 1]
+	return current_value
+
+/proc/get_prev_armor_level(current_value)
+	var/static/list/armor_levels = list(
+		CLOTHING_ARMOR_NONE,
+		CLOTHING_ARMOR_VERYLOW,
+		CLOTHING_ARMOR_LOW,
+		CLOTHING_ARMOR_MEDIUMLOW,
+		CLOTHING_ARMOR_MEDIUM,
+		CLOTHING_ARMOR_MEDIUMHIGH,
+		CLOTHING_ARMOR_HIGH,
+		CLOTHING_ARMOR_HIGHPLUS,
+		CLOTHING_ARMOR_VERYHIGH,
+		CLOTHING_ARMOR_VERYHIGHPLUS,
+		CLOTHING_ARMOR_ULTRAHIGH,
+		CLOTHING_ARMOR_ULTRAHIGHPLUS,
+		CLOTHING_ARMOR_GIGAHIGH,
+		CLOTHING_ARMOR_GIGAHIGHPLUS,
+		CLOTHING_ARMOR_GIGAHIGHDOUBLEPLUSGOOD,
+		CLOTHING_ARMOR_HARDCORE
+	)
+	var/index = armor_levels.Find(current_value)
+	if(index && index > 1)
+		return armor_levels[index - 1]
+	return current_value

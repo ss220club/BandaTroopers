@@ -707,3 +707,13 @@
 	desc = "An unbelievably creepy cat clock that surveys the room with every tick and every tock."
 	icon = 'icons/obj/structures/props/catclock.dmi'
 	icon_state = "cat_clock_motion"
+
+/obj/structure/sign/prop1_alt
+	name = "\improper USCM Poster"
+	desc = "The symbol of the United States Colonial Marines corps, it's faded over time."
+	icon_state = "prop1_alt"
+
+/obj/structure/sign/prop1_alt2
+	name = "\improper Worn USCM Poster"
+	desc = "The symbol of the United States Colonial Marines corps, very worn and faded over time."
+	icon_state = "prop1_alt2"

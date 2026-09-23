@@ -479,9 +479,10 @@ GLOBAL_LIST_INIT(slot_to_contained_sprite_shorthand, list(
 #define ACCESSORY_SLOT_SGPAINT "SG Paint"
 #define ACCESSORY_SLOT_PAINT "Paint"
 #define ACCESSORY_SLOT_M3UTILITY "M3 Utility"
-#define ACCESSORY_SLOT_PLATE "USCM plate"
+#define ACCESSORY_SLOT_PLATE "M3 plate"
 #define ACCESSORY_SLOT_PLATE2 "TWE plate"
 #define ACCESSORY_SLOT_PLATE3 "UPP plate"
+#define ACCESSORY_SLOT_GASMASK "Gasmask"
 #define ACCESSORY_SLOT_M56UTILITY "M56 Utility"
 #define ACCESSORY_SLOT_WRIST_L "Left wrist"
 #define ACCESSORY_SLOT_WRIST_R "Right wrist"
@@ -494,6 +495,12 @@ GLOBAL_LIST_INIT(slot_to_contained_sprite_shorthand, list(
 #define ACCESSORY_SLOT_ARMOR_S "Armor storage"
 #define ACCESSORY_SLOT_ARMOR_M "Misc armor"
 #define ACCESSORY_SLOT_HELM_C "Helmet cover"
+
+// IMP backpack accessory slots
+#define IMP_SLOT_ETOOL   "imp_etool"
+#define IMP_SLOT_BEDROLL "imp_bedroll"
+#define IMP_SLOT_SADAR   "imp_sadar"
+#define IMP_SLOT_POUCH   "imp_pouch"
 //=================================================
 
 //=================================================
