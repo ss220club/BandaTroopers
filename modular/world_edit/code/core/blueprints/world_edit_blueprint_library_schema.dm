@@ -15,9 +15,9 @@
 		var/dx = text2num("[entry["dx"]]")
 		var/dy = text2num("[entry["dy"]]")
 		var/dz = text2num("[entry["dz"]]")
-		var/obj_path = text2path("[entry["type"]]")
+		var/atom_path = text2path("[entry["type"]]")
 		var/dir_value = text2num("[entry["dir"]]")
-		for(var/list/offset as anything in world_edit_get_blueprint_occupied_offsets(obj_path, dir_value))
+		for(var/list/offset as anything in world_edit_get_blueprint_occupied_offsets(atom_path, dir_value))
 			if(!islist(offset) || length(offset) < 2)
 				continue
 			var/occupied_dx = dx + (text2num("[offset[1]]") || 0)
@@ -56,6 +56,18 @@
 			return FALSE
 
 	return TRUE
+
+/datum/world_edit_blueprint_service/proc/world_edit_validate_blueprint_footprint_bounds(list/bounds)
+	if(!islist(bounds))
+		return "У шаблона отсутствуют bounds."
+
+	var/footprint_width = (text2num("[bounds["max_x"]]") - text2num("[bounds["min_x"]]")) + 1
+	var/footprint_height = (text2num("[bounds["max_y"]]") - text2num("[bounds["min_y"]]")) + 1
+	if(footprint_width <= 0 || footprint_height <= 0)
+		return "Шаблон содержит некорректные границы."
+	if(footprint_width > WORLD_EDIT_BLUEPRINT_MAX_DIMENSION || footprint_height > WORLD_EDIT_BLUEPRINT_MAX_DIMENSION)
+		return "Шаблон превышает лимит размера [WORLD_EDIT_BLUEPRINT_MAX_DIMENSION]x[WORLD_EDIT_BLUEPRINT_MAX_DIMENSION]."
+	return null
 
 /datum/world_edit_blueprint_service/proc/world_edit_validate_blueprint_entry_vars(obj_path, raw_vars)
 	var/list/rule = world_edit_get_blueprint_type_rule(obj_path)
@@ -115,8 +127,9 @@
 		return list("error" = "Запись шаблона должна быть списком.")
 
 	var/type_text = "[raw_entry["type"]]"
-	var/obj_path = text2path(type_text)
-	var/list/rule = world_edit_get_blueprint_type_rule(obj_path)
+	var/atom_path = text2path(type_text)
+	var/is_turf_entry = ispath(atom_path, /turf)
+	var/list/rule = is_turf_entry ? world_edit_get_blueprint_turf_rule(atom_path) : world_edit_get_blueprint_type_rule(atom_path)
 	if(!rule)
 		return list("error" = "В шаблоне указан неразрешенный тип '[type_text]'.")
 
@@ -136,12 +149,26 @@
 		if(!(dir_value in GLOB.cardinals))
 			return list("error" = "В шаблоне указано некардинальное направление.")
 
-	var/list/vars_result = world_edit_validate_blueprint_entry_vars(obj_path, raw_entry["vars"])
+	if(is_turf_entry)
+		if(islist(raw_entry["vars"]) && length(raw_entry["vars"]))
+			return list("error" = "Blueprint turf entries do not support vars.")
+		return list("entry" = list(
+			"kind" = "turf",
+			"type" = "[atom_path]",
+			"dx" = dx,
+			"dy" = dy,
+			"dz" = dz,
+			"dir" = SOUTH,
+			"vars" = list(),
+		))
+
+	var/list/vars_result = world_edit_validate_blueprint_entry_vars(atom_path, raw_entry["vars"])
 	if(vars_result["error"])
 		return vars_result
 
 	return list("entry" = list(
-		"type" = "[obj_path]",
+		"kind" = "object",
+		"type" = "[atom_path]",
 		"dx" = dx,
 		"dy" = dy,
 		"dz" = dz,
@@ -357,19 +384,13 @@
 
 /datum/world_edit_blueprint_service/proc/world_edit_validate_blueprint_definition(list/raw_definition)
 	if(!islist(raw_definition))
-		return list("error" = "Данные шаблона должны быть JSON-объектом.")
-	if("[raw_definition["schema"]]" != WORLD_EDIT_BLUEPRINT_SCHEMA)
-		return list("error" = "В шаблоне отсутствует schema или она не поддерживается.")
-
-	var/version = text2num("[raw_definition["version"]]")
-	if(version != WORLD_EDIT_BLUEPRINT_VERSION)
-		return list("error" = "Версия шаблона не поддерживается.")
+		return list("error" = "Данные шаблона должны быть объектом.")
 
 	var/blueprint_id = sanitize_filename("[raw_definition["id"]]")
 	if(!length(blueprint_id))
 		return list("error" = "У шаблона отсутствует id.")
 	if(length(blueprint_id) > WORLD_EDIT_BLUEPRINT_ID_LEN)
-		return list("error" = "id шаблона превышает лимит длины Phase 3A.")
+		return list("error" = "id шаблона превышает лимит длины.")
 
 	var/blueprint_name = trim(sanitize_text("[raw_definition["name"]]", ""))
 	if(!length(blueprint_name))
@@ -389,8 +410,12 @@
 		if(entry_result["error"])
 			return entry_result
 		var/list/sanitized_entry = entry_result["entry"]
-		var/obj_path = text2path("[sanitized_entry["type"]]")
-		var/list/coord_keys = world_edit_build_blueprint_relative_slot_keys(obj_path, sanitized_entry["dx"], sanitized_entry["dy"], sanitized_entry["dz"], sanitized_entry["dir"])
+		var/atom_path = text2path("[sanitized_entry["type"]]")
+		var/list/coord_keys = list()
+		if(ispath(atom_path, /turf))
+			coord_keys += "turf:[sanitized_entry["dx"]],[sanitized_entry["dy"]],[sanitized_entry["dz"]]"
+		else
+			coord_keys = world_edit_build_blueprint_relative_slot_keys(atom_path, sanitized_entry["dx"], sanitized_entry["dy"], sanitized_entry["dz"], sanitized_entry["dir"])
 		if(!length(coord_keys))
 			return list("error" = "В шаблоне указан недопустимый слот направленного размещения.")
 		for(var/coord_key as anything in coord_keys)
@@ -402,8 +427,11 @@
 	var/list/computed_bounds = world_edit_compute_blueprint_bounds(sanitized_entries)
 	if(computed_bounds["radius"] > WORLD_EDIT_BLUEPRINT_MAX_RADIUS)
 		return list("error" = "Шаблон превышает допустимый лимит радиуса.")
+	var/footprint_error = world_edit_validate_blueprint_footprint_bounds(computed_bounds)
+	if(footprint_error)
+		return list("error" = footprint_error)
 
-	if(!world_edit_blueprint_bounds_match(raw_definition["bounds"], computed_bounds))
+	if(islist(raw_definition["bounds"]) && !world_edit_blueprint_bounds_match(raw_definition["bounds"], computed_bounds))
 		return list("error" = "Метаданные bounds шаблона устарели или некорректны.")
 
 	var/list/outpost_recipe_result = world_edit_validate_outpost_recipe(raw_definition["outpost_recipe"])
@@ -415,11 +443,109 @@
 		"name" = blueprint_name,
 		"created_at" = "[raw_definition["created_at"] || ""]",
 		"created_by" = ckey("[raw_definition["created_by"]]"),
-		"source" = "[raw_definition["source"] || "server"]",
+		"source" = "[raw_definition["source"] || "dmm"]",
 		"bounds" = computed_bounds,
 		"entries" = sanitized_entries,
 		"outpost_recipe" = outpost_recipe_result["outpost_recipe"],
 	))
+
+/datum/world_edit_blueprint_service/proc/world_edit_get_blueprint_preview_category_priority(category)
+	switch("[category]")
+		if("mine")
+			return 60
+		if("sentry", "defense")
+			return 50
+		if("wire_object")
+			return 40
+		if("support_prop")
+			return 30
+		if("building_wall")
+			return 25
+		if("barricade")
+			return 20
+		if("building_object")
+			return 15
+		if("building_floor")
+			return 5
+	return 10
+
+/datum/world_edit_blueprint_service/proc/world_edit_get_blueprint_preview_tone(category)
+	switch("[category]")
+		if("mine")
+			return "mine"
+		if("sentry", "defense")
+			return "defense"
+		if("wire_object")
+			return "wire"
+		if("support_prop")
+			return "support"
+		if("building_wall")
+			return "wall"
+		if("building_floor")
+			return "floor"
+		if("building_object")
+			return "support"
+		if("barricade")
+			return "barricade"
+	return "other"
+
+/datum/world_edit_blueprint_service/proc/world_edit_build_blueprint_preview_cells(list/blueprint)
+	if(!islist(blueprint))
+		return list()
+	var/list/bounds = blueprint["bounds"]
+	var/list/entries = blueprint["entries"]
+	if(!islist(bounds) || !islist(entries) || !length(entries))
+		return list()
+
+	var/min_x = text2num("[bounds["min_x"]]")
+	var/max_x = text2num("[bounds["max_x"]]")
+	var/min_y = text2num("[bounds["min_y"]]")
+	var/max_y = text2num("[bounds["max_y"]]")
+	if(max_x < min_x || max_y < min_y)
+		return list()
+
+	var/list/cell_by_coord = list()
+	for(var/list/entry as anything in entries)
+		var/atom_path = text2path("[entry["type"]]")
+		var/list/rule = ispath(atom_path, /turf) ? world_edit_get_blueprint_turf_rule(atom_path) : world_edit_get_blueprint_type_rule(atom_path)
+		if(!islist(rule))
+			continue
+
+		var/category = "[rule["category"]]"
+		var/priority = world_edit_get_blueprint_preview_category_priority(category)
+		var/tone = world_edit_get_blueprint_preview_tone(category)
+		var/dx = text2num("[entry["dx"]]")
+		var/dy = text2num("[entry["dy"]]")
+		var/dir_value = text2num("[entry["dir"]]") || SOUTH
+		for(var/list/offset as anything in world_edit_get_blueprint_occupied_offsets(atom_path, dir_value))
+			if(!islist(offset) || length(offset) < 2)
+				continue
+			var/occupied_dx = dx + (text2num("[offset[1]]") || 0)
+			var/occupied_dy = dy + (text2num("[offset[2]]") || 0)
+			var/coord_key = "[occupied_dx],[occupied_dy]"
+			var/list/current_cell = cell_by_coord[coord_key]
+			if(islist(current_cell) && text2num("[current_cell["priority"]]") > priority)
+				continue
+			cell_by_coord[coord_key] = list(
+				"category" = category,
+				"tone" = tone,
+				"priority" = priority,
+			)
+
+	var/list/preview_cells = list()
+	for(var/map_y = max_y, map_y >= min_y, map_y--)
+		for(var/map_x = min_x, map_x <= max_x, map_x++)
+			var/list/cell = cell_by_coord["[map_x],[map_y]"]
+			if(!islist(cell))
+				continue
+			preview_cells += list(list(
+				"x" = (map_x - min_x) + 1,
+				"y" = (max_y - map_y) + 1,
+				"category" = cell["category"],
+				"tone" = cell["tone"],
+			))
+
+	return preview_cells
 
 /datum/world_edit_blueprint_service/proc/world_edit_build_blueprint_summary(list/blueprint, file_path = null, valid = TRUE, error_text = "")
 	var/list/bounds = blueprint["bounds"] || list()
@@ -437,6 +563,8 @@
 		"source" = blueprint["source"] || "",
 		"valid" = valid ? TRUE : FALSE,
 		"error" = error_text,
+		"preview_mode" = length(blueprint["entries"]) > WORLD_EDIT_BLUEPRINT_COMPACT_PREVIEW_ENTRY_THRESHOLD ? "compact" : "detail",
+		"preview_cells" = world_edit_build_blueprint_preview_cells(blueprint),
 	)
 	if(file_path)
 		summary["file_path"] = file_path

@@ -1,42 +1,55 @@
-# EVIDENCE
+# EVIDENCE - Canonical Building Layout correctness continuation
 
-## E-001: Starting state
-- Active task-state previously described `outpost_radius`, not the current instruction-normalization task.
-- Read-only review found contradictions across `AGENTS.md`, `WORKFLOW_RULES.md`, `.AI_AGENT/README.md`, and `POLICIES.md`.
+## Baseline discovery 2026-07-22
 
-## E-002: Plan mapping challenge
-- Status: PASS WITH RISKS before implementation.
-- Risk: instructions are stable guidance, so duplicated wording can drift again. Mitigation: keep `AGENTS.md` as the entrypoint and put detailed mechanics in `WORKFLOW_RULES.md`.
-- Risk: concise task-state conflicts with contract tables. Mitigation: explicitly allow concise tables and summaries while keeping raw logs outside Markdown.
-- Risk: tests can still be over-prioritized. Mitigation: split `Plan Fidelity` from `Verification` and make incomplete `MUST/KEEP/REJECT` block final "done".
+- `HEAD` and PR #99 head are `91afe9c71c4a5e156c73d4972caac292e4745394`; PR remains draft.
+- Worktree contains only the user's appended `17.07.06_review.md`; it is preserved untouched.
+- The one production entrypoint remains `build_building_layout_candidate_state() -> solve_building_layout() -> emit_building_layout_plan()`.
+- `modular/modular.dme` includes `world_edit/_world_edit.dme`; that include file still loads canonical solver plus legacy semantic, room-graph and BSP layers.
+- Existing local reports: living/hydroponics/workshop supported; kitchen/laboratory/dormitory/storage `no_solution`. They lack SHA metadata and are not final baseline evidence.
+- GitHub checks for this SHA: Windows Build and unit matrices succeeded; Run Linters, OpenDream lint and MapDiffBot2 failed.
 
-## E-003: Expected old contradictions to remove
-- "Large work" must not be the gate when a user-approved plan exists.
-- Task-state edits must not be confused with product-code/docs implementation edits.
-- `PASS WITH RISKS` must not allow known plan-changing risks.
-- `BLOCKED` must not become permission for fallback.
-- Subagents must not be implied unless explicitly permitted by user and higher-priority instructions.
+## Confirmed P0 code paths
 
-## E-004: Implementation result
-- `AGENTS.md` now defines read-only discovery, planning-mutation, and implementation-правки before product/stable-doc edits.
-- `.AI_AGENT/README.md` now allows compact contract/fidelity tables and removes the old "new large task" lifecycle gate.
-- `WORKFLOW_RULES.md` now has one approved-plan order, explicit challenge outcomes, forbidden substitutions, old-path audit, pre-final sync, and separate Plan Fidelity/Verification status.
-- `POLICIES.md` now routes approved plans through task-state contract and challenge instead of generic alternatives, and blocks hotfix/wrapper/fallback substitution.
+- Family `hard_validate()` only checks family id and non-empty rooms; `route_hints` are seed metadata and are not consumed by terminal A*.
+- Candidate connection compilation converts every non-functional topology endpoint to the literal `route`.
+- Connection/opening datums overload `kind`; room `route_opening_kind` overrides topology edge kind.
+- Beam conflict reserves a one-tile ring for every room, all non-route edge kinds use the same partition overlap check, and the first route-feasible complete partial wins.
+- Terminal A* intentionally selects the farthest first terminal; entry ownership uses insertion order rather than BFS distance.
+- Partitions are room-perimeter wall turfs plus `materialize_building_layout_partition_corner_joins()`; `open_bay_perimeter` can force the root open.
+- Residual counting only sees route cells labelled `circulation_open_bay`, so unlabeled interior can false-green.
+- Room preferred area still includes equal division of useful area; composition satisfaction uses fixture count credit and required generic fallback remains available.
+- Old route/overlay helpers and duplicate canyon computation remain in the compiled source; topology signature includes exact room/route coordinates.
 
-## E-005: Verification
-- PASS: `git diff --check`.
-- PASS: `rg` check for removed contradiction phrases. The only hit was the intended `без готового пользовательского плана` wording in `POLICIES.md`.
-- PASS: mojibake scan; the only hits are intentional `Р...` examples in `WORKFLOW_RULES.md` and this evidence note.
+## SHA-bound baseline 2026-07-31
+
+- Python tooling syntax check passed; Werror build passed with `0 errors, 0 warnings`.
+- The bounded runtime wait fixed the startup race: all seven cases produced matching `report.json`, `semantic.json`, `semantic.png` and `semantic_sprites.png` with `source_sha=91afe9c71c4a5e156c73d4972caac292e4745394`.
+- `building_workshop_target_rooms_6` is the only supported case (`open_bay_perimeter`, 4 hard-valid candidates, zero expectation diffs).
+- Living, hydroponics, kitchen, laboratory, dormitory and storage are honest `program.insufficient_footprint` / `no_solution` failures with 18/8/6/6/7/7 expectation diffs respectively.
+- Immutable artifacts and workflow log are preserved under `.AI_AGENT/logs/building_layout_baseline_91afe9c_20260731/`; no DreamDaemon process remains.
+
+## Self plan-mapping challenge
+
+Status: PASS WITH RISKS
+
+Revalidated against unchanged `HEAD` on 2026-07-31 after explicit user approval. The entrypoint, P0 callsites, forbidden substitutions and unrelated review-document diff are unchanged; implementation may proceed in the recorded dependency order.
+
+- PASS: all 18 review blockers map to existing canonical solver files and can be fixed without changing the public generator entrypoint.
+- PASS: the old route/overlay definitions are not used by the current allocation orchestration and can be removed after exact callsite checks.
+- PASS: current datums provide migration points for typed policies, segment ownership and composition recipes.
+- RISK: deleting false-green paths will keep several cases red until later stages. Mitigation: preserve immutable expectations and report stage-specific failures.
+- RISK: typed circulation IDs affect route terminal, opening, validator and semantic export consumers together. Mitigation: change the contract and all callsites atomically with focused tests.
+- RISK: real nested geometry conflicts with the current universal partition ring. Mitigation: edge-specific candidate generation and a nested ownership model must land in the same slice.
+- RISK: canonical partition segments touch openings and wall validation. Mitigation: segment extraction precedes materialization; no compatibility rasterizer remains reachable.
+- RISK: legacy semantic helpers may still have productive callsites outside solver orchestration. Mitigation: migrate only proven reusable helpers, then require definition/include/callsite zero audits.
 
 ## Plan fidelity matrix
-| ID | Type | Requirement | Evidence | Status |
-| --- | --- | --- | --- | --- |
-| M1 | MUST | Approved plans do not depend on "large work" threshold. | `AGENTS.md`, `README.md`, `WORKFLOW_RULES.md`; `rg` check. | DONE |
-| M2 | MUST | One ordered workflow exists. | `WORKFLOW_RULES.md` approved-plan order. | DONE |
-| M3 | MUST | Planning task-state edits are separate from implementation edits. | `AGENTS.md` and `WORKFLOW_RULES.md` planning-mutation wording. | DONE |
-| M4 | MUST | `PASS WITH RISKS`, `BLOCKED`, and incomplete contract items cannot hide false done. | `WORKFLOW_RULES.md`, `POLICIES.md`. | DONE |
-| M5 | MUST | Verification cannot replace plan fidelity. | `AGENTS.md`, `WORKFLOW_RULES.md`, `POLICIES.md`. | DONE |
-| M6 | MUST | Subagents require explicit user/higher-priority permission; otherwise self-challenge. | `AGENTS.md`, `WORKFLOW_RULES.md`. | DONE |
-| K1 | KEEP | Preserve modular-first, `rg`, build, UTF-8, and non-destructive git guidance. | Existing rules retained and clarified. | DONE |
-| R1 | REJECT | Avoid another overlapping layer. | Contradictory thresholds replaced in the affected sections. | DONE |
-| C1 | CHECK | Docs-level checks pass. | `git diff --check`, `rg` scans. | DONE |
+
+| ID | Requirement | Evidence | Status |
+| --- | --- | --- | --- |
+| M1 | Refresh exact-HEAD baseline and task contract. | SHA-bound baseline section and preserved artifacts. | DONE |
+| M2-M9 | Remove masks; implement typed families/allocation/route/partition/composition/quality. | Source diff, focused units, reports and old-path audits. | PENDING |
+| K1 | Preserve canonical public/runtime contracts. | Entrypoint/include and preview/apply/undo audits. | ACTIVE |
+| R1 | No alternate/fallback/visual repair. | Forbidden-token and callsite audits. | ACTIVE |
+| C1-C3 | Fixed artifacts, compile/units, full matrix/smoke/final audit. | Fresh logs and summaries. | PENDING |

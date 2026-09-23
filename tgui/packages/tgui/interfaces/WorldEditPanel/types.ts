@@ -18,6 +18,9 @@ export type UiFieldOption = {
   label: string;
   value: unknown;
   description?: string;
+  disabled?: boolean;
+  locked?: boolean;
+  lockReason?: string;
 };
 
 export type UiField = {
@@ -68,6 +71,7 @@ export type ChangesetSummary = {
   undo_policy: string;
   created_entries: number;
   moved_entries: number;
+  changed_turf_entries?: number;
   owned_effect_entries: number;
   created_at: string;
   can_undo: boolean;
@@ -79,6 +83,69 @@ export type PlacementOption = {
   label: string;
   value: string;
   description?: string;
+  locked?: boolean;
+  shape_locked?: boolean;
+  request_locked?: boolean;
+  lockReason?: string;
+  lock_code?: string;
+  status?: string;
+  can_preview?: boolean;
+  can_apply?: boolean;
+};
+
+export type BuildingLayoutCapabilityProgram = {
+  id: string;
+  label?: string;
+  suggested_style_id?: string;
+  required_slots?: string[];
+  required_capabilities?: string[];
+};
+
+export type BuildingLayoutCapabilityProvider = {
+  id: string;
+  label?: string;
+  slot_id?: string;
+  object_path?: string;
+  capabilities?: string[];
+};
+
+export type BuildingLayoutCapabilityStyle = {
+  id: string;
+  label?: string;
+  capabilities?: string[];
+  providers_by_capability?: Record<string, BuildingLayoutCapabilityProvider[]>;
+};
+
+export type BuildingLayoutCompatibilityRow = {
+  program_id: string;
+  style_id: string;
+  supported: boolean;
+  lock_code?: string;
+  missing_slots?: string[];
+  missing_capabilities?: string[];
+};
+
+export type BuildingLayoutCapabilityMatrix = {
+  programs?: Record<string, BuildingLayoutCapabilityProgram>;
+  styles?: Record<string, BuildingLayoutCapabilityStyle>;
+  compatibility?: {
+    rows?: BuildingLayoutCompatibilityRow[];
+    by_key?: Record<string, BuildingLayoutCompatibilityRow>;
+  };
+};
+
+export type BuildingLayoutGeneratorPayload = {
+  schema_version?: number;
+  current_program_id?: string;
+  current_style_id?: string;
+  current_error?: string;
+  current_error_code?: string;
+  capability_matrix?: BuildingLayoutCapabilityMatrix;
+};
+
+export type GeneratorPayload = {
+  building_layout?: BuildingLayoutGeneratorPayload;
+  [generatorId: string]: unknown;
 };
 
 export type PresetEntry = {
@@ -108,6 +175,24 @@ export type BlueprintEntry = {
   has_outpost_recipe?: boolean;
   outpost_defense_profile?: string;
   outpost_layout_variant?: string;
+  preview_mode?: 'detail' | 'compact';
+  preview_cells?: BlueprintPreviewCell[];
+};
+
+export type ActiveBlueprintPreview = {
+  mode?: 'sprite' | 'schematic';
+  image_url?: string;
+  width?: number;
+  height?: number;
+  entry_count?: number;
+  reason?: string;
+};
+
+export type BlueprintPreviewCell = {
+  x: number;
+  y: number;
+  category: string;
+  tone: string;
 };
 
 export type BackendData = {
@@ -117,6 +202,7 @@ export type BackendData = {
   current_generator_supports_preview: boolean;
   requires_preview_before_apply: boolean;
   ui_fields: UiField[];
+  generator_payload?: GeneratorPayload;
   placement_supported: boolean;
   placement_active: boolean;
   placement_mode: string;
@@ -142,6 +228,7 @@ export type BackendData = {
   preset_entries: PresetEntry[];
   blueprint_entries: BlueprintEntry[];
   active_blueprint_id?: string;
+  active_blueprint_preview?: ActiveBlueprintPreview;
   can_save_blueprint_from_plan: boolean;
   confirm_before_apply: boolean;
   last_ui_error: string;
@@ -182,6 +269,7 @@ export type ChoiceOption = {
   value: string;
   displayText: string;
   tooltip?: string;
+  disabled?: boolean;
 };
 
 export type ShapeGlyphSpec = {

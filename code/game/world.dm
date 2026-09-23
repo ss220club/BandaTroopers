@@ -54,16 +54,19 @@ GLOBAL_LIST_INIT(reboot_sfx, file2list("config/reboot_sfx.txt"))
 
 	init_global_referenced_datums()
 
-	// SS220 EDIT - START: UNIT_TESTS should only enter automated test flow when run_tests is passed explicitly
+	// SS220 EDIT - START: explicit automation params control headless test/acceptance flow
 	var/testing_locally = (world.params && world.params["local_test"])
+	var/running_world_edit_acceptance = (world.params && world.params["world_edit_acceptance"])
 	var/running_tests = (world.params && world.params["run_tests"])
+	var/running_headless_automation = running_tests || running_world_edit_acceptance
 	#ifdef AUTOWIKI
 	// running_tests = TRUE
 	running_tests = TRUE
+	running_headless_automation = TRUE
 	#endif
 	// SS220 EDIT - END
-	// Only do offline sleeping when the server isn't running unit tests or hosting a local dev test
-	sleep_offline = (!running_tests && !testing_locally)
+	// Only do offline sleeping when the server isn't running unit tests or hosting a local dev test.
+	sleep_offline = (!running_headless_automation && !testing_locally)
 
 	if(!GLOB.RoleAuthority)
 		GLOB.RoleAuthority = new /datum/authority/branch/role()
@@ -84,6 +87,13 @@ GLOBAL_LIST_INIT(reboot_sfx, file2list("config/reboot_sfx.txt"))
 	if(running_tests)
 		HandleTestRun()
 	#endif
+	// SS220 EDIT - END
+
+	// SS220 EDIT - START: explicit one-shot World Edit acceptance runner
+	if(running_world_edit_acceptance)
+		run_world_edit_visual_acceptance_from_params()
+		shutdown()
+		return
 	// SS220 EDIT - END
 
 	#ifdef AUTOWIKI

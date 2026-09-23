@@ -36,6 +36,9 @@ GLOBAL_LIST_EMPTY(world_edit_managers_by_client)
 	var/blueprint_recent_usage_sequence = 0
 	var/active_blueprint_revision_id = null
 	var/active_blueprint_revision_hash = ""
+	var/active_blueprint_sprite_preview_revision_id = null
+	var/active_blueprint_sprite_preview_revision_hash = ""
+	var/list/active_blueprint_sprite_preview_cache = null
 	var/confirm_before_apply = TRUE
 
 	var/datum/click_intercept_previous
@@ -81,6 +84,9 @@ GLOBAL_LIST_EMPTY(world_edit_managers_by_client)
 	blueprint_recent_usage_sequence = 0
 	active_blueprint_revision_id = null
 	active_blueprint_revision_hash = ""
+	active_blueprint_sprite_preview_revision_id = null
+	active_blueprint_sprite_preview_revision_hash = ""
+	active_blueprint_sprite_preview_cache = null
 	preview_images = list()
 	preview_groups_signature = null
 	current_params = list()
@@ -119,6 +125,9 @@ GLOBAL_LIST_EMPTY(world_edit_managers_by_client)
 	blueprint_recent_usage = null
 	active_blueprint_revision_id = null
 	active_blueprint_revision_hash = null
+	active_blueprint_sprite_preview_revision_id = null
+	active_blueprint_sprite_preview_revision_hash = null
+	active_blueprint_sprite_preview_cache = null
 	if(holder && GLOB.world_edit_managers_by_client[holder] == src)
 		GLOB.world_edit_managers_by_client[holder] = null
 	holder = null

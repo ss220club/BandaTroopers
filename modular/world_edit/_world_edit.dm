@@ -5,6 +5,3 @@
 
 /datum/modpack/world_edit/pre_initialize()
 	. = ..()
-
-/datum/modpack/world_edit/initialize()
-	. = ..()

@@ -2,6 +2,48 @@ GLOBAL_DATUM_INIT(world_edit_helpers, /datum/world_edit_helpers, new)
 
 /datum/world_edit_helpers
 
+/// Безопасное удаление объектов World Edit (особенно неинициализированных).
+/// Защищает от runtimes в Destroy() объектов, которые были созданы и сразу удалены.
+/datum/world_edit_helpers/proc/safe_qdel(atom/target)
+	if(!target)
+		return
+	var/turf/current_turf = get_turf(target)
+	if(isobj(target) && current_turf)
+		if(("area" in target.vars) && isnull(target.vars["area"]))
+			target.vars["area"] = current_turf.loc
+		if(("alarm_area" in target.vars) && isnull(target.vars["alarm_area"]))
+			target.vars["alarm_area"] = current_turf.loc
+	qdel(target)
+
+/// Выравнивает настенный объект к стене, смещая его пиксельно.
+/// Объект спавнится на полу и визуально сдвигается на стену.
+/datum/world_edit_helpers/proc/align_object_to_wall(obj/target, direction)
+	if(!istype(target) || !(direction in GLOB.cardinals))
+		return
+	
+	var/should_align = FALSE
+	if(istype(target, /obj/structure/machinery/power/apc) || \
+		istype(target, /obj/structure/machinery/alarm) || \
+		istype(target, /obj/structure/machinery/firealarm) || \
+		istype(target, /obj/structure/machinery/light_switch) || \
+		istype(target, /obj/structure/machinery/light) || \
+		istype(target, /obj/item/device/radio/intercom))
+		should_align = TRUE
+
+	if(!should_align)
+		return
+
+	switch(direction)
+		if(NORTH)
+			target.pixel_y = 32
+		if(SOUTH)
+			target.pixel_y = -32
+		if(EAST)
+			target.pixel_x = 32
+		if(WEST)
+			target.pixel_x = -32
+
+
 /datum/world_edit_helpers/proc/parse_bool(value)
 	if(isnull(value))
 		return FALSE
@@ -463,12 +505,11 @@ GLOBAL_DATUM_INIT(world_edit_helpers, /datum/world_edit_helpers, new)
 		"color" = color,
 	)
 
-/datum/world_edit_helpers/proc/build_world_edit_preview_object_spec(turf/target_turf, icon_file, icon_state = null, dir_to_use = SOUTH, layer = null, plane = null, pixel_x = 0, pixel_y = 0, alpha = 230, color = null, list/overlays = null)
-	if(!istype(target_turf) || isnull(icon_file))
+/datum/world_edit_helpers/proc/build_world_edit_preview_appearance_spec(icon_file, icon_state = null, dir_to_use = SOUTH, layer = null, plane = null, pixel_x = 0, pixel_y = 0, alpha = 230, color = null, list/overlays = null)
+	if(isnull(icon_file))
 		return null
 
 	return list(
-		"turf" = target_turf,
 		"icon" = icon_file,
 		"icon_state" = icon_state,
 		"dir" = is_cardinal_dir(dir_to_use) ? dir_to_use : SOUTH,
@@ -480,6 +521,27 @@ GLOBAL_DATUM_INIT(world_edit_helpers, /datum/world_edit_helpers, new)
 		"color" = color,
 		"overlays" = islist(overlays) ? overlays.Copy() : list(),
 	)
+
+/datum/world_edit_helpers/proc/build_world_edit_preview_object_spec(turf/target_turf, icon_file, icon_state = null, dir_to_use = SOUTH, layer = null, plane = null, pixel_x = 0, pixel_y = 0, alpha = 230, color = null, list/overlays = null)
+	if(!istype(target_turf) || isnull(icon_file))
+		return null
+
+	var/list/spec = build_world_edit_preview_appearance_spec(
+		icon_file,
+		icon_state,
+		dir_to_use,
+		layer,
+		plane,
+		pixel_x,
+		pixel_y,
+		alpha,
+		color,
+		overlays,
+	)
+	if(!islist(spec))
+		return null
+	spec["turf"] = target_turf
+	return spec
 
 /datum/world_edit_helpers/proc/get_world_edit_barricade_preview_layer(obj_path, dir_to_use)
 	if(!ispath(obj_path, /obj/structure/barricade))
@@ -502,8 +564,8 @@ GLOBAL_DATUM_INIT(world_edit_helpers, /datum/world_edit_helpers, new)
 
 	return resolved_layer
 
-/datum/world_edit_helpers/proc/build_world_edit_barricade_preview_spec(obj_path, turf/target_turf, dir_to_use = SOUTH)
-	if(!ispath(obj_path, /obj/structure/barricade) || !istype(target_turf))
+/datum/world_edit_helpers/proc/build_world_edit_barricade_preview_appearance_spec(obj_path, dir_to_use = SOUTH, alpha = 230)
+	if(!ispath(obj_path, /obj/structure/barricade))
 		return null
 
 	var/obj/structure/barricade/preview_barricade = obj_path
@@ -521,10 +583,9 @@ GLOBAL_DATUM_INIT(world_edit_helpers, /datum/world_edit_helpers, new)
 	if(is_wired)
 		var/barricade_type = "[initial(preview_barricade.barricade_type)]"
 		if(length(barricade_type))
-			overlay_specs += list(build_world_edit_preview_overlay_spec(icon_file, "[barricade_type]_wire", dir_to_use, 0, pixel_y))
+			overlay_specs += list(build_world_edit_preview_overlay_spec(icon_file, "[barricade_type]_wire", dir_to_use, 0, pixel_y, alpha))
 
-	return build_world_edit_preview_object_spec(
-		target_turf,
+	return build_world_edit_preview_appearance_spec(
 		icon_file,
 		icon_state,
 		dir_to_use,
@@ -532,13 +593,22 @@ GLOBAL_DATUM_INIT(world_edit_helpers, /datum/world_edit_helpers, new)
 		initial(preview_barricade.plane),
 		0,
 		pixel_y,
-		230,
+		alpha,
 		null,
 		overlay_specs,
 	)
 
-/datum/world_edit_helpers/proc/build_world_edit_sentry_preview_spec(obj_path, turf/target_turf, dir_to_use = SOUTH, turned_on = TRUE)
-	if(!ispath(obj_path, /obj/structure/machinery/defenses/sentry) || !istype(target_turf))
+/datum/world_edit_helpers/proc/build_world_edit_barricade_preview_spec(obj_path, turf/target_turf, dir_to_use = SOUTH)
+	if(!istype(target_turf))
+		return null
+	var/list/spec = build_world_edit_barricade_preview_appearance_spec(obj_path, dir_to_use)
+	if(!islist(spec))
+		return null
+	spec["turf"] = target_turf
+	return spec
+
+/datum/world_edit_helpers/proc/build_world_edit_sentry_preview_appearance_spec(obj_path, dir_to_use = SOUTH, turned_on = TRUE, alpha = 230)
+	if(!ispath(obj_path, /obj/structure/machinery/defenses/sentry))
 		return null
 
 	var/obj/structure/machinery/defenses/sentry/preview_sentry = obj_path
@@ -549,10 +619,9 @@ GLOBAL_DATUM_INIT(world_edit_helpers, /datum/world_edit_helpers, new)
 	var/list/overlay_specs = list()
 	if(length(defense_type) && length(sentry_type))
 		var/overlay_state = turned_on ? "[defense_type] [sentry_type]_on" : "[defense_type] [sentry_type]"
-		overlay_specs += list(build_world_edit_preview_overlay_spec(icon_file, overlay_state, dir_to_use))
+		overlay_specs += list(build_world_edit_preview_overlay_spec(icon_file, overlay_state, dir_to_use, 0, 0, alpha))
 
-	return build_world_edit_preview_object_spec(
-		target_turf,
+	return build_world_edit_preview_appearance_spec(
 		icon_file,
 		length("[icon_state]") ? "[icon_state]" : null,
 		dir_to_use,
@@ -560,17 +629,26 @@ GLOBAL_DATUM_INIT(world_edit_helpers, /datum/world_edit_helpers, new)
 		initial(preview_sentry.plane),
 		0,
 		0,
-		230,
+		alpha,
 		null,
 		overlay_specs,
 	)
 
-/datum/world_edit_helpers/proc/build_world_edit_atom_preview_spec(obj_path, turf/target_turf, dir_to_use = SOUTH, list/entry_vars = null)
-	if(!ispath(obj_path, /obj) || !istype(target_turf))
+/datum/world_edit_helpers/proc/build_world_edit_sentry_preview_spec(obj_path, turf/target_turf, dir_to_use = SOUTH, turned_on = TRUE)
+	if(!istype(target_turf))
+		return null
+	var/list/spec = build_world_edit_sentry_preview_appearance_spec(obj_path, dir_to_use, turned_on)
+	if(!islist(spec))
+		return null
+	spec["turf"] = target_turf
+	return spec
+
+/datum/world_edit_helpers/proc/build_world_edit_atom_preview_appearance_spec(obj_path, dir_to_use = SOUTH, list/entry_vars = null, alpha = 230)
+	if(!ispath(obj_path, /obj))
 		return null
 
 	if(ispath(obj_path, /obj/structure/barricade))
-		return build_world_edit_barricade_preview_spec(obj_path, target_turf, dir_to_use)
+		return build_world_edit_barricade_preview_appearance_spec(obj_path, dir_to_use, alpha)
 	if(ispath(obj_path, /obj/structure/covenant_barricade/wide))
 		var/obj/structure/covenant_barricade/wide/preview_barrier = obj_path
 		var/pixel_x = 0
@@ -581,8 +659,7 @@ GLOBAL_DATUM_INIT(world_edit_helpers, /datum/world_edit_helpers, new)
 				pixel_x = -16
 			if(EAST, WEST)
 				overlay_pixel_y = 64
-		return build_world_edit_preview_object_spec(
-			target_turf,
+		return build_world_edit_preview_appearance_spec(
 			initial(preview_barrier.icon),
 			initial(preview_barrier.icon_state),
 			dir_to_use,
@@ -590,20 +667,19 @@ GLOBAL_DATUM_INIT(world_edit_helpers, /datum/world_edit_helpers, new)
 			initial(preview_barrier.plane),
 			pixel_x,
 			pixel_y,
-			230,
+			alpha,
 			null,
-			list(build_world_edit_preview_overlay_spec(initial(preview_barrier.icon), "[initial(preview_barrier.icon_state)]_o", dir_to_use, 0, overlay_pixel_y)),
+			list(build_world_edit_preview_overlay_spec(initial(preview_barrier.icon), "[initial(preview_barrier.icon_state)]_o", dir_to_use, 0, overlay_pixel_y, alpha)),
 		)
 	if(ispath(obj_path, /obj/structure/machinery/defenses/sentry))
-		return build_world_edit_sentry_preview_spec(obj_path, target_turf, dir_to_use, parse_bool(islist(entry_vars) ? entry_vars["turned_on"] : null))
+		return build_world_edit_sentry_preview_appearance_spec(obj_path, dir_to_use, parse_bool(islist(entry_vars) ? entry_vars["turned_on"] : null), alpha)
 
 	var/atom/spawn_atom = obj_path
 	var/icon_file = initial(spawn_atom.icon)
 	if(isnull(icon_file))
 		return null
 
-	return build_world_edit_preview_object_spec(
-		target_turf,
+	return build_world_edit_preview_appearance_spec(
 		icon_file,
 		length("[initial(spawn_atom.icon_state)]") ? "[initial(spawn_atom.icon_state)]" : null,
 		is_cardinal_dir(dir_to_use) ? dir_to_use : initial(spawn_atom.dir),
@@ -611,10 +687,19 @@ GLOBAL_DATUM_INIT(world_edit_helpers, /datum/world_edit_helpers, new)
 		initial(spawn_atom.plane),
 		initial(spawn_atom.pixel_x),
 		initial(spawn_atom.pixel_y),
-		230,
+		alpha,
 		null,
 		null,
 	)
+
+/datum/world_edit_helpers/proc/build_world_edit_atom_preview_spec(obj_path, turf/target_turf, dir_to_use = SOUTH, list/entry_vars = null)
+	if(!istype(target_turf))
+		return null
+	var/list/spec = build_world_edit_atom_preview_appearance_spec(obj_path, dir_to_use, entry_vars)
+	if(!islist(spec))
+		return null
+	spec["turf"] = target_turf
+	return spec
 
 /datum/world_edit_helpers/proc/build_grouped_turf_preview_signature(list/groups)
 	if(!islist(groups) || !length(groups))

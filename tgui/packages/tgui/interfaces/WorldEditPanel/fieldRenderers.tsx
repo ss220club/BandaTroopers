@@ -5,6 +5,7 @@ import {
   Flex,
   Input,
   NumberInput,
+  Slider,
 } from '../../components';
 import {
   PLACEMENT_SHAPE_GLYPHS,
@@ -23,6 +24,8 @@ type FieldChoiceOption = {
   value: string;
   displayText: string;
   rawValue: unknown;
+  disabled?: boolean;
+  tooltip?: string;
 };
 
 type FieldControlOptions = {
@@ -48,13 +51,15 @@ const ChoiceStrip = (props: {
     <Flex wrap mx={-0.15}>
       {options.map((option) => {
         const isSelected = `${option.value}` === `${selected}`;
+        const isOptionDisabled = disabled || !!option.disabled;
         return (
           <Flex.Item key={option.value} grow basis={itemBasis} m={0.15}>
             <Button
               compact
               fluid
               selected={isSelected}
-              disabled={disabled}
+              disabled={isOptionDisabled}
+              tooltip={option.tooltip}
               onClick={() => onSelected(option.value)}
             >
               {option.displayText}
@@ -118,6 +123,8 @@ const getFieldChoiceOptions = (field?: UiField): FieldChoiceOption[] =>
       option.value,
     ),
     rawValue: option.value,
+    disabled: !!(option.disabled || option.locked),
+    tooltip: option.lockReason || option.description,
   }));
 
 const getSelectedFieldChoiceValue = (field?: UiField) =>
@@ -153,10 +160,15 @@ const ShapeOptionStrip = (props: {
       }}
     >
       {orderedValues.map((value) => {
+        const option = options.find((entry) => `${entry.value}` === value);
         const label = getTranslatedShapeLabel(value);
         const glyph = PLACEMENT_SHAPE_GLYPHS[value]?.glyph || '•';
         const isAvailable = availableValues.has(value);
+        const isLocked = !!(option?.locked || option?.shape_locked);
         const isSelected = isAvailable && value === selected;
+        const lockReason = `${option?.lockReason || option?.description || ''}`;
+        const tooltip =
+          isLocked && lockReason ? `${label}: ${lockReason}` : label;
 
         return (
           <Button
@@ -165,8 +177,8 @@ const ShapeOptionStrip = (props: {
             verticalAlignContent="middle"
             selected={isSelected}
             color={isSelected ? 'good' : undefined}
-            disabled={disabled || !isAvailable}
-            tooltip={label}
+            disabled={disabled || !isAvailable || isLocked}
+            tooltip={tooltip}
             onClick={() => onSelected(value)}
             style={{
               width: '100%',
@@ -221,6 +233,7 @@ const CompactChoiceStrip = (props: {
     <Flex wrap mx={-0.12}>
       {options.map((option) => {
         const isSelected = `${option.value}` === `${selected}`;
+        const isOptionDisabled = disabled || !!option.disabled;
         return (
           <Flex.Item key={option.value} m={0.12}>
             <Button
@@ -228,7 +241,8 @@ const CompactChoiceStrip = (props: {
               verticalAlignContent="middle"
               selected={isSelected}
               color={isSelected ? 'good' : undefined}
-              disabled={disabled}
+              disabled={isOptionDisabled}
+              tooltip={option.tooltip}
               onClick={() => onSelected(option.value)}
               style={{
                 minWidth: buttonMinWidth,
@@ -271,6 +285,32 @@ const renderFieldControl = (
   }
 
   if (field.kind === 'number') {
+    const minValue = Number(field.min);
+    const maxValue = Number(field.max);
+    const hasBoundedRange =
+      Number.isFinite(minValue) &&
+      Number.isFinite(maxValue) &&
+      maxValue > minValue;
+    const rawValue = Number(field.value);
+    const numericValue = Number.isFinite(rawValue) ? rawValue : minValue;
+
+    if (hasBoundedRange) {
+      const boundedValue = Math.min(Math.max(numericValue, minValue), maxValue);
+      return (
+        <Slider
+          key={`${field.id}_${String(field.label ?? '')}_${String(field.min ?? '')}_${String(field.max ?? '')}`}
+          value={boundedValue}
+          minValue={minValue}
+          maxValue={maxValue}
+          step={field.step || 1}
+          stepPixelSize={5}
+          onChange={
+            isDisabled ? undefined : (_event, value) => emitValue(value)
+          }
+        />
+      );
+    }
+
     return (
       <NumberInput
         key={`${field.id}_${String(field.label ?? '')}_${String(field.min ?? '')}_${String(field.max ?? '')}`}
@@ -300,6 +340,7 @@ const renderFieldControl = (
   if (field.kind === 'select') {
     const choiceOptions = getFieldChoiceOptions(field);
     const selected = getSelectedFieldChoiceValue(field);
+    const hasLockedOptions = choiceOptions.some((option) => option.disabled);
     const handleSelected = (selectedOptionValue: string) => {
       const selectedOption = choiceOptions.find(
         (option) => option.value === `${selectedOptionValue}`,
@@ -307,7 +348,7 @@ const renderFieldControl = (
       emitValue(selectedOption?.rawValue);
     };
 
-    return forceChoiceStrip ? (
+    return forceChoiceStrip || hasLockedOptions ? (
       <ChoiceStrip
         options={choiceOptions}
         selected={selected}

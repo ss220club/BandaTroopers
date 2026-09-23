@@ -20,6 +20,8 @@
 		message = "Предпросмотр размещения готов: форма=[shape_label], режим=[mode_label], опор=[anchor_count], действий=[entry_label], направление=[metadata["placement_dir_label"]]."
 		if(collector_point_count)
 			message += " Точек в сборе=[collector_point_count]."
+	if(GLOB.world_edit_helpers.parse_bool(metadata["will_replace_blocked_turfs"]) && round(text2num("[metadata["replace_blocked_turf_count"]]") || 0) > 0)
+		message += " Will replace blocked turfs: [metadata["replace_blocked_turf_count"]]."
 	return message
 
 /datum/world_edit_manager/proc/build_safe_placement_confirm_text(datum/world_edit_plan/plan)
@@ -33,7 +35,10 @@
 	var/dir_suffix = ""
 	if(metadata["placement_dir_label"])
 		dir_suffix = ", направление=[metadata["placement_dir_label"]]"
-	return "Применить размещение [current_definition?.name_ru || current_definition?.id]? форма=[shape_label], режим=[mode_label], опор=[anchor_count], действий=[entry_count][dir_suffix]."
+	var/replacement_suffix = ""
+	if(GLOB.world_edit_helpers.parse_bool(metadata["will_replace_blocked_turfs"]) && round(text2num("[metadata["replace_blocked_turf_count"]]") || 0) > 0)
+		replacement_suffix = ", заменит блокирующих тайлов=[metadata["replace_blocked_turf_count"]]"
+	return "Применить размещение [current_definition?.name_ru || current_definition?.id]? форма=[shape_label], режим=[mode_label], опор=[anchor_count], действий=[entry_count][dir_suffix][replacement_suffix]."
 
 /datum/world_edit_manager/proc/sanitize_preview_feedback_meta(list/meta)
 	if(!islist(meta))

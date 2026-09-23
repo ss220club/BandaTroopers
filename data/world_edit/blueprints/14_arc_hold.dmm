@@ -1,0 +1,82 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aaa" = (
+/obj/structure/barricade/sandbags/full{
+	dir = 1
+	},
+/obj/structure/barricade/sandbags/full{
+	dir = 8
+	},
+/turf/template_noop,
+/area/template_noop)
+"bbb" = (
+/obj/structure/barricade/sandbags/full{
+	dir = 1
+	},
+/turf/template_noop,
+/area/template_noop)
+"ccc" = (
+/obj/structure/barricade/sandbags/full{
+	dir = 1
+	},
+/obj/structure/barricade/sandbags/full{
+	dir = 4
+	},
+/turf/template_noop,
+/area/template_noop)
+"ddd" = (
+/obj/structure/barricade/metal{
+	dir = 8
+	},
+/turf/template_noop,
+/area/template_noop)
+"eee" = (
+/turf/template_noop,
+/area/template_noop)
+"fff" = (
+/obj/structure/barricade/metal{
+	dir = 4
+	},
+/turf/template_noop,
+/area/template_noop)
+"ggg" = (
+/obj/structure/barricade/metal{
+	dir = 2
+	},
+/turf/template_noop,
+/area/template_noop)
+
+(1,1,1) = {"
+aaa
+ddd
+eee
+eee
+eee
+"}
+(2,1,1) = {"
+bbb
+eee
+eee
+ggg
+eee
+"}
+(3,1,1) = {"
+bbb
+eee
+eee
+ggg
+eee
+"}
+(4,1,1) = {"
+bbb
+eee
+eee
+ggg
+eee
+"}
+(5,1,1) = {"
+ccc
+fff
+eee
+eee
+eee
+"}

@@ -1,0 +1,140 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aaa" = (
+/turf/template_noop,
+/area/template_noop)
+"bbb" = (
+/obj/item/explosive/mine/covenant/plasma/active{
+	dir = 1
+	},
+/turf/template_noop,
+/area/template_noop)
+"ccc" = (
+/obj/item/explosive/mine/covenant/needle_mine/active{
+	dir = 8
+	},
+/turf/template_noop,
+/area/template_noop)
+"ddd" = (
+/obj/structure/covenant_barricade{
+	dir = 1
+	},
+/turf/template_noop,
+/area/template_noop)
+"eee" = (
+/obj/structure/covenant_barricade/wide{
+	dir = 4
+	},
+/turf/template_noop,
+/area/template_noop)
+"fff" = (
+/obj/structure/machinery/recharger/covenant{
+	dir = 2
+	},
+/turf/template_noop,
+/area/template_noop)
+"ggg" = (
+/obj/structure/covenant_barricade/wide{
+	dir = 8
+	},
+/turf/template_noop,
+/area/template_noop)
+"hhh" = (
+/obj/structure/covenant_barricade{
+	dir = 2
+	},
+/turf/template_noop,
+/area/template_noop)
+"iii" = (
+/obj/item/explosive/mine/covenant/needle_mine/active{
+	dir = 4
+	},
+/turf/template_noop,
+/area/template_noop)
+"jjj" = (
+/obj/item/explosive/mine/covenant/plasma/active{
+	dir = 2
+	},
+/turf/template_noop,
+/area/template_noop)
+
+(1,1,1) = {"
+aaa
+ccc
+aaa
+aaa
+aaa
+aaa
+aaa
+"}
+(2,1,1) = {"
+aaa
+aaa
+aaa
+eee
+aaa
+aaa
+aaa
+"}
+(3,1,1) = {"
+bbb
+aaa
+aaa
+aaa
+aaa
+aaa
+aaa
+"}
+(4,1,1) = {"
+aaa
+ddd
+aaa
+aaa
+aaa
+hhh
+aaa
+"}
+(5,1,1) = {"
+aaa
+aaa
+aaa
+fff
+aaa
+aaa
+aaa
+"}
+(6,1,1) = {"
+aaa
+ddd
+aaa
+aaa
+aaa
+hhh
+aaa
+"}
+(7,1,1) = {"
+aaa
+aaa
+aaa
+aaa
+aaa
+aaa
+jjj
+"}
+(8,1,1) = {"
+aaa
+aaa
+aaa
+ggg
+aaa
+aaa
+aaa
+"}
+(9,1,1) = {"
+aaa
+aaa
+aaa
+aaa
+aaa
+iii
+aaa
+"}

@@ -1,12 +1,21 @@
 export type {
   BlueprintFilterMode,
+  BlueprintLibraryActionId,
   BlueprintSortMode,
 } from './viewModelBlueprint';
 export {
   filterAndSortBlueprintEntries,
   getBlueprintActionState,
   getBlueprintFootprintText,
+  getBlueprintLibraryActions,
+  getBlueprintPreviewMode,
 } from './viewModelBlueprint';
+export type { BuildingLayoutCapabilityStatus } from './viewModelBuildingLayout';
+export {
+  decorateBuildingLayoutCapabilityFields,
+  getBuildingLayoutCapabilityStatus,
+  getBuildingLayoutCompatibilityRow,
+} from './viewModelBuildingLayout';
 export type {
   EditorChromeViewModel,
   SharedModeViewModel,

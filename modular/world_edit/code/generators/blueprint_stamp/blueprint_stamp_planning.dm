@@ -19,11 +19,36 @@
 	if(!istype(target_turf))
 		return null
 
+	if("[placement["kind"]]" == "blueprint_turf")
+		return "turf:[target_turf.x],[target_turf.y],[target_turf.z]"
+
 	var/obj_path = placement["obj_path"]
 	if(ispath(obj_path, /obj/structure/barricade))
 		return GLOB.world_edit_helpers.build_turf_dir_slot_key(target_turf, placement["dir"])
 
 	return "[target_turf.x],[target_turf.y],[target_turf.z]"
+
+/datum/world_edit_generator/blueprint_stamp/proc/build_blueprint_placement_physical_cell_keys(list/placement)
+	var/list/cell_keys = list()
+	var/turf/target_turf = placement["turf"]
+	if(!istype(target_turf))
+		return cell_keys
+
+	if("[placement["kind"]]" == "blueprint_turf")
+		cell_keys += GLOB.world_edit_helpers.turf_to_text(target_turf)
+		return cell_keys
+
+	var/obj_path = placement["obj_path"]
+	if(!ispath(obj_path, /obj))
+		cell_keys += GLOB.world_edit_helpers.turf_to_text(target_turf)
+		return cell_keys
+
+	for(var/turf/occupied_turf as anything in GLOB.world_edit_blueprints.world_edit_get_blueprint_occupied_turfs(target_turf, obj_path, placement["dir"]))
+		var/cell_key = GLOB.world_edit_helpers.turf_to_text(occupied_turf)
+		if(length(cell_key))
+			cell_keys += cell_key
+
+	return cell_keys
 
 /datum/world_edit_generator/blueprint_stamp/evaluate_shape_contract(datum/world_edit_shape_contract/shape_contract, list/params, list/placement_context)
 	var/list/load_result = load_active_blueprint(params)
@@ -80,19 +105,42 @@
 		blocked_entry_count += anchor_plan.metadata["blocked_entry_count"] || 0
 		duplicate_entry_count += anchor_plan.metadata["duplicate_entry_count"] || 0
 
+		var/list/anchor_placement_lookup = list()
+		var/list/anchor_cell_lookup = list()
+		var/list/anchor_placements = list()
 		for(var/list/placement as anything in anchor_plan.placements)
 			var/turf/target_turf = placement["turf"]
 			var/placement_key = build_blueprint_placement_key(placement)
 			if(!length(placement_key))
 				overlap_entry_count++
 				continue
-			if(occupied_lookup[placement_key])
+			if(anchor_placement_lookup[placement_key])
 				overlap_entry_count++
 				continue
 
-			occupied_lookup[placement_key] = TRUE
+			var/list/physical_cell_keys = build_blueprint_placement_physical_cell_keys(placement)
+			if(!length(physical_cell_keys))
+				overlap_entry_count++
+				continue
+
+			var/has_cross_anchor_overlap = FALSE
+			for(var/physical_cell_key as anything in physical_cell_keys)
+				if(occupied_lookup[physical_cell_key])
+					has_cross_anchor_overlap = TRUE
+					break
+			if(has_cross_anchor_overlap)
+				overlap_entry_count++
+				continue
+
+			anchor_placement_lookup[placement_key] = TRUE
+			for(var/physical_cell_key as anything in physical_cell_keys)
+				anchor_cell_lookup[physical_cell_key] = TRUE
 			affected_lookup[target_turf] = TRUE
-			plan.placements += list(placement.Copy())
+			anchor_placements += list(placement.Copy())
+
+		for(var/physical_cell_key as anything in anchor_cell_lookup)
+			occupied_lookup[physical_cell_key] = TRUE
+		plan.placements += anchor_placements
 
 		if(length(plan.placements) > WORLD_EDIT_PLACEMENT_MAX_TOTAL_PLACEMENTS)
 			plan.metadata["error"] = "Запрошенное размещение превышает безопасный лимит размещений ([WORLD_EDIT_PLACEMENT_MAX_TOTAL_PLACEMENTS])."

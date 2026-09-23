@@ -24,6 +24,7 @@ GLOBAL_DATUM_INIT(world_edit_changesets, /datum/world_edit_changeset_service, ne
 	var/undo_policy = WORLD_EDIT_UNDO_NONE
 	var/list/created_entries = list()
 	var/list/moved_entries = list()
+	var/list/changed_turf_entries = list()
 	var/list/owned_effect_entries = list()
 	var/list/metadata = list()
 	var/created_at = ""
@@ -35,6 +36,7 @@ GLOBAL_DATUM_INIT(world_edit_changesets, /datum/world_edit_changeset_service, ne
 	undo_policy = length("[new_undo_policy]") ? "[new_undo_policy]" : WORLD_EDIT_UNDO_NONE
 	created_entries = list()
 	moved_entries = list()
+	changed_turf_entries = list()
 	owned_effect_entries = list()
 	metadata = GLOB.world_edit_changesets.copy_changeset_metadata(new_metadata)
 	created_at = time_stamp()
@@ -66,6 +68,26 @@ GLOBAL_DATUM_INIT(world_edit_changesets, /datum/world_edit_changeset_service, ne
 	))
 	return TRUE
 
+/datum/world_edit_changeset/proc/add_changed_turf(turf/changed_turf, old_type, new_type, old_baseturfs = null, list/entry_metadata = null)
+	if(!istype(changed_turf) || !ispath(old_type, /turf) || !ispath(new_type, /turf))
+		return FALSE
+
+	var/stored_baseturfs = old_baseturfs
+	if(islist(old_baseturfs))
+		var/list/old_baseturfs_list = old_baseturfs
+		stored_baseturfs = old_baseturfs_list.Copy()
+
+	changed_turf_entries += list(list(
+		"x" = changed_turf.x,
+		"y" = changed_turf.y,
+		"z" = changed_turf.z,
+		"old_type" = old_type,
+		"new_type" = new_type,
+		"old_baseturfs" = stored_baseturfs,
+		"metadata" = GLOB.world_edit_changesets.copy_changeset_metadata(entry_metadata),
+	))
+	return TRUE
+
 /datum/world_edit_changeset/proc/add_owned_effect(atom/effect_atom, owner_operation_id = null, turf/effect_turf = null, list/effect_metadata = null)
 	if(!effect_atom || QDELETED(effect_atom))
 		return FALSE
@@ -85,7 +107,7 @@ GLOBAL_DATUM_INIT(world_edit_changesets, /datum/world_edit_changeset_service, ne
 /datum/world_edit_changeset/proc/can_undo()
 	if(!(undo_policy in list(WORLD_EDIT_UNDO_FULL, WORLD_EDIT_UNDO_PARTIAL)))
 		return FALSE
-	return (length(created_entries) || length(moved_entries)) ? TRUE : FALSE
+	return (length(created_entries) || length(moved_entries) || length(changed_turf_entries)) ? TRUE : FALSE
 
 /datum/world_edit_changeset/proc/can_cleanup_owned_effects()
 	return length(owned_effect_entries) ? TRUE : FALSE
@@ -118,8 +140,26 @@ GLOBAL_DATUM_INIT(world_edit_changesets, /datum/world_edit_changeset_service, ne
 					skipped_count++
 					continue
 
-				qdel(target)
+				GLOB.world_edit_helpers.safe_qdel(target)
 				reverted_count++
+
+			for(var/list/entry as anything in changeset.changed_turf_entries)
+				var/x_value = text2num("[entry["x"]]")
+				var/y_value = text2num("[entry["y"]]")
+				var/z_value = text2num("[entry["z"]]")
+				var/turf/target_turf = locate(x_value, y_value, z_value)
+				var/expected_type = entry["new_type"]
+				var/old_type = entry["old_type"]
+				if(!istype(target_turf) || target_turf.type != expected_type || !ispath(old_type, /turf))
+					skipped_count++
+					continue
+
+				target_turf.ChangeTurf(old_type, entry["old_baseturfs"])
+				var/turf/restored_turf = locate(x_value, y_value, z_value)
+				if(istype(restored_turf) && restored_turf.type == old_type)
+					reverted_count++
+				else
+					skipped_count++
 
 		if(WORLD_EDIT_UNDO_PARTIAL)
 			for(var/list/entry as anything in changeset.moved_entries)
@@ -147,7 +187,7 @@ GLOBAL_DATUM_INIT(world_edit_changesets, /datum/world_edit_changeset_service, ne
 					skipped_count++
 
 		else
-			skipped_count = length(changeset.created_entries) + length(changeset.moved_entries)
+			skipped_count = length(changeset.created_entries) + length(changeset.moved_entries) + length(changeset.changed_turf_entries)
 
 	var/outcome = "none"
 	var/attempted_count = reverted_count + skipped_count
@@ -190,7 +230,7 @@ GLOBAL_DATUM_INIT(world_edit_changesets, /datum/world_edit_changeset_service, ne
 			skipped_count++
 			continue
 
-		qdel(effect_atom)
+		GLOB.world_edit_helpers.safe_qdel(effect_atom)
 		removed_count++
 
 	var/outcome = "none"

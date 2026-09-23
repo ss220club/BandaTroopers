@@ -1,6 +1,13 @@
 import type { BackendData, BlueprintEntry } from './types';
 
 type BlueprintFilterMode = 'all' | 'valid' | 'invalid' | 'active';
+type BlueprintLibraryActionId =
+  | 'load_blueprint'
+  | 'preview_blueprint'
+  | 'apply_blueprint'
+  | 'export_blueprint'
+  | 'rename_blueprint'
+  | 'delete_blueprint';
 type BlueprintSortMode =
   | 'recent'
   | 'status'
@@ -54,6 +61,9 @@ const getBlueprintLastUsedRank = (blueprint: BlueprintEntry) =>
 const getBlueprintEntryCount = (blueprint: BlueprintEntry) =>
   Math.max(Number(blueprint.entry_count) || 0, 0);
 
+const getBlueprintPreviewMode = (blueprint: BlueprintEntry) =>
+  blueprint.preview_mode === 'compact' ? 'compact' : 'detail';
+
 const compareBlueprintStatus = (
   data: BackendData,
   left: BlueprintEntry,
@@ -92,6 +102,39 @@ const getBlueprintActionState = (
     canPreview,
     canApply,
   };
+};
+
+const getBlueprintLibraryActions = (
+  data: BackendData,
+  blueprint: BlueprintEntry,
+) => {
+  const actionState = getBlueprintActionState(data, blueprint);
+  return [
+    {
+      action: 'load_blueprint',
+      disabled: !actionState.canLoad,
+    },
+    {
+      action: 'preview_blueprint',
+      disabled: !actionState.canPreview,
+    },
+    {
+      action: 'apply_blueprint',
+      disabled: !actionState.canApply,
+    },
+    {
+      action: 'export_blueprint',
+      disabled: !blueprint.valid,
+    },
+    {
+      action: 'rename_blueprint',
+      disabled: !blueprint.valid,
+    },
+    {
+      action: 'delete_blueprint',
+      disabled: !blueprint.valid,
+    },
+  ] satisfies Array<{ action: BlueprintLibraryActionId; disabled: boolean }>;
 };
 
 const filterAndSortBlueprintEntries = (
@@ -169,5 +212,11 @@ export {
   filterAndSortBlueprintEntries,
   getBlueprintActionState,
   getBlueprintFootprintText,
+  getBlueprintLibraryActions,
+  getBlueprintPreviewMode,
 };
-export type { BlueprintFilterMode, BlueprintSortMode };
+export type {
+  BlueprintFilterMode,
+  BlueprintLibraryActionId,
+  BlueprintSortMode,
+};

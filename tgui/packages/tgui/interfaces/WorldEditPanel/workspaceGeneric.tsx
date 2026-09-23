@@ -1,7 +1,13 @@
 import { Box } from '../../components';
 import { FieldListCard } from './fieldControls';
-import { WorkspaceGrid, WorkspacePane } from './primitives';
-import type { ActFn, UiField } from './types';
+import {
+  CompactStatusRow,
+  SurfaceCard,
+  WorkspaceGrid,
+  WorkspacePane,
+} from './primitives';
+import type { ActFn, BackendData, UiField } from './types';
+import { getBuildingLayoutCapabilityStatus } from './viewModelBuildingLayout';
 
 const GenericFieldGroups = (props: {
   readonly groupedFields: Record<string, UiField[]>;
@@ -29,17 +35,32 @@ const GenericFieldGroups = (props: {
 };
 
 const GenericToolWorkspace = (props: {
+  readonly data: BackendData;
   readonly act: ActFn;
   readonly groupedFields: Record<string, UiField[]>;
   readonly groupNames: string[];
   readonly showPlacementSetup: boolean;
 }) => {
-  const { act, groupedFields, groupNames, showPlacementSetup } = props;
-  const hasPrimaryContent = groupNames.length > 0 || showPlacementSetup;
+  const { data, act, groupedFields, groupNames, showPlacementSetup } = props;
+  const capabilityStatus = getBuildingLayoutCapabilityStatus(data);
+  const hasCapabilityStatus = !!capabilityStatus?.visible;
+  const hasPrimaryContent =
+    groupNames.length > 0 || showPlacementSetup || hasCapabilityStatus;
 
   return (
     <>
       {!hasPrimaryContent && <Box color="label">Нет настроек.</Box>}
+
+      {hasCapabilityStatus && (
+        <SurfaceCard
+          title={capabilityStatus.title}
+          subtitle={capabilityStatus.message}
+          tone={capabilityStatus.tone}
+          mt={0.6}
+        >
+          <CompactStatusRow items={capabilityStatus.items} basis="45%" />
+        </SurfaceCard>
+      )}
 
       {!!groupNames.length && (
         <GenericFieldGroups

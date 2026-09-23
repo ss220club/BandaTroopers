@@ -1,0 +1,43 @@
+{
+  "id": "building_living_explicit_compact_2x2",
+  "generator": "building_layout",
+  "seed": 2001,
+  "canvas": {
+    "preset": "blank_64",
+    "width": 64,
+    "height": 64
+  },
+  "shape": {
+    "id": "point",
+    "anchors": [
+      { "x": 32, "y": 32 }
+    ]
+  },
+  "config": {
+    "program": "living",
+    "faction_preset": "colony",
+    "direction": "north",
+    "auto_size": false,
+    "half_width": 2,
+    "half_depth": 2,
+    "detail_budget": 0,
+    "window_density": 0,
+    "respect_blockers": false,
+    "replace_blocked_turfs": true
+  },
+  "expect": {
+    "status": "locked",
+    "reason_code": "program.insufficient_footprint",
+    "canvas_changed": false
+  },
+  "render": {
+    "semantic_png": true,
+    "after_dmm": false,
+    "debug_overlays": true
+  },
+  "profile": {
+    "enabled": true,
+    "include_stage_timings": true,
+    "include_loop_counters": true
+  }
+}

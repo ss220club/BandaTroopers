@@ -1,0 +1,112 @@
+//MAP CONVERTED BY dmm2tgm.py THIS HEADER COMMENT PREVENTS RECONVERSION, DO NOT REMOVE
+"aaa" = (
+/obj/structure/barricade/metal/plasteel/wired{
+	dir = 1
+	},
+/obj/structure/barricade/metal/plasteel/wired{
+	dir = 8
+	},
+/turf/template_noop,
+/area/template_noop)
+"bbb" = (
+/obj/structure/barricade/metal/plasteel{
+	dir = 1
+	},
+/turf/template_noop,
+/area/template_noop)
+"ccc" = (
+/turf/template_noop,
+/area/template_noop)
+"ddd" = (
+/obj/structure/barricade/metal/plasteel/wired{
+	dir = 1
+	},
+/obj/structure/barricade/metal/plasteel/wired{
+	dir = 4
+	},
+/turf/template_noop,
+/area/template_noop)
+"eee" = (
+/obj/structure/barricade/metal/plasteel{
+	dir = 8
+	},
+/turf/template_noop,
+/area/template_noop)
+"fff" = (
+/obj/structure/barricade/metal{
+	dir = 1
+	},
+/turf/template_noop,
+/area/template_noop)
+"ggg" = (
+/obj/structure/barricade/metal/plasteel{
+	dir = 4
+	},
+/turf/template_noop,
+/area/template_noop)
+"hhh" = (
+/obj/structure/largecrate/supply/generator{
+	dir = 2
+	},
+/turf/template_noop,
+/area/template_noop)
+"iii" = (
+/obj/structure/barricade/metal/plasteel/wired{
+	dir = 2
+	},
+/obj/structure/barricade/metal/plasteel/wired{
+	dir = 8
+	},
+/turf/template_noop,
+/area/template_noop)
+"jjj" = (
+/obj/structure/barricade/metal/plasteel{
+	dir = 2
+	},
+/turf/template_noop,
+/area/template_noop)
+"kkk" = (
+/obj/structure/barricade/metal/plasteel/wired{
+	dir = 2
+	},
+/obj/structure/barricade/metal/plasteel/wired{
+	dir = 4
+	},
+/turf/template_noop,
+/area/template_noop)
+
+(1,1,1) = {"
+aaa
+eee
+eee
+eee
+iii
+"}
+(2,1,1) = {"
+bbb
+fff
+ccc
+ccc
+jjj
+"}
+(3,1,1) = {"
+ccc
+ccc
+hhh
+ccc
+jjj
+"}
+(4,1,1) = {"
+bbb
+fff
+ccc
+ccc
+jjj
+"}
+(5,1,1) = {"
+ddd
+ggg
+ggg
+ggg
+kkk
+"}

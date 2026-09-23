@@ -42,6 +42,22 @@
 			save_blueprint_from_current_plan(user)
 			return TRUE
 
+		if("import_blueprint")
+			import_blueprint_file(user)
+			return TRUE
+
+		if("export_blueprint")
+			export_blueprint_file(user, params["blueprint_id"])
+			return TRUE
+
+		if("rename_blueprint")
+			rename_blueprint_file(user, params["blueprint_id"])
+			return TRUE
+
+		if("delete_blueprint")
+			delete_blueprint_file(user, params["blueprint_id"])
+			return TRUE
+
 		if("load_blueprint")
 			load_blueprint_into_manager(user, params["blueprint_id"])
 			return TRUE

@@ -1,0 +1,38 @@
+{
+  "id": "building_storage_rectangle_target_rooms_5",
+  "generator": "building_layout",
+  "seed": 2205,
+  "canvas": { "preset": "blank_96", "width": 96, "height": 96 },
+  "shape": {
+    "id": "rectangle",
+    "anchors": [
+      { "x": 36, "y": 36 },
+      { "x": 59, "y": 56 }
+    ]
+  },
+  "config": {
+    "program": "storage",
+    "faction_preset": "colony",
+    "direction": "east",
+    "target_room_count": 5,
+    "detail_budget": 75,
+    "respect_blockers": false,
+    "replace_blocked_turfs": true
+  },
+  "expect": {
+    "status": "supported",
+    "direction_honored": true,
+    "hard_error_count": 0,
+    "target_room_count": 5,
+    "room_count_satisfied": true,
+    "has_interior_objects": true,
+    "has_template_chunks": true,
+    "post_emit_validation_error_count": 0,
+    "semantic_credit_without_emitted_slots_count": 0,
+    "reserved_walk_blocked_count": 0,
+    "mandatory_pattern_failure_count": 0,
+    "forbidden_fallback_count": 0
+  },
+  "render": { "semantic_png": true, "after_dmm": false, "debug_overlays": true },
+  "profile": { "enabled": true, "include_stage_timings": true, "include_loop_counters": true }
+}

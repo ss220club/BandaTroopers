@@ -1,5 +1,6 @@
 import { getOrderedToolTabs } from './toolRegistry';
 import type { BackendData, UiField } from './types';
+import { decorateBuildingLayoutCapabilityFields } from './viewModelBuildingLayout';
 
 type WorldEditViewModel = {
   showPlacementSetup: boolean;
@@ -24,7 +25,8 @@ const getGroupNames = (groupedFields: Record<string, UiField[]>) =>
   Object.keys(groupedFields);
 
 const buildWorldEditViewModel = (data: BackendData): WorldEditViewModel => {
-  const groupedFields = buildGroupedFields(data.ui_fields || []);
+  const uiFields = decorateBuildingLayoutCapabilityFields(data);
+  const groupedFields = buildGroupedFields(uiFields);
 
   return {
     showPlacementSetup:
