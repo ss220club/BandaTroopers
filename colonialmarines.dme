@@ -861,6 +861,7 @@
 #include "code\game\area\space_station_13_areas.dm"
 #include "code\game\area\strata.dm"
 #include "code\game\area\Sulaco.dm"
+#include "code\game\area\swamp.dm"
 #include "code\game\area\Taipei.dm"
 #include "code\game\area\techtree.dm"
 #include "code\game\area\upp_bunker.dm"
@@ -2775,4 +2776,5 @@
 #include "interface\skin.dmf"
 #include "maps\_basemap.dm"
 #include "modular\modular.dme" // BANDATROOPERS EDIT
+#include "modular\swamp\Swamp.dm"
 // END_INCLUDE

@@ -12,6 +12,9 @@ Format:
 	disabled (disables the map)
 endmap
 
+map swamp_1
+endmap
+
 map lv624
 	default
 endmap
@@ -131,6 +134,7 @@ endmap
 
 map binhai_supply_station
 endmap
+
 
 map lv671
 endmap
