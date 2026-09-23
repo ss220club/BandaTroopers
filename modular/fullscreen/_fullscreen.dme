@@ -1,3 +1,4 @@
 #include "_fullscreen.dm"
 
+#include "code/cryo_intro_hud.dm"
 #include "code/cryo_manifest.dm"

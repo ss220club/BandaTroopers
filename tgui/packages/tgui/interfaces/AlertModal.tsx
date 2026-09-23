@@ -1,5 +1,6 @@
 import { KEY } from 'common/keys';
 import { BooleanLike } from 'common/react';
+import { decodeHtmlEntities } from 'common/string';
 import { KeyboardEvent, useState } from 'react';
 
 import { useBackend } from '../backend';
@@ -30,21 +31,24 @@ export function AlertModal(props) {
     large_buttons,
     message = '',
     timeout,
-    title,
+    title = '',
   } = data;
+  const decodedMessage = decodeHtmlEntities(message);
+  const decodedTitle = decodeHtmlEntities(title);
+  const decodedButtons = buttons.map((button) => decodeHtmlEntities(button));
 
   const [selected, setSelected] = useState(0);
 
   // At least one of the buttons has a long text message
-  const isVerbose = buttons.some((button) => button.length > 10);
+  const isVerbose = decodedButtons.some((button) => button.length > 10);
   const largeSpacing = isVerbose && large_buttons ? 20 : 15;
 
   // Dynamically sets window dimensions
   const windowHeight =
     120 +
     (isVerbose ? largeSpacing * buttons.length : 0) +
-    (message.length > 30 ? Math.ceil(message.length / 4) : 0) +
-    (message.length && large_buttons ? 5 : 0);
+    (decodedMessage.length > 30 ? Math.ceil(decodedMessage.length / 4) : 0) +
+    (decodedMessage.length && large_buttons ? 5 : 0);
 
   const windowWidth = 345 + (buttons.length > 2 ? 55 : 0);
 
@@ -77,22 +81,28 @@ export function AlertModal(props) {
   }
 
   return (
-    <Window height={windowHeight} title={title} width={windowWidth}>
+    <Window height={windowHeight} title={decodedTitle} width={windowWidth}>
       {!!timeout && <Loader value={timeout} />}
       <Window.Content onKeyDown={keyDownHandler}>
         <Section fill>
           <Stack fill vertical>
             <Stack.Item m={1}>
               <Box color="label" overflow="hidden">
-                {message}
+                {decodedMessage}
               </Box>
             </Stack.Item>
             <Stack.Item grow>
               {!!autofocus && <Autofocus />}
               {isVerbose ? (
-                <VerticalButtons selected={selected} />
+                <VerticalButtons
+                  decodedButtons={decodedButtons}
+                  selected={selected}
+                />
               ) : (
-                <HorizontalButtons selected={selected} />
+                <HorizontalButtons
+                  decodedButtons={decodedButtons}
+                  selected={selected}
+                />
               )}
             </Stack.Item>
           </Stack>
@@ -103,6 +113,7 @@ export function AlertModal(props) {
 }
 
 type ButtonDisplayProps = {
+  readonly decodedButtons: string[];
   readonly selected: number;
 };
 
@@ -112,7 +123,7 @@ type ButtonDisplayProps = {
 function HorizontalButtons(props: ButtonDisplayProps) {
   const { act, data } = useBackend<Data>();
   const { buttons = [], large_buttons, swapped_buttons } = data;
-  const { selected } = props;
+  const { decodedButtons, selected } = props;
 
   return (
     <Stack fill justify="space-around" reverse={!swapped_buttons}>
@@ -128,7 +139,9 @@ function HorizontalButtons(props: ButtonDisplayProps) {
             selected={selected === index}
             textAlign="center"
           >
-            {!large_buttons ? button : button.toUpperCase()}
+            {!large_buttons
+              ? decodedButtons[index] ?? button
+              : (decodedButtons[index] ?? button).toUpperCase()}
           </Button>
         </Stack.Item>
       ))}
@@ -143,7 +156,7 @@ function HorizontalButtons(props: ButtonDisplayProps) {
 function VerticalButtons(props: ButtonDisplayProps) {
   const { act, data } = useBackend<Data>();
   const { buttons = [], large_buttons, swapped_buttons } = data;
-  const { selected } = props;
+  const { decodedButtons, selected } = props;
 
   return (
     <Stack
@@ -170,7 +183,9 @@ function VerticalButtons(props: ButtonDisplayProps) {
             selected={selected === index}
             textAlign="center"
           >
-            {!large_buttons ? button : button.toUpperCase()}
+            {!large_buttons
+              ? decodedButtons[index] ?? button
+              : (decodedButtons[index] ?? button).toUpperCase()}
           </Button>
         </Stack.Item>
       ))}

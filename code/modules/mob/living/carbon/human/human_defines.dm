@@ -157,6 +157,11 @@
 	throw_range = 4 // Humans can't be thrown that far
 
 	var/datum/action/human_action/activable/selected_ability
+	var/tmp/cryo_intro_hud_hidden = FALSE
+	var/tmp/cryo_intro_hud_restore_style = HUD_STYLE_STANDARD
+	var/tmp/cryo_intro_hud_monitor_running = FALSE
+	var/tmp/cryo_intro_sequence_running = FALSE
+	var/tmp/cryo_intro_exit_warn_cooldown = 0
 
 	///list of weakrefs of recently dropped objects
 	var/list/remembered_dropped_objects = list()
@@ -274,4 +279,3 @@
 
 		to_chat(usr, "Removed [rem_organ] from [src].")
 		qdel(rem_organ)
-

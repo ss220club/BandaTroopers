@@ -1,0 +1,481 @@
+#define MODULAR_ROUND_OUTRO_BG_FADE_IN_TIME (2.5 SECONDS)
+#define MODULAR_ROUND_OUTRO_TEXT_FADE_IN_TIME (2.2 SECONDS)
+#define MODULAR_ROUND_OUTRO_PAGE_SHOW_MIN_TIME (8 SECONDS)
+#define MODULAR_ROUND_OUTRO_PAGE_SHOW_MAX_TIME (16 SECONDS)
+#define MODULAR_ROUND_OUTRO_PAGE_SHOW_TIME_PER_LINE (0.35 SECONDS)
+#define MODULAR_ROUND_OUTRO_FADE_TIME (2 SECONDS)
+#define MODULAR_ROUND_OUTRO_PAGE_OVERHEAD_TIME (1 SECONDS)
+#define MODULAR_ROUND_OUTRO_PAGE_PLAYER_LINES 6
+#define MODULAR_ROUND_OUTRO_TEXT_WIDTH 620
+#define MODULAR_ROUND_OUTRO_BASE_HEIGHT 460
+#define MODULAR_ROUND_OUTRO_LINE_HEIGHT 16
+
+/proc/modular_round_outro_get_page_show_time_for_lines(line_count)
+	if(!isnum(line_count))
+		line_count = 1
+
+	line_count = max(1, line_count)
+	var/page_show_time = round(line_count * MODULAR_ROUND_OUTRO_PAGE_SHOW_TIME_PER_LINE)
+	page_show_time = max(MODULAR_ROUND_OUTRO_PAGE_SHOW_MIN_TIME, min(page_show_time, MODULAR_ROUND_OUTRO_PAGE_SHOW_MAX_TIME))
+	return page_show_time
+
+/proc/modular_round_outro_get_total_page_time(line_count)
+	return modular_round_outro_get_page_show_time_for_lines(line_count) + MODULAR_ROUND_OUTRO_FADE_TIME + MODULAR_ROUND_OUTRO_PAGE_OVERHEAD_TIME
+
+/mob
+	var/tmp/modular_round_outro_hud_hidden = FALSE
+	var/tmp/modular_round_outro_hud_restore_style = HUD_STYLE_STANDARD
+	var/tmp/modular_round_outro_hud_monitor_running = FALSE
+
+/mob/proc/modular_start_round_outro_hud_lock(lock_duration = 0)
+	if(!client)
+		return
+
+	if(lock_duration > 0)
+		addtimer(CALLBACK(src, PROC_REF(modular_finish_round_outro_hud_lock)), lock_duration)
+
+	if(!modular_round_outro_hud_hidden)
+		if(!hud_used)
+			create_hud()
+		if(hud_used)
+			modular_round_outro_hud_restore_style = hud_used.hud_version
+			if(!modular_round_outro_hud_restore_style)
+				modular_round_outro_hud_restore_style = HUD_STYLE_STANDARD
+			hud_used.show_hud(HUD_STYLE_NOHUD)
+		modular_round_outro_hud_hidden = TRUE
+
+	modular_enforce_round_outro_hud_lock()
+	if(!modular_round_outro_hud_monitor_running)
+		modular_round_outro_hud_monitor_running = TRUE
+		INVOKE_ASYNC(src, PROC_REF(modular_wait_for_round_outro_hud_unlock))
+
+/mob/proc/modular_is_round_outro_screen_allowed(thing)
+	if(istype(thing, /obj/render_plane_relay))
+		return TRUE
+
+	if(!istype(thing, /atom/movable/screen))
+		return FALSE
+
+	if(istype(thing, /atom/movable/screen/fullscreen))
+		return TRUE
+	if(istype(thing, /atom/movable/screen/text))
+		return TRUE
+	if(istype(thing, /atom/movable/screen/plane_master))
+		return TRUE
+	if(istype(thing, /atom/movable/screen/click_catcher))
+		return TRUE
+
+	return FALSE
+
+/mob/proc/modular_enforce_round_outro_hud_lock()
+	if(!client || !modular_round_outro_hud_hidden)
+		return
+
+	for(var/thing as anything in client.screen.Copy())
+		if(modular_is_round_outro_screen_allowed(thing))
+			continue
+		client.remove_from_screen(thing)
+
+	for(var/datum/action/A as anything in actions)
+		if(A?.button)
+			A.button.screen_loc = null
+
+	if(hud_used?.hide_actions_toggle)
+		hud_used.hide_actions_toggle.screen_loc = null
+
+/mob/proc/modular_wait_for_round_outro_hud_unlock()
+	while(modular_round_outro_hud_hidden)
+		if(QDELETED(src) || !client)
+			modular_round_outro_hud_monitor_running = FALSE
+			return
+
+		if(hud_used && hud_used.hud_version != HUD_STYLE_NOHUD)
+			hud_used.show_hud(HUD_STYLE_NOHUD)
+		modular_enforce_round_outro_hud_lock()
+		sleep(1)
+
+	modular_round_outro_hud_monitor_running = FALSE
+
+/mob/proc/modular_finish_round_outro_hud_lock()
+	if(!modular_round_outro_hud_hidden)
+		return
+
+	modular_round_outro_hud_hidden = FALSE
+	if(!client || !hud_used)
+		return
+
+	hud_used.show_hud(modular_round_outro_hud_restore_style)
+
+/atom/movable/screen/fullscreen/black/modular_round_outro
+	show_when_dead = TRUE
+	alpha = 0
+
+/atom/movable/screen/fullscreen/crt/modular_round_outro
+	show_when_dead = TRUE
+	alpha = 0
+
+/atom/movable/screen/text/screen_text/modular_round_outro
+	layer = ABOVE_INTRO_LAYER
+	plane = FULLSCREEN_PLANE
+	screen_loc = "CENTER,CENTER"
+	maptext_width = MODULAR_ROUND_OUTRO_TEXT_WIDTH
+	maptext_height = MODULAR_ROUND_OUTRO_BASE_HEIGHT
+	maptext_x = -310
+	maptext_y = -230
+	fade_out_delay = 0
+	fade_out_time = MODULAR_ROUND_OUTRO_FADE_TIME
+	style_open = "<span style='font-size:11pt; text-align:left; color:#C9FFE9; font-family:Tahoma, Arial, sans-serif; -dm-text-outline: 1 #00120B;' valign='top'>"
+	var/page_show_time = MODULAR_ROUND_OUTRO_PAGE_SHOW_MIN_TIME
+	var/layout_base_height = MODULAR_ROUND_OUTRO_BASE_HEIGHT
+	var/layout_line_height = MODULAR_ROUND_OUTRO_LINE_HEIGHT
+
+/atom/movable/screen/text/screen_text/modular_round_outro/proc/modular_update_layout_for_client()
+	if(!player)
+		return
+
+	var/list/view_size = getviewsize(player.view)
+	if(!islist(view_size) || length(view_size) < 2)
+		return
+
+	var/view_px_w = view_size[1] * 32
+	var/view_px_h = view_size[2] * 32
+
+	var/new_width = round(view_px_w * 0.82)
+	new_width = max(420, min(new_width, 980))
+	maptext_width = new_width
+	maptext_x = -round(maptext_width * 0.5)
+
+	layout_base_height = round(view_px_h * 0.82)
+	layout_base_height = max(360, min(layout_base_height, 820))
+
+	var/font_size = round(view_px_w / 90)
+	font_size = max(9, min(font_size, 13))
+	layout_line_height = round(font_size * 2)
+	layout_line_height = max(16, min(layout_line_height, 24))
+	style_open = "<span style='font-size:[font_size]pt; text-align:left; color:#C9FFE9; font-family:Tahoma, Arial, sans-serif; -dm-text-outline: 1 #00120B;' valign='top'>"
+
+/atom/movable/screen/text/screen_text/modular_round_outro/play_to_client()
+	if(!player)
+		qdel(src)
+		return
+
+	player.add_to_screen(src)
+	modular_update_layout_for_client()
+
+	var/list/message_lines = splittext(text_to_play, "<br>")
+	var/line_count = max(1, length(message_lines))
+	page_show_time = modular_round_outro_get_page_show_time_for_lines(line_count)
+	maptext_height = layout_base_height
+	maptext_y = -round(maptext_height * 0.5)
+	pixel_y = 0
+	alpha = 0
+	maptext = "[style_open][text_to_play][style_close]"
+
+	animate(src, alpha = 255, time = MODULAR_ROUND_OUTRO_TEXT_FADE_IN_TIME)
+	addtimer(CALLBACK(src, PROC_REF(after_play)), page_show_time)
+
+/datum/game_mode/colonialmarines
+	/// Guard to avoid double-sending outro in unusual round-end paths.
+	var/modular_round_outro_sent = FALSE
+	/// Null means auto-detect based on round_finished.
+	var/modular_round_outro_forced_marine_win = null
+	/// Prevent repeated prompts if announce is called multiple times.
+	var/modular_round_outro_choice_prompted = FALSE
+
+/datum/game_mode/colonialmarines/announce_ending()
+	..()
+	modular_play_round_outro()
+
+/datum/game_mode/colonialmarines/proc/modular_play_round_outro()
+	if(modular_round_outro_sent)
+		return
+	modular_round_outro_sent = TRUE
+
+	modular_prompt_round_outro_result_override()
+
+	var/list/outro_pages = modular_build_round_outro_pages()
+	if(!length(outro_pages))
+		return
+
+	var/total_outro_time = MODULAR_ROUND_OUTRO_BG_FADE_IN_TIME
+	for(var/page_text as anything in outro_pages)
+		var/list/page_lines = splittext("[page_text]", "<br>")
+		total_outro_time += modular_round_outro_get_total_page_time(length(page_lines))
+
+	for(var/client/player_client as anything in sortTim(GLOB.clients, GLOBAL_PROC_REF(cmp_ckey_asc)))
+		var/mob/player_mob = player_client.mob
+		if(!player_mob)
+			continue
+
+		player_mob.modular_start_round_outro_hud_lock(total_outro_time)
+
+		var/atom/movable/screen/fullscreen/black/modular_round_outro/black_overlay = player_mob.overlay_fullscreen("modular_round_outro", /atom/movable/screen/fullscreen/black/modular_round_outro)
+		if(black_overlay)
+			animate(black_overlay, alpha = 245, time = MODULAR_ROUND_OUTRO_BG_FADE_IN_TIME)
+
+		var/atom/movable/screen/fullscreen/crt/modular_round_outro/crt_overlay = player_mob.overlay_fullscreen("modular_round_outro_crt", /atom/movable/screen/fullscreen/crt/modular_round_outro)
+		if(crt_overlay)
+			animate(crt_overlay, alpha = 85, time = MODULAR_ROUND_OUTRO_BG_FADE_IN_TIME)
+
+		addtimer(CALLBACK(player_mob, TYPE_PROC_REF(/mob, clear_fullscreen), "modular_round_outro", 10), total_outro_time)
+		addtimer(CALLBACK(player_mob, TYPE_PROC_REF(/mob, clear_fullscreen), "modular_round_outro_crt", 10), total_outro_time)
+
+		for(var/page_text as anything in outro_pages)
+			var/list/page_lines = splittext("[page_text]", "<br>")
+			var/page_line_count = max(1, length(page_lines))
+			var/atom/movable/screen/text/screen_text/modular_round_outro/page_text_box = new
+			page_text_box.page_show_time = modular_round_outro_get_page_show_time_for_lines(page_line_count)
+			player_mob.play_screen_text(page_text, page_text_box, "#FFFFFF", 9999)
+
+/datum/game_mode/colonialmarines/proc/modular_build_round_outro_text()
+	var/list/outro_pages = modular_build_round_outro_pages()
+	if(!length(outro_pages))
+		return null
+	return outro_pages[1]
+
+/datum/game_mode/colonialmarines/proc/modular_build_round_outro_pages()
+	var/list/player_lines = list()
+	var/list/seen_ckeys = list()
+
+	for(var/client/player_client as anything in sortTim(GLOB.clients, GLOBAL_PROC_REF(cmp_ckey_asc)))
+		var/player_key = player_client.ckey ? player_client.ckey : player_client.key
+		var/player_ckey = lowertext(player_key)
+		if(!player_ckey || seen_ckeys[player_ckey])
+			continue
+		seen_ckeys[player_ckey] = TRUE
+
+		var/mob/status_mob = modular_get_round_outro_status_mob(player_client)
+		var/is_alive = status_mob && status_mob.stat != DEAD
+		var/is_critical = modular_round_outro_is_critical(status_mob)
+
+		var/player_name = status_mob?.real_name ? status_mob.real_name : (player_client.key ? player_client.key : "НЕИЗВЕСТНЫЙ БОЕЦ")
+		var/display_name = sanitize(player_name)
+		var/display_role = sanitize(status_mob?.job || "")
+		var/identity_line = display_role ? "[display_name] | [display_role]" : "[display_name]"
+		var/status_alive = "В СТРОЮ"
+		var/status_critical = "ТЯЖЕЛО РАНЕН"
+		var/status_dead = "ПОГИБ"
+		var/reason_label = "причина гибели"
+
+		if(is_alive && !is_critical)
+			player_lines += "[identity_line] - [status_alive]"
+			continue
+		if(is_alive && is_critical)
+			player_lines += "[identity_line] - [status_critical]"
+			continue
+
+		var/death_cause = sanitize(modular_get_round_outro_death_cause(status_mob, player_client))
+		player_lines += "[identity_line] - [status_dead]"
+		player_lines += "&nbsp;&nbsp;&nbsp;[reason_label]: [death_cause]"
+
+	if(!length(player_lines))
+		return list()
+
+	var/tactical_success = modular_round_outro_is_victory()
+	var/safe_round_result = modular_round_outro_localize_result()
+	var/title_text = "USCMC // ПОСЛЕБОЕВОЙ ОПЕРАТИВНЫЙ ОТЧЕТ"
+	var/subtitle_text = "КАНАЛ: ARES TACNET // ДОСТУП: ДЛЯ СЛУЖЕБНОГО ПОЛЬЗОВАНИЯ"
+	var/theater_name = sanitize(SSmapping.configs[GROUND_MAP].map_name || "НЕИЗВЕСТНЫЙ ТЕАТР")
+	var/operation_name = sanitize(GLOB.round_statistics?.round_name || "НЕ УКАЗАНО")
+	var/report_clock = worldtime2text("hh:mm")
+	var/report_date = time2text(REALTIMEOFDAY, "DD-MMM-[GLOB.game_year]")
+	var/report_time = "[report_clock] / [report_date]"
+	var/result_line = tactical_success ? "СТАТУС ОПЕРАЦИИ: ОСНОВНЫЕ ЗАДАЧИ ВЫПОЛНЕНЫ" : "СТАТУС ОПЕРАЦИИ: ОСНОВНЫЕ ЗАДАЧИ НЕ ВЫПОЛНЕНЫ"
+	var/readiness_line = tactical_success ? "БОЕСПОСОБНОСТЬ ПОДРАЗДЕЛЕНИЯ: СОХРАНЕНА" : "БОЕСПОСОБНОСТЬ ПОДРАЗДЕЛЕНИЯ: УТРАЧЕНА"
+
+	var/list/outro_lines = list(
+		"<b>[title_text]</b>",
+		"<span style='color:#B8B8B8;'>[subtitle_text]</span>",
+		"",
+		"СЕКТОР ОПЕРАЦИИ: [theater_name]",
+		"ПОЗЫВНОЙ ОПЕРАЦИИ: [operation_name]",
+		"ОТМЕТКА ВРЕМЕНИ: [report_time]",
+		"----------------------------------------------------",
+		"[result_line]",
+		"ШТАБНАЯ КЛАССИФИКАЦИЯ: [safe_round_result]",
+		"[readiness_line]",
+		"",
+		"ЛИЧНЫЙ СОСТАВ (ПОСЛЕДНИЙ КОНТАКТ):",
+		""
+	)
+
+	var/list/page_chunks = list()
+	var/player_lines_len = length(player_lines)
+	var/chunk_start = 1
+	while(chunk_start <= player_lines_len)
+		var/chunk_end = min(chunk_start + MODULAR_ROUND_OUTRO_PAGE_PLAYER_LINES - 1, player_lines_len)
+		page_chunks += list(player_lines.Copy(chunk_start, chunk_end + 1))
+		chunk_start = chunk_end + 1
+
+	var/list/outro_pages = list()
+	var/total_pages = length(page_chunks)
+	if(!total_pages)
+		total_pages = 1
+		page_chunks += list(list())
+
+	for(var/page_index = 1 to total_pages)
+		var/list/page_lines
+		if(page_index == 1)
+			page_lines = outro_lines.Copy()
+		else
+			page_lines = list(
+				outro_lines[1],
+				outro_lines[2],
+				"",
+				outro_lines[12],
+				""
+			)
+
+		if(total_pages > 1)
+			var/page_marker = html_decode("&#1051;&#1048;&#1057;&#1058;")
+			page_lines += "---------- [page_marker] [page_index]/[total_pages] ----------"
+			page_lines += ""
+
+		var/list/page_chunk = page_chunks[page_index]
+		if(length(page_chunk))
+			page_lines += page_chunk
+
+		outro_pages += jointext(page_lines, "<br>")
+
+	return outro_pages
+
+/datum/game_mode/colonialmarines/proc/modular_round_outro_is_victory()
+	if(!isnull(modular_round_outro_forced_marine_win))
+		return modular_round_outro_forced_marine_win
+
+	var/result_text = lowertext("[round_finished]")
+	return findtext(result_text, "marine major") || findtext(result_text, "marine minor")
+
+/datum/game_mode/colonialmarines/proc/modular_round_outro_localize_result()
+	if(!isnull(modular_round_outro_forced_marine_win))
+		if(modular_round_outro_forced_marine_win)
+			return "ПОБЕДА МОРСКОЙ ПЕХОТЫ"
+		return "ПОРАЖЕНИЕ МОРСКОЙ ПЕХОТЫ"
+
+	switch(round_finished)
+		if(MODE_INFESTATION_X_MAJOR)
+			return "ПОРАЖЕНИЕ МОРСКОЙ ПЕХОТЫ"
+		if(MODE_INFESTATION_M_MAJOR)
+			return "ПОБЕДА МОРСКОЙ ПЕХОТЫ"
+		if(MODE_INFESTATION_X_MINOR)
+			return "ПОРАЖЕНИЕ МОРСКОЙ ПЕХОТЫ"
+		if(MODE_INFESTATION_M_MINOR)
+			return "ПОБЕДА МОРСКОЙ ПЕХОТЫ"
+		if(MODE_INFESTATION_DRAW_DEATH)
+			return "БЕЗ РЕШАЮЩЕГО РЕЗУЛЬТАТА"
+	return "РЕЗУЛЬТАТ НЕ КЛАССИФИЦИРОВАН"
+
+/datum/game_mode/colonialmarines/proc/modular_prompt_round_outro_result_override()
+	if(modular_round_outro_choice_prompted)
+		return
+	modular_round_outro_choice_prompted = TRUE
+
+	var/list/admin_candidates = list()
+	for(var/client/admin_client as anything in sortTim(GLOB.admins, GLOBAL_PROC_REF(cmp_ckey_asc)))
+		if(!admin_client?.mob || !(admin_client.admin_holder?.rights & R_ADMIN))
+			continue
+		admin_candidates += admin_client
+
+	if(!length(admin_candidates))
+		return
+
+	var/client/chooser = admin_candidates[1]
+	var/title_text = "USCMC // КЛАССИФИКАЦИЯ ИСХОДА"
+	var/prompt_text = "Назначьте официальную штабную формулировку исхода операции:"
+	var/option_marine_win = "ПОБЕДА МОРСКОЙ ПЕХОТЫ"
+	var/option_marine_loss = "ПОРАЖЕНИЕ МОРСКОЙ ПЕХОТЫ"
+	var/option_auto = "АВТООПРЕДЕЛЕНИЕ"
+	var/choice = tgui_alert(chooser, prompt_text, title_text, list(option_marine_win, option_marine_loss, option_auto), 20 SECONDS)
+
+	if(choice == option_marine_win)
+		modular_round_outro_forced_marine_win = TRUE
+		message_admins("[key_name_admin(chooser)] selected marine victory for round outro.")
+		return
+
+	if(choice == option_marine_loss)
+		modular_round_outro_forced_marine_win = FALSE
+		message_admins("[key_name_admin(chooser)] selected marine defeat for round outro.")
+		return
+
+	modular_round_outro_forced_marine_win = null
+
+/datum/game_mode/colonialmarines/proc/modular_get_round_outro_status_mob(client/player_client)
+	var/mob/current_mob = player_client?.mob
+	if(!current_mob)
+		return null
+
+	if(!isobserver(current_mob))
+		return current_mob
+
+	var/mob/original_mob = current_mob.mind?.original
+	if(istype(original_mob, /mob))
+		return original_mob
+
+	return current_mob
+
+/datum/game_mode/colonialmarines/proc/modular_get_round_outro_death_cause(mob/status_mob, client/player_client)
+	var/death_cause = status_mob?.last_damage_data?.cause_name
+	if(!death_cause)
+		death_cause = player_client?.mob?.last_damage_data?.cause_name
+	if(!death_cause)
+		death_cause = player_client?.mob?.mind?.original?.last_damage_data?.cause_name
+	if(!death_cause)
+		return "неизвестно"
+
+	return modular_round_outro_normalize_cause(death_cause)
+
+/datum/game_mode/colonialmarines/proc/modular_round_outro_normalize_cause(cause_text)
+	if(!cause_text)
+		return "неуточненное боевое воздействие"
+
+	var/lower_cause = lowertext(cause_text)
+	var/static/list/explosion_keywords = list("explosion", "rocket", "grenade", "bomb", "mortar", "strike")
+	var/static/list/bullet_keywords = list("bullet", "rifle", "pistol", "shotgun", "smg", "gauss", "railgun")
+	var/static/list/fire_keywords = list("flame", "fire", "burn", "napalm", "incendiary")
+	var/static/list/xeno_keywords = list("acid", "xeno", "facehugger", "chestburst", "headbite", "queen")
+	var/static/list/impact_keywords = list("fall", "crash", "roadkill", "squash")
+
+	if(modular_round_outro_contains_any_keyword(lower_cause, explosion_keywords))
+		return "взрывная травма"
+	if(modular_round_outro_contains_any_keyword(lower_cause, bullet_keywords))
+		return "огнестрельное поражение"
+	if(modular_round_outro_contains_any_keyword(lower_cause, fire_keywords))
+		return "термическое поражение"
+	if(modular_round_outro_contains_any_keyword(lower_cause, xeno_keywords))
+		return "поражение ксеноморфной биоформой"
+	if(modular_round_outro_contains_any_keyword(lower_cause, impact_keywords))
+		return "травма при ударе/падении"
+	return "неуточненное боевое воздействие"
+
+/datum/game_mode/colonialmarines/proc/modular_round_outro_contains_any_keyword(text, list/keywords)
+	if(!text || !islist(keywords))
+		return FALSE
+
+	for(var/keyword in keywords)
+		if(findtext(text, "[keyword]"))
+			return TRUE
+
+	return FALSE
+
+/datum/game_mode/colonialmarines/proc/modular_round_outro_is_critical(mob/status_mob)
+	if(!isliving(status_mob) || status_mob.stat == DEAD)
+		return FALSE
+
+	var/mob/living/living_mob = status_mob
+	var/has_crit_effect = (locate(/datum/effects/crit) in living_mob.effects_list)
+	var/is_unconscious = living_mob.stat == UNCONSCIOUS
+	if((has_crit_effect || is_unconscious) && living_mob.health < HEALTH_THRESHOLD_CRIT)
+		return TRUE
+	return FALSE
+
+#undef MODULAR_ROUND_OUTRO_BG_FADE_IN_TIME
+#undef MODULAR_ROUND_OUTRO_TEXT_FADE_IN_TIME
+#undef MODULAR_ROUND_OUTRO_PAGE_SHOW_MIN_TIME
+#undef MODULAR_ROUND_OUTRO_PAGE_SHOW_MAX_TIME
+#undef MODULAR_ROUND_OUTRO_PAGE_SHOW_TIME_PER_LINE
+#undef MODULAR_ROUND_OUTRO_FADE_TIME
+#undef MODULAR_ROUND_OUTRO_PAGE_OVERHEAD_TIME
+#undef MODULAR_ROUND_OUTRO_PAGE_PLAYER_LINES
+#undef MODULAR_ROUND_OUTRO_TEXT_WIDTH
+#undef MODULAR_ROUND_OUTRO_BASE_HEIGHT
+#undef MODULAR_ROUND_OUTRO_LINE_HEIGHT

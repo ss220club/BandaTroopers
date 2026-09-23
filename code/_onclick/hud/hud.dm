@@ -441,6 +441,22 @@
 
 /// Wrapper for adding anything to a client's screen
 /client/proc/add_to_screen(screen_add)
+	if(istype(mob, /mob/living/carbon/human))
+		var/mob/living/carbon/human/H = mob
+		if(H.cryo_intro_hud_hidden)
+			if(islist(screen_add))
+				var/list/filtered_add = list()
+				for(var/thing as anything in screen_add)
+					if(H.is_cryo_intro_screen_allowed(thing))
+						filtered_add += thing
+				if(!length(filtered_add))
+					return
+				screen += filtered_add
+				SEND_SIGNAL(src, COMSIG_CLIENT_SCREEN_ADD, filtered_add)
+				return
+			else if(!H.is_cryo_intro_screen_allowed(screen_add))
+				return
+
 	screen += screen_add
 	SEND_SIGNAL(src, COMSIG_CLIENT_SCREEN_ADD, screen_add)
 
