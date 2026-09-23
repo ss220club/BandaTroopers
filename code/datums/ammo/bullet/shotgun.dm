@@ -695,6 +695,7 @@
 /datum/ammo/bullet/shotgun/buckshot/medium
 	name = "medium buckshot"
 	handful_state = "medium_buck"
+	handful_type = /obj/item/ammo_magazine/handful/shotgun/medium
 	multiple_handful_name = TRUE
 	bonus_projectiles_type = /datum/ammo/bullet/shotgun/buckshot/medium/spread
 	bonus_projectiles_amount = EXTRA_PROJECTILES_TIER_6
@@ -714,10 +715,9 @@
 
 /datum/ammo/bullet/shotgun/flechette/medium
 	name = "medium flechette shell"
-
 	handful_state = "medium_flech"
+	handful_type = /obj/item/ammo_magazine/handful/shotgun/medium/flechette
 	bonus_projectiles_type = /datum/ammo/bullet/shotgun/flechette_spread/medium
-
 	max_range = 15
 	damage = 40
 	penetration = ARMOR_PENETRATION_TIER_8
@@ -736,7 +736,7 @@
 /datum/ammo/bullet/shotgun/slug/medium
 	name = "medium shotgun slug"
 	handful_state = "medium_slug"
-
+	handful_type = /obj/item/ammo_magazine/handful/shotgun/medium/slugs
 	accurate_range = 9
 	max_range = 17
 	damage = 105

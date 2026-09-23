@@ -561,6 +561,7 @@
 /obj/item/ammo_magazine/rifle/nsg23/extended
 	name = "\improper NSG 23 extended magazine (8.5x33mm)"
 	desc = "A high-capacity drum magazine designed to fit the NSG 23 & L23A1 assault rifles."
+	bonus_overlay = "nsg23_ext_overlay"
 // SS220 EDIT - END
 
 /obj/item/ammo_magazine/rifle/nsg23/ap
