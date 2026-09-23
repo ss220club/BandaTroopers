@@ -148,7 +148,20 @@
 	if(!SSticker.mode)
 		return
 
-	SSticker.mode.round_finished = MODE_INFESTATION_DRAW_DEATH
+	// P1.10: Outcome choice for round cinematics
+	var/outcome_choice = tgui_input_list(usr, "Выберите исход операции для синематики:", "Исход раунда", list("Авто / определить по режиму", "Победа операции", "Провал операции", "Исход не подтверждён"), default = "Авто / определить по режиму")
+	if(!isnull(outcome_choice) && outcome_choice != "Авто / определить по режиму")
+		if(GLOB.round_cinematics)
+			switch(outcome_choice)
+				if("Победа операции")
+					GLOB.round_cinematics.set_admin_outcome(ROUND_CINEMATICS_OUTCOME_MARINE_VICTORY)
+				if("Провал операции")
+					GLOB.round_cinematics.set_admin_outcome(ROUND_CINEMATICS_OUTCOME_MARINE_DEFEAT)
+				if("Исход не подтверждён")
+					GLOB.round_cinematics.set_admin_outcome(ROUND_CINEMATICS_OUTCOME_INCONCLUSIVE)
+
+	if(!SSticker.mode.round_finished)
+		SSticker.mode.round_finished = MODE_INFESTATION_DRAW_DEATH
 	message_admins("[key_name(usr)] has made the round end early.")
 	for(var/client/C in GLOB.admins)
 		to_chat(C, {"

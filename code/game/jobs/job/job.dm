@@ -354,6 +354,11 @@
 		*/
 		// human.try_enter_nearby_free_cryopod(src)
 		human.try_enter_nearby_free_cryopod(src, spawn_candidate?["preferred_pod"]) // SS220 EDIT: added preferred_pod from modular spawn candidate
+		// SS220 EDIT: capture cryopod for reliable cryo-intro start
+		if(istype(human.loc, /obj/structure/machinery/cryopod))
+			human.spawn_cryopod = human.loc
+
+		GLOB.round_cinematics?.on_human_assigned_cryo(human, human.spawn_cryopod, "roundstart_job")
 
 		human.sec_hud_set_ID()
 		human.hud_set_squad()

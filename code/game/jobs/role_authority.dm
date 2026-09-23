@@ -659,6 +659,11 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 	*/
 	// new_human.try_enter_nearby_free_cryopod(new_job)
 	new_human.try_enter_nearby_free_cryopod(new_job, spawn_candidate?["preferred_pod"]) // SS220 EDIT: added preferred_pod from modular spawn candidate
+	// SS220 EDIT: capture cryopod for reliable cryo-intro start
+	if(istype(new_human.loc, /obj/structure/machinery/cryopod))
+		new_human.spawn_cryopod = new_human.loc
+
+	GLOB.round_cinematics?.on_human_assigned_cryo(new_human, new_human.spawn_cryopod, "roundstart")
 
 	new_human.sec_hud_set_ID()
 	new_human.hud_set_squad()
