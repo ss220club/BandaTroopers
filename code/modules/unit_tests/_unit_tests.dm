@@ -82,6 +82,7 @@
 #include "emote_panels.dm"
 #include "game_rule_panel.dm" // SS220 EDIT: include Game Rule Panel unit tests
 #include "gc_regressions.dm"
+#include "minimap.dm" // DemonicLynx for BandaMarines: adaptive large-map rendering regression tests
 #include "missing_icons.dm"
 #include "resist.dm"
 #include "spawn_humans.dm"
