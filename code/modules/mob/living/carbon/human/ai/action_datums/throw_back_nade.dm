@@ -9,12 +9,14 @@
 	var/throw_ready_time = 0 // SS220 EDIT: picked-up timed grenades roll a random hold window before the actual throw
 	var/mid_throw = FALSE // SS220 EDIT: transient async state keeps trigger_action() no-sleep while the real throw runs separately
 	var/throw_finished = FALSE // SS220 EDIT: transient async state completes the action on the next scheduler tick
+	// DemonicLynx for BandaMarines
+	var/turf/planned_throw_target // SS220 EDIT: prove a safe hostile-side destination exists before approaching the live grenade
 
 /datum/ai_action/throw_back_nade/get_weight(datum/human_ai_brain/brain)
-	if(!brain.can_throw_back_grenades) // SS220 EDIT: modular HALO weak AI presets must not enter throw-back mode
-		return 0
+	brain.scan_nearby_live_grenade_threat() // SS220 EDIT: four-tile grenade awareness is independent of ordinary looting range
 
-	if(QDELETED(brain.active_grenade_found))
+	// DemonicLynx for BandaMarines
+	if(QDELETED(brain.active_grenade_found) || !brain.active_grenade_found.active)
 		return 0
 
 	if(get_dist(brain.tied_human, brain.active_grenade_found) > 4)
@@ -27,10 +29,13 @@
 	throw_ready_time = 0
 	mid_throw = FALSE // SS220 EDIT: drop transient async throw state when the action is torn down
 	throw_finished = FALSE // SS220 EDIT: drop transient async throw state when the action is torn down
+	// DemonicLynx for BandaMarines
+	planned_throw_target = null
 	return ..()
 
 /datum/ai_action/throw_back_nade/proc/try_hold_grenade(mob/living/carbon/human/tied_human, obj/item/explosive/grenade/grenade)
-	if(!grenade || QDELETED(grenade) || !isturf(grenade.loc))
+	// DemonicLynx for BandaMarines
+	if(!grenade || QDELETED(grenade) || (!isturf(grenade.loc) && grenade.loc != tied_human)) // SS220 EDIT: reselect a grenade already picked up for throw-back
 		return FALSE
 
 	if(tied_human.get_active_hand() == grenade)
@@ -92,6 +97,44 @@
 
 	return null
 
+// DemonicLynx for BandaMarines
+/// Returns TRUE only when the live grenade can reach this turf without crossing dense cover or endangering friendlies.
+/datum/ai_action/throw_back_nade/proc/can_throw_back_to_target(mob/living/carbon/human/tied_human, obj/item/explosive/grenade/grenade, turf/target_turf)
+	if(!tied_human || QDELETED(grenade) || !target_turf)
+		return FALSE
+	var/distance = get_dist(tied_human, target_turf)
+	if(distance < min_safe_throw_distance || distance > grenade.throw_range)
+		return FALSE
+	for(var/turf/path_turf as anything in get_line(tied_human, target_turf, include_start_atom = FALSE))
+		if(path_turf.density)
+			return FALSE
+		for(var/obj/path_blocker in path_turf)
+			if(path_blocker.density)
+				return FALSE
+	for(var/mob/possible_friendly in range(brain.friendly_throw_check_range, target_turf))
+		if(!brain.can_target(possible_friendly))
+			return FALSE
+	return TRUE
+
+/// Finds a safe visible turf on the hostile side before the NPC risks handling the grenade.
+/datum/ai_action/throw_back_nade/proc/get_hostile_throw_target(mob/living/carbon/human/tied_human, obj/item/explosive/grenade/grenade)
+	var/list/possible_targets = list()
+	for(var/mob/living/carbon/target in range(brain.view_distance, tied_human))
+		if(brain.can_target(target))
+			possible_targets += target
+	for(var/mob/living/carbon/target as anything in shuffle(possible_targets))
+		var/turf/target_turf = get_turf(target)
+		if(can_throw_back_to_target(tied_human, grenade, target_turf))
+			return target_turf
+	return null
+
+/// Keeps the reaction action alive while the NPC creates more than four tiles of separation.
+/datum/ai_action/throw_back_nade/proc/evade_live_grenade(obj/item/explosive/grenade/grenade)
+	if(QDELETED(grenade) || !grenade.active || get_dist(brain.tied_human, grenade) > 4)
+		return ONGOING_ACTION_COMPLETED
+	brain.move_away_from_live_grenade(grenade)
+	return ONGOING_ACTION_UNFINISHED
+
 /datum/ai_action/throw_back_nade/trigger_action()
 	. = ..()
 	if(throw_finished)
@@ -100,12 +143,7 @@
 	if(mid_throw)
 		return ONGOING_ACTION_UNFINISHED
 
-	if(!brain.can_throw_back_grenades) // SS220 EDIT: abort stale throw-back actions after preset capability changes
-		log_game("AI GRENADE: throw-back aborted — capability disabled, mob=[key_name(brain?.tied_human)]")
-		brain.active_grenade_found = null
-		throw_ready_time = 0
-		return ONGOING_ACTION_COMPLETED
-
+	// DemonicLynx for BandaMarines
 	var/obj/item/explosive/grenade/active_grenade_found = brain.active_grenade_found
 	if(QDELETED(active_grenade_found) || !active_grenade_found.active || (!isturf(active_grenade_found.loc) && active_grenade_found.loc != brain.tied_human))
 		log_game("AI GRENADE: throw-back aborted — grenade stale or spent, grenade=[active_grenade_found], mob=[key_name(brain?.tied_human)]")
@@ -115,19 +153,30 @@
 
 	var/mob/living/carbon/human/tied_human = brain.tied_human
 	if(active_grenade_found.loc != tied_human)
+		// DemonicLynx for BandaMarines
+		if(!brain.can_attempt_live_grenade_throwback(active_grenade_found))
+			return evade_live_grenade(active_grenade_found) // SS220 EDIT: incapable NPCs retreat and never approach or pick up the grenade
+
+		planned_throw_target = get_hostile_throw_target(tied_human, active_grenade_found)
+		if(!planned_throw_target)
+			return evade_live_grenade(active_grenade_found) // SS220 EDIT: prove a safe hostile-side throw exists before touching the grenade
+
 		if(get_dist(active_grenade_found, tied_human) > 1)
 			if(!brain.move_to_next_turf(get_turf(active_grenade_found)))
-				log_game("AI GRENADE: throw-back aborted — could not move to grenade, grenade=[active_grenade_found], mob=[key_name(tied_human)]")
-				return ONGOING_ACTION_COMPLETED
+				// DemonicLynx for BandaMarines
+				return evade_live_grenade(active_grenade_found) // SS220 EDIT: failed interception falls back to escape
 
 			if(get_dist(active_grenade_found, tied_human) > 1)
 				return ONGOING_ACTION_UNFINISHED
 
+		// DemonicLynx for BandaMarines
+		planned_throw_target = get_hostile_throw_target(tied_human, active_grenade_found)
+		if(!planned_throw_target)
+			return evade_live_grenade(active_grenade_found)
+
 		if(!try_hold_grenade(tied_human, active_grenade_found))
-			log_game("AI GRENADE: throw-back aborted — could not pick up grenade, grenade=[active_grenade_found], mob=[key_name(tied_human)]")
-			brain.active_grenade_found = null
-			throw_ready_time = 0
-			return ONGOING_ACTION_COMPLETED
+			// DemonicLynx for BandaMarines
+			return evade_live_grenade(active_grenade_found) // SS220 EDIT: failed pickup never leaves the NPC standing beside the threat
 
 		var/remaining_fuse_ticks = active_grenade_found.get_remaining_timed_fuse_ticks()
 		if(isnull(remaining_fuse_ticks) || (remaining_fuse_ticks <= 0))
@@ -141,25 +190,10 @@
 	if(world.time < throw_ready_time)
 		return ONGOING_ACTION_UNFINISHED
 
-	var/view_distance = brain.view_distance
-	var/list/possible_targets = list()
-
-	for(var/mob/living/carbon/target in range(view_distance, tied_human))
-		if(brain.can_target(target))
-			possible_targets += target
-
-	var/turf/place_to_throw
-	if(length(possible_targets))
-		var/mob/living/carbon/chosen_target = pick(possible_targets)
-		var/list/turf_pathfind_list = AStar(get_turf(tied_human), get_turf(chosen_target), /turf/proc/AdjacentTurfs, /turf/proc/Distance, view_distance)
-		for(var/i = length(turf_pathfind_list); i >= min_safe_throw_distance; i--) // We cut it off at 4 because we want to avoid most of the nade blast
-			var/turf/target_turf = turf_pathfind_list[i]
-			if(tied_human in viewers(view_distance, target_turf))
-				place_to_throw = target_turf
-				break
-
-	if(place_to_throw && (get_dist(tied_human, place_to_throw) < min_safe_throw_distance))
-		place_to_throw = null // SS220 EDIT: short A* paths must not degrade into self-throws when the target is already too close
+	// DemonicLynx for BandaMarines
+	var/turf/place_to_throw = get_hostile_throw_target(tied_human, active_grenade_found)
+	if(!place_to_throw && can_throw_back_to_target(tied_human, active_grenade_found, planned_throw_target))
+		place_to_throw = planned_throw_target // SS220 EDIT: retain the pre-pickup hostile target if it remains safe
 
 	if(!place_to_throw)
 		place_to_throw = get_directional_throw_target(tied_human) // SS220 EDIT: fallback keeps the primed grenade moving away from nearby friendlies and the thrower

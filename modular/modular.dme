@@ -8,11 +8,15 @@
 #include "_singletons/_singletons.dme"
 
 #include "admin/_admin.dme"
+// DemonicLynx for BandaMarines
+#include "faction_music/_faction_music.dme"
 #include "speech_filter/_speech_filter.dme"
 #include "text_to_speech/_tts.dme"
 #include "game_master/_game_master.dme"
 #include "game_rule_panel/_game_rule_panel.dme"
 #include "fullscreen/_fullscreen.dme"
+// DemonicLynx for BandaMarines
+#include "human_ai/_human_ai.dme"
 #include "squads/_squads.dme"
 #include "world_edit/_world_edit.dme"
 #include "weapons/_weapons.dme"

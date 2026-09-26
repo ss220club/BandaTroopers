@@ -62,6 +62,6 @@
 	currently_reloading = FALSE
 
 /datum/ai_action/reload/proc/primary_ammo_search()
-	for(var/obj/item/ammo_magazine/mag as anything in brain.equipment_map[HUMAN_AI_AMMUNITION])
-		if(istype(brain.primary_weapon, mag.gun_type) && mag.ai_can_use(brain.tied_human, src))
-			return mag
+	// DemonicLynx for BandaMarines
+	// SS220 EDIT: keep reload and weapon-selection ammo compatibility checks on one code path
+	return brain.weapon_ammo_search(brain.primary_weapon)

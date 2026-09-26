@@ -359,6 +359,8 @@
 		human.hud_set_squad()
 
 		SSround_recording.recorder.track_player(human)
+		// DemonicLynx for BandaMarines
+		play_faction_music(human) // SS220 EDIT: play the resolved faction track after roundstart job/faction equipment is complete
 
 	return TRUE
 

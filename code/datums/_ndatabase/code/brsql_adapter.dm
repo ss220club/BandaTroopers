@@ -266,6 +266,11 @@
 	if(first_id.status != DB_QUERY_FINISHED)
 		issue_log += "Unable to allocate insert for [table_name], error: '[first_id.error]'"
 		return -1 // OH SHIT OH FUCK
+	// SS220 EDIT - START: handle an empty max(id) aggregate result
+	// DemonicLynx for BandaMarines
+	if(!length(first_id.results))
+		return 1
+	// SS220 EDIT - END
 	var/value = first_id.results[1][BRSQL_COUNT_COLUMN_NAME]
 	if(!value)
 		return 1

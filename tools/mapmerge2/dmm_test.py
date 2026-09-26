@@ -1,3 +1,4 @@
+# DemonicLynx for BandaMarines
 import os
 import sys
 import pygit2
@@ -19,6 +20,25 @@ def has_tgm_header(fname):
 class LintException(Exception):
     pass
 
+def resolve_base_ref(repo):
+    base_branch = os.environ.get("GITHUB_BASE_REF") or "main"
+    candidates = (
+        f"refs/remotes/origin/{base_branch}",
+        "refs/remotes/origin/HEAD",
+        "refs/remotes/origin/main",
+    )
+
+    for ref_name in dict.fromkeys(candidates):
+        try:
+            return repo.lookup_reference(ref_name).resolve().target
+        except KeyError:
+            continue
+
+    raise LintException(
+        "Unable to resolve the repository base branch. Fetch origin/main "
+        "or set GITHUB_BASE_REF to the checked-out pull request base."
+    )
+
 def _self_test():
     repo = pygit2.Repository(pygit2.discover_repository(os.getcwd()))
 
@@ -26,7 +46,7 @@ def _self_test():
     # Assumption: origin on the runner is what we'd normally call upstream
     head = repo.head.target
     initial_head_commit = repo[head]
-    upstream = repo.revparse_single("refs/remotes/origin/master").id
+    upstream = resolve_base_ref(repo)
     ancestor = repo.merge_base(head, upstream)
     ancestor_commit = None
     if len(initial_head_commit.parent_ids) != 1: # if HEAD is a merge commit:

@@ -271,6 +271,9 @@
 		to_chat(character, SPAN_HIGHDANGER("As you stagger out of hypersleep, the sleep bay blares: '[SShijack.evac_status ? "VESSEL UNDERGOING EVACUATION PROCEDURES, SELF DEFENSE KIT PROVIDED" : "VESSEL IN HEIGHTENED ALERT STATUS, SELF DEFENSE KIT PROVIDED"]'."))
 		character.put_in_hands(new /obj/item/storage/box/kit/cryo_self_defense(character.loc))
 
+	// DemonicLynx for BandaMarines
+	// play_faction_latejoin_music(character) // SS220 EDIT: moved faction playback to the shared role-equipment completion point
+
 	GLOB.data_core.manifest_inject(character)
 	SSticker.minds += character.mind//Cyborgs and AIs handle this in the transform proc. //TODO!!!!! ~Carn
 	SSticker.mode.latejoin_update(player_rank)

@@ -546,8 +546,9 @@
 	has_sensor = UNIFORM_HAS_SENSORS
 	sensor_faction = FACTION_UPP
 	armor_internaldamage = CLOTHING_ARMOR_MEDIUMLOW
-	// SS220 EDIT: CM-PVE #1255 UPP camouflage — NO_NAME_OVERRIDE for gamemode skin
-	flags_atom = NO_NAME_OVERRIDE
+	// DemonicLynx for BandaMarines
+	// SS220 EDIT: keep the base UPP texture on every map and remove the prior Kutjevo-only override
+	flags_atom = NO_SNOW_TYPE|NO_NAME_OVERRIDE
 	item_icons = list( // SS220 EDIT: split GroundSide military uniforms out of uniform_0.dmi
 		WEAR_BODY = 'icons/mob/humans/onmob/clothing/uniforms/uniforms_by_faction/groundside_military.dmi',
 	)

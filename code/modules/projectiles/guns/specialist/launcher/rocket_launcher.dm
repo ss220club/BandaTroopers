@@ -73,6 +73,7 @@
 	if(skill_locked && !skillcheck(user, SKILL_SPEC_WEAPONS, SKILL_SPEC_ALL) && user.skills.get_skill_level(SKILL_SPEC_WEAPONS) != SKILL_SPEC_ROCKET)
 		to_chat(user, SPAN_WARNING("You don't seem to know how to use \the [src]..."))
 		return FALSE
+	// DemonicLynx for BandaMarines: keep the transfer package compatible with builds that predate is_marine_equivalent_human().
 	if(user.faction == FACTION_MARINE && explosive_antigrief_check(src, user))
 		to_chat(user, SPAN_WARNING("\The [name]'s safe-area accident inhibitor prevents you from firing!"))
 		msg_admin_niche("[key_name(user)] attempted to fire \a [name] in [get_area(src)] [ADMIN_JMP(loc)]")
@@ -520,9 +521,10 @@
 
 /obj/item/weapon/gun/launcher/rocket/upp/set_bullet_traits()
 	. = ..()
+	// SS220 EDIT: the base rocket launcher already supplies IFF; attaching it twice overrides its projectile signal
 	LAZYADD(traits_to_give, list(
-		BULLET_TRAIT_ENTRY_ID("vehicles", /datum/element/bullet_trait_damage_boost, 100, GLOB.damage_boost_vehicles),
-		BULLET_TRAIT_ENTRY(/datum/element/bullet_trait_iff)
+		// DemonicLynx for BandaMarines
+		BULLET_TRAIT_ENTRY_ID("vehicles", /datum/element/bullet_trait_damage_boost, 100, GLOB.damage_boost_vehicles)
 	))
 
 // SS220 EDIT - START: CM-PVE #1288 Anti Air GM Choice — looping sounds for AA lockon

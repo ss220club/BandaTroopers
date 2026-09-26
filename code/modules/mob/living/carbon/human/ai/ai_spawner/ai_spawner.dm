@@ -280,12 +280,20 @@
 					ai_human = new()
 				else
 					randomise_appearance = FALSE
+					// DemonicLynx for BandaMarines
+					// SS220 EDIT AI - START: outfit mode operates on mobs; a turf click previously called change_mob_type() on the turf
+					if(!ismob(object))
+						to_chat(user, SPAN_WARNING("Outfit mode requires clicking a mob."))
+						return
 					if(!ishuman(object))
-						var/mob/living/carbon/human/selected = object
+						// DemonicLynx for BandaMarines
+						var/mob/selected = object
 						selected = selected.change_mob_type(/mob/living/carbon/human, null, null, TRUE, "Human")
 						object = selected
 						if(!ishuman(selected))
 							return
+					// DemonicLynx for BandaMarines
+					// SS220 EDIT AI - END
 					ai_human = object
 
 					for(var/item in ai_human.get_equipped_items(TRUE))

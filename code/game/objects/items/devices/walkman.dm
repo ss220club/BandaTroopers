@@ -101,6 +101,8 @@
 		else
 			return
 	paused = FALSE
+	// DemonicLynx for BandaMarines
+	current_listener?.client?.stop_faction_music_playback() // SS220 EDIT: personal Walkman playback takes priority over faction music
 	if(current_song.status & SOUND_PAUSED)
 		to_chat(current_listener,SPAN_INFO("Resuming [pl_index] of [length(current_playlist)]"))
 		update_song(current_song,current_listener)

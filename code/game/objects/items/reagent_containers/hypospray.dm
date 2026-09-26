@@ -208,6 +208,17 @@
 		playsound(user.loc, 'sound/weapons/thudswoosh.ogg', 25, 1, 7)
 		return 0
 
+	// DemonicLynx for BandaMarines
+	// SS220 EDIT - START: another medic may finish a dose during our do_after; AI must recheck immediately before transfer
+	if(ishuman(user))
+		var/mob/living/carbon/human/human_user = user
+		var/datum/human_ai_brain/ai_brain = human_user.get_ai_brain()
+		if(ai_brain && ishuman(M))
+			var/mob/living/carbon/human/human_target = M
+			if(!ai_brain.can_safely_administer_reagents(src, human_target, amount_per_transfer_from_this))
+				return 0
+	// SS220 EDIT - END
+
 	to_chat(user, SPAN_NOTICE(" You inject [M] with [src]."))
 	to_chat(M, SPAN_WARNING("You feel a tiny prick!"))
 	playsound(loc, injectSFX, injectVOL, 1)
@@ -230,6 +241,17 @@
 		else
 			to_chat(user, SPAN_NOTICE("[trans] units injected. [reagents.total_volume] units remaining in [src]."))
 	return TRUE
+
+// DemonicLynx for BandaMarines
+// SS220 EDIT - START: enable Human AI use of the supported autoinjectors listed by its treatment engine
+/obj/item/reagent_container/hypospray/ai_can_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain, mob/living/carbon/human/target)
+	return target && reagents?.total_volume && target.can_inject(user, TRUE) && ai_brain?.can_safely_administer_reagents(src, target, amount_per_transfer_from_this) // SS220 EDIT: prevent AI-administered OD
+
+/obj/item/reagent_container/hypospray/ai_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain, mob/living/carbon/human/target)
+	if(!ai_can_use(user, ai_brain, target)) // SS220 EDIT: recheck after async treatment delay and other medics' doses
+		return FALSE
+	return attack(target, user)
+// SS220 EDIT - END
 
 /obj/item/reagent_container/hypospray/Initialize()
 	. = ..()

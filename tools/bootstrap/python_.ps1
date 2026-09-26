@@ -1,3 +1,4 @@
+# DemonicLynx for BandaMarines
 # bootstrap/python_.ps1
 #
 # Python bootstrapping script for Windows.
@@ -24,6 +25,17 @@ function ExtractVersion {
 	throw "Couldn't find value for $Key in $Path"
 }
 
+function GetFileHashString {
+	param([string] $Path)
+	$Sha256 = [System.Security.Cryptography.SHA256]::Create()
+	try {
+		return [System.BitConverter]::ToString($Sha256.ComputeHash([System.IO.File]::ReadAllBytes($Path)))
+	}
+	finally {
+		$Sha256.Dispose()
+	}
+}
+
 # Convenience variables
 $Bootstrap = Split-Path $script:MyInvocation.MyCommand.Path
 $Tools = Split-Path $Bootstrap
@@ -35,6 +47,8 @@ $PythonVersion = ExtractVersion -Path "$Bootstrap/../../dependencies.sh" -Key "P
 $PythonDir = "$Cache/python-$PythonVersion"
 $PythonExe = "$PythonDir/python.exe"
 $Log = "$Cache/last-command.log"
+$PythonVersionArray = $PythonVersion.Split(".")
+$PythonVersionString = "python$($PythonVersionArray[0])$($PythonVersionArray[1])"
 
 # Download and unzip a portable version of Python
 if (!(Test-Path $PythonExe -PathType Leaf)) {
@@ -49,17 +63,14 @@ if (!(Test-Path $PythonExe -PathType Leaf)) {
 
 	[System.IO.Compression.ZipFile]::ExtractToDirectory($Archive, $PythonDir)
 
-	$PythonVersionArray = $PythonVersion.Split(".")
-	$PythonVersionString = "python$($PythonVersionArray[0])$($PythonVersionArray[1])"
-	Write-Output "Generating PATH descriptor."
-	New-Item "$Cache/$PythonVersionString._pth" | Out-Null
-	Set-Content "$Cache/$PythonVersionString._pth" "$PythonVersionString.zip`n.`n..\..\..`nimport site`n"
-	# Copy a ._pth file without "import site" commented, so pip will work
-	Copy-Item "$Cache/$PythonVersionString._pth" $PythonDir `
-		-ErrorAction Stop
-
 	Remove-Item $Archive
 }
+
+# Keep the embedded Python import path valid for both a fresh and an existing cache.
+# Four parents is the repo root (`tools.*` imports); three parents is `tools`
+# (the historical `dmi.*` and `mapmerge2.*` module entrypoints).
+Write-Output "Configuring Python path descriptor."
+Set-Content "$PythonDir/$PythonVersionString._pth" "$PythonVersionString.zip`n.`n..\..\..\..`n..\..\..`nimport site`n"
 
 # Install pip
 if (!(Test-Path "$PythonDir/Scripts/pip.exe")) {
@@ -79,7 +90,7 @@ if (!(Test-Path "$PythonDir/Scripts/pip.exe")) {
 }
 
 # Use pip to install our requirements
-if (!(Test-Path "$PythonDir/requirements.txt") -or ((Get-FileHash "$Tools/requirements.txt").hash -ne (Get-FileHash "$PythonDir/requirements.txt").hash)) {
+if (!(Test-Path "$PythonDir/requirements.txt") -or ((GetFileHashString "$Tools/requirements.txt") -ne (GetFileHashString "$PythonDir/requirements.txt"))) {
 	$host.ui.RawUI.WindowTitle = "Updating dependencies..."
 
 	& $PythonExe -m pip install -U pip -r "$Tools/requirements.txt"
@@ -97,6 +108,7 @@ Write-Output $PythonExe | Out-File -Encoding utf8 $Log
 Write-Output "---" | Out-File -Encoding utf8 -Append $Log
 $host.ui.RawUI.WindowTitle = "python $args"
 $ErrorActionPreference = "Continue"
+$Env:PYTHONUTF8 = "1"
 & $PythonExe -u $args 2>&1 | ForEach-Object {
 	$str = "$_"
 	if ($_.GetType() -eq [System.Management.Automation.ErrorRecord]) {

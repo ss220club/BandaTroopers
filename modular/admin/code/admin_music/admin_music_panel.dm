@@ -324,6 +324,8 @@
 	var/datum/media_response/preview_response = GLOB.admin_music_service.resolve_media(holder, preview_variant.source_url)
 	if(!preview_response)
 		return FALSE
+	// DemonicLynx for BandaMarines
+	holder?.stop_faction_music_playback()
 	set_preview_command("play", list(
 		"title" = length(preview_variant.title) ? preview_variant.title : (preview_response.title ? preview_response.title : "Admin sound"),
 		"url" = preview_response.url,

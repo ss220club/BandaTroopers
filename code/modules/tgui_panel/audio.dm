@@ -20,6 +20,8 @@
 /datum/tgui_panel/proc/play_music(url, extra_data)
 	if(!is_ready())
 		return
+	// DemonicLynx for BandaMarines
+	client?.stop_faction_music_playback() // SS220 EDIT: browser music takes priority over the faction intro track
 	// Commented to allow playing via simple asset transport. Just check when calling.
 //	if(!findtext(url, GLOB.is_http_protocol))
 //		return

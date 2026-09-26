@@ -665,6 +665,8 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 
 	SEND_SIGNAL(new_human, COMSIG_POST_SPAWN_UPDATE)
 	SSround_recording.recorder.track_player(new_human)
+	// DemonicLynx for BandaMarines
+	play_faction_music(new_human) // SS220 EDIT: shared old-roundstart/latejoin completion point for faction music
 
 //Find which squad has the least population. If all 4 squads are equal it should just use a random one
 /datum/authority/branch/role/proc/get_lowest_squad(mob/living/carbon/human/H)
@@ -1008,6 +1010,23 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 	return desired_status
 
 /proc/transfer_marine_to_squad(mob/living/carbon/human/transfer_marine, datum/squad/new_squad, datum/squad/old_squad, obj/item/card/id/ID)
+	// DemonicLynx for BandaMarines
+	if(!transfer_marine || !new_squad)
+		return FALSE
+	if(old_squad == new_squad)
+		return FALSE
+
+	// Overwatch transfers are explicit administrative moves. A squad can be
+	// visible/valid for transfer even when its backend `usable` flag is FALSE
+	// (for example a modular or secondary squad). The destination must still
+	// be unlocked; we temporarily enable it only while inserting the marine.
+	if(new_squad.locked)
+		return FALSE
+
+	var/restore_usable = !new_squad.usable
+	if(restore_usable)
+		new_squad.usable = TRUE
+
 	if(old_squad)
 		if(transfer_marine.assigned_fireteam)
 			if(old_squad.fireteam_leaders["FT[transfer_marine.assigned_fireteam]"] == transfer_marine)
@@ -1019,6 +1038,11 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 	if(.)
 		new_squad.update_free_mar()
 
+	// DemonicLynx for BandaMarines
+	if(restore_usable)
+		new_squad.usable = FALSE
+
+	if(.)
 		var/marine_ref = WEAKREF(transfer_marine)
 		for(var/datum/data/record/t in GLOB.data_core.general) //we update the crew manifest
 			if(t.fields["ref"] == marine_ref)

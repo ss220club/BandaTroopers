@@ -40,6 +40,9 @@
 
 /datum/ai_action/item_pickup/trigger_action()
 	. = ..()
+	// DemonicLynx for BandaMarines
+	if(brain.get_priority_ally_treatment_target()) // SS220 EDIT: abandon routine loot so treatment can start on the next AI tick
+		return ONGOING_ACTION_COMPLETED
 
 	if(QDELETED(to_pickup) || !isturf(to_pickup.loc))
 		brain.UnregisterSignal(to_pickup, COMSIG_PARENT_QDELETING)
@@ -96,17 +99,33 @@
 		INVOKE_ASYNC(tied_human, TYPE_PROC_REF(/mob, equip_to_slot), to_pickup, WEAR_R_STORE)
 		return ONGOING_ACTION_COMPLETED
 
+	// DemonicLynx for BandaMarines
+	// SS220 EDIT - START: revalidate medicine for self or allies, then retain it in storage or hand for treatment
+	if(to_pickup.flags_human_ai & HEALING_ITEM)
+		if(!brain.medical_item_has_target(to_pickup))
+			brain.UnregisterSignal(to_pickup, COMSIG_PARENT_QDELETING)
+			brain.to_pickup -= to_pickup
+			return ONGOING_ACTION_COMPLETED
+
+		var/health_storage_spot = brain.storage_has_room(to_pickup)
+		tied_human.put_in_hands(to_pickup, TRUE)
+		if(to_pickup.loc != tied_human)
+			brain.to_pickup -= to_pickup
+			return ONGOING_ACTION_COMPLETED
+		if(health_storage_spot)
+			brain.store_item(to_pickup, health_storage_spot, HUMAN_AI_HEALTHITEMS)
+		else
+			brain.index_held_health_item(to_pickup)
+		return ONGOING_ACTION_COMPLETED
+	// SS220 EDIT - END
+
 	var/storage_spot = brain.storage_has_room(to_pickup)
 	if(!storage_spot || !to_pickup.ai_can_use(tied_human, brain, tied_human))
 		brain.UnregisterSignal(to_pickup, COMSIG_PARENT_QDELETING)
 		brain.to_pickup -= to_pickup
 		return ONGOING_ACTION_COMPLETED
 
-	if(to_pickup.flags_human_ai & HEALING_ITEM)
-		tied_human.put_in_hands(to_pickup, TRUE)
-		brain.store_item(to_pickup, storage_spot, HUMAN_AI_HEALTHITEMS)
-		return ONGOING_ACTION_COMPLETED
-
+	// DemonicLynx for BandaMarines
 	if(brain.primary_weapon && istype(to_pickup, /obj/item/ammo_magazine))
 		var/obj/item/ammo_magazine/mag = to_pickup
 		if(istype(brain.primary_weapon, mag.gun_type))
