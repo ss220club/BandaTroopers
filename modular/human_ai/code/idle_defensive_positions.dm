@@ -1,3 +1,4 @@
+// DemonicLynx for BandaMarines
 #define HUMAN_AI_IDLE_CLUSTER_RADIUS 1
 #define HUMAN_AI_IDLE_CLUSTER_SIZE 3
 #define HUMAN_AI_IDLE_POSITION_RADIUS 6

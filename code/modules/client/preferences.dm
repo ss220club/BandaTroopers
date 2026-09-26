@@ -66,6 +66,7 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 	var/toggles_sound = TOGGLES_SOUND_DEFAULT
 	var/toggles_flashing = TOGGLES_FLASHING_DEFAULT
 	var/toggles_ert = TOGGLES_ERT_DEFAULT
+	// DemonicLynx for BandaMarines
 	var/list/volume_preferences = list(1, 0.5, 1, 0.6, // Game, ambience, admin midis, lobby music
 	1, 0.5, 0.5, 0.35) // Local, Radio, Announces, faction music - SS220 EDIT
 	var/chat_display_preferences = CHAT_TYPE_ALL

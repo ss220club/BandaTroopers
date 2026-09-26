@@ -308,6 +308,7 @@
 		return
 
 	if(client.check_whitelist_status(WHITELIST_PREDATOR))
+		// DemonicLynx for BandaMarines
 		RegisterSignal(SSdcs, COMSIG_GLOB_PREDATOR_ROUND_TOGGLED, PROC_REF(toggle_predator_action), override = TRUE) // SS220 EDIT: Login may run again for the same observer
 		toggle_predator_action()
 

@@ -1,3 +1,4 @@
+// DemonicLynx for BandaMarines
 import assert from "node:assert/strict";
 import fs from "fs";
 import os from "os";
@@ -34,6 +35,7 @@ test("generates deterministic recursive faction music resources", () => {
     assert.equal(first.changed, true);
     assert.equal(first.trackCount, 4);
     assert.equal(second.changed, false);
+    assert.match(manifest, /DemonicLynx for BandaMarines/);
     assert.match(
       manifest,
       /'sound\/factions music\/UPP\/nested\/track\.wav'/

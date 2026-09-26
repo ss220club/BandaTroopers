@@ -665,6 +665,7 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 
 	SEND_SIGNAL(new_human, COMSIG_POST_SPAWN_UPDATE)
 	SSround_recording.recorder.track_player(new_human)
+	// DemonicLynx for BandaMarines
 	play_faction_music(new_human) // SS220 EDIT: shared old-roundstart/latejoin completion point for faction music
 
 //Find which squad has the least population. If all 4 squads are equal it should just use a random one
@@ -1009,6 +1010,7 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 	return desired_status
 
 /proc/transfer_marine_to_squad(mob/living/carbon/human/transfer_marine, datum/squad/new_squad, datum/squad/old_squad, obj/item/card/id/ID)
+	// DemonicLynx for BandaMarines
 	if(!transfer_marine || !new_squad)
 		return FALSE
 	if(old_squad == new_squad)
@@ -1036,6 +1038,7 @@ I hope it's easier to tell what the heck this proc is even doing, unlike previou
 	if(.)
 		new_squad.update_free_mar()
 
+	// DemonicLynx for BandaMarines
 	if(restore_usable)
 		new_squad.usable = FALSE
 

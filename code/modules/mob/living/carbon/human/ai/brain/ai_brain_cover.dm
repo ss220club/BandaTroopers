@@ -1,3 +1,4 @@
+// DemonicLynx for BandaMarines
 #define HUMAN_AI_COVER_SCAN_LIMIT 198
 
 /datum/human_ai_brain
@@ -37,6 +38,7 @@
 	var/list/turf_dict = list()
 	var/cover_dir = reverse_direction(angle2dir4ai(angle))
 
+	// DemonicLynx for BandaMarines
 	scan_turfs_for_cover(get_turf(tied_human), turf_dict, cover_dir)
 
 #ifdef TESTING
@@ -68,6 +70,7 @@
 
 		brain.cover_processing(turf_dict, TRUE)
 
+// DemonicLynx for BandaMarines
 /// Iteratively searches nearby tiles and scores at most HUMAN_AI_COVER_SCAN_LIMIT candidates as cover.
 // SS220 EDIT AI - START: recursive flood-fill exhausted BYOND's call stack and aborted Human AI processing
 /datum/human_ai_brain/proc/scan_turfs_for_cover(turf/start_turf, list/turf_dict, cover_dir)
@@ -89,13 +92,16 @@
 			if(!thing.density || istype(thing, /obj/structure/barricade))
 				continue
 			turf_dict[scan_turf] -= 1000
+			// DemonicLynx for BandaMarines
 			tile_blocked = TRUE
 			break
 
+		// DemonicLynx for BandaMarines
 		// The starting turf contains the AI itself. Score it, but still expand from it.
 		if(tile_blocked && !first_iteration)
 			continue
 
+		// DemonicLynx for BandaMarines
 		var/obj/structure/barricade/cade = locate() in scan_turf.contents
 		if(cade?.density && (cade?.dir in get_related_directions(cover_dir)))
 			turf_dict[scan_turf] += cade.projectile_coverage / 2
@@ -138,6 +144,7 @@
 #endif
 
 	return TRUE
+// DemonicLynx for BandaMarines
 // SS220 EDIT AI - END
 
 /datum/human_ai_brain/proc/clear_cover_value_debug(list/turf_list)
@@ -160,5 +167,6 @@
 		// SS220 EDIT: forward the resolved cover scan once with the correct turf_dict payload
 		if(!from_squad)
 			squad_cover_processing(turf_dict)
+			// DemonicLynx for BandaMarines
 
 #undef HUMAN_AI_COVER_SCAN_LIMIT

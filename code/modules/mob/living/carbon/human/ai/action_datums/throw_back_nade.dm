@@ -9,11 +9,13 @@
 	var/throw_ready_time = 0 // SS220 EDIT: picked-up timed grenades roll a random hold window before the actual throw
 	var/mid_throw = FALSE // SS220 EDIT: transient async state keeps trigger_action() no-sleep while the real throw runs separately
 	var/throw_finished = FALSE // SS220 EDIT: transient async state completes the action on the next scheduler tick
+	// DemonicLynx for BandaMarines
 	var/turf/planned_throw_target // SS220 EDIT: prove a safe hostile-side destination exists before approaching the live grenade
 
 /datum/ai_action/throw_back_nade/get_weight(datum/human_ai_brain/brain)
 	brain.scan_nearby_live_grenade_threat() // SS220 EDIT: four-tile grenade awareness is independent of ordinary looting range
 
+	// DemonicLynx for BandaMarines
 	if(QDELETED(brain.active_grenade_found) || !brain.active_grenade_found.active)
 		return 0
 
@@ -27,10 +29,12 @@
 	throw_ready_time = 0
 	mid_throw = FALSE // SS220 EDIT: drop transient async throw state when the action is torn down
 	throw_finished = FALSE // SS220 EDIT: drop transient async throw state when the action is torn down
+	// DemonicLynx for BandaMarines
 	planned_throw_target = null
 	return ..()
 
 /datum/ai_action/throw_back_nade/proc/try_hold_grenade(mob/living/carbon/human/tied_human, obj/item/explosive/grenade/grenade)
+	// DemonicLynx for BandaMarines
 	if(!grenade || QDELETED(grenade) || (!isturf(grenade.loc) && grenade.loc != tied_human)) // SS220 EDIT: reselect a grenade already picked up for throw-back
 		return FALSE
 
@@ -93,6 +97,7 @@
 
 	return null
 
+// DemonicLynx for BandaMarines
 /// Returns TRUE only when the live grenade can reach this turf without crossing dense cover or endangering friendlies.
 /datum/ai_action/throw_back_nade/proc/can_throw_back_to_target(mob/living/carbon/human/tied_human, obj/item/explosive/grenade/grenade, turf/target_turf)
 	if(!tied_human || QDELETED(grenade) || !target_turf)
@@ -138,6 +143,7 @@
 	if(mid_throw)
 		return ONGOING_ACTION_UNFINISHED
 
+	// DemonicLynx for BandaMarines
 	var/obj/item/explosive/grenade/active_grenade_found = brain.active_grenade_found
 	if(QDELETED(active_grenade_found) || !active_grenade_found.active || (!isturf(active_grenade_found.loc) && active_grenade_found.loc != brain.tied_human))
 		log_game("AI GRENADE: throw-back aborted — grenade stale or spent, grenade=[active_grenade_found], mob=[key_name(brain?.tied_human)]")
@@ -147,6 +153,7 @@
 
 	var/mob/living/carbon/human/tied_human = brain.tied_human
 	if(active_grenade_found.loc != tied_human)
+		// DemonicLynx for BandaMarines
 		if(!brain.can_attempt_live_grenade_throwback(active_grenade_found))
 			return evade_live_grenade(active_grenade_found) // SS220 EDIT: incapable NPCs retreat and never approach or pick up the grenade
 
@@ -156,16 +163,19 @@
 
 		if(get_dist(active_grenade_found, tied_human) > 1)
 			if(!brain.move_to_next_turf(get_turf(active_grenade_found)))
+				// DemonicLynx for BandaMarines
 				return evade_live_grenade(active_grenade_found) // SS220 EDIT: failed interception falls back to escape
 
 			if(get_dist(active_grenade_found, tied_human) > 1)
 				return ONGOING_ACTION_UNFINISHED
 
+		// DemonicLynx for BandaMarines
 		planned_throw_target = get_hostile_throw_target(tied_human, active_grenade_found)
 		if(!planned_throw_target)
 			return evade_live_grenade(active_grenade_found)
 
 		if(!try_hold_grenade(tied_human, active_grenade_found))
+			// DemonicLynx for BandaMarines
 			return evade_live_grenade(active_grenade_found) // SS220 EDIT: failed pickup never leaves the NPC standing beside the threat
 
 		var/remaining_fuse_ticks = active_grenade_found.get_remaining_timed_fuse_ticks()
@@ -180,6 +190,7 @@
 	if(world.time < throw_ready_time)
 		return ONGOING_ACTION_UNFINISHED
 
+	// DemonicLynx for BandaMarines
 	var/turf/place_to_throw = get_hostile_throw_target(tied_human, active_grenade_found)
 	if(!place_to_throw && can_throw_back_to_target(tied_human, active_grenade_found, planned_throw_target))
 		place_to_throw = planned_throw_target // SS220 EDIT: retain the pre-pickup hostile target if it remains safe

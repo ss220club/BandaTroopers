@@ -895,6 +895,7 @@
 /obj/item/storage/pill_bottle/can_be_inserted(obj/item/W, mob/user, stop_messages = FALSE)
 	. = ..()
 	if(.)
+		// DemonicLynx for BandaMarines
 		// SS220 EDIT - START: storage and AI calls may not have usr; validate the explicit actor
 		if(skilllock && (!user || !skillcheck(user, SKILL_MEDICAL, SKILL_MEDICAL_MEDIC)))
 			if(user)
@@ -973,6 +974,7 @@
 		return FALSE
 
 	var/obj/item/reagent_container/pill/pill = contents[1]
+	// DemonicLynx for BandaMarines
 	if(!ai_brain.can_safely_administer_reagents(pill, target, pill.reagents.total_volume)) // SS220 EDIT: validate every reagent in mixed pills against patient levels
 		return FALSE
 
@@ -982,6 +984,7 @@
 	return TRUE
 
 /obj/item/storage/pill_bottle/ai_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain, mob/living/carbon/human/target)
+	// DemonicLynx for BandaMarines
 	if(!ai_can_use(user, ai_brain, target)) // SS220 EDIT: another medic may have dosed the patient since selection
 		return FALSE
 	var/used_pill = FALSE
@@ -989,6 +992,7 @@
 	user.swap_hand()
 	if(user.put_in_active_hand(pill))
 		remove_from_storage(pill, user)
+		// DemonicLynx for BandaMarines
 		if(!pill.attack(target, user)) // SS220 EDIT: late OD rejection must return the unused pill instead of losing it
 			attempt_item_insertion(pill, FALSE, user)
 		else
@@ -997,6 +1001,7 @@
 			sleep(ai_brain.medium_action_delay * ai_brain.action_delay_mult)
 
 	ai_brain.appraise_inventory() // For some reason it removes pill bottles from equipment_map after usage
+	// DemonicLynx for BandaMarines
 	return used_pill
 
 /obj/item/storage/pill_bottle/proc/choose_color(mob/user)

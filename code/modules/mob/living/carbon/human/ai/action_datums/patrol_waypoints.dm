@@ -24,6 +24,7 @@
 
 /datum/ai_action/patrol_waypoints/trigger_action()
 	. = ..()
+	// DemonicLynx for BandaMarines
 	if(brain.get_priority_ally_treatment_target()) // SS220 EDIT: injured allies preempt routine patrol movement
 		return ONGOING_ACTION_COMPLETED
 

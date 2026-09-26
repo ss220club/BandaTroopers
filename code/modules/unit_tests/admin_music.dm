@@ -2,6 +2,7 @@
 	var/datum/admin_music_service/service
 	var/list/temp_paths
 
+// DemonicLynx for BandaMarines
 /datum/unit_test/admin_music/Run()
 	return
 
@@ -90,6 +91,7 @@
 	var/datum/admin_music_preset/parsed = parse_result["preset"]
 	TEST_ASSERT_NOTNULL(parsed, "Preset parsing returned no preset for defaulted show-title state.")
 	TEST_ASSERT(parsed.show_title_to_players, "Omitted show-title flag should preserve the TRUE default.")
+	// DemonicLynx for BandaMarines
 	TEST_ASSERT(!parsed.repeat, "Omitted repeat flag should preserve the FALSE default.") // SS220 EDIT: new admin-music presets no longer repeat by default
 
 	json_data["version"] = 2

@@ -208,6 +208,7 @@
 		playsound(user.loc, 'sound/weapons/thudswoosh.ogg', 25, 1, 7)
 		return 0
 
+	// DemonicLynx for BandaMarines
 	// SS220 EDIT - START: another medic may finish a dose during our do_after; AI must recheck immediately before transfer
 	if(ishuman(user))
 		var/mob/living/carbon/human/human_user = user
@@ -241,6 +242,7 @@
 			to_chat(user, SPAN_NOTICE("[trans] units injected. [reagents.total_volume] units remaining in [src]."))
 	return TRUE
 
+// DemonicLynx for BandaMarines
 // SS220 EDIT - START: enable Human AI use of the supported autoinjectors listed by its treatment engine
 /obj/item/reagent_container/hypospray/ai_can_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain, mob/living/carbon/human/target)
 	return target && reagents?.total_volume && target.can_inject(user, TRUE) && ai_brain?.can_safely_administer_reagents(src, target, amount_per_transfer_from_this) // SS220 EDIT: prevent AI-administered OD

@@ -1,3 +1,4 @@
+// DemonicLynx for BandaMarines
 import fs from 'fs';
 import path from 'path';
 import Juke from '../juke/index.js';

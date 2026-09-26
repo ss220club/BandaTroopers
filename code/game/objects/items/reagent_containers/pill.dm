@@ -102,6 +102,7 @@
 			return
 		if(QDELETED(src))
 			return
+		// DemonicLynx for BandaMarines
 		// SS220 EDIT - START: prevent another medic's dose during do_after from turning this feeding into an overdose
 		if(ishuman(user))
 			var/mob/living/carbon/human/human_user = user
@@ -320,3 +321,4 @@
 	pill_initial_reagents = list("ethylredoxrazine" = 7.5)
 	pill_icon_class = "alky"
 	color = COLOR_OLIVE
+	// DemonicLynx for BandaMarines

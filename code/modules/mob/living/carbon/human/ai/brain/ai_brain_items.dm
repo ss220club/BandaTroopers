@@ -1,6 +1,7 @@
 /datum/human_ai_brain
 	/// If an AI takes out an item from their equipment_map, the place it was last stored is added to this dict
 	var/list/equipped_items_original_loc = list()
+	// DemonicLynx for BandaMarines
 	/// Root equipped slot for indexed items; keeps nested-storage entries removable during partial rescans.
 	var/list/equipment_item_root_slots = list() // SS220 EDIT: track nested Human AI inventory roots
 
@@ -24,6 +25,7 @@
 		"backpack" = null,
 		"left_pocket" = null,
 		"right_pocket" = null,
+		// DemonicLynx for BandaMarines
 		"suit_storage" = null, // SS220 EDIT: containers worn in WEAR_J_STORE are real inventory roots
 		"armor" = null,
 		"uniform" = null,
@@ -35,12 +37,14 @@
 		WEAR_WAIST,
 		WEAR_L_STORE,
 		WEAR_R_STORE,
+		// DemonicLynx for BandaMarines
 		WEAR_J_STORE, // SS220 EDIT: index containers carried in the suit-storage slot
 		WEAR_JACKET,
 		WEAR_BODY,
 	)
 
 	/// Bitflag equivalent of important_storage_slots
+	// DemonicLynx for BandaMarines
 	var/static/important_storage_slots_bitflag = SLOT_BACK | SLOT_WAIST | SLOT_STORE | SLOT_SUIT_STORE | SLOT_OCLOTHING | SLOT_ICLOTHING // SS220 EDIT: include suit storage
 
 	/// If TRUE, the AI ignores darkness when it comes to determining vision
@@ -50,6 +54,7 @@
 /datum/human_ai_brain/proc/get_object_from_loc(object_loc)
 	RETURN_TYPE(/obj/item/storage)
 
+	// DemonicLynx for BandaMarines
 	// SS220 EDIT - START: nested inventory entries store their actual container rather than only a top-level slot name
 	if(istype(object_loc, /obj/item/storage))
 		var/obj/item/storage/nested_storage = object_loc
@@ -68,6 +73,7 @@
 			storage_object = tied_human.l_store
 		if("right_pocket")
 			storage_object = tied_human.r_store
+		// DemonicLynx for BandaMarines
 		if("suit_storage")
 			if(istype(tied_human.s_store, /obj/item/storage))
 				storage_object = tied_human.s_store
@@ -96,12 +102,14 @@
 	if(!storage_object)
 		equipment_map[object_type] -= object_ref
 		equipped_items_original_loc -= object_ref
+		// DemonicLynx for BandaMarines
 		equipment_item_root_slots -= object_ref // SS220 EDIT: purge stale nested inventory metadata
 		return
 
 	if(object_ref.loc != storage_object)
 		equipment_map[object_type] -= object_ref
 		equipped_items_original_loc -= object_ref
+		// DemonicLynx for BandaMarines
 		equipment_item_root_slots -= object_ref // SS220 EDIT: purge stale nested inventory metadata
 		return
 
@@ -115,6 +123,7 @@
 /datum/human_ai_brain/proc/get_item_from_equipment_map_path(object_path, object_type)
 	return (locate(object_path) in equipment_map[object_type])
 
+// DemonicLynx for BandaMarines
 /datum/human_ai_brain/proc/store_item(obj/item/object_ref, object_loc, slot_type, allow_same_turf = FALSE)
 	// SS220 EDIT - START: late AI store callbacks can outlive the held item, owner, or original storage slot
 	if(!has_valid_tied_human() || QDELETED(object_ref))
@@ -122,36 +131,45 @@
 		equipped_items_original_loc -= object_ref
 		if(slot_type)
 			equipment_map[slot_type] -= object_ref
+		// DemonicLynx for BandaMarines
 		equipment_item_root_slots -= object_ref // SS220 EDIT: purge nested inventory metadata with the item
 		return FALSE
 
+	// DemonicLynx for BandaMarines
 	if(object_ref.loc != tied_human && (!allow_same_turf || get_turf(object_ref) != get_turf(tied_human)))
 		to_pickup -= object_ref
 		equipped_items_original_loc -= object_ref
 		if(slot_type)
 			equipment_map[slot_type] -= object_ref
+		// DemonicLynx for BandaMarines
 		equipment_item_root_slots -= object_ref // SS220 EDIT: purge nested inventory metadata with the item
 		return FALSE
 
+	// DemonicLynx for BandaMarines
 	var/original_storage_loc
 	var/storage_loc = object_loc
 	var/obj/item/storage/storage_object
 
 	if(object_ref in equipped_items_original_loc)
+		// DemonicLynx for BandaMarines
 		original_storage_loc = equipped_items_original_loc[object_ref]
 		storage_loc = original_storage_loc
 		storage_object = get_object_from_loc(storage_loc)
+	// DemonicLynx for BandaMarines
 	else if(storage_loc) // we assume that we've already checked if something will fit or not
 		storage_object = get_object_from_loc(storage_loc) // SS220 EDIT: storage_loc may be a nested storage ref
 
+	// DemonicLynx for BandaMarines
 	if(storage_object?.attempt_item_insertion(object_ref, FALSE, tied_human))
 		equipped_items_original_loc -= object_ref
 		if(slot_type)
+			// DemonicLynx for BandaMarines
 			equipment_map[slot_type][object_ref] = storage_loc
 		equipment_item_root_slots[object_ref] = get_storage_root_slot(storage_object) // SS220 EDIT: retain nested root ownership
 		to_pickup -= object_ref
 		return TRUE
 
+	// DemonicLynx for BandaMarines
 	// If the original container disappeared or rejected the item, try the pre-checked fallback before dropping it.
 	if(original_storage_loc && object_loc && object_loc != original_storage_loc)
 		storage_loc = object_loc
@@ -166,11 +184,13 @@
 
 	equipped_items_original_loc -= object_ref
 	if(slot_type)
+		// DemonicLynx for BandaMarines
 		equipment_map[slot_type] -= object_ref
 	equipment_item_root_slots -= object_ref // SS220 EDIT: purge nested inventory metadata when storage fails
 	if(tied_human.is_holding(object_ref))
 		tied_human.drop_held_item(object_ref)
 	to_pickup -= object_ref
+	// DemonicLynx for BandaMarines
 	return FALSE
 	// SS220 EDIT - END
 
@@ -185,6 +205,7 @@
 	invalidate_nearby_item_search()
 	invalidate_halo_runtime_caches()
 	equipped_items_original_loc -= source // SS220 EDIT: deleted held items must not keep stale original-slot tracking
+	// DemonicLynx for BandaMarines
 	equipment_item_root_slots -= source // SS220 EDIT: deleted items must not keep nested root tracking
 
 	for(var/name in container_refs)
@@ -206,6 +227,7 @@
 
 	if((slot in important_storage_slots) && (istype(equipment, /obj/item/storage) || slot == WEAR_J_STORE))
 		recalculate_containers()
+		// DemonicLynx for BandaMarines
 		appraise_inventory(slot == WEAR_WAIST, slot == WEAR_BACK, slot == WEAR_L_STORE, slot == WEAR_R_STORE, slot == WEAR_JACKET, slot == WEAR_BODY, slot == WEAR_J_STORE)
 
 	if(!primary_weapon && isgun(equipment) && (slot == WEAR_J_STORE))
@@ -221,9 +243,11 @@
 
 	if((important_storage_slots_bitflag & slot) && (istype(equipment, /obj/item/storage) || slot == SLOT_SUIT_STORE))
 		recalculate_containers()
+		// DemonicLynx for BandaMarines
 		appraise_inventory(slot == SLOT_WAIST, slot == SLOT_BACK, slot == SLOT_STORE, slot == SLOT_STORE, slot == SLOT_OCLOTHING, slot == SLOT_ICLOTHING, slot == SLOT_SUIT_STORE)
 
 	if(isgun(equipment))
+		// DemonicLynx for BandaMarines
 		appraise_inventory(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE)
 
 	if(istype(equipment, /obj/item/clothing/glasses/night) && (slot == WEAR_EYES))
@@ -231,6 +255,7 @@
 
 /// Reappraises what storage items the AI has
 /datum/human_ai_brain/proc/recalculate_containers()
+	// DemonicLynx for BandaMarines
 	if(!has_valid_tied_human()) // SS220 EDIT AI: equipment signals may finish after the brain detached its owner during qdel
 		return
 
@@ -243,6 +268,7 @@
 		container_refs["left_pocket"] = tied_human.l_store
 	if(isstorage(tied_human.r_store))
 		container_refs["right_pocket"] = tied_human.r_store
+	// DemonicLynx for BandaMarines
 	if(isstorage(tied_human.s_store))
 		container_refs["suit_storage"] = tied_human.s_store // SS220 EDIT: UPP RPG rockets are commonly carried here
 	if(istype(tied_human.wear_suit, /obj/item/clothing/suit/storage))
@@ -253,6 +279,7 @@
 		if(storage_accessory)
 			container_refs["uniform"] = storage_accessory.hold
 
+// DemonicLynx for BandaMarines
 // SS220 EDIT - START: bounded helpers for equipped and nested Human AI storage
 /datum/human_ai_brain/proc/get_storage_roots()
 	var/list/storage_roots = list()
@@ -298,6 +325,7 @@
 // SS220 EDIT - END
 
 /// Used to determine what the AI has in their inventory
+// DemonicLynx for BandaMarines
 /datum/human_ai_brain/proc/appraise_inventory(belt = TRUE, back = TRUE, pocket_l = TRUE, pocket_r = TRUE, armor = TRUE, uniform = TRUE, suit_storage = TRUE)
 	// SS220 EDIT AI: equipment signals may finish after the component detached its owner during qdel
 	if(!has_valid_tied_human())
@@ -313,10 +341,12 @@
 		if(knife)
 			set_primary_melee(knife)*/
 
+	// DemonicLynx for BandaMarines
 	// SS220 EDIT - START: preset equipment is commonly loaded before the AI brain exists, so its equip signal was missed.
 	// if(isgun(tied_human.s_store) && (tied_human.s_store != primary_weapon))
 	// 	add_secondary_weapon(tied_human.s_store)
 	if(isgun(tied_human.s_store) && (tied_human.s_store != primary_weapon))
+		// DemonicLynx for BandaMarines
 		var/obj/item/weapon/gun/issued_suit_weapon = tied_human.s_store
 		if(!primary_weapon)
 			set_primary_weapon(issued_suit_weapon)
@@ -337,6 +367,7 @@
 	if(pocket_r)
 		appraise_right_pocket()
 
+	// DemonicLynx for BandaMarines
 	if(suit_storage)
 		appraise_suit_storage()
 
@@ -354,6 +385,7 @@
 	if(!istype(tied_human.belt, /obj/item/storage)) // belts can be backpacks, don't ask
 		return
 
+	// DemonicLynx for BandaMarines
 	clear_equipment_map_slot("belt") // SS220 EDIT: also clear nested entries owned by this slot
 
 	RegisterSignal(tied_human.belt, COMSIG_PARENT_QDELETING, PROC_REF(on_item_delete), TRUE)
@@ -370,6 +402,7 @@
 		return
 	// SS220 EDIT - END
 
+	// DemonicLynx for BandaMarines
 	clear_equipment_map_slot("backpack") // SS220 EDIT: also clear nested entries owned by this slot
 
 	RegisterSignal(tied_human.back, COMSIG_PARENT_QDELETING, PROC_REF(on_item_delete), TRUE)
@@ -379,6 +412,7 @@
 	if(!istype(tied_human.l_store, /obj/item/storage/pouch))
 		return
 
+	// DemonicLynx for BandaMarines
 	clear_equipment_map_slot("left_pocket") // SS220 EDIT: also clear nested entries owned by this slot
 
 	RegisterSignal(tied_human.l_store, COMSIG_PARENT_QDELETING, PROC_REF(on_item_delete), TRUE)
@@ -388,11 +422,13 @@
 	if(!istype(tied_human.r_store, /obj/item/storage/pouch))
 		return
 
+	// DemonicLynx for BandaMarines
 	clear_equipment_map_slot("right_pocket") // SS220 EDIT: also clear nested entries owned by this slot
 
 	RegisterSignal(tied_human.r_store, COMSIG_PARENT_QDELETING, PROC_REF(on_item_delete), TRUE)
 	item_slot_appraisal_loop(tied_human.r_store, "right_pocket")
 
+// DemonicLynx for BandaMarines
 /datum/human_ai_brain/proc/appraise_suit_storage()
 	clear_equipment_map_slot("suit_storage")
 
@@ -410,12 +446,14 @@
 	if(!istype(tied_human.wear_suit, /obj/item/clothing/suit))
 		return
 
+	// DemonicLynx for BandaMarines
 	var/obj/item/clothing/suit/worn_armor = tied_human.wear_suit
 	if(tied_human.loc && worn_armor.has_light && !worn_armor.light_on) // being in nullspace makes lights play weirdly
 		worn_armor.turn_light(tied_human, TRUE) // SS220 EDIT: armor without a light must still have its storage appraised
 
 	clear_equipment_map_slot("armor") // SS220 EDIT: also clear nested entries owned by this slot
 
+	// DemonicLynx for BandaMarines
 	RegisterSignal(worn_armor, COMSIG_PARENT_QDELETING, PROC_REF(on_item_delete), TRUE)
 	for(var/obj/item/clothing/accessory/storage/armour_webbing in worn_armor.accessories)
 		item_slot_appraisal_loop(armour_webbing.hold, "armor") // SS220 EDIT: appraise the accessory's real storage root
@@ -430,11 +468,13 @@
 	if(!located_storage)
 		return
 
+	// DemonicLynx for BandaMarines
 	clear_equipment_map_slot("uniform") // SS220 EDIT: also clear nested entries owned by this slot
 
 	RegisterSignal(located_storage, COMSIG_PARENT_QDELETING, PROC_REF(on_item_delete), TRUE)
 	item_slot_appraisal_loop(located_storage.hold, "uniform")
 
+// DemonicLynx for BandaMarines
 /datum/human_ai_brain/proc/item_slot_appraisal_loop(obj/item/storage/container_to_loop, slot_to_assign)
 	// SS220 EDIT - START: recursively index bounded storage descendants and retain each item's immediate source container
 	if(!container_to_loop)
@@ -488,6 +528,7 @@
 	store_item(active_hand, storage_id)
 
 /datum/human_ai_brain/proc/storage_has_room(obj/item/inserting)
+	// DemonicLynx for BandaMarines
 	// SS220 EDIT - START: consider every equipped root and its nested storage, not only six top-level refs
 	var/list/storage_roots = get_storage_roots()
 	var/list/storage_queue = list()
@@ -516,9 +557,11 @@
 
 	if(isturf(source.loc))
 		equipped_items_original_loc -= source
+		// DemonicLynx for BandaMarines
 		equipment_item_root_slots -= source // SS220 EDIT: dropped held items no longer belong to an inventory root
 		UnregisterSignal(source, COMSIG_ITEM_DROPPED)
 
+// DemonicLynx for BandaMarines
 /// Indexes medicine picked up without free storage so it can be used before the AI drops it.
 /datum/human_ai_brain/proc/index_held_health_item(obj/item/heal_item)
 	if(QDELETED(heal_item) || heal_item.loc != tied_human)
@@ -566,6 +609,7 @@
 
 	for(var/slot in container_refs)
 		if(container_refs[slot] == dropped)
+			// DemonicLynx for BandaMarines
 			appraise_inventory(slot == "belt", slot == "backpack", slot == "left_pocket", slot == "right_pocket", slot == "armor", slot == "uniform", slot == "suit_storage")
 			break
 
@@ -573,6 +617,7 @@
 		for(var/obj/item/item_ref as anything in equipment_map[id])
 			if(item_ref == dropped)
 				equipment_map[id] -= item_ref
+				// DemonicLynx for BandaMarines
 				equipment_item_root_slots -= item_ref // SS220 EDIT: purge nested root metadata with dropped item
 				return
 
@@ -621,12 +666,14 @@
 		gun_data = default
 
 /datum/human_ai_brain/proc/item_search(list/things_around)
+	// DemonicLynx for BandaMarines
 	// SS220 EDIT - START: preserve a live floor threat throughout the four-tile reaction, or a grenade already held for throw-back.
 	var/grenade_threat_is_local = active_grenade_found && !QDELETED(active_grenade_found) && active_grenade_found.active \
 		&& ((active_grenade_found.loc == tied_human) || (isturf(active_grenade_found.loc) && get_dist(tied_human, active_grenade_found) <= 4))
 	if(!grenade_threat_is_local)
 		active_grenade_found = null
 	// SS220 EDIT - END
+	// DemonicLynx for BandaMarines
 	// SS220 EDIT - START: an issued carried gun must be selected before considering weapons from the floor.
 	var/has_usable_carried_weapon = FALSE
 	if(!primary_weapon)
@@ -646,6 +693,7 @@
 
 			if(thing.flags_human_ai & GRENADE_ITEM)
 				var/obj/item/explosive/grenade/nade = thing
+				// DemonicLynx for BandaMarines
 				if(nade.active) // SS220 EDIT: every live floor grenade is a threat; the reaction action decides throw-back versus retreat
 					active_grenade_found = thing
 					continue
@@ -655,6 +703,7 @@
 				continue
 			// SS220 EDIT - END
 
+			// DemonicLynx for BandaMarines
 			// if(!primary_weapon && isgun(thing))
 			if(!primary_weapon && !has_usable_carried_weapon && isgun(thing)) // SS220 EDIT: prefer an issued carried weapon over floor loot
 				var/obj/item/weapon/gun/thing_gun = thing
@@ -679,6 +728,7 @@
 			if(istype(thing, /obj/item/storage/pouch) && (!container_refs["left_pocket"] || !container_refs["right_pocket"]))
 				add_to_pickup(thing)
 
+			// DemonicLynx for BandaMarines
 			// SS220 EDIT - START: ally-only medicine is valid loot and may be carried in hand when storage is full
 			if(thing.flags_human_ai & HEALING_ITEM)
 				if(medical_item_has_target(thing))
@@ -690,6 +740,7 @@
 			if(!storage_spot || !thing.ai_can_use(tied_human, src, tied_human))
 				continue
 
+			// DemonicLynx for BandaMarines
 			if((thing.flags_human_ai & AMMUNITION_ITEM) && primary_weapon)
 				var/obj/item/ammo_magazine/mag = thing
 				if(istype(primary_weapon, mag.gun_type))

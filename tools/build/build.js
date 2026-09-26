@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// DemonicLynx for BandaMarines
 /**
  * Build script for Colonial Marines codebase.
  *

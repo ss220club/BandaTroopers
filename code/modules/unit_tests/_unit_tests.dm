@@ -82,6 +82,7 @@
 #include "emote_panels.dm"
 #include "game_rule_panel.dm" // SS220 EDIT: include Game Rule Panel unit tests
 #include "gc_regressions.dm"
+// DemonicLynx for BandaMarines
 #include "human_ai.dm" // SS220 EDIT: cover shared Human AI target, movement, and cover traversal regressions
 #include "missing_icons.dm"
 #include "resist.dm"

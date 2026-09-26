@@ -58,10 +58,12 @@
 		/obj/item/storage/pill_bottle/tramadol,
 	)
 
+	// DemonicLynx for BandaMarines
 	/// Requires this much damage of one type to consider it a problem
 	var/damage_problem_threshold = 5
 	/// Pain percentage (out of 100) for the AI to consider using painkillers
 	var/pain_percentage_threshold = 1
+	// DemonicLynx for BandaMarines
 	/// How far the AI can notice an ally who needs medical assistance. This does not affect combat vision.
 	var/medical_view_distance = 10
 
@@ -80,9 +82,11 @@
 	/// How many stacks are required to stop this AI from recieving treatment
 	var/treatment_stack_threshold = 10
 
+// DemonicLynx for BandaMarines
 /datum/human_ai_brain/proc/set_injured_ally(mob/living/carbon/human/new_target)
 	if(!new_target)
 		return
+	// DemonicLynx for BandaMarines
 	if(found_injured_ally == new_target)
 		return
 	lose_injured_ally()
@@ -98,6 +102,7 @@
 	found_injured_ally = null
 
 /datum/human_ai_brain/proc/get_injured_ally()
+	// DemonicLynx for BandaMarines
 	// SS220 EDIT - START: treat the most injured actionable ally; distance only breaks equal-priority ties
 	var/mob/living/carbon/human/best_target
 	var/best_priority = -INFINITY
@@ -107,20 +112,25 @@
 		if(possible_buddy == tied_human)
 			continue
 
+		// DemonicLynx for BandaMarines
 		if(!faction_check(possible_buddy))
 			continue
 
+		// DemonicLynx for BandaMarines
 		if(!medical_target_in_view(possible_buddy))
 			continue
 
+		// DemonicLynx for BandaMarines
 		if(!can_treat_ally(possible_buddy))
 			continue
 
 		var/distance = get_dist(tied_human, possible_buddy)
+		// DemonicLynx for BandaMarines
 		var/treatment_priority = get_ally_treatment_priority(possible_buddy)
 		if(treatment_priority < best_priority || (treatment_priority == best_priority && distance >= best_distance))
 			continue
 
+		// DemonicLynx for BandaMarines
 		best_target = possible_buddy
 		best_priority = treatment_priority
 		best_distance = distance
@@ -160,6 +170,7 @@
 		if(candidate == target_turf || candidate.density)
 			continue
 
+		// DemonicLynx for BandaMarines
 		var/permanently_blocked = FALSE
 		var/temporarily_occupied = FALSE
 		for(var/atom/movable/blocker as anything in candidate)
@@ -171,12 +182,14 @@
 			permanently_blocked = TRUE
 			break
 
+		// DemonicLynx for BandaMarines
 		if(permanently_blocked)
 			continue
 		if(temporarily_occupied)
 			crowded_treatment_turfs += candidate
 			continue
 
+		// DemonicLynx for BandaMarines
 		var/candidate_distance = get_dist(tied_human, candidate)
 		if(candidate_distance >= best_distance)
 			continue
@@ -234,6 +247,7 @@
 	if(!treatment_target)
 		return
 
+	// DemonicLynx for BandaMarines
 	var/static/list/preemptible_action_types = list(
 		/datum/ai_action/item_pickup,
 		/datum/ai_action/follow_leader,
@@ -281,6 +295,7 @@
 	if(healing_start_check(tied_human) && medical_item_can_treat(heal_item, tied_human))
 		return TRUE
 
+	// DemonicLynx for BandaMarines
 	for(var/mob/living/carbon/human/possible_buddy as anything in GLOB.alive_human_list)
 		if(possible_buddy == tied_human || !faction_check(possible_buddy))
 			continue
@@ -310,6 +325,7 @@
 // SS220 EDIT - END
 
 /datum/human_ai_brain/proc/healing_start_check(mob/living/carbon/human/target)
+	// DemonicLynx for BandaMarines
 	// SS220 EDIT - START: respond to every actionable injury instead of waiting for 30% total health loss
 	return (target.getBruteLoss() > damage_problem_threshold) \
 		|| (target.getFireLoss() > damage_problem_threshold) \
@@ -369,6 +385,7 @@
 			. = TRUE
 
 	// Doesn't support bone-healing chems
+	// DemonicLynx for BandaMarines
 	if(target_has_unsplinted_fracture(target)) // SS220 EDIT: only apply splints to untreated fractures
 		if(bone_heal(target))
 			. = TRUE
@@ -378,6 +395,7 @@
 			. = TRUE
 
 	// This has the issue of the AI taking multiple painkillers if high on pain, despite them not stacking. Not worth fixing atm
+	// DemonicLynx for BandaMarines
 	if(target.pain?.get_pain_percentage() > pain_percentage_threshold)
 		if(pain_heal(target))
 			. = TRUE
@@ -392,6 +410,7 @@
 
 	healing_someone = FALSE
 
+// DemonicLynx for BandaMarines
 // SS220 EDIT - START: return reusable medical supplies to their source container before using fallback storage
 /datum/human_ai_brain/proc/return_health_item(obj/item/heal_item)
 	if(QDELETED(heal_item))
@@ -416,6 +435,7 @@
 	if(!brute_heal)
 		return
 
+	// DemonicLynx for BandaMarines
 	if(!prepare_hands_for_treatment()) // SS220 EDIT: medicine needs a free active hand
 		healing_someone = FALSE
 		return
@@ -430,6 +450,7 @@
 	if(QDELETED(brute_heal))
 		return
 
+	// DemonicLynx for BandaMarines
 	return_health_item(brute_heal) // SS220 EDIT: restore medical item to its source container
 #if defined(TESTING) || defined(HUMAN_AI_TESTING)
 	to_chat(world, "[tied_human.name] healed brute damage of [target.name] using [brute_heal].")
@@ -445,6 +466,7 @@
 	if(!bleed_heal)
 		return
 
+	// DemonicLynx for BandaMarines
 	if(!prepare_hands_for_treatment()) // SS220 EDIT: medicine needs a free active hand
 		healing_someone = FALSE
 		return
@@ -459,6 +481,7 @@
 	if(QDELETED(bleed_heal))
 		return
 
+	// DemonicLynx for BandaMarines
 	return_health_item(bleed_heal) // SS220 EDIT: restore medical item to its source container
 #if defined(TESTING) || defined(HUMAN_AI_TESTING)
 	to_chat(world, "[tied_human.name] fixed bleeding of [target.name] using [bleed_heal].")
@@ -474,6 +497,7 @@
 	if(!bone_heal)
 		return
 
+	// DemonicLynx for BandaMarines
 	if(!prepare_hands_for_treatment()) // SS220 EDIT: medicine needs a free active hand
 		healing_someone = FALSE
 		return
@@ -488,6 +512,7 @@
 	if(QDELETED(bone_heal))
 		return
 
+	// DemonicLynx for BandaMarines
 	return_health_item(bone_heal) // SS220 EDIT: restore medical item to its source container
 #if defined(TESTING) || defined(HUMAN_AI_TESTING)
 	to_chat(world, "[tied_human.name] splinted a fracture of [target.name] using [bone_heal].")
@@ -503,6 +528,7 @@
 	if(!burn_heal)
 		return
 
+	// DemonicLynx for BandaMarines
 	if(!prepare_hands_for_treatment()) // SS220 EDIT: medicine needs a free active hand
 		healing_someone = FALSE
 		return
@@ -517,6 +543,7 @@
 	if(QDELETED(burn_heal))
 		return
 
+	// DemonicLynx for BandaMarines
 	return_health_item(burn_heal) // SS220 EDIT: restore medical item to its source container
 #if defined(TESTING) || defined(HUMAN_AI_TESTING)
 	to_chat(world, "[tied_human.name] healed burn damage of [target.name] using [burn_heal].")
@@ -532,6 +559,7 @@
 	if(!painkiller)
 		return
 
+	// DemonicLynx for BandaMarines
 	if(!prepare_hands_for_treatment()) // SS220 EDIT: medicine needs a free active hand
 		healing_someone = FALSE
 		return
@@ -546,6 +574,7 @@
 	if(QDELETED(painkiller))
 		return
 
+	// DemonicLynx for BandaMarines
 	return_health_item(painkiller) // SS220 EDIT: restore medical item to its source container
 #if defined(TESTING) || defined(HUMAN_AI_TESTING)
 	to_chat(world, "[tied_human.name] healed pain of [target.name] using [painkiller].")
@@ -561,6 +590,7 @@
 	if(!tox_heal)
 		return
 
+	// DemonicLynx for BandaMarines
 	if(!prepare_hands_for_treatment()) // SS220 EDIT: medicine needs a free active hand
 		healing_someone = FALSE
 		return
@@ -575,6 +605,7 @@
 	if(QDELETED(tox_heal))
 		return
 
+	// DemonicLynx for BandaMarines
 	return_health_item(tox_heal) // SS220 EDIT: restore medical item to its source container
 #if defined(TESTING) || defined(HUMAN_AI_TESTING)
 	to_chat(world, "[tied_human.name] healed tox damage of [target.name] using [tox_heal].")
@@ -590,6 +621,7 @@
 		healing_someone = FALSE
 		return
 
+	// DemonicLynx for BandaMarines
 	if(!prepare_hands_for_treatment()) // SS220 EDIT: medicine needs a free active hand
 		healing_someone = FALSE
 		return
@@ -605,6 +637,7 @@
 		healing_someone = FALSE
 		return
 
+	// DemonicLynx for BandaMarines
 	return_health_item(oxy_heal) // SS220 EDIT: restore medical item to its source container
 #if defined(TESTING) || defined(HUMAN_AI_TESTING)
 	to_chat(world, "[tied_human.name] healed oxygen damage of [target.name] using [oxy_heal].")

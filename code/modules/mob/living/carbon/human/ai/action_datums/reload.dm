@@ -62,5 +62,6 @@
 	currently_reloading = FALSE
 
 /datum/ai_action/reload/proc/primary_ammo_search()
+	// DemonicLynx for BandaMarines
 	// SS220 EDIT: keep reload and weapon-selection ammo compatibility checks on one code path
 	return brain.weapon_ammo_search(brain.primary_weapon)

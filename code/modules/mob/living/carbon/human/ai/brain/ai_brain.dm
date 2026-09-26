@@ -104,6 +104,7 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 	RegisterSignal(tied_human, COMSIG_LIVING_SET_BODY_POSITION, PROC_REF(on_body_position_change)) // SS220 EDIT: standing back up should wake shared human AI immediately
 	GLOB.human_ai_brains += src
 	setup_detection_radius()
+	// DemonicLynx for BandaMarines
 	recalculate_containers() // SS220 EDIT: pre-equipped AI missed equip signals; initialize storage roots before recursive appraisal
 	appraise_inventory()
 	tied_human.a_intent_change(INTENT_DISARM)
@@ -208,6 +209,7 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 	if(!iszombie(tied_human) && should_run_nearby_item_search())
 		item_search(range(2, tied_human))
 
+	// DemonicLynx for BandaMarines
 	scan_nearby_live_grenade_threat() // SS220 EDIT: active floor grenades require a dedicated four-tile emergency scan
 	preempt_actions_for_live_grenade() // SS220 EDIT: grenade reactions immediately release occupied hand and movement slots
 	preempt_routine_actions_for_ally_treatment() // SS220 EDIT: safe medical emergencies displace stale routine action-slot owners
@@ -490,6 +492,7 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 		return
 
 	if(!in_combat)
+		// DemonicLynx for BandaMarines
 		begin_combat_grenade_decision() // SS220 EDIT: carried-grenade chance is rolled once for each new combat encounter
 		say_in_combat_line()
 

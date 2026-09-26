@@ -24,12 +24,15 @@
 	if(!length(brain.equipment_map[HUMAN_AI_GRENADES]))
 		return 0
 
+	// DemonicLynx for BandaMarines
 	if(brain.active_grenade_found)
 		return 0
 
+	// DemonicLynx for BandaMarines
 	if(!brain.should_attempt_combat_grenade()) // SS220 EDIT: roll exactly once per combat encounter, not once per scheduler tick
 		return 0
 
+	// DemonicLynx for BandaMarines
 	return 20 // SS220 EDIT: a selected grenade throw preempts routine firing and spacing actions
 
 /datum/ai_action/throw_grenade/get_conflicts(datum/human_ai_brain/brain)
@@ -38,6 +41,7 @@
 	. += /datum/ai_action/sniper_nest
 
 /datum/ai_action/throw_grenade/Added()
+	// DemonicLynx for BandaMarines
 	brain.consume_combat_grenade_decision() // SS220 EDIT: at most one carried-grenade attempt per combat encounter
 	throwing = locate() in brain.equipment_map[HUMAN_AI_GRENADES]
 	throw_range_override = isnum(throwing?.throw_range) ? throwing.throw_range : null
@@ -156,6 +160,7 @@
 	return FALSE
 
 /datum/ai_action/throw_grenade/proc/resolve_throw_target(mob/living/carbon/human/tied_human, obj/item/explosive/grenade/grenade, turf/original_target)
+	// DemonicLynx for BandaMarines
 	if(can_throw_to_target(tied_human, grenade, original_target) && !has_friendly_near_throw_target(original_target)) // SS220 EDIT: never accept the primary target without the same friendly-area check as fallbacks
 		return original_target
 
@@ -169,6 +174,7 @@
 		if(can_throw_to_target(tied_human, grenade, cardinal_target) && !has_friendly_near_throw_target(cardinal_target))
 			return cardinal_target
 
+	// DemonicLynx for BandaMarines
 	return null
 
 /datum/ai_action/throw_grenade/proc/finish_async_throw()
@@ -232,6 +238,7 @@
 		if(length(emergency_target))
 			for(var/direction in emergency_target)
 				var/turf/candidate = get_ranged_target_turf(tied_human, direction, get_effective_throw_range(grenade))
+				// DemonicLynx for BandaMarines
 				if(candidate && can_throw_to_target(tied_human, grenade, candidate) && !has_friendly_near_throw_target(candidate)) // SS220 EDIT: emergency retargeting keeps the same friendly-area safety rule
 					emergency_target = candidate
 					break

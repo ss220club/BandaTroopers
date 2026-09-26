@@ -170,13 +170,16 @@
 	var/list/items
 	var/list/obj/item/item_types
 
+// DemonicLynx for BandaMarines
 /obj/structure/machinery/cm_vending/clothing/super_snowflake/tgui_interact(mob/user, datum/tgui/ui)
 	// SS220 EDIT - START: keep interactive category selection out of the no-sleep Initialize path
 	if(!item_types)
+		// DemonicLynx for BandaMarines
 		var/obj/item/chosen = get_item_category_from_user(user)
 		if(!chosen)
 			return
 		item_types = list(chosen)
+		// DemonicLynx for BandaMarines
 		cm_build_inventory(get_listed_products(), 1, 3)
 	return ..(user, ui)
 	// SS220 EDIT - END
@@ -194,6 +197,7 @@
 
 	return items
 
+// DemonicLynx for BandaMarines
 /obj/structure/machinery/cm_vending/clothing/super_snowflake/proc/get_item_category_from_user(mob/user) // SS220 EDIT: use the explicit actor instead of implicit usr
 	var/item = tgui_input_text(user,"What item to stock?", "Stock Vendor","")
 	if(!item)
@@ -214,6 +218,7 @@
 		chosen = matches[1]
 	else
 		//If we have multiple options, let them select which one they meant
+		// DemonicLynx for BandaMarines
 		chosen = tgui_input_list(user, "Select an object type", "Select Object", matches)
 
 	return chosen
@@ -240,6 +245,7 @@
 		to_chat(usr, SPAN_WARNING("This option isn't for you."))
 		return
 
+	// DemonicLynx for BandaMarines
 	var/obj/item/chosen = get_item_category_from_user(usr) // SS220 EDIT: pass the VV actor explicitly
 	if(!chosen)
 		return

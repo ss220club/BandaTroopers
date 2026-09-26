@@ -1,3 +1,4 @@
+// DemonicLynx for BandaMarines
 #define HUMAN_AI_TEST_COVER_SCAN_LIMIT 198
 
 /datum/unit_test/human_ai_core_behaviors

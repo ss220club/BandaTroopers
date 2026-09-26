@@ -1,3 +1,4 @@
+// DemonicLynx for BandaMarines
 /datum/unit_test/faction_music_resolver/Run()
 	if(get_faction_music_key_for_values(JOB_SQUAD_MARINE_ODST, FACTION_UNSC) != "ODST")
 		Fail("ODST jobs must take precedence over the generic UNSC faction.", __FILE__, __LINE__)

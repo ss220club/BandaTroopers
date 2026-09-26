@@ -829,6 +829,7 @@
 		LM.spin = TRUE
 		LM.pass_flags = NO_FLAGS
 		to_chat(unlucky_mob, SPAN_WARNING("The ocean currents sweep you off your feet and throw you away!"))
+		// DemonicLynx for BandaMarines
 		// unlucky_mob.launch_towards(LM)
 		INVOKE_ASYNC(unlucky_mob, TYPE_PROC_REF(/atom/movable, launch_towards), LM) // SS220 EDIT: launch sleeps and Entered is reachable from turf Initialize
 		return

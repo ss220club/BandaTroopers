@@ -93,6 +93,7 @@
 
 	var/mob/living/carbon/tied_human = brain.tied_human
 	brain.unholster_primary()
+	// DemonicLynx for BandaMarines
 	brain.ensure_primary_hand(primary_weapon)
 
 	// SS220 EDIT - START: establish a real two-handed grip before entering the gun firing loop
@@ -106,6 +107,7 @@
 
 	var/datum/firearm_appraisal/gun_data = brain.gun_data
 	gun_data.before_fire(primary_weapon, tied_human, brain)
+	// DemonicLynx for BandaMarines
 	// SS220 EDIT: weapon-specific setup must not bypass the core wield requirement either
 	if((primary_weapon.flags_gun_features & GUN_WIELDED_FIRING_ONLY) && !(primary_weapon.flags_item & WIELDED))
 		return ONGOING_ACTION_UNFINISHED

@@ -1,3 +1,4 @@
+// DemonicLynx for BandaMarines
 /// Moves an idle Human AI to an injured friendly and delegates treatment to the shared health engine.
 /datum/ai_action/treat_ally
 	name = "Treat Ally"

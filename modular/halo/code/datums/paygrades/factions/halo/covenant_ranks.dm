@@ -65,6 +65,7 @@
 	ranking = 5
 	pay_multiplier = 3
 
+// DemonicLynx for BandaMarines
 // SANGHEILI
 
 /datum/paygrade/covenant/sangheili_minor
