@@ -9,6 +9,7 @@
 import fs from "fs";
 import Juke from "./juke/index.js";
 import { DreamDaemon, DreamMaker, NamedVersionFile } from "./lib/byond.js";
+import { generateFactionMusicManifest } from "./lib/faction_music.js";
 import { yarn } from "./lib/yarn.js";
 
 Juke.chdir("../..", import.meta.url);
@@ -40,6 +41,8 @@ export const DmVersionParameter = new Juke.Parameter({
 
 export const CiParameter = new Juke.Parameter({ type: "boolean" });
 
+export const ForceParameter = new Juke.Parameter({ type: "boolean" });
+
 export const WarningParameter = new Juke.Parameter({
   type: "string[]",
   alias: "W",
@@ -47,7 +50,9 @@ export const WarningParameter = new Juke.Parameter({
 
 export const DmMapsIncludeTarget = new Juke.Target({
   executes: async () => {
-    const folders = [...Juke.glob("maps/**/*.dmm")];
+    const folders = [...Juke.glob("maps/**/*.dmm")].filter(
+      (file) => file !== "maps/map_files/generic/Admin_level.dmm"
+    );
     const content_base =
       folders
         .filter((file) => file.split("/").length == 4 && file.includes("map_files"))
@@ -66,12 +71,38 @@ export const DmMapsIncludeTarget = new Juke.Target({
   },
 });
 
+export const FactionMusicManifestTarget = new Juke.Target({
+  // Intentionally has no declared output: copied audio may preserve an mtime
+  // older than the generated manifest. The generator writes only on changes,
+  // so checking on every build does not force needless DM recompilation.
+  inputs: [
+    "tools/build/lib/faction_music.js",
+    "sound/factions music/**/*.[mM][pP]3",
+    "sound/factions music/**/*.[oO][gG][gG]",
+    "sound/factions music/**/*.[wW][aA][vV]",
+  ],
+  executes: () => {
+    const result = generateFactionMusicManifest();
+    Juke.logger.info(
+      `${result.changed ? "Generated" : "Checked"} faction music manifest (${result.trackCount} tracks)`
+    );
+  },
+});
+
 export const DmTarget = new Juke.Target({
-  parameters: [DefineParameter, DmVersionParameter, WarningParameter],
+  parameters: [
+    CiParameter,
+    DefineParameter,
+    DmVersionParameter,
+    ForceParameter,
+    WarningParameter,
+  ],
   dependsOn: ({ get }) => [
+    FactionMusicManifestTarget,
     get(DefineParameter).includes("ALL_MAPS") && DmMapsIncludeTarget,
   ],
   inputs: [
+    "maps/_basemap.dm",
     "maps/map_files/generic/**",
     "code/**",
     "html/**",
@@ -83,89 +114,129 @@ export const DmTarget = new Juke.Target({
     NamedVersionFile,
   ],
   outputs: ({ get }) => {
-    if (get(DmVersionParameter) || get(DefineParameter).includes("ALL_MAPS")) {
-      return []; // Always rebuild when dm version or ALL_MAPS is provided
+    if (
+      get(CiParameter) ||
+      get(DmVersionParameter) ||
+      get(ForceParameter) ||
+      get(DefineParameter).length > 0 ||
+      get(WarningParameter).length > 0
+    ) {
+      return []; // Parameterized verification must never reuse an incompatible DMB.
     }
     return [`${DME_NAME}.dmb`, `${DME_NAME}.rsc`];
   },
   executes: async ({ get }) => {
-    await DreamMaker(`${DME_NAME}.dme`, {
-      defines: ["CBT", ...get(DefineParameter)],
-      warningsAsErrors: get(WarningParameter).includes("error"),
-      namedDmVersion: get(DmVersionParameter),
-    });
+    try {
+      await DreamMaker(`${DME_NAME}.dme`, {
+        defines: ["CBT", ...get(DefineParameter)],
+        warningsAsErrors: get(WarningParameter).includes("error"),
+        namedDmVersion: get(DmVersionParameter),
+        strictVersion: get(CiParameter),
+      });
+    } finally {
+      if (get(DefineParameter).includes("ALL_MAPS")) {
+        Juke.rm("maps/templates_base.dm");
+        Juke.rm("maps/templates_extra.dm");
+      }
+    }
   },
 });
 
 export const DmTestTarget = new Juke.Target({
-  parameters: [DefineParameter, DmVersionParameter, WarningParameter],
+  parameters: [CiParameter, DefineParameter, DmVersionParameter, WarningParameter],
   dependsOn: ({ get }) => [
+    FactionMusicManifestTarget,
     get(DefineParameter).includes("ALL_MAPS") && DmMapsIncludeTarget,
   ],
   executes: async ({ get }) => {
     fs.copyFileSync(`${DME_NAME}.dme`, `${DME_NAME}.test.dme`);
-    await DreamMaker(`${DME_NAME}.test.dme`, {
-      defines: ["CBT", "CIBUILDING", ...get(DefineParameter)],
-      warningsAsErrors: get(WarningParameter).includes("error"),
-      namedDmVersion: get(DmVersionParameter),
-    });
-    Juke.rm("data/logs/ci", { recursive: true });
-    const options = {
-      dmbFile: `${DME_NAME}.test.dmb`,
-      namedDmVersion: get(DmVersionParameter),
-    };
-    await DreamDaemon(
-      options,
-      "-close",
-      "-trusted",
-      "-verbose",
-      "-params",
-      "run_tests=1&log-directory=ci"
-    );
-    Juke.rm("*.test.*");
     try {
+      await DreamMaker(`${DME_NAME}.test.dme`, {
+        defines: ["CBT", "CIBUILDING", ...get(DefineParameter)],
+        warningsAsErrors: get(WarningParameter).includes("error"),
+        namedDmVersion: get(DmVersionParameter),
+        strictVersion: get(CiParameter),
+      });
+      Juke.rm("data/logs/ci", { recursive: true });
+      const options = {
+        dmbFile: `${DME_NAME}.test.dmb`,
+        namedDmVersion: get(DmVersionParameter),
+      };
+      let daemonError;
+      try {
+        await DreamDaemon(
+          options,
+          "-close",
+          "-trusted",
+          "-verbose",
+          "-params",
+          "run_tests=1&log-directory=ci"
+        );
+      } catch (err) {
+        // DreamDaemon on Windows can return a non-zero process code after a
+        // clean `-close` shutdown. The fresh sentinel below is authoritative.
+        daemonError = err;
+      }
       const cleanRun = fs.readFileSync("data/logs/ci/clean_run.lk", "utf-8");
+      if (cleanRun.trim() !== "Success!") {
+        throw daemonError || new Error("Unit-test success sentinel is invalid");
+      }
       console.log(cleanRun);
     } catch (err) {
       Juke.logger.error("Test run was not clean, exiting");
       throw new Juke.ExitCode(1);
+    } finally {
+      Juke.rm("*.test.*");
+      if (get(DefineParameter).includes("ALL_MAPS")) {
+        Juke.rm("maps/templates_base.dm");
+        Juke.rm("maps/templates_extra.dm");
+      }
     }
   },
 });
 
 export const AutowikiTarget = new Juke.Target({
-  parameters: [DefineParameter, DmVersionParameter, WarningParameter],
+  parameters: [CiParameter, DefineParameter, DmVersionParameter, WarningParameter],
   dependsOn: ({ get }) => [
+    FactionMusicManifestTarget,
     get(DefineParameter).includes("ALL_MAPS") && DmMapsIncludeTarget,
   ],
   outputs: ["data/autowiki_edits.txt"],
   executes: async ({ get }) => {
     fs.copyFileSync(`${DME_NAME}.dme`, `${DME_NAME}.test.dme`);
-    await DreamMaker(`${DME_NAME}.test.dme`, {
-      defines: ["CBT", "AUTOWIKI", ...get(DefineParameter)],
-      warningsAsErrors: get(WarningParameter).includes("error"),
-      namedDmVersion: get(DmVersionParameter),
-    });
-    Juke.rm("data/autowiki_edits.txt");
-    Juke.rm("data/autowiki_files", { recursive: true });
-    Juke.rm("data/logs/ci", { recursive: true });
+    try {
+      await DreamMaker(`${DME_NAME}.test.dme`, {
+        defines: ["CBT", "AUTOWIKI", ...get(DefineParameter)],
+        warningsAsErrors: get(WarningParameter).includes("error"),
+        namedDmVersion: get(DmVersionParameter),
+        strictVersion: get(CiParameter),
+      });
+      Juke.rm("data/autowiki_edits.txt");
+      Juke.rm("data/autowiki_files", { recursive: true });
+      Juke.rm("data/logs/ci", { recursive: true });
 
-    const options = {
-      dmbFile: `${DME_NAME}.test.dmb`,
-      namedDmVersion: get(DmVersionParameter),
-    };
-    await DreamDaemon(
-      options,
-      "-close",
-      "-trusted",
-      "-verbose",
-      "-params",
-      "log-directory=ci"
-    );
-    Juke.rm("*.test.*");
-    if (!fs.existsSync("data/autowiki_edits.txt")) {
-      Juke.logger.error("Autowiki did not generate an output, exiting");
-      throw new Juke.ExitCode(1);
+      const options = {
+        dmbFile: `${DME_NAME}.test.dmb`,
+        namedDmVersion: get(DmVersionParameter),
+      };
+      await DreamDaemon(
+        options,
+        "-close",
+        "-trusted",
+        "-verbose",
+        "-params",
+        "log-directory=ci"
+      );
+      if (!fs.existsSync("data/autowiki_edits.txt")) {
+        Juke.logger.error("Autowiki did not generate an output, exiting");
+        throw new Juke.ExitCode(1);
+      }
+    } finally {
+      Juke.rm("*.test.*");
+      if (get(DefineParameter).includes("ALL_MAPS")) {
+        Juke.rm("maps/templates_base.dm");
+        Juke.rm("maps/templates_extra.dm");
+      }
     }
   },
 });

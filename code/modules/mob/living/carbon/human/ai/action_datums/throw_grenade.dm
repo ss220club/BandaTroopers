@@ -24,13 +24,13 @@
 	if(!length(brain.equipment_map[HUMAN_AI_GRENADES]))
 		return 0
 
-	if(!brain.primary_weapon)
-		return 10
+	if(brain.active_grenade_found)
+		return 0
 
-	if(locate(/turf/closed) in get_line(brain.tied_human, target_turf))
-		return 10
+	if(!brain.should_attempt_combat_grenade()) // SS220 EDIT: roll exactly once per combat encounter, not once per scheduler tick
+		return 0
 
-	return 0
+	return 20 // SS220 EDIT: a selected grenade throw preempts routine firing and spacing actions
 
 /datum/ai_action/throw_grenade/get_conflicts(datum/human_ai_brain/brain)
 	. = ..()
@@ -38,6 +38,7 @@
 	. += /datum/ai_action/sniper_nest
 
 /datum/ai_action/throw_grenade/Added()
+	brain.consume_combat_grenade_decision() // SS220 EDIT: at most one carried-grenade attempt per combat encounter
 	throwing = locate() in brain.equipment_map[HUMAN_AI_GRENADES]
 	throw_range_override = isnum(throwing?.throw_range) ? throwing.throw_range : null
 	log_game("AI GRENADE: throw action created — grenade=[throwing] ([throwing?.type]), available=[english_list(brain?.equipment_map[HUMAN_AI_GRENADES])], throw_range=[throw_range_override], mob=[key_name(brain?.tied_human)]")
@@ -155,7 +156,7 @@
 	return FALSE
 
 /datum/ai_action/throw_grenade/proc/resolve_throw_target(mob/living/carbon/human/tied_human, obj/item/explosive/grenade/grenade, turf/original_target)
-	if(can_throw_to_target(tied_human, grenade, original_target))
+	if(can_throw_to_target(tied_human, grenade, original_target) && !has_friendly_near_throw_target(original_target)) // SS220 EDIT: never accept the primary target without the same friendly-area check as fallbacks
 		return original_target
 
 	var/effective_throw_range = get_effective_throw_range(grenade)
@@ -167,12 +168,6 @@
 		var/turf/cardinal_target = get_ranged_target_turf(tied_human, direction, effective_throw_range)
 		if(can_throw_to_target(tied_human, grenade, cardinal_target) && !has_friendly_near_throw_target(cardinal_target))
 			return cardinal_target
-
-	for(var/direction in fallback_directions)
-		for(var/candidate_range = effective_throw_range; candidate_range > min_safe_throw_distance; candidate_range--)
-			var/turf/cardinal_target = get_ranged_target_turf(tied_human, direction, candidate_range)
-			if(can_throw_to_target(tied_human, grenade, cardinal_target))
-				return cardinal_target
 
 	return null
 
@@ -237,7 +232,7 @@
 		if(length(emergency_target))
 			for(var/direction in emergency_target)
 				var/turf/candidate = get_ranged_target_turf(tied_human, direction, get_effective_throw_range(grenade))
-				if(candidate && can_throw_to_target(tied_human, grenade, candidate))
+				if(candidate && can_throw_to_target(tied_human, grenade, candidate) && !has_friendly_near_throw_target(candidate)) // SS220 EDIT: emergency retargeting keeps the same friendly-area safety rule
 					emergency_target = candidate
 					break
 			if(!isturf(emergency_target))

@@ -92,6 +92,8 @@
 		S.file = target_ambience
 		ambience = target_ambience
 
+	if((owner.prefs.toggles_sound & SOUND_AMBIENCE) && target_ambience && (S.file || force_update))
+		owner.stop_faction_music_playback() // SS220 EDIT: newly started or explicitly enabled ambience takes priority over faction music
 
 	S.volume = 100 * owner.prefs.volume_preferences[VOLUME_AMB]
 	S.status = status_flags
@@ -124,6 +126,8 @@
 			S.z = pick(1,-1)
 			S.y = 1
 			S.channel = SOUND_CHANNEL_SOUNDSCAPE
+			if(owner.prefs.toggles_sound & SOUND_AMBIENCE)
+				owner.stop_faction_music_playback() // SS220 EDIT: an enabled soundscape takes priority over the faction intro track
 			sound_to(owner, S)
 		var/area/A = get_area(owner.mob)
 		if(A)

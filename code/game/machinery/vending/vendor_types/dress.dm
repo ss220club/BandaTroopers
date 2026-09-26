@@ -170,13 +170,22 @@
 	var/list/items
 	var/list/obj/item/item_types
 
-/obj/structure/machinery/cm_vending/clothing/super_snowflake/get_listed_products(mob/user)
-	//If we don't have an object type, we ask the user to supply it
+/obj/structure/machinery/cm_vending/clothing/super_snowflake/tgui_interact(mob/user, datum/tgui/ui)
+	// SS220 EDIT - START: keep interactive category selection out of the no-sleep Initialize path
 	if(!item_types)
-		var/obj/item/chosen = get_item_category_from_user()
+		var/obj/item/chosen = get_item_category_from_user(user)
 		if(!chosen)
 			return
 		item_types = list(chosen)
+		cm_build_inventory(get_listed_products(), 1, 3)
+	return ..(user, ui)
+	// SS220 EDIT - END
+
+/obj/structure/machinery/cm_vending/clothing/super_snowflake/get_listed_products(mob/user)
+	// SS220 EDIT - START: Initialize calls this proc and must never open a blocking prompt
+	if(!item_types)
+		return list()
+	// SS220 EDIT - END
 
 	if(!items)
 		items = list()
@@ -185,8 +194,8 @@
 
 	return items
 
-/obj/structure/machinery/cm_vending/clothing/super_snowflake/proc/get_item_category_from_user()
-	var/item = tgui_input_text(usr,"What item to stock?", "Stock Vendor","")
+/obj/structure/machinery/cm_vending/clothing/super_snowflake/proc/get_item_category_from_user(mob/user) // SS220 EDIT: use the explicit actor instead of implicit usr
+	var/item = tgui_input_text(user,"What item to stock?", "Stock Vendor","")
 	if(!item)
 		return
 	var/list/types = typesof(/obj/item)
@@ -205,7 +214,7 @@
 		chosen = matches[1]
 	else
 		//If we have multiple options, let them select which one they meant
-		chosen = tgui_input_list(usr, "Select an object type", "Select Object", matches)
+		chosen = tgui_input_list(user, "Select an object type", "Select Object", matches)
 
 	return chosen
 
@@ -231,7 +240,7 @@
 		to_chat(usr, SPAN_WARNING("This option isn't for you."))
 		return
 
-	var/obj/item/chosen = get_item_category_from_user()
+	var/obj/item/chosen = get_item_category_from_user(usr) // SS220 EDIT: pass the VV actor explicitly
 	if(!chosen)
 		return
 	add_items(chosen)

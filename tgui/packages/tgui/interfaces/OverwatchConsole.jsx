@@ -178,7 +178,7 @@ const MainDashboard = (props) => {
             inline
             width="23%"
             icon="person"
-            onClick={() => act('remind_primary')}
+            onClick={() => act('check_primary')}
           >
             REMIND PRIMARY
           </Button>
@@ -196,7 +196,7 @@ const MainDashboard = (props) => {
             inline
             width="23%"
             icon="person"
-            onClick={() => act('remind_secondary')}
+            onClick={() => act('check_secondary')}
           >
             REMIND SECONDARY
           </Button>

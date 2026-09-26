@@ -6,12 +6,23 @@ This build script is the recommended way to compile the game, including not only
   a) Press `Ctrl+Shift+B` to build.
   b) Press `F5` to build and run with debugger attached.
 - Windows:
-  a) Double-click `BUILD.bat` in the repository root to build (will wait for a key press before it closes).
+  a) Double-click `BUILD.cmd` in the repository root to build (will wait for a key press before it closes).
   b) Double-click `tools/build/build.bat` to build (will exit as soon as it finishes building).
 - Linux:
   a) Run `tools/build/build` from the repository root.
 
 The script will skip build steps whose inputs have not changed since the last run.
+Parameterized DM checks (`--ci`, `-D`, `-W`, or `--dm-version`) always rebuild,
+because their output is not compatible with an ordinary cached DMB. To force an
+otherwise normal DM rebuild, run:
+
+```
+tools/build/build dm --force
+```
+
+CI verification requires the exact BYOND version selected by the CI environment
+(normally the version pinned in `dependencies.sh`; alternate-version jobs set an
+explicit override). Ordinary local builds warn on a version mismatch.
 
 ## Getting list of available targets
 

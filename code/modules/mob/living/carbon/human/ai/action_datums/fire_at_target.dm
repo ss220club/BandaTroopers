@@ -93,9 +93,22 @@
 
 	var/mob/living/carbon/tied_human = brain.tied_human
 	brain.unholster_primary()
+	brain.ensure_primary_hand(primary_weapon)
+
+	// SS220 EDIT - START: establish a real two-handed grip before entering the gun firing loop
+	// before_fire() may perform delayed weapon-specific setup asynchronously. Starting fire in
+	// the same tick used to make wield-required guns (notably the M56 smartgun and RPGs) fail
+	// their core WIELDED check without ever producing a shot callback.
+	if((primary_weapon.flags_gun_features & GUN_WIELDED_FIRING_ONLY) && !(primary_weapon.flags_item & WIELDED))
+		brain.wield_primary()
+		return ONGOING_ACTION_UNFINISHED
+	// SS220 EDIT - END
 
 	var/datum/firearm_appraisal/gun_data = brain.gun_data
 	gun_data.before_fire(primary_weapon, tied_human, brain)
+	// SS220 EDIT: weapon-specific setup must not bypass the core wield requirement either
+	if((primary_weapon.flags_gun_features & GUN_WIELDED_FIRING_ONLY) && !(primary_weapon.flags_item & WIELDED))
+		return ONGOING_ACTION_UNFINISHED
 	if(brain.should_reload())
 		if(gun_data?.disposable)
 			tied_human.drop_held_item(primary_weapon)

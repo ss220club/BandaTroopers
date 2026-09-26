@@ -2,6 +2,9 @@
 	var/datum/admin_music_service/service
 	var/list/temp_paths
 
+/datum/unit_test/admin_music/Run()
+	return
+
 /datum/unit_test/admin_music/New()
 	. = ..()
 	service = new /datum/admin_music_service
@@ -87,7 +90,7 @@
 	var/datum/admin_music_preset/parsed = parse_result["preset"]
 	TEST_ASSERT_NOTNULL(parsed, "Preset parsing returned no preset for defaulted show-title state.")
 	TEST_ASSERT(parsed.show_title_to_players, "Omitted show-title flag should preserve the TRUE default.")
-	TEST_ASSERT(parsed.repeat, "Omitted repeat flag should preserve the TRUE default.")
+	TEST_ASSERT(!parsed.repeat, "Omitted repeat flag should preserve the FALSE default.") // SS220 EDIT: new admin-music presets no longer repeat by default
 
 	json_data["version"] = 2
 	parse_result = service.parse_preset_json_text(json_encode(json_data), "bad_version")

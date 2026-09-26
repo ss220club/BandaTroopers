@@ -127,6 +127,16 @@
 			attack(target, user)
 			sleep(ai_brain.short_action_delay)
 
+// SS220 EDIT - START: basic gauze is listed as Human AI bleeding treatment and needs a matching usability check
+/obj/item/stack/medical/bruise_pack/ai_can_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain, mob/living/carbon/human/target)
+	if(!target)
+		return FALSE
+	for(var/obj/limb/limb as anything in target.limbs)
+		if(locate(/datum/effects/bleeding/external) in limb.bleeding_effects_list)
+			return TRUE
+	return FALSE
+// SS220 EDIT - END
+
 /obj/item/stack/medical/bruise_pack/two
 	amount = 2
 
@@ -443,8 +453,18 @@
 		if(QDELETED(src))
 			return
 
-		if(limb.is_broken())
+		if(limb.is_broken() && !(limb.status & LIMB_SPLINTED)) // SS220 EDIT: skip fractures already stabilized by a splint
 			user.zone_selected = limb.name
 			attack(target, user)
 			sleep(ai_brain.short_action_delay)
 			continue
+
+// SS220 EDIT - START: Human AI must recognize splints as usable on untreated fractures
+/obj/item/stack/medical/splint/ai_can_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain, mob/living/carbon/human/target)
+	if(!target)
+		return FALSE
+	for(var/obj/limb/limb as anything in target.limbs)
+		if((limb.status & LIMB_BROKEN) && !(limb.status & LIMB_SPLINTED))
+			return TRUE
+	return FALSE
+// SS220 EDIT - END

@@ -13,6 +13,7 @@
 #define VOLUME_TTS_LOCAL 5 // SS220 EDIT - TTS
 #define VOLUME_TTS_RADIO 6 // SS220 EDIT - TTS
 #define VOLUME_TTS_ANNOUNCE 7 // SS220 EDIT - TTS
+#define VOLUME_MUSIC 8 // SS220 EDIT - faction music uses an append-only preference slot
 
 //types for choosing correct volume and channel for tts cast
 #define TTS_LOCALYZE_RADIO 0

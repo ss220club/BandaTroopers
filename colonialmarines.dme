@@ -2116,6 +2116,7 @@
 #include "code\modules\mob\living\carbon\human\ai\action_datums\take_cover.dm"
 #include "code\modules\mob\living\carbon\human\ai\action_datums\throw_back_nade.dm"
 #include "code\modules\mob\living\carbon\human\ai\action_datums\throw_grenade.dm"
+#include "code\modules\mob\living\carbon\human\ai\action_datums\treat_ally.dm" // SS220 EDIT: include transferred ally-treatment action
 #include "code\modules\mob\living\carbon\human\ai\action_datums\treat_self.dm"
 #include "code\modules\mob\living\carbon\human\ai\action_datums\walk_melee.dm"
 #include "code\modules\mob\living\carbon\human\ai\ai_spawner\ai_presets_canc.dm"

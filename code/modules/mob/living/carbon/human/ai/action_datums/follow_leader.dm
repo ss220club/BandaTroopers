@@ -38,6 +38,8 @@
 
 /datum/ai_action/follow_leader/trigger_action()
 	. = ..()
+	if(brain.get_priority_ally_treatment_target()) // SS220 EDIT: injured allies preempt routine formation movement
+		return ONGOING_ACTION_COMPLETED
 
 	if(brain.in_combat || length(brain.to_pickup))
 		return ONGOING_ACTION_COMPLETED

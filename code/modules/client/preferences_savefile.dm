@@ -223,8 +223,13 @@
 
 /proc/sanitize_volume_preferences(list/pref_list, list/default_volume_preferences)
 	var/list/volume_preferences = sanitize_islist(pref_list, default_volume_preferences)
-	if(length(volume_preferences) != length(default_volume_preferences))
-		volume_preferences = default_volume_preferences
+	// SS220 EDIT START - preserve existing slots when new volume categories are appended.
+	if(length(volume_preferences) < length(default_volume_preferences))
+		for(var/i in length(volume_preferences) + 1 to length(default_volume_preferences))
+			volume_preferences += default_volume_preferences[i]
+	else if(length(volume_preferences) > length(default_volume_preferences))
+		volume_preferences.Cut(length(default_volume_preferences) + 1)
+	// SS220 EDIT END
 	for(var/i in 1 to length(volume_preferences))
 		var/num = sanitize_float(volume_preferences[i], 0, 1, 1)
 		volume_preferences[i] = num
@@ -458,8 +463,8 @@
 	if(!observer_huds)
 		observer_huds = list("Medical HUD" = FALSE, "Security HUD" = FALSE, "Squad HUD" = FALSE, "Xeno Status HUD" = FALSE)
 
-	volume_preferences = sanitize_volume_preferences(volume_preferences, list(1, 0.5, 1, 0.6, // Game, music, admin midis, lobby music
-	1, 0.5, 0.5)) // Local, Radio,  Announces - SS220 TTS EDIT from "modular/text_to_speech/code/sound.dm"
+	volume_preferences = sanitize_volume_preferences(volume_preferences, list(1, 0.5, 1, 0.6, // Game, ambience, admin midis, lobby music
+	1, 0.5, 0.5, 0.35)) // Local, Radio, Announces, faction music - SS220 EDIT
 
 	return 1
 

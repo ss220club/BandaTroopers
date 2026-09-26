@@ -24,6 +24,8 @@
 
 /datum/ai_action/patrol_waypoints/trigger_action()
 	. = ..()
+	if(brain.get_priority_ally_treatment_target()) // SS220 EDIT: injured allies preempt routine patrol movement
+		return ONGOING_ACTION_COMPLETED
 
 	var/datum/ai_order/patrol/current_order = brain.current_order
 	if(current_order.waiting || QDELETED(current_order) || !istype(current_order) || length(brain.to_pickup) || brain.in_combat)

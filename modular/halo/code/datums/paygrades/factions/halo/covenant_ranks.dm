@@ -65,12 +65,6 @@
 	ranking = 5
 	pay_multiplier = 3
 
-/datum/paygrade/covenant/kigyar_champion
-	parent_type = /datum/paygrade/covenant/jackal_champion
-
-/datum/paygrade/covenant/kigyar_shipmistress
-	parent_type = /datum/paygrade/covenant/jackal_shipmistress
-
 // SANGHEILI
 
 /datum/paygrade/covenant/sangheili_minor

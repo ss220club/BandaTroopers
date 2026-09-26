@@ -52,6 +52,29 @@
 	else
 		tacmap = new(src, minimap_type) // Non-drawing version
 
+/// Resolve the platoon family that this Overwatch operator is supposed to control.
+/// HALO ODST ships can share the same map with the normal UNSC platoon, so the map
+/// default alone is not enough to determine which squad family the operator needs.
+/obj/structure/machinery/computer/overwatch/proc/overwatch_squad_faction_matches(datum/squad/S)
+	if(!S)
+		return FALSE
+
+	// HALO overwatch uses FACTION_LIST_UNSC rather than a single faction value.
+	// The normal Overwatch code compares against one faction string, which made
+	// every UNSC squad fail the filter and left the console with no units.
+	if(islist(faction))
+		return S.faction in faction
+
+	return S.faction == faction
+
+/obj/structure/machinery/computer/overwatch/proc/get_operator_platoon_type(mob/user)
+	if(user && user.job && GLOB.RoleAuthority)
+		var/halo_platoon = GLOB.RoleAuthority.get_halo_platoon_type_for_job(user.job)
+		if(halo_platoon)
+			return halo_platoon
+
+	return GLOB.RoleAuthority?.get_active_ship_platoon_type() || MAIN_SHIP_PLATOON || text2path(MAIN_SHIP_DEFAULT_PLATOON)
+
 /obj/structure/machinery/computer/overwatch/Destroy()
 	QDEL_NULL(tacmap)
 	return ..()
@@ -120,10 +143,17 @@
 	data["theme"] = ui_theme
 
 	if(!current_squad)
+		// TGUI backend merges incoming data with the previous state. Explicitly
+		// clear current_squad so HomePanel can render after Stop Overwatch.
+		data["current_squad"] = null
+		data["operator"] = null
 		data["squad_list"] = list()
-		for(var/datum/squad/current_squad in GLOB.RoleAuthority.squads)
-			if(current_squad.active && !current_squad.overwatch_officer && current_squad.faction == faction && current_squad.name != "Root")
-				data["squad_list"] += current_squad.name
+		var/operator_platoon = get_operator_platoon_type(user)
+		for(var/datum/squad/available_squad in GLOB.RoleAuthority.squads)
+			if(available_squad.overwatch_officer || !overwatch_squad_faction_matches(available_squad) || available_squad.name == "Root")
+				continue
+			if(available_squad.active || available_squad.type == operator_platoon || (operator_platoon && available_squad.is_modular_platoon_match(operator_platoon)))
+				data["squad_list"] += available_squad.name
 		return data
 
 	data["current_squad"] = current_squad.name
@@ -357,6 +387,9 @@
 
 	var/mob/user = ui.user
 
+	// Overwatch console button feedback sound
+	playsound(user, 'sound/machines/computer_typing1.ogg', 25, FALSE)
+
 	if((user.contents.Find(src) || (in_range(src, user) && istype(loc, /turf))) || (isSilicon(user)))
 		user.set_interaction(src)
 
@@ -365,13 +398,22 @@
 			if(current_squad)
 				return
 			var/datum/squad/selected_squad
+			var/operator_platoon = get_operator_platoon_type(user)
 			for(var/datum/squad/searching_squad in GLOB.RoleAuthority.squads)
-				if(searching_squad.active && !searching_squad.overwatch_officer && searching_squad.faction == faction && searching_squad.name != "Root" && searching_squad.name == params["squad"])
+				if(searching_squad.overwatch_officer || !overwatch_squad_faction_matches(searching_squad) || searching_squad.name == "Root" || searching_squad.name != params["squad"])
+					continue
+				if(searching_squad.active || searching_squad.type == operator_platoon || (operator_platoon && searching_squad.is_modular_platoon_match(operator_platoon)))
 					selected_squad = searching_squad
 					break
 
 			if(!selected_squad)
 				return
+
+			// A HALO platoon family can be present on the same ship map while its
+			// sections are still disabled by the map's default platoon profile.
+			// Selecting it from Overwatch explicitly engages that section.
+			if(!selected_squad.active && operator_platoon && (selected_squad.type == operator_platoon || selected_squad.is_modular_platoon_match(operator_platoon)))
+				selected_squad.engage_squad()
 
 			if(selected_squad.assume_overwatch(user))
 				current_squad = selected_squad
@@ -396,7 +438,11 @@
 				user.reset_view(null)
 				user.UnregisterSignal(cam, COMSIG_PARENT_QDELETING)
 			cam = null
-			ui.close()
+			// Keep the Overwatch UI open after stopping control and immediately
+			// refresh this exact TGUI instance. The selector is driven by ui_data()
+			// when current_squad is null, so send a forced full update instead of
+			// relying on the subsystem's deferred update pass.
+			ui?.send_full_update(force = TRUE)
 			return TRUE
 
 		if("message")
@@ -469,7 +515,7 @@
 
 		if("set_secondary")
 			var/input = sanitize_control_chars(stripped_input(usr, "What will be the section's secondary objective?", "Secondary Objective"))
-			if(input)
+			if(current_squad && input)
 				current_squad.secondary_objective = input + " ([worldtime2text()])"
 				current_squad.send_message("Your secondary objective has been changed to '[input]'. See Status pane for details.")
 				current_squad.send_maptext(input, "Secondary Objective Updated:")
@@ -540,8 +586,8 @@
 			if(!params["index"] || !params["comment"])
 				return
 			var/index = text2num(params["index"])
-			if(length(saved_coordinates) + 1 < index)
-				return
+			if(index < 1 || index > length(saved_coordinates))
+				return TRUE
 			saved_coordinates[index]["comment"] = params["comment"]
 			return TRUE
 
@@ -779,8 +825,14 @@
 		return
 
 	var/list/available_squads = list()
+	var/operator_platoon = get_operator_platoon_type(usr)
 	for(var/datum/squad/squad as anything in GLOB.RoleAuthority.squads)
-		if(squad.active && !squad.locked && squad.faction == faction && squad.name != "Root")
+		// Transfer Marine must offer exactly the same destination squads that
+		// this Overwatch console exposes in its squad selector. Locked squads are
+		// excluded because transfer_marine_to_squad() rejects them.
+		if(squad.locked || squad.overwatch_officer || !overwatch_squad_faction_matches(squad) || squad.name == "Root")
+			continue
+		if(squad.active || squad.type == operator_platoon || (operator_platoon && squad.is_modular_platoon_match(operator_platoon)))
 			available_squads += squad
 
 	var/datum/squad/new_squad = tgui_input_list(usr, "Choose the marine's new squad", "Squad Selection", available_squads)
@@ -804,6 +856,13 @@
 	if(GLOB.RoleAuthority.check_squad_capacity(transfer_marine, new_squad))
 		to_chat(usr, "[icon2html(src, usr)] [SPAN_WARNING("Transfer aborted. [new_squad] can't have another [transfer_marine.job].")]")
 		return
+
+	// A modular HALO squad can be visible to Overwatch because it belongs to the
+	// operator's platoon even when it has not yet been enabled as usable.
+	// Explicitly enable that destination before the transfer so put_marine_in_squad()
+	// does not reject the move.
+	if(!new_squad.active && operator_platoon && new_squad.is_modular_platoon_match(operator_platoon))
+		new_squad.engage_squad()
 
 	. = transfer_marine_to_squad(transfer_marine, new_squad, old_squad, card)
 	if(.)
@@ -966,7 +1025,9 @@
 	faction = FACTION_FREELANCER
 // SS220 EDIT - START: HALO Minimap Fix - UNSC Overwatch Console
 /obj/structure/machinery/computer/overwatch/unsc
-	faction = FACTION_LIST_UNSC
+	// Overwatch compares this value directly with squad.faction, so this must
+	// be the concrete UNSC faction rather than the broader UNSC faction list.
+	faction = FACTION_UNSC
 // SS220 EDIT - END
 
 /obj/structure/machinery/computer/overwatch/toc

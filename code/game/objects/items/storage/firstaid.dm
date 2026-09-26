@@ -895,9 +895,12 @@
 /obj/item/storage/pill_bottle/can_be_inserted(obj/item/W, mob/user, stop_messages = FALSE)
 	. = ..()
 	if(.)
-		if(skilllock && !skillcheck(usr, SKILL_MEDICAL, SKILL_MEDICAL_MEDIC))
-			error_idlock(usr)
-			return
+		// SS220 EDIT - START: storage and AI calls may not have usr; validate the explicit actor
+		if(skilllock && (!user || !skillcheck(user, SKILL_MEDICAL, SKILL_MEDICAL_MEDIC)))
+			if(user)
+				error_idlock(user)
+			return FALSE
+		// SS220 EDIT - END
 
 /obj/item/storage/pill_bottle/clicked(mob/user, list/mods)
 	if(..())
@@ -970,9 +973,7 @@
 		return FALSE
 
 	var/obj/item/reagent_container/pill/pill = contents[1]
-	var/datum/reagent/reagent_datum = GLOB.chemical_reagents_list[pill.pill_initial_reagents[1]]
-
-	if((target.reagents.get_reagent_amount(reagent_datum.id) + pill.reagents.total_volume) > reagent_datum.overdose)
+	if(!ai_brain.can_safely_administer_reagents(pill, target, pill.reagents.total_volume)) // SS220 EDIT: validate every reagent in mixed pills against patient levels
 		return FALSE
 
 	if(skilllock && !skillcheck(user, SKILL_MEDICAL, SKILL_MEDICAL_MEDIC))
@@ -981,15 +982,22 @@
 	return TRUE
 
 /obj/item/storage/pill_bottle/ai_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain, mob/living/carbon/human/target)
+	if(!ai_can_use(user, ai_brain, target)) // SS220 EDIT: another medic may have dosed the patient since selection
+		return FALSE
+	var/used_pill = FALSE
 	var/obj/item/pill = contents[1]
 	user.swap_hand()
 	if(user.put_in_active_hand(pill))
 		remove_from_storage(pill, user)
-		pill.attack(target, user)
-		COOLDOWN_START(ai_brain, pill_use_cooldown, 5 SECONDS)
-		sleep(ai_brain.medium_action_delay * ai_brain.action_delay_mult)
+		if(!pill.attack(target, user)) // SS220 EDIT: late OD rejection must return the unused pill instead of losing it
+			attempt_item_insertion(pill, FALSE, user)
+		else
+			used_pill = TRUE
+			COOLDOWN_START(ai_brain, pill_use_cooldown, 5 SECONDS)
+			sleep(ai_brain.medium_action_delay * ai_brain.action_delay_mult)
 
 	ai_brain.appraise_inventory() // For some reason it removes pill bottles from equipment_map after usage
+	return used_pill
 
 /obj/item/storage/pill_bottle/proc/choose_color(mob/user)
 	if(!user)

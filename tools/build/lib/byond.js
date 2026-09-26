@@ -112,6 +112,7 @@ const getAllNamedDmVersions = (throw_on_fail) => {
  *   defines?: string[];
  *   warningsAsErrors?: boolean;
  *   namedDmVersion?: string;
+ *   strictVersion?: boolean;
  * }} options
  */
 export const DreamMaker = async (dmeFile, options = {}) => {
@@ -140,7 +141,7 @@ export const DreamMaker = async (dmeFile, options = {}) => {
     }
   };
 
-  const testDmVersion = async (dmPath) => {
+  const testDmVersion = async (dmPath, strictVersion) => {
     const execReturn = await Juke.exec(dmPath, [], {
       silent: true,
       throw: false,
@@ -167,9 +168,31 @@ export const DreamMaker = async (dmeFile, options = {}) => {
       );
       throw new Juke.ExitCode(1);
     }
+
+    const dependencies = fs.readFileSync("dependencies.sh", "utf-8");
+    const pinnedMajor = dependencies.match(/^export BYOND_MAJOR=(\d+)$/m)?.[1];
+    const pinnedMinor = dependencies.match(/^export BYOND_MINOR=(\d+)$/m)?.[1];
+    if (!pinnedMajor || !pinnedMinor) {
+      Juke.logger.error("Unable to read the pinned BYOND version from dependencies.sh");
+      throw new Juke.ExitCode(1);
+    }
+
+    const expectedMajor = process.env.BYOND_MAJOR || pinnedMajor;
+    const expectedMinor = process.env.BYOND_MINOR || pinnedMinor;
+    const actualVersion = `${major}.${minor}`;
+    const expectedVersion = `${expectedMajor}.${expectedMinor}`;
+    if (actualVersion !== expectedVersion) {
+      const source = process.env.BYOND_MAJOR ? "the build environment" : "dependencies.sh";
+      const message = `BYOND ${expectedVersion} is required by ${source}, but ${actualVersion} was selected.`;
+      if (strictVersion) {
+        Juke.logger.error(message);
+        throw new Juke.ExitCode(1);
+      }
+      Juke.logger.warn(`${message} Use --ci for strict verification.`);
+    }
   };
 
-  await testDmVersion(dmPath);
+  await testDmVersion(dmPath, options.strictVersion);
   testOutputFile(`${dmeBaseName}.dmb`);
   testOutputFile(`${dmeBaseName}.rsc`);
   const runWithWarningChecks = async (dmPath, args) => {
