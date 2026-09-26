@@ -23,7 +23,8 @@
 	switch(faction)
 		if(FACTION_MARINE)
 			return FACTION_MUSIC_KEY_USCM
-		if(FACTION_UNSC)
+		// Fix by DemonicLynx: UNSC Marines and UNSC Navy/crew share the UNSC playlist; ODST was resolved above.
+		if(FACTION_UNSC, FACTION_UNSCN)
 			return FACTION_MUSIC_KEY_UNSC
 		if(FACTION_UPP)
 			return FACTION_MUSIC_KEY_UPP
