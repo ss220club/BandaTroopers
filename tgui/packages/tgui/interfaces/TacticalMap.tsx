@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useBackend } from '../backend';
 import {
@@ -31,6 +31,9 @@ interface TacMapProps {
   exportedColor: string;
   mapFallback: string;
   mapRef: string;
+  mapZoom: number;
+  mapPanX: number;
+  mapPanY: number;
   currentMenu: string;
   lastUpdateTime: any;
   canvasCooldownDuration: any;
@@ -75,6 +78,11 @@ const PAGES = [
   },
 ];
 
+// DemonicLynx for BandaMarines - START: zoomed tactical Canvas viewport
+const TACTICAL_CANVAS_SIZE = 684;
+const TACTICAL_CANVAS_ZOOM = 2;
+// DemonicLynx for BandaMarines - END
+
 const colorOptions = [
   'black',
   'red',
@@ -107,10 +115,11 @@ export const TacticalMap = (props) => {
     });
   };
 
+  // DemonicLynx for BandaMarines: wider tactical map viewport
   return (
     <Window
-      width={700}
-      height={900}
+      width={900}
+      height={800}
       theme={data.isxeno ? 'hive_status' : 'crtblue'}
     >
       <Window.Content>
@@ -162,7 +171,48 @@ export const TacticalMap = (props) => {
 };
 
 const ViewMapPanel = (props) => {
-  const { data } = useBackend<TacMapProps>();
+  const { data, act } = useBackend<TacMapProps>();
+  // DemonicLynx for BandaMarines - START: native live-map pan controls
+  const [panX, setPanX] = useState(50);
+  const [panY, setPanY] = useState(50);
+  const mapViewportRef = useRef<HTMLDivElement>(null);
+
+  const getNativeViewportSize = () => {
+    const bounds = mapViewportRef.current?.getBoundingClientRect();
+    const zoom = data.mapZoom ?? 2;
+    const pixelRatio = window.devicePixelRatio || 1;
+
+    return {
+      viewportHeight: bounds
+        ? Math.max(1, Math.floor((bounds.height * pixelRatio) / zoom))
+        : undefined,
+      viewportWidth: bounds
+        ? Math.max(1, Math.floor((bounds.width * pixelRatio) / zoom))
+        : undefined,
+    };
+  };
+
+  useEffect(() => {
+    act('panTacmap', {
+      x: panX,
+      y: panY,
+      ...getNativeViewportSize(),
+    });
+  }, []);
+
+  const updatePan = (axis: 'x' | 'y', value: number) => {
+    if (axis === 'x') {
+      setPanX(value);
+    } else {
+      setPanY(value);
+    }
+    act('panTacmap', {
+      x: axis === 'x' ? value : panX,
+      y: axis === 'y' ? value : panY,
+      ...getNativeViewportSize(),
+    });
+  };
+  // DemonicLynx for BandaMarines - END
 
   // byond ui can't resist trying to render
   if (!data.canViewTacmap || data.mapRef === null) {
@@ -171,16 +221,50 @@ const ViewMapPanel = (props) => {
 
   return (
     <Section fill>
-      <ByondUi
-        height="100%"
-        width="100%"
-        params={{
-          id: data.mapRef,
-          type: 'map',
-          'background-color': 'none',
-        }}
-        className="TacticalMap"
-      />
+      {/* DemonicLynx for BandaMarines - START: enlarged native map with two working scrollbars */}
+      <div className="TacticalMapViewport">
+        <div ref={mapViewportRef} className="TacticalMapViewport__map">
+          <ByondUi
+            height="100%"
+            width="100%"
+            params={{
+              id: data.mapRef,
+              type: 'map',
+              'background-color': 'none',
+              letterbox: false,
+              zoom: data.mapZoom ?? 2,
+              'zoom-mode': 'distort',
+            }}
+            className="TacticalMap"
+          />
+        </div>
+        <input
+          aria-label="Vertical tactical map position"
+          className="TacticalMapViewport__slider TacticalMapViewport__slider--vertical"
+          max={100}
+          min={0}
+          step={2}
+          type="range"
+          value={panY}
+          onChange={(event) =>
+            updatePan('y', Number(event.currentTarget.value))
+          }
+        />
+        <input
+          aria-label="Horizontal tactical map position"
+          className="TacticalMapViewport__slider TacticalMapViewport__slider--horizontal"
+          max={100}
+          min={0}
+          step={2}
+          type="range"
+          value={panX}
+          onChange={(event) =>
+            updatePan('x', Number(event.currentTarget.value))
+          }
+        />
+        <div className="TacticalMapViewport__corner" />
+      </div>
+      {/* DemonicLynx for BandaMarines - END */}
     </Section>
   );
 };
@@ -206,6 +290,13 @@ const OldMapPanel = (props) => {
 
 const DrawMapPanel = (props) => {
   const { data, act } = useBackend<TacMapProps>();
+
+  // DemonicLynx for BandaMarines - START: frontend pan state for the zoomed Canvas
+  const [canvasPanX, setCanvasPanX] = useState(50);
+  const [canvasPanY, setCanvasPanY] = useState(50);
+  const canvasPanFromTop = 100 - canvasPanY;
+  const canvasDisplaySize = TACTICAL_CANVAS_SIZE * TACTICAL_CANVAS_ZOOM;
+  // DemonicLynx for BandaMarines - END
 
   const timeLeftPct = data.canvasCooldown / data.canvasCooldownDuration;
   const canUpdate = data.canvasCooldown <= 0 && !data.updatedCanvas;
@@ -329,17 +420,56 @@ const DrawMapPanel = (props) => {
           )}
         </Stack.Item>
       </Stack>
-      <CanvasLayer
-        selection={handleColorSelection(data.toolbarUpdatedSelection)}
-        actionQueueChange={data.actionQueueChange}
-        imageSrc={data.newCanvasFlatImage}
-        key={data.lastUpdateTime}
-        onImageExport={handleTacMapExport}
-        onUndo={(value: string) =>
-          act('selectColor', { color: findColorValue(value) })
-        }
-        onDraw={() => act('onDraw')}
-      />
+      {/* DemonicLynx for BandaMarines - START: zoomed Canvas with two pan sliders */}
+      <div className="TacticalCanvasViewport">
+        <div className="TacticalCanvasViewport__surface">
+          <div
+            className="TacticalCanvasViewport__content"
+            style={{
+              height: `${canvasDisplaySize}px`,
+              left: `${canvasPanX}%`,
+              top: `${canvasPanFromTop}%`,
+              transform: `translate(-${canvasPanX}%, -${canvasPanFromTop}%)`,
+              width: `${canvasDisplaySize}px`,
+            }}
+          >
+            <CanvasLayer
+              selection={handleColorSelection(data.toolbarUpdatedSelection)}
+              actionQueueChange={data.actionQueueChange}
+              displaySize={canvasDisplaySize}
+              imageSrc={data.newCanvasFlatImage}
+              key={data.lastUpdateTime}
+              onImageExport={handleTacMapExport}
+              onUndo={(value: string) =>
+                act('selectColor', { color: findColorValue(value) })
+              }
+              onDraw={() => act('onDraw')}
+            />
+          </div>
+        </div>
+        <input
+          aria-label="Vertical tactical canvas position"
+          className="TacticalCanvasViewport__slider TacticalCanvasViewport__slider--vertical"
+          max={100}
+          min={0}
+          step={2}
+          type="range"
+          value={canvasPanY}
+          onChange={(event) => setCanvasPanY(Number(event.currentTarget.value))}
+        />
+        <input
+          aria-label="Horizontal tactical canvas position"
+          className="TacticalCanvasViewport__slider TacticalCanvasViewport__slider--horizontal"
+          max={100}
+          min={0}
+          step={2}
+          type="range"
+          value={canvasPanX}
+          onChange={(event) => setCanvasPanX(Number(event.currentTarget.value))}
+        />
+        <div className="TacticalCanvasViewport__corner" />
+      </div>
+      {/* DemonicLynx for BandaMarines - END */}
     </Section>
   );
 };
