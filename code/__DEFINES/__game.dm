@@ -55,6 +55,7 @@
 #define MAP_BOSENMORI_BASHO "Bosenmori Basho"
 #define MAP_REDEMPTION_VALLEY "Redemption Valley" //valley with a military outpost and agricultural hamlet
 #define MAP_BINHAI_SUPPLY_STATION "Binhai Supply Station" //UPP asteroid base
+#define MAP_SUBURB_LV759 "Suburb LV-759"
 // SS220 EDIT - START
 #define MAP_FEATURELESS_SPACE "Featureless Space"
 #define MAP_LV522_FEATURELESS_BARRENS "LV-522 Featureless Barrens"

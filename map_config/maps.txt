@@ -172,4 +172,7 @@ endmap
 
 map arctic_valley
 endmap
+
+map suburb_lv759
+endmap
 # SS220 EDIT - END
