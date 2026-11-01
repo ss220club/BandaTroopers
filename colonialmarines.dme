@@ -2778,5 +2778,6 @@
 #include "interface\interface.dm"
 #include "interface\skin.dmf"
 #include "maps\_basemap.dm"
+#include "maps\map_files\suburb_lv759\standalone\Suburb_lv759.dmm"
 #include "modular\modular.dme" // BANDATROOPERS EDIT
 // END_INCLUDE

@@ -22025,6 +22025,11 @@
 /area/Suburb_lv759/indoors/caves/wy_research_complex_entrance)
 "ihe" = (
 /obj/effect/decal/cleanable/dirt,
+/obj/structure/prop/M24{
+	pixel_y = -1;
+	pixel_x = -26;
+	layer = 1
+	},
 /obj/structure/blocker/invisible_wall,
 /turf/open/shuttle/dropship/light_grey_single_wide_up_to_down,
 /area/Suburb_lv759/indoors/caves/Monorail)
