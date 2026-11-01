@@ -199,10 +199,12 @@ test('dossier information is three pixels smaller, capped, and remains inside th
   for (const selector of ['.dossier-name', '.data-row']) {
     const rules = [...css.matchAll(new RegExp(`\\${selector} \\{([^}]+)\\}`, 'g'))];
     assert.ok(rules.length >= 2, selector);
-    for (const rule of rules) {
-      assert.match(rule[1], /font-size:\s*[0-9.]+px\/\*banda-no-lobby-offset-cap14\*\//);
-      assert.match(rule[1], /line-height:\s*[0-9.]+px\/\*banda-no-lobby-offset-cap14\*\//);
-    }
+    assert.match(rules[0][1], /font-size:\s*[0-9.]+px\/\*banda-no-lobby-offset-cap14\*\//);
+    assert.match(rules[0][1], /line-height:\s*[0-9.]+px\/\*banda-no-lobby-offset-cap14\*\//);
+    const fluidRule = rules.find(rule => /font-size:\s*clamp\(/.test(rule[1]));
+    assert.ok(fluidRule, `${selector} fluid rule`);
+    assert.match(fluidRule[1], /font-size:\s*clamp\([^}]+\)\s*!important/);
+    assert.match(fluidRule[1], /line-height:\s*clamp\([^}]+\)\s*!important/);
   }
   const nameRule = css.match(/\.dossier-name \{([^}]+)\}/);
   const rowRule = css.match(/\.data-row \{([^}]+)\}/);
@@ -219,18 +221,55 @@ test('dossier information is three pixels smaller, capped, and remains inside th
     assert.ok(rule, selector);
     assert.doesNotMatch(rule[1], /banda-no-lobby-offset/);
   }
-  const intermediate = css.match(/@media \(max-width: 900px\) \{([\s\S]*?)\n\}/);
-  assert.ok(intermediate);
-  assert.match(intermediate[1], /\.dossier-name \{[^}]*font-size:\s*11px\/\*banda-no-lobby-offset-cap14\*\/[^}]*line-height:\s*14px\/\*banda-no-lobby-offset-cap14\*\//);
-  assert.match(intermediate[1], /\.data-row \{[^}]*font-size:\s*9px\/\*banda-no-lobby-offset-cap14\*\/[^}]*line-height:\s*11px\/\*banda-no-lobby-offset-cap14\*\/[^}]*margin:\s*1px 0/);
+  const fluid = css.match(/@media \(max-width: 1200px\) \{([\s\S]*?)\n\}/);
+  assert.ok(fluid);
+  assert.match(fluid[1], /\.dossier-name \{[^}]*font-size:\s*clamp\(10px,\s*1\.08vw,\s*var\(--banda-dossier-name-size, 13px\)\)\s*!important[^}]*line-height:\s*clamp\(12px,\s*1\.42vw,\s*var\(--banda-dossier-name-line-height, 17px\)\)\s*!important/);
+  assert.match(fluid[1], /\.data-row \{[^}]*font-size:\s*clamp\(8px,\s*\.92vw,\s*var\(--banda-dossier-row-size, 11px\)\)\s*!important[^}]*line-height:\s*clamp\(10px,\s*1\.08vw,\s*var\(--banda-dossier-row-line-height, 13px\)\)\s*!important[^}]*margin:\s*0/);
   const dossierData = css.match(/\.dossier-data \{([^}]+)\}/);
   assert.ok(dossierData);
+  assert.match(dossierData[1], /justify-content:\s*flex-start/);
   assert.match(dossierData[1], /overflow:\s*visible/);
   assert.doesNotMatch(dossierData[1], /overflow-y:\s*(?:auto|scroll)/);
   const typography = fs.readFileSync(path.join(root, 'code/shared/typography.dm'), 'utf8');
   assert.match(typography, /banda-no-lobby-offset\(\?:-cap14\)\?/);
   assert.match(typography, /min\(banda_terminal_font_size, 14\)/);
   assert.doesNotMatch(typography, /\.dossier-data[^\n]*overflow-y:\s*(?:auto|scroll)/);
+});
+test('narrow lobby fluidly compacts without adding a scroll surface', () => {
+  const css = fs.readFileSync(path.join(root, 'assets/lobby.css'), 'utf8');
+  const fluidStart = css.indexOf('@media (max-width: 1200px)');
+  const intermediateStart = css.indexOf('@media (max-width: 900px)');
+  const narrowStart = css.indexOf('@media (max-width: 760px)');
+  assert.ok(fluidStart >= 0);
+  assert.ok(intermediateStart >= 0);
+  assert.ok(narrowStart >= 0);
+  const fluid = css.slice(fluidStart, intermediateStart);
+  const intermediate = css.slice(intermediateStart, narrowStart);
+  const narrow = css.slice(narrowStart, css.indexOf('\n.crt-shell a.menu-item.primary', narrowStart));
+  assert.match(intermediate, /\.menu \{[^}]*flex-basis:\s*40%[^}]*width:\s*40%[^}]*min-width:\s*280px/);
+  assert.match(intermediate, /\.portrait \{[^}]*flex-basis:\s*34%[^}]*min-width:\s*130px/);
+  assert.match(intermediate, /\.dossier-data \{[^}]*padding-top:\s*2px/);
+  assert.match(intermediate, /\.data-label \{[^}]*flex-basis:\s*38%/);
+  assert.doesNotMatch(intermediate, /\.(?:dossier-name|data-row) \{[^}]*font-size:\s*clamp\([^}]*%/);
+  assert.match(narrow, /\.terminal \{[^}]*padding:\s*clamp\(/);
+  assert.match(narrow, /\.menu \{[^}]*flex-basis:\s*37%[^}]*width:\s*37%[^}]*min-width:\s*0[^}]*--banda-terminal-effective-size/);
+  assert.match(narrow, /\.portrait \{[^}]*flex-basis:\s*32%[^}]*min-width:\s*clamp\(/);
+  assert.match(narrow, /\.dossier-data \{[^}]*padding-top:\s*clamp\(/);
+  assert.match(narrow, /\.data-label \{[^}]*flex-basis:\s*36%/);
+  assert.match(narrow, /\.data-value \{[^}]*overflow-wrap:\s*anywhere[^}]*word-break:\s*normal/);
+  assert.doesNotMatch(narrow, /\.(?:dossier-name|data-row) \{[^}]*font-size:\s*clamp\([^}]*%/);
+  assert.doesNotMatch(fluid, /\.(?:dossier-name|data-row) \{[^}]*font-size:\s*clamp\([^}]*%/);
+  assert.doesNotMatch(intermediate, /overflow-(?:x|y):\s*(?:auto|scroll)/);
+  assert.doesNotMatch(narrow, /overflow-(?:x|y):\s*(?:auto|scroll)/);
+
+  const typography = fs.readFileSync(path.join(root, 'code/shared/typography.dm'), 'utf8');
+  assert.match(typography, /--banda-terminal-base-size: \[banda_terminal_font_size\]px/);
+  assert.match(typography, /--banda-terminal-effective-size: \[effective_base_size\]px/);
+  assert.match(typography, /var\/capped_font_size = min\(banda_terminal_font_size, 14\)/);
+  assert.match(typography, /--banda-dossier-name-size: \[dossier_name_size\]px/);
+  assert.match(typography, /--banda-dossier-name-line-height: \[dossier_name_line_height\]px/);
+  assert.match(typography, /--banda-dossier-row-size: \[dossier_row_size\]px/);
+  assert.match(typography, /--banda-dossier-row-line-height: \[dossier_row_line_height\]px/);
 });
 test('main dossier shows build before body type without swapping values', () => {
   const source = fs.readFileSync(path.join(root, 'code/themes/terminal_lobby.dm'), 'utf8');

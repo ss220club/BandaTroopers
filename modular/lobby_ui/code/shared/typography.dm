@@ -31,6 +31,11 @@
 /datum/preferences/proc/apply_banda_terminal_typography(css, pixel_offset = 0)
 	var/font = get_banda_terminal_font_family()
 	var/effective_base_size = banda_terminal_font_size + pixel_offset
+	var/capped_font_size = min(banda_terminal_font_size, 14)
+	var/dossier_name_size = round(13 * capped_font_size / 14, 0.1)
+	var/dossier_name_line_height = round(17 * capped_font_size / 14, 0.1)
+	var/dossier_row_size = round(11 * capped_font_size / 14, 0.1)
+	var/dossier_row_line_height = round(13 * capped_font_size / 14, 0.1)
 	if(font)
 		// Do not rename @font-face registrations to a selected system font.
 		css += "\nhtml body, body a, body input, body textarea, body button, body select, body div, body span, body h1, body h2, body h3, body td, body th {font-family: [font] !important;}"
@@ -50,7 +55,7 @@
 	parts += copytext(css, cursor)
 	css = jointext(parts, "")
 	// Low specificity preserves scaled component/heading rules, including pseudo-text.
-	css += "\nhtml body {font-size: [effective_base_size]px !important; line-height: 1.4 !important;} html body * {font-size: inherit !important; line-height: inherit !important;}"
+	css += "\nhtml body {--banda-terminal-base-size: [banda_terminal_font_size]px; --banda-terminal-effective-size: [effective_base_size]px; --banda-terminal-capped-size: [capped_font_size]px; --banda-dossier-name-size: [dossier_name_size]px; --banda-dossier-name-line-height: [dossier_name_line_height]px; --banda-dossier-row-size: [dossier_row_size]px; --banda-dossier-row-line-height: [dossier_row_line_height]px; font-size: [effective_base_size]px !important; line-height: 1.4 !important;} html body * {font-size: inherit !important; line-height: inherit !important;}"
 	return css
 
 /datum/preferences/proc/show_banda_typography_dialog(mob/user, mode)
