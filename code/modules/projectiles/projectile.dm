@@ -1045,6 +1045,13 @@
 
 	bullet_message(P) //We still want this, regardless of whether or not the bullet did damage. For griefers and such.
 
+	// SS220 EDIT - START: let armor plates absorb a percentage while preserving the normal projectile hit pipeline
+	if(damage_result > 0)
+		var/list/armor_plate_damage_data = list("damage" = damage_result)
+		SEND_SIGNAL(src, COMSIG_HUMAN_ARMOR_PLATE_BULLET_ACT, armor_plate_damage_data, ammo_flags, P)
+		damage_result = max(armor_plate_damage_data["damage"], 0)
+	// SS220 EDIT - END
+
 	if(SEND_SIGNAL(src, COMSIG_HUMAN_BULLET_ACT, damage_result, ammo_flags, P) & COMPONENT_CANCEL_BULLET_ACT)
 		return
 

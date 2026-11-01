@@ -15,6 +15,8 @@
 /// From /mob/living/carbon/human/bullet_act(): (damage_result, ammo_flags, obj/projectile/P)
 #define COMSIG_HUMAN_BULLET_ACT "human_bullet_act"
 	#define COMPONENT_CANCEL_BULLET_ACT (1<<0)
+/// SS220 EDIT: From /mob/living/carbon/human/bullet_act(): (list/damage_data, ammo_flags, obj/projectile/P); permits armor plates to modify post-armor damage.
+#define COMSIG_HUMAN_ARMOR_PLATE_BULLET_ACT "human_armor_plate_bullet_act"
 
 /// From /obj/effect/decal/cleanable/blood/Crossed(): (amount, bcolor, dry_time_left)
 #define COMSIG_HUMAN_BLOOD_CROSSED "human_blood_crossed"
