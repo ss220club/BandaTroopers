@@ -1,0 +1,355 @@
+@keyframes banda-terminal-input-frame {
+  0% {
+    opacity: 0.4;
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes banda-terminal-input-title {
+  0% {
+    opacity: 0.25;
+    letter-spacing: 0.16em;
+  }
+  100% {
+    opacity: 1;
+    letter-spacing: normal;
+  }
+}
+
+.BandaTerminalInput {
+  --banda-accent-color: #CCFF66;
+  --banda-terminal-text: #FFFFFF;
+  animation: banda-terminal-input-frame 0.2s steps(3, end) 1;
+  background: #050604 !important;
+  color: var(--banda-terminal-text) !important;
+  font-size: var(--banda-font-size);
+
+  // SS220 EDIT: account typography is opt-in; classic windows lack this root.
+  &.BandaTerminalInput--fontOverride,
+  &.BandaTerminalInput--fontOverride *:not(.Icon):not(.BandaTypographyPreview) {
+    font-family: var(--banda-font-family) !important;
+  }
+
+  // SS220 EDIT: every terminal text node, not a partial component whitelist.
+  *:not(.Icon):not(.BandaTypographyPreview) {
+    font-size: var(--banda-font-size) !important;
+    line-height: 1.4 !important;
+  }
+
+  .Window__rest,
+  .Window__content,
+  .Layout__content,
+  .Section,
+  .Section__content {
+    background: #070805 !important;
+    color: var(--banda-terminal-text) !important;
+  }
+
+  .Window__rest {
+    border: 2px solid rgba(0, 0, 0, 0.6) !important;
+    box-shadow: none !important;
+  }
+
+  .Section {
+    border: 2px solid rgba(0, 0, 0, 0.6) !important;
+  }
+
+  .TitleBar,
+  .Section__title,
+  .Section__titleText {
+    border-color: var(--banda-accent-color) !important;
+    background: #11110d !important;
+    color: var(--banda-terminal-text) !important;
+  }
+
+  .Button,
+  .Button--color--bad,
+  .Button--color--good,
+  .Button--color--average,
+  .Button--color--purple,
+  .Button--color--red,
+  .Button--color--green {
+    border: 1px solid var(--banda-accent-color) !important;
+    background: #14140f !important;
+    color: var(--banda-terminal-text) !important;
+    box-shadow: none !important;
+  }
+
+  .Dropdown__menu,
+  .Slider {
+    border: 1px solid var(--banda-accent-color);
+    background: #090a07;
+    color: var(--banda-terminal-text);
+  }
+
+  .Dropdown__menuentry:hover,
+  .Dropdown__menuentry.selected,
+  .Slider .ProgressBar__fill {
+    background: var(--banda-accent-color);
+    color: #050604;
+  }
+
+  .Slider__cursor {
+    border-color: var(--banda-accent-color);
+  }
+
+  .Button:hover,
+  .Button--selected {
+    background: #28271c !important;
+    color: #fffdf0 !important;
+    filter: brightness(1.12);
+  }
+
+  .Input,
+  .TextArea,
+  .NumberInput,
+  .NumberInput__input {
+    border-color: var(--banda-accent-color) !important;
+    background: #090a07 !important;
+    color: var(--banda-terminal-text) !important;
+    box-shadow: none !important;
+  }
+
+  .ListInput__Section .Button {
+    min-height: 31px;
+    padding: 6px 9px;
+    opacity: 1;
+  }
+
+  * {
+    scrollbar-color: var(--banda-accent-color) #090a07;
+  }
+
+  *::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  *::-webkit-scrollbar-track {
+    background: #090a07;
+  }
+  *::-webkit-scrollbar-thumb {
+    border: 2px solid #090a07;
+    background: var(--banda-accent-color);
+  }
+}
+
+.BandaTerminalInput--textOverride {
+  --banda-terminal-text: var(--banda-text-color);
+}
+
+.BandaTerminalInput--textOverride,
+.BandaTerminalInput--textOverride * {
+  color: var(--banda-text-color) !important;
+}
+
+.BandaTerminalInput--noGlow,
+.BandaTerminalInput--noGlow * {
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+// SS220 DemonicLynx "Lobby UI" - optional terminal presentation only.
+.BandaTerminalInput::after {
+  content: '';
+  position: absolute;
+  z-index: 36;
+  inset: 0;
+  pointer-events: none;
+  background: var(--banda-accent-color);
+  opacity: 0.09;
+}
+
+.BandaTerminalInput--noGlow::after {
+  display: none;
+}
+
+.BandaTerminalInput--reduced,
+.BandaTerminalInput--reduced *,
+.BandaTerminalInput--effectsOff,
+.BandaTerminalInput--effectsOff * {
+  animation: none !important;
+  transition: none !important;
+}
+
+.BandaTerminalInput--effectsOff::after {
+  display: none;
+}
+
+// SS220 DemonicLynx "Lobby UI" - compact terminal-only keybind editor.
+.BandaTerminalInput.BandaKeybinds {
+  .Window__content {
+    padding: 6px !important;
+  }
+
+  .BandaKeybinds__controls {
+    position: sticky;
+    z-index: 4;
+    top: 0;
+    margin-bottom: 6px;
+    background: #070805 !important;
+
+    .Section__content {
+      padding: 5px !important;
+    }
+  }
+
+  .BandaKeybinds__search {
+    gap: 5px;
+    margin-bottom: 5px;
+
+    .Input {
+      min-height: 26px;
+    }
+
+    .Button {
+      min-width: 30px;
+      min-height: 26px;
+      margin: 0;
+    }
+  }
+
+  .BandaKeybinds__categorySelect,
+  .Dropdown {
+    width: 100% !important;
+  }
+
+  .BandaKeybinds__quickNav {
+    margin-top: 5px;
+    padding: 4px;
+    border: 1px solid var(--banda-accent-color);
+    background: rgba(0, 0, 0, 0.4);
+
+    > .Flex {
+      gap: 3px;
+    }
+
+    .Flex__item {
+      flex: 1 1 auto;
+    }
+
+    .Button {
+      width: 100%;
+      min-height: 24px;
+      margin: 0;
+      padding: 2px 7px;
+      text-align: center;
+      white-space: normal;
+    }
+  }
+
+  .BandaKeybinds__legacySeparator {
+    display: none;
+  }
+
+  .Section {
+    margin-bottom: 6px;
+  }
+
+  .BandaKeybinds__category {
+    scroll-margin-top: 176px;
+  }
+
+  .BandaKeybinds__category--collapsed {
+    .Section__content {
+      display: none;
+    }
+  }
+
+  .BandaKeybinds__collapse {
+    min-width: 29px;
+    min-height: 23px;
+    margin: 0;
+    padding: 1px 7px;
+  }
+
+  .Section__title {
+    min-height: 27px;
+    border-left: 3px solid var(--banda-accent-color) !important;
+    letter-spacing: 0.06em;
+  }
+
+  .Section__content {
+    padding: 3px 5px !important;
+  }
+
+  .BandaKeybinds__row {
+    position: relative;
+    min-height: 31px;
+    padding: 3px 4px;
+    transition: background-color 0.12s linear, box-shadow 0.12s linear;
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: 4px;
+      bottom: 0;
+      left: 4px;
+      height: 1px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--banda-accent-color) 0 5px,
+        transparent 5px 10px
+      );
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.42);
+      box-shadow: inset 3px 0 0 var(--banda-accent-color);
+    }
+  }
+
+  .BandaKeybinds__name {
+    min-width: 0;
+    padding-right: 8px;
+
+    .Box {
+      overflow-wrap: anywhere;
+      line-height: 1.2 !important;
+    }
+  }
+
+  .BandaKeybinds__bindings {
+    min-width: 92px;
+
+    .Flex {
+      gap: 3px;
+    }
+
+    .Button {
+      margin: 0;
+    }
+  }
+
+  .BandaKeybinds__unbound {
+    opacity: 0.55;
+    padding-left: 6px;
+  }
+
+  .BandaKeybinds__actions {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 3px;
+    padding-left: 5px;
+  }
+
+  .BandaKeybinds__row .Button {
+    min-height: 24px;
+    margin: 0;
+    padding: 2px 6px;
+    line-height: 1.15 !important;
+  }
+}
+
+.BandaTerminalInput--effectsOff.BandaKeybinds {
+  .BandaKeybinds__row:hover {
+    background: transparent;
+    box-shadow: none;
+  }
+}

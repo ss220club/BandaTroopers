@@ -1,0 +1,40 @@
+.picker-actions { display: flex; align-items: center; gap: 8px; }
+.loadout-summary { margin: 10px; padding: 10px 14px; border-left: 4px solid var(--banda-accent-color); background: rgba(var(--banda-accent-rgb), 0.151); color: var(--banda-text-color); font-size: 13px; line-height: 19px; letter-spacing: 1px; }
+.loadout-category { margin: 9px 10px; border: 1px solid var(--banda-accent-color); background: rgba(4, 7, 5, .84); box-shadow: inset 0 0 17px rgba(var(--banda-accent-rgb), 0.045); }
+a.loadout-category-toggle, a.loadout-category-toggle:link, a.loadout-category-toggle:visited { display: flex; align-items: center; min-height: 44px; padding: 9px 13px; border-left: 5px solid var(--banda-accent-color); background: rgba(var(--banda-accent-rgb), 0.161); color: var(--banda-text-color); font-size: 14px; line-height: 20px; letter-spacing: 2px; text-transform: uppercase; }
+a.loadout-category-toggle:hover { background: rgba(var(--banda-accent-rgb), 0.356); color: var(--banda-text-color); }
+.loadout-category-marker { flex: 0 0 34px; color: var(--banda-text-color); font-size: 18px; }
+.loadout-category-name { flex: 1 1 auto; }
+.loadout-category-count { flex: 0 0 auto; color: var(--banda-text-color); font-size: 12px; letter-spacing: 1px; }
+.loadout-category-items { display: flex; flex-wrap: wrap; align-content: flex-start; padding: 8px; border-top: 1px dashed rgba(var(--banda-accent-rgb), 0.397); animation: loadout-category-reveal .22s ease-out both; }
+a.loadout-card, a.loadout-card:link, a.loadout-card:visited { position: relative; display: flex; flex-direction: column; width: 154px; min-height: 174px; height: auto; margin: 5px; padding: 8px; overflow: hidden; border: 1px solid var(--banda-accent-color); background: rgba(4, 7, 5, .9); color: var(--banda-text-color); box-shadow: inset 0 0 16px rgba(var(--banda-accent-rgb), 0.04); }
+a.loadout-card:hover { border-color: var(--banda-accent-color); background: rgba(var(--banda-accent-rgb), 0.24); color: var(--banda-text-color); box-shadow: 0 0 11px rgba(var(--banda-accent-rgb), 0.24), inset 0 0 19px rgba(var(--banda-accent-rgb), 0.09); }
+a.loadout-card.equipped { border-left: 5px solid var(--banda-accent-color); background: rgba(var(--banda-accent-rgb), 0.22); }
+a.loadout-card.equipped:after { content: ''; position: absolute; z-index: 3; left: 0; right: 0; top: -18px; height: 12px; pointer-events: none; background: rgba(var(--banda-accent-rgb), 0.24); animation: loadout-equipped-scan .42s steps(4, end) 1; }
+.loadout-sprite-box { flex: 0 0 108px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid rgba(var(--banda-accent-rgb), 0.381); background: radial-gradient(circle at 50% 50%, rgba(var(--banda-accent-rgb), 0.209), rgba(4, 7, 5, .96) 68%); }
+.loadout-sprite { display: block; width: 96px; height: 96px; object-fit: contain; image-rendering: pixelated; image-rendering: crisp-edges; filter: drop-shadow(0 0 7px rgba(var(--banda-accent-rgb), 0.38)); }
+.loadout-no-preview { color: var(--banda-text-color); font-size: 11px; line-height: 15px; letter-spacing: 1px; text-align: center; }
+.loadout-card-name { flex: 1 1 auto; min-height: 0; padding: 6px 2px 0; overflow: visible; overflow-wrap: break-word; word-wrap: break-word; font-size: 12px; line-height: 15px; text-align: center; text-transform: uppercase; }
+.loadout-card-cost { flex: 0 0 auto; padding-top: 3px; color: var(--banda-text-color); font-size: 11px; line-height: 14px; text-align: center; letter-spacing: 1px; }
+.loadout-card-state { flex: 0 0 auto; color: var(--banda-text-color); font-size: 10px; line-height: 13px; text-align: center; letter-spacing: 1px; }
+@keyframes loadout-command-in { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes loadout-cursor-blink { 0%, 45% { opacity: 1; } 46%, 100% { opacity: .15; } }
+@keyframes loadout-stamp { from { opacity: 0; transform: scale(1.08); } to { opacity: 1; transform: scale(1); } }
+@keyframes loadout-category-reveal { from { opacity: 0; transform: translateY(-7px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes loadout-equipped-scan { from { top: -18px; opacity: 0; } 20% { opacity: 1; } to { top: 100%; opacity: 0; } }
+@keyframes loadout-error-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 50% { transform: translateX(4px); } 75% { transform: translateX(-2px); } }
+@keyframes loadout-wait-dot { 0%, 18%, 100% { opacity: .16; } 38%, 72% { opacity: 1; } }
+.loadout-loader { flex: 1 1 auto; padding: 42px 8%; color: var(--banda-text-color); font-family: Consolas, monospace; font-size: 15px; line-height: 29px; }
+.loadout-command { display: flex; gap: 10px; opacity: 0; animation: loadout-command-in .12s steps(2, end) forwards; }
+.loadout-command-text { flex: 1 1 auto; }
+.loadout-command-status { flex: 0 0 58px; color: var(--banda-text-color); text-align: right; }
+.loadout-command.active .loadout-command-status:after { content: '█'; margin-left: 5px; animation: loadout-cursor-blink .5s steps(1, end) infinite; }
+.loadout-command.error .loadout-command-status { color: #ff8585; }
+.loadout-final-wait { margin-top: 10px; letter-spacing: 2px; animation: loadout-command-in .12s steps(2, end) both; }
+.loadout-wait-dots { display: inline-block; min-width: 34px; }
+.loadout-wait-dots span { display: inline-block; opacity: .16; animation: loadout-wait-dot 1.8s ease-in-out infinite; }
+.loadout-wait-dots span:nth-child(2) { animation-delay: .3s; }
+.loadout-wait-dots span:nth-child(3) { animation-delay: .6s; }
+.loadout-authorized { margin: 10px; padding: 9px 12px; border: 1px solid var(--banda-accent-color); color: var(--banda-text-color); text-align: center; letter-spacing: 2px; animation: loadout-stamp .2s steps(3, end) 1; }
+.picker-terminal.banda-error-feedback { animation: loadout-error-shake .2s steps(4, end) 1; }
+.picker-crt.banda-effects-reduced .loadout-command, .picker-crt.banda-effects-reduced .loadout-authorized, .picker-crt.banda-effects-reduced .loadout-command-status:after, .picker-crt.banda-effects-reduced .loadout-category-items, .picker-crt.banda-effects-reduced .loadout-card:after, .picker-crt.banda-effects-reduced .banda-error-feedback, .picker-crt.banda-effects-reduced .loadout-wait-dots span, .picker-crt.banda-effects-off .loadout-command, .picker-crt.banda-effects-off .loadout-authorized, .picker-crt.banda-effects-off .loadout-command-status:after, .picker-crt.banda-effects-off .loadout-category-items, .picker-crt.banda-effects-off .loadout-card:after, .picker-crt.banda-effects-off .banda-error-feedback, .picker-crt.banda-effects-off .loadout-wait-dots span { animation: none !important; opacity: 1; }

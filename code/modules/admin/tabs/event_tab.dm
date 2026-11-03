@@ -35,12 +35,16 @@
 	if(input == "" || !input)
 		CEI.msg = ""
 		message_admins("[key_name_admin(usr)] has removed the event message for \"[faction]\" category.")
+		// SS220 DemonicLynx "Lobby UI" - optional refresh hook; classic lobby needs no push update.
+		SSmodpacks?.lobby_ui_provider?.lobby_ui_refresh_event_panels(CEI)
 		return
 
 	CEI.msg = html_encode(input)
 	message_admins("[key_name_admin(usr)] has changed the event message for \"[faction]\" category.")
 
 	CEI.handle_event_info_update(faction)
+	// SS220 DemonicLynx "Lobby UI" - optional refresh hook; classic lobby needs no push update.
+	SSmodpacks?.lobby_ui_provider?.lobby_ui_refresh_event_panels(CEI)
 
 /client/proc/change_security_level()
 	if(!check_rights(R_ADMIN))

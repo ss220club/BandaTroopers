@@ -6,6 +6,10 @@ import { Box, Button, RestrictedInput, Section, Stack } from '../components';
 import { Window } from '../layouts';
 import { InputButtons } from './common/InputButtons';
 import { Loader } from './common/Loader';
+import {
+  getTerminalInputWindowProps,
+  TerminalInputPresentation,
+} from './common/TerminalInputPresentation';
 
 type NumberInputData = {
   init_value: number;
@@ -16,11 +20,21 @@ type NumberInputData = {
   timeout: number;
   title: string;
   round_value: boolean;
+  theme?: string;
+  presentation?: TerminalInputPresentation;
 };
 
 export const NumberInputModal = (props) => {
   const { act, data } = useBackend<NumberInputData>();
-  const { init_value, large_buttons, message = '', timeout, title } = data;
+  const {
+    init_value,
+    large_buttons,
+    message = '',
+    timeout,
+    title,
+    theme,
+    presentation,
+  } = data;
   const [input, setInput] = useState(init_value);
 
   const setValue = (value: number) => {
@@ -37,7 +51,13 @@ export const NumberInputModal = (props) => {
     (message.length && large_buttons ? 5 : 0);
 
   return (
-    <Window title={title} width={270} height={windowHeight}>
+    <Window
+      title={title}
+      width={270}
+      height={windowHeight}
+      theme={theme}
+      {...getTerminalInputWindowProps(presentation)}
+    >
       {timeout && <Loader value={timeout} />}
       <Window.Content
         onKeyDown={(event) => {

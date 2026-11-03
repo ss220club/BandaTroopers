@@ -258,6 +258,9 @@
 	SSsound.queue(template, hearers)
 
 /client/proc/playtitlemusic()
+	// SS220 DemonicLynx "Lobby UI" - neutral provider hook; upstream music is the fallback.
+	if(SSmodpacks?.lobby_ui_provider?.lobby_ui_play_title_music(src))
+		return TRUE
 	if(!SSticker?.login_music)
 		return FALSE
 	if(prefs && prefs.toggles_sound & SOUND_LOBBY)

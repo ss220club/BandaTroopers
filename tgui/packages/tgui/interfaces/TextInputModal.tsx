@@ -6,6 +6,10 @@ import { Box, Section, Stack, TextArea } from '../components';
 import { Window } from '../layouts';
 import { InputButtons } from './common/InputButtons';
 import { Loader } from './common/Loader';
+import {
+  getTerminalInputWindowProps,
+  TerminalInputPresentation,
+} from './common/TerminalInputPresentation';
 
 type TextInputData = {
   large_buttons: boolean;
@@ -15,6 +19,8 @@ type TextInputData = {
   placeholder: string;
   timeout: number;
   title: string;
+  theme?: string;
+  presentation?: TerminalInputPresentation;
 };
 
 export const sanitizeMultiline = (toSanitize: string) => {
@@ -35,6 +41,8 @@ export const TextInputModal = (props) => {
     placeholder = '',
     timeout,
     title,
+    theme,
+    presentation,
   } = data;
 
   const [input, setInput] = useState(placeholder || '');
@@ -57,7 +65,13 @@ export const TextInputModal = (props) => {
     (message.length && large_buttons ? 5 : 0);
 
   return (
-    <Window title={title} width={325} height={windowHeight}>
+    <Window
+      title={title}
+      width={325}
+      height={windowHeight}
+      theme={theme}
+      {...getTerminalInputWindowProps(presentation)}
+    >
       {timeout && <Loader value={timeout} />}
       <Window.Content
         onKeyDown={(event) => {

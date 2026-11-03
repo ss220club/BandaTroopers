@@ -5,6 +5,39 @@ SUBSYSTEM_DEF(modpacks)
 	init_order = INIT_ORDER_MODPACKS
 	flags = SS_NO_FIRE
 	var/list/loaded_modpacks = list()
+	// SS220 DemonicLynx "Lobby UI" - neutral optional provider registration; null preserves all standard fallbacks.
+	/// Optional provider for lobby and character-preferences presentation.
+	var/datum/modpack/lobby_ui_provider
+
+/datum/controller/subsystem/modpacks/proc/register_lobby_ui_provider(datum/modpack/provider)
+	if(!provider)
+		return "Lobby UI provider is null"
+	if(lobby_ui_provider && lobby_ui_provider != provider)
+		return "Lobby UI provider is already registered by [lobby_ui_provider.name]"
+	lobby_ui_provider = provider
+	return null
+
+/datum/controller/subsystem/modpacks/proc/lobby_ui_choice(datum/preferences/preferences, mob/user, prompt, title, list/options)
+	// SS220 DemonicLynx "Lobby UI" - neutral localization gateway; the standard input list is the fallback.
+	if(lobby_ui_provider)
+		return lobby_ui_provider.lobby_ui_localized_choice(preferences, user, prompt, title, options)
+	return tgui_input_list(user, prompt, title, options)
+
+/datum/controller/subsystem/modpacks/proc/lobby_ui_translate(datum/preferences/preferences, text)
+	// SS220 DemonicLynx "Lobby UI" - neutral translation gateway; unchanged text is the fallback.
+	return lobby_ui_provider?.lobby_ui_translate_text(preferences, text) || text
+
+/datum/controller/subsystem/modpacks/proc/lobby_ui_text(datum/preferences/preferences, mob/user, prompt, title, default_value, max_length = MAX_MESSAGE_LEN, multiline = FALSE)
+	// SS220 DemonicLynx "Lobby UI" - neutral themed text-input gateway; standard TGUI is the fallback.
+	if(lobby_ui_provider)
+		return lobby_ui_provider.lobby_ui_text_input(preferences, user, prompt, title, default_value, max_length, multiline)
+	return tgui_input_text(user, prompt, title, default_value, max_length, multiline, encode = FALSE)
+
+/datum/controller/subsystem/modpacks/proc/lobby_ui_number(datum/preferences/preferences, mob/user, prompt, title, default_value, max_value, min_value)
+	// SS220 DemonicLynx "Lobby UI" - neutral themed number-input gateway; standard TGUI is the fallback.
+	if(lobby_ui_provider)
+		return lobby_ui_provider.lobby_ui_number_input(preferences, user, prompt, title, default_value, max_value, min_value)
+	return tgui_input_number(user, prompt, title, default_value, max_value, min_value)
 
 /datum/controller/subsystem/modpacks/Initialize()
 	var/list/all_modpacks = list()

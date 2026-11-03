@@ -13,6 +13,8 @@
 #include "game_master/_game_master.dme"
 #include "game_rule_panel/_game_rule_panel.dme"
 #include "fullscreen/_fullscreen.dme"
+// DemonicLynx for BandaMarines
+#include "lobby_ui/_lobby_ui.dme"
 #include "squads/_squads.dme"
 #include "world_edit/_world_edit.dme"
 #include "weapons/_weapons.dme"

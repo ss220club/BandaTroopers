@@ -30,7 +30,7 @@
  * * default - If an option is already preselected on the UI. Current values, etc.
  * * ui_state - The TGUI UI state that will be returned in ui_state(). Default: always_state
  */
-/proc/tgui_input_list(mob/user, message, title = "Select", list/buttons, timeout = 0, theme = null, default, ui_state = GLOB.always_state)
+/proc/tgui_input_list(mob/user, message, title = "Select", list/buttons, timeout = 0, theme = null, default, ui_state = GLOB.always_state, list/presentation = null)
 	if (!user)
 		user = usr
 	if(!length(buttons))
@@ -46,7 +46,7 @@
 	if(isnull(user.client))
 		return null
 
-	var/datum/tgui_list_input/input = new(user, message, title, buttons, timeout, theme, default, ui_state)
+	var/datum/tgui_list_input/input = new(user, message, title, buttons, timeout, theme, default, ui_state, presentation)
 	if(input.invalid)
 		qdel(input)
 		return
@@ -121,10 +121,12 @@
 	var/datum/ui_state/state
 	/// String field for the theme to use
 	var/ui_theme
+	/// SS220 DemonicLynx "Lobby UI" - optional neutral presentation payload; null preserves standard TGUI.
+	var/list/ui_presentation
 	/// Whether the tgui list input is invalid or not (i.e. due to all list entries being null)
 	var/invalid = FALSE
 
-/datum/tgui_list_input/New(mob/user, message, title, list/buttons, timeout, theme = null, default, ui_state)
+/datum/tgui_list_input/New(mob/user, message, title, list/buttons, timeout, theme = null, default, ui_state, list/presentation = null)
 	src.title = title
 	src.message = message
 	src.buttons = list()
@@ -132,6 +134,7 @@
 	src.default = default
 	src.state = ui_state
 	src.ui_theme = theme
+	src.ui_presentation = presentation
 	var/list/repeat_items = list()
 	// Gets rid of illegal characters
 	var/static/regex/whitelistedWords = regex(@{"([^\u0020-\u8000]+)"})
@@ -188,6 +191,7 @@
 	data["swapped_buttons"] = FALSE // Pref?
 	data["title"] = title
 	data["theme"] = ui_theme
+	data["presentation"] = ui_presentation
 	return data
 
 /datum/tgui_list_input/ui_data(mob/user)

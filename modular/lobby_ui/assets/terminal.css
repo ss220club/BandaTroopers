@@ -1,0 +1,13 @@
+/* Shared tint is independent of CRT animation and never rotates RGB colors. */
+.banda-terminal-tone {
+  position: absolute;
+  z-index: 36;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  background: rgba(var(--banda-accent-rgb), .09);
+}
+.banda-glow-off > .banda-terminal-tone { display: none; }
+.banda-effects-off > .banda-terminal-tone { display: none; }

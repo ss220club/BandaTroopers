@@ -33,6 +33,10 @@
 	if(!client)
 		return
 
+	// SS220 DemonicLynx "Lobby UI" - optional provider hook; complete classic lobby fallback follows.
+	if(SSmodpacks?.lobby_ui_provider?.lobby_ui_show_lobby(src, refresh))
+		return
+
 	var/tempnumber = rand(1, 999)
 	var/postfix_text = (client.xeno_postfix) ? ("-"+client.xeno_postfix) : ""
 	var/prefix_text = (client.xeno_prefix) ? client.xeno_prefix : "XX"
@@ -77,6 +81,9 @@
 		return
 	if(!client)
 		return
+	// SS220 DemonicLynx "Lobby UI" - optional click-feedback hook; classic fallback is silence.
+	if(href_list["lobby_choice"])
+		SSmodpacks?.lobby_ui_provider?.lobby_ui_play_click(src)
 
 	switch(href_list["lobby_choice"])
 		if("show_preferences")
@@ -398,9 +405,14 @@
 	return new_character
 
 /mob/new_player/proc/ViewManifest()
+	var/manifest_html = GLOB.data_core.get_manifest(FALSE, TRUE)
+	// SS220 DemonicLynx "Lobby UI" - optional manifest renderer; the complete classic browser below is the fallback.
+	if(SSmodpacks?.lobby_ui_provider?.lobby_ui_show_manifest(src, manifest_html))
+		return
+
 	var/dat = "<html><body>"
 	dat += "<h4><center>Crew Manifest:</center></h4>"
-	dat += GLOB.data_core.get_manifest(FALSE, TRUE)
+	dat += manifest_html
 
 	show_browser(src, dat, "Crew Manifest", "manifest", width = 450, height = 750)
 
@@ -445,6 +457,8 @@
 /mob/proc/close_spawn_windows() // Somehow spawn menu stays open for non-newplayers
 	close_browser(src, "latechoices") //closes late choices window
 	close_browser(src, "playersetup") //closes the player setup window
+	// SS220 DemonicLynx "Lobby UI" - optional cleanup hook; standard windows are closed above.
+	SSmodpacks?.lobby_ui_provider?.lobby_ui_hide(src)
 	src << sound(null, repeat = 0, wait = 0, volume = 85, channel = SOUND_CHANNEL_LOBBY) // Stops lobby music.
 	if(src.open_uis)
 		for(var/datum/nanoui/ui in src.open_uis)

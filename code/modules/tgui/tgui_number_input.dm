@@ -16,7 +16,7 @@
  * * integer_only - whether the inputted number is rounded down into an integer.
  * * ui_state - The TGUI UI state that will be returned in ui_state(). Default: always_state
  */
-/proc/tgui_input_number(mob/user, message, title = "Number Input", default = 0, max_value = 10000, min_value = 0, timeout = 0, integer_only = TRUE, ui_state = GLOB.always_state)
+/proc/tgui_input_number(mob/user, message, title = "Number Input", default = 0, max_value = 10000, min_value = 0, timeout = 0, integer_only = TRUE, ui_state = GLOB.always_state, theme = null, list/presentation = null)
 	if (!user)
 		user = usr
 	if (!istype(user))
@@ -29,7 +29,7 @@
 	if (isnull(user.client))
 		return null
 
-	var/datum/tgui_input_number/number_input = new(user, message, title, default, max_value, min_value, timeout, integer_only, ui_state)
+	var/datum/tgui_input_number/number_input = new(user, message, title, default, max_value, min_value, timeout, integer_only, ui_state, theme, presentation)
 	number_input.tgui_interact(user)
 	number_input.wait()
 	if (number_input)
@@ -98,8 +98,12 @@
 	var/title
 	/// The TGUI UI state that will be returned in ui_state(). Default: always_state
 	var/datum/ui_state/state
+	/// Optional visual theme supplied by a neutral caller; null preserves the standard input appearance.
+	var/ui_theme
+	/// SS220 DemonicLynx "Lobby UI" - optional neutral presentation payload; null preserves standard TGUI.
+	var/list/ui_presentation
 
-/datum/tgui_input_number/New(mob/user, message, title, default, max_value, min_value, timeout, integer_only, ui_state)
+/datum/tgui_input_number/New(mob/user, message, title, default, max_value, min_value, timeout, integer_only, ui_state, theme = null, list/presentation = null)
 	src.default = default
 	src.max_value = max_value
 	src.message = message
@@ -107,6 +111,8 @@
 	src.title = title
 	src.integer_only = integer_only
 	src.state = ui_state
+	src.ui_theme = theme
+	src.ui_presentation = presentation
 	if (timeout)
 		src.timeout = timeout
 		start_time = world.time
@@ -159,6 +165,8 @@
 	data["swapped_buttons"] = FALSE // Pref?
 	data["title"] = title
 	data["round_value"] = integer_only
+	data["theme"] = ui_theme
+	data["presentation"] = ui_presentation
 	return data
 
 /datum/tgui_input_number/ui_data(mob/user)

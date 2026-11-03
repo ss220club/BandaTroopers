@@ -1,6 +1,10 @@
 import { useBackend } from '../../backend';
 import { Window } from '../../layouts';
 import { Loader } from '../common/Loader';
+import {
+  getTerminalInputWindowProps,
+  TerminalInputPresentation,
+} from '../common/TerminalInputPresentation';
 import { ListInputModal } from './ListInputModal';
 
 type ListInputData = {
@@ -11,6 +15,7 @@ type ListInputData = {
   timeout: number;
   title: string;
   theme: string;
+  presentation?: TerminalInputPresentation;
 };
 
 export const ListInputWindow = () => {
@@ -23,6 +28,7 @@ export const ListInputWindow = () => {
     timeout,
     title,
     theme,
+    presentation,
   } = data;
 
   // Dynamically changes the window height based on the message.
@@ -30,7 +36,13 @@ export const ListInputWindow = () => {
     325 + Math.ceil(message.length / 3) + (large_buttons ? 5 : 0);
 
   return (
-    <Window title={title} width={325} height={windowHeight} theme={theme}>
+    <Window
+      title={title}
+      width={360}
+      height={windowHeight}
+      theme={theme}
+      {...getTerminalInputWindowProps(presentation)}
+    >
       {timeout && <Loader value={timeout} />}
       <Window.Content>
         <ListInputModal

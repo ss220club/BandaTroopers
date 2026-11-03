@@ -4,6 +4,7 @@ import { useBackend } from '../backend';
 import { Box, Button, Dropdown, Flex, Input, Section } from '../components';
 import { globalEvents } from '../events';
 import { Window } from '../layouts';
+import { getTerminalInputWindowProps } from './common/TerminalInputPresentation';
 
 const KEY_MODS = {
   SHIFT: true,
@@ -33,10 +34,29 @@ const getAllKeybinds = (glob_keybinds) => {
 
 export const KeyBinds = (props) => {
   const { act, data } = useBackend();
-  const { player_keybinds, glob_keybinds, byond_keymap } = data;
+  const {
+    player_keybinds,
+    glob_keybinds,
+    byond_keymap,
+    custom_presentation: presentation,
+  } = data;
+  const labels = presentation?.labels || {};
+  const terminalWindowProps = getTerminalInputWindowProps(presentation);
+  const windowClassName = presentation
+    ? `${terminalWindowProps.className} BandaKeybinds`
+    : terminalWindowProps.className;
 
   const [selectedTab, setSelectedTab] = useState('ALL');
   const [searchTerm, setSearchTerm] = useState('');
+  const [collapsedCategories, setCollapsedCategories] = useState(() => {
+    const initialState = {};
+    Object.keys(glob_keybinds).forEach((category) => {
+      initialState[category] = true;
+    });
+    return initialState;
+  });
+  const [activeCategory, setActiveCategory] = useState(null);
+  const categories = Object.keys(glob_keybinds);
 
   const keybinds_to_use =
     searchTerm.length || selectedTab === 'ALL'
@@ -47,13 +67,68 @@ export const KeyBinds = (props) => {
     val.full_name.toLowerCase().match(searchTerm),
   );
 
+  const scrollToCategory = (category) => {
+    setTimeout(() => {
+      document
+        .getElementById(`keybind-category-${category}`)
+        ?.scrollIntoView({ block: 'start' });
+    }, 0);
+  };
+
+  const jumpToCategory = (category) => {
+    setSearchTerm('');
+    setCollapsedCategories((current) => ({
+      ...current,
+      [category]: false,
+    }));
+    setActiveCategory(category);
+    scrollToCategory(category);
+  };
+
+  const toggleCategory = (category) => {
+    setCollapsedCategories((current) => ({
+      ...current,
+      [category]: !current[category],
+    }));
+  };
+
+  const revealKeybind = (keybindName) => {
+    if (presentation) {
+      const category = categories.find((categoryName) =>
+        glob_keybinds[categoryName].some(
+          (keybind) => keybind.name === keybindName,
+        ),
+      );
+      if (category) {
+        setSearchTerm('');
+        setCollapsedCategories((current) => ({
+          ...current,
+          [category]: false,
+        }));
+        setActiveCategory(category);
+      }
+    }
+    setTimeout(() => {
+      document
+        .getElementById(keybindName)
+        ?.scrollIntoView({ block: 'center' });
+    }, 0);
+  };
+
   return (
-    <Window width={400} height={500} resizable>
+    <Window
+      width={presentation ? 520 : 400}
+      height={presentation ? 600 : 500}
+      resizable
+      {...terminalWindowProps}
+      className={windowClassName}
+    >
       <Window.Content scrollable>
         <Flex direction="column">
           <Flex.Item>
             <Section
-              title="Settings"
+              className="BandaKeybinds__controls"
+              title={labels.settings || 'Settings'}
               buttons={
                 <Flex.Item>
                   <Button
@@ -61,27 +136,31 @@ export const KeyBinds = (props) => {
                     icon="undo"
                     onClick={() => act('clear_all_keybinds')}
                   >
-                    Reset to Default
+                    {labels.reset || 'Reset to Default'}
                   </Button>
                 </Flex.Item>
               }
             >
               <Flex direction="column">
                 <Flex.Item>
-                  <Flex align="baseline" mt="5px">
+                  <Flex
+                    className={presentation ? 'BandaKeybinds__search' : undefined}
+                    align={presentation ? 'center' : 'baseline'}
+                    mt={presentation ? undefined : '5px'}
+                  >
                     <Flex.Item grow>
                       <Input
                         value={searchTerm}
                         onInput={(_, value) =>
                           setSearchTerm(value.toLowerCase())
                         }
-                        placeholder="Search..."
+                        placeholder={labels.search || 'Search...'}
                         fluid
                       />
                     </Flex.Item>
                     <Flex.Item>
                       <ButtonKeybind
-                        tooltip="Search by key"
+                        tooltip={labels.search_by_key || 'Search by key'}
                         tooltipPosition="bottom-start"
                         icon="keyboard"
                         onFinish={(keysDown) => {
@@ -99,8 +178,8 @@ export const KeyBinds = (props) => {
                             const element = document.getElementById(
                               targetEntry[i],
                             );
-                            if (element) {
-                              element.scrollIntoView();
+                            if (element || presentation) {
+                              revealKeybind(targetEntry[i]);
                               break;
                             }
                           }
@@ -110,48 +189,138 @@ export const KeyBinds = (props) => {
                   </Flex>
                 </Flex.Item>
                 <Flex.Item>
-                  <Box height="5px" />
-                  <KeybindsDropdown
-                    selectedTab={selectedTab}
-                    setSelectedTab={setSelectedTab}
-                    searchTerm={searchTerm}
-                  />
+                  {presentation ? (
+                    <KeybindQuickNavigation
+                      categories={categories}
+                      activeCategory={activeCategory}
+                      onJump={jumpToCategory}
+                    />
+                  ) : (
+                    <>
+                      <Box height="5px" />
+                      <KeybindsDropdown
+                        selectedTab={selectedTab}
+                        setSelectedTab={setSelectedTab}
+                        searchTerm={searchTerm}
+                        labels={labels}
+                      />
+                    </>
+                  )}
                 </Flex.Item>
               </Flex>
             </Section>
           </Flex.Item>
           <Flex direction="column">
-            {selectedTab === 'ALL' && !searchTerm.length
-              ? Object.keys(glob_keybinds).map((category) => (
-                  <Flex.Item key={category}>
-                    <Section title={category}>
-                      <Flex direction="column">
-                        {glob_keybinds[category].map((keybind) => (
-                          <Flex.Item key={keybind}>
-                            <KeybindElement keybind={keybind} />
-                            <Box
-                              backgroundColor="rgba(40, 40, 40, 255)"
-                              width="100%"
-                              height="2px"
-                              mt="2px"
-                            />
-                          </Flex.Item>
-                        ))}
-                      </Flex>
-                    </Section>
-                  </Flex.Item>
-                ))
-              : filteredKeybinds.map((keybind) => (
+            {presentation ? (
+              searchTerm.length ? (
+                filteredKeybinds.map((keybind) => (
                   <Flex.Item key={keybind.full_name}>
-                    <KeybindElement keybind={keybind} />
+                    <KeybindElement
+                      keybind={keybind}
+                      labels={labels}
+                      compact
+                    />
                     <Box
+                      className="BandaKeybinds__legacySeparator"
                       backgroundColor="rgba(40, 40, 40, 255)"
                       width="100%"
                       height="2px"
                       mt="2px"
                     />
                   </Flex.Item>
-                ))}
+                ))
+              ) : (
+                categories.map((category) => {
+                  const collapsed = !!collapsedCategories[category];
+                  return (
+                    <Flex.Item key={category}>
+                      <Section
+                        container_id={`keybind-category-${category}`}
+                        className={`BandaKeybinds__category${
+                          collapsed ? ' BandaKeybinds__category--collapsed' : ''
+                        }`}
+                        title={category}
+                        buttons={
+                          <Button
+                            className="BandaKeybinds__collapse"
+                            icon={collapsed ? 'chevron-down' : 'chevron-up'}
+                            tooltip={
+                              collapsed
+                                ? labels.expand || 'Expand category'
+                                : labels.collapse || 'Collapse category'
+                            }
+                            onClick={() => toggleCategory(category)}
+                          />
+                        }
+                      >
+                        {!collapsed && (
+                          <Flex direction="column">
+                            {glob_keybinds[category].map((keybind) => (
+                              <Flex.Item key={keybind.name}>
+                                <KeybindElement
+                                  keybind={keybind}
+                                  labels={labels}
+                                  compact
+                                />
+                                <Box
+                                  className="BandaKeybinds__legacySeparator"
+                                  backgroundColor="rgba(40, 40, 40, 255)"
+                                  width="100%"
+                                  height="2px"
+                                  mt="2px"
+                                />
+                              </Flex.Item>
+                            ))}
+                          </Flex>
+                        )}
+                      </Section>
+                    </Flex.Item>
+                  );
+                })
+              )
+            ) : selectedTab === 'ALL' && !searchTerm.length ? (
+              Object.keys(glob_keybinds).map((category) => (
+                <Flex.Item key={category}>
+                  <Section title={category}>
+                    <Flex direction="column">
+                      {glob_keybinds[category].map((keybind) => (
+                        <Flex.Item key={keybind.name}>
+                          <KeybindElement
+                            keybind={keybind}
+                            labels={labels}
+                            compact={!!presentation}
+                          />
+                          <Box
+                            className="BandaKeybinds__legacySeparator"
+                            backgroundColor="rgba(40, 40, 40, 255)"
+                            width="100%"
+                            height="2px"
+                            mt="2px"
+                          />
+                        </Flex.Item>
+                      ))}
+                    </Flex>
+                  </Section>
+                </Flex.Item>
+              ))
+            ) : (
+              filteredKeybinds.map((keybind) => (
+                <Flex.Item key={keybind.full_name}>
+                  <KeybindElement
+                    keybind={keybind}
+                    labels={labels}
+                    compact={!!presentation}
+                  />
+                  <Box
+                    className="BandaKeybinds__legacySeparator"
+                    backgroundColor="rgba(40, 40, 40, 255)"
+                    width="100%"
+                    height="2px"
+                    mt="2px"
+                  />
+                </Flex.Item>
+              ))
+            )}
           </Flex>
         </Flex>
       </Window.Content>
@@ -159,18 +328,43 @@ export const KeyBinds = (props) => {
   );
 };
 
-const KeybindsDropdown = (props) => {
-  const { act, data } = useBackend();
-  const { glob_keybinds } = data;
-  const { selectedTab, setSelectedTab, searchTerm } = props;
+const KeybindQuickNavigation = (props) => {
+  const { categories, activeCategory, onJump } = props;
 
-  const dropdownOptions = ['ALL', ...Object.keys(glob_keybinds)];
+  return (
+    <Box className="BandaKeybinds__quickNav">
+      <Flex wrap="wrap">
+        {categories.map((category) => (
+          <Flex.Item key={category}>
+            <Button
+              selected={activeCategory === category}
+              onClick={() => onJump(category)}
+            >
+              {category}
+            </Button>
+          </Flex.Item>
+        ))}
+      </Flex>
+    </Box>
+  );
+};
+
+const KeybindsDropdown = (props) => {
+  const { data } = useBackend();
+  const { glob_keybinds } = data;
+  const { selectedTab, setSelectedTab, searchTerm, labels } = props;
+
+  const dropdownOptions = [
+    { displayText: labels.all || 'ALL', value: 'ALL' },
+    ...Object.keys(glob_keybinds),
+  ];
 
   return (
     <Dropdown
       width="360px"
       menuWidth="360px"
       selected={selectedTab}
+      displayText={selectedTab === 'ALL' ? labels.all || 'ALL' : selectedTab}
       options={dropdownOptions}
       disabled={searchTerm.length}
       onSelected={(value) => setSelectedTab(value)}
@@ -180,7 +374,7 @@ const KeybindsDropdown = (props) => {
 
 export const KeybindElement = (props) => {
   const { act, data } = useBackend();
-  const { keybind } = props;
+  const { keybind, labels = {}, compact } = props;
   const { player_keybinds } = data;
 
   const currentBoundKeys = [];
@@ -195,43 +389,66 @@ export const KeybindElement = (props) => {
   }
 
   return (
-    <Flex id={keybind.name} mt={1}>
-      <Flex.Item basis="30%">
-        <Box fontSize="115%" color="label" textAlign="center">
+    <Flex
+      id={keybind.name}
+      className={compact ? 'BandaKeybinds__row' : undefined}
+      align={compact ? 'center' : undefined}
+      mt={compact ? undefined : 1}
+    >
+      <Flex.Item
+        className={compact ? 'BandaKeybinds__name' : undefined}
+        basis={compact ? '44%' : '30%'}
+      >
+        <Box
+          fontSize={compact ? undefined : '115%'}
+          color="label"
+          textAlign={compact ? undefined : 'center'}
+        >
           {keybind.full_name}
         </Box>
       </Flex.Item>
-      <Flex.Item grow={1}>
-        <Flex direction="column">
-          {currentBoundKeys.map((val) => (
-            <Flex.Item key={val}>
-              <ButtonKeybind
-                color="transparent"
-                content={val}
-                onFinish={(keysDown) => {
-                  const mods = keysDown.filter((k) => KEY_MODS[k]);
-                  const keys = keysDown.filter((k) => !KEY_MODS[k]);
-                  if (keys.length === 0) {
-                    if (mods.length >= 0) {
-                      keys.push(mods.pop());
+      <Flex.Item
+        className={compact ? 'BandaKeybinds__bindings' : undefined}
+        grow={1}
+      >
+        <Flex
+          direction={compact ? undefined : 'column'}
+          wrap={compact ? 'wrap' : undefined}
+        >
+          {currentBoundKeys.length ? (
+            currentBoundKeys.map((val) => (
+              <Flex.Item key={val}>
+                <ButtonKeybind
+                  color="transparent"
+                  content={val}
+                  onFinish={(keysDown) => {
+                    const mods = keysDown.filter((k) => KEY_MODS[k]);
+                    const keys = keysDown.filter((k) => !KEY_MODS[k]);
+                    if (keys.length === 0) {
+                      if (mods.length >= 0) {
+                        keys.push(mods.pop());
+                      }
                     }
-                  }
-                  act('set_keybind', {
-                    keybind_name: keybind.name,
-                    old_key: val,
-                    key_mods: mods,
-                    key: keys.length === 0 ? false : keys[0],
-                  });
-                }}
-              />
-            </Flex.Item>
-          ))}
+                    act('set_keybind', {
+                      keybind_name: keybind.name,
+                      old_key: val,
+                      key_mods: mods,
+                      key: keys.length === 0 ? false : keys[0],
+                    });
+                  }}
+                />
+              </Flex.Item>
+            ))
+          ) : compact ? (
+            <Box className="BandaKeybinds__unbound">—</Box>
+          ) : null}
         </Flex>
       </Flex.Item>
-      <Flex.Item>
+      <Flex.Item className={compact ? 'BandaKeybinds__actions' : undefined}>
         <ButtonKeybind
           icon="plus"
           color="transparent"
+          tooltip={compact ? labels.add || 'Add key' : undefined}
           onFinish={(keysDown) => {
             const mods = keysDown.filter((k) => KEY_MODS[k]);
             const keys = keysDown.filter((k) => !KEY_MODS[k]);
@@ -255,7 +472,7 @@ export const KeybindElement = (props) => {
             })
           }
         >
-          Clear
+          {labels.clear || 'Clear'}
         </Button>
       </Flex.Item>
     </Flex>

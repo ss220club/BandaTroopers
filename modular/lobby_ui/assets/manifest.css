@@ -1,0 +1,17 @@
+@keyframes banda-manifest-row-reveal { 0% { opacity: 0; transform: translateY(-5px); filter: brightness(1.6); } 100% { opacity: 1; transform: translateY(0); filter: brightness(1); } }
+.banda-manifest-window .banda-aux-content { padding: 5px 12px 18px; }
+.banda-manifest-window .banda-manifest-data > div { width: 100%; }
+.banda-manifest-window table.manifest { width: 100%; border-collapse: separate !important; border-spacing: 0 4px !important; color: var(--banda-text-color) !important; }
+.banda-manifest-window table.manifest th { height: auto !important; padding: 8px 10px !important; border: 1px solid var(--banda-accent-color) !important; background: rgba(var(--banda-accent-rgb), 0.192) !important; color: var(--banda-text-color) !important; font-size: 13px; line-height: 18px; letter-spacing: 1px; text-transform: uppercase; text-align: center; box-shadow: inset 0 0 14px rgba(var(--banda-accent-rgb), 0.08); }
+.banda-manifest-window table.manifest tr.head th { border-color: var(--banda-accent-color) !important; background: rgba(var(--banda-accent-rgb), 0.335) !important; color: var(--banda-text-color) !important; letter-spacing: 2px; }
+.banda-manifest-window table.manifest td { padding: 7px 10px !important; border: 1px solid rgba(var(--banda-accent-rgb), 0.281) !important; background: rgba(4, 7, 5, .88) !important; color: var(--banda-text-color) !important; font-size: 12px; line-height: 17px; }
+.banda-manifest-window table.manifest tr.alt td { background: rgba(4, 7, 5, .9) !important; }
+.banda-manifest-window table.manifest td:first-child { width: 38%; text-align: left !important; color: var(--banda-text-color) !important; }
+.banda-manifest-window table.manifest td:nth-child(2) { width: 42%; }
+.banda-manifest-window table.manifest td:nth-child(3) { width: 20%; text-align: center; }
+.banda-manifest-window table.manifest tr.manifest-row-loading { opacity: 0; animation: banda-manifest-row-reveal .18s ease-out both; }
+.banda-aux-crt.banda-effects-reduced.banda-manifest-window table.manifest tr.manifest-row-loading, .banda-aux-crt.banda-effects-off.banda-manifest-window table.manifest tr.manifest-row-loading { opacity: 1; animation: none !important; }
+@media (max-width: 600px) {
+	.banda-manifest-window .banda-aux-content { padding: 3px 2px 10px; }
+	.banda-manifest-window table.manifest th, .banda-manifest-window table.manifest td { padding: 5px 4px !important; font-size: 10px; line-height: 14px; }
+}

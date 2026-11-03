@@ -203,7 +203,9 @@
 	preview_dummy.update_body()
 	preview_dummy.update_hair()
 
-	arm_equipment(preview_dummy, J, FALSE, FALSE, owner, show_job_gear)
+	// SS220 DemonicLynx "Lobby UI" - optional preview provider; upstream equipment is the fallback.
+	if(!SSmodpacks?.lobby_ui_provider?.lobby_ui_equip_character_preview(src, preview_dummy, J))
+		arm_equipment(preview_dummy, J, FALSE, FALSE, owner, show_job_gear)
 
 	// If the dummy was equipped with marine armor.
 	var/jacket = preview_dummy.get_item_by_slot(WEAR_JACKET)

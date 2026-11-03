@@ -236,6 +236,17 @@ window "mapwindow"
 .langchat_notification { font-family: 'Press Start 2P'; font-size: 6pt; } \
 .context { font-family: 'Pix Cyrillic'; font-size: 12pt; -dm-text-outline: 1px black; } \
 .subcontext { font-family: 'TinyUnicode'; font-size: 12pt; line-height: 0.75; }"
+	// SS220 DemonicLynx "Lobby UI" - neutral hidden browser host; the classic lobby remains the fallback.
+	elem "lobbybrowser"
+		type = BROWSER
+		pos = 0,0
+		size = 640x480
+		anchor1 = 0,0
+		anchor2 = 100,100
+		is-visible = false
+		background-color = #020810
+		saved-params = ""
+	// SS220 DemonicLynx "Lobby UI" - end neutral lobby browser host.
 	elem "status_bar"
 		type = LABEL
 		pos = 0,464
@@ -442,20 +453,23 @@ window "preferencewindow"
  		background-color = none
  		is-visible = false
  		statusbar = false
- 	elem "preferencebrowser"
- 		type = BROWSER
- 		pos = 0,240
+	// SS220 DemonicLynx "Lobby UI" - neutral hidden character-editor browser host; classic Preferences remains the fallback.
+	elem "preferencebrowser"
+		type = BROWSER
+		pos = 0,0
 		size = 0x0
- 		anchor1 = 0,0
- 		anchor2 = 100,100
- 		background-color = none
- 		saved-params = ""
- 	elem "preview"
- 		type = MAP
- 		pos = 0,-10
- 		size = 0x250
- 		anchor1 = 0,0
- 		anchor2 = 100,0
+		anchor1 = 0,0
+		anchor2 = 100,100
+		background-color = none
+		saved-params = ""
+	elem "preview"
+		type = MAP
+		pos = 0,-10
+		size = 0x250
+		anchor1 = 0,0
+		anchor2 = 100,0
+		is-visible = false
+	// SS220 DemonicLynx "Lobby UI" - end neutral character-editor browser host.
 
 window "statwindow"
 	elem "statwindow"

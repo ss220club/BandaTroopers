@@ -32,7 +32,9 @@ type Props = Partial<{
   buttons: ReactNode;
   buttonsRight: boolean;
   canClose: boolean;
+  className: string;
   height: number;
+  style: BoxProps['style'];
   theme: string;
   title: string;
   width: number;
@@ -49,6 +51,8 @@ export const Window = (props: Props) => {
     buttonsRight = false,
     width,
     height,
+    className,
+    style,
   } = props;
 
   const { config, suspended } = useBackend();
@@ -94,7 +98,11 @@ export const Window = (props: Props) => {
       : config.status < UI_INTERACTIVE);
 
   return suspended ? null : (
-    <Layout className="Window" theme={theme}>
+    <Layout
+      className={classes(['Window', className])}
+      style={style}
+      theme={theme}
+    >
       <TitleBar
         className="Window__titleBar"
         title={title || decodeHtmlEntities(config.title)}

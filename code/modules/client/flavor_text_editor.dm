@@ -6,6 +6,10 @@
 		return
 
 	.["categories"] = list()
+	// SS220 DemonicLynx "Lobby UI" - optional presentation data; TGUI defaults remain classic.
+	var/list/custom_presentation = SSmodpacks?.lobby_ui_provider?.lobby_ui_flavor_text_presentation(prefs)
+	if(custom_presentation)
+		.["custom_presentation"] = custom_presentation
 
 	for (var/category in prefs.flavor_texts)
 		.["categories"] += category
@@ -17,7 +21,9 @@
 	ui = SStgui.try_update_ui(user, src, ui)
 
 	if(!ui)
-		ui = new(user, src, "FlavorTextEditor", "Flavor Text Editor")
+		// SS220 DemonicLynx "Lobby UI" - optional title provider; upstream title is the fallback.
+		var/window_title = SSmodpacks?.lobby_ui_provider?.lobby_ui_flavor_text_window_title(user.client?.prefs) || "Flavor Text Editor"
+		ui = new(user, src, "FlavorTextEditor", window_title)
 		ui.open()
 		ui.set_autoupdate(FALSE)
 

@@ -60,6 +60,10 @@
 @include meta.load-css('./interfaces/DropshipWeapons.scss');
 @include meta.load-css('./interfaces/ElevatorControl.scss');
 @include meta.load-css('./interfaces/ExperimentConfigure.scss');
+// SS220 DemonicLynx "Lobby UI" - generic optional FlavorTextEditor presentation styles.
+@include meta.load-css('./interfaces/FlavorTextEditor.scss');
+// SS220 DemonicLynx "Lobby UI" - optional neutral input presentation; unstyled callers keep the standard fallback.
+@include meta.load-css('./interfaces/TerminalInputPresentation.scss');
 @include meta.load-css('./interfaces/MarkMenu.scss');
 @include meta.load-css('./interfaces/MedalsViewer.scss');
 @include meta.load-css('./interfaces/NavigationShuttle.scss');

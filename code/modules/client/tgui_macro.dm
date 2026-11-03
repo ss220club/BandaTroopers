@@ -24,6 +24,10 @@ GLOBAL_LIST_EMPTY(ui_data_keybindings)
 /datum/tgui_macro/ui_data(mob/user)
 	. = list()
 	.["player_keybinds"] = prefs.key_bindings
+	// SS220 DemonicLynx "Lobby UI" - optional presentation; no payload keeps the upstream window unchanged.
+	var/list/custom_presentation = SSmodpacks?.lobby_ui_provider?.lobby_ui_keybind_presentation(prefs)
+	if(custom_presentation)
+		.["custom_presentation"] = custom_presentation
 
 /datum/tgui_macro/ui_static_data(mob/user)
 	. = list()
@@ -44,7 +48,12 @@ GLOBAL_LIST_EMPTY(ui_data_keybindings)
 
 	ui = SStgui.try_update_ui(user, src, ui)
 	if(!ui)
-		ui = new(user, src, "KeyBinds", "Keybind Preference")
+		// SS220 DemonicLynx "Lobby UI" - title is localized only for the optional terminal presentation.
+		var/list/custom_presentation = SSmodpacks?.lobby_ui_provider?.lobby_ui_keybind_presentation(prefs)
+		var/window_title = "Keybind Preference"
+		if(custom_presentation && custom_presentation["window_title"])
+			window_title = custom_presentation["window_title"]
+		ui = new(user, src, "KeyBinds", window_title)
 		ui.open()
 		ui.set_autoupdate(FALSE)
 

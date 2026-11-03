@@ -294,6 +294,8 @@
 	S["ghost_vision_pref"] >> ghost_vision_pref
 	S["ghost_orbit"] >> ghost_orbit
 	S["auto_observe"] >> auto_observe
+	// SS220 DemonicLynx "Lobby UI" - optional provider load hook; null keeps classic defaults.
+	SSmodpacks?.lobby_ui_provider?.lobby_ui_load_preferences(src, S)
 
 	S["human_name_ban"] >> human_name_ban
 
@@ -507,6 +509,8 @@
 	S["ghost_vision_pref"] << ghost_vision_pref
 	S["ghost_orbit"] << ghost_orbit
 	S["auto_observe"] << auto_observe
+	// SS220 DemonicLynx "Lobby UI" - optional provider save hook; null requires no data.
+	SSmodpacks?.lobby_ui_provider?.lobby_ui_save_preferences(src, S)
 
 	S["human_name_ban"] << human_name_ban
 
@@ -792,6 +796,8 @@
 		S["tts_seed"] >> tts_seed
 	// =================================
 
+	// SS220 EDIT: optional post-success notification; classic persistence remains unchanged.
+	SSmodpacks?.lobby_ui_provider?.lobby_ui_character_persisted(src, "reload")
 	return 1
 
 /datum/preferences/proc/save_character()
@@ -901,6 +907,8 @@
 
 	S.Unlock()
 
+	// SS220 EDIT: optional post-success notification; failures never report a saved slot.
+	SSmodpacks?.lobby_ui_provider?.lobby_ui_character_persisted(src, "save")
 	return TRUE
 
 /// checks through keybindings for outdated unbound keys and updates them

@@ -17,7 +17,7 @@
  * * trim - Whether or not to trim leading and trailing whitespace from your input. Defaults to TRUE
  * * ui_state - The TGUI UI state that will be returned in ui_state(). Default: always_state
  */
-/proc/tgui_input_text(mob/user, message = "", title = "Text Input", default, max_length = MAX_MESSAGE_LEN, multiline = FALSE, encode = TRUE, timeout = 0, trim = TRUE, ui_state = GLOB.always_state)
+/proc/tgui_input_text(mob/user, message = "", title = "Text Input", default, max_length = MAX_MESSAGE_LEN, multiline = FALSE, encode = TRUE, timeout = 0, trim = TRUE, ui_state = GLOB.always_state, theme = null, list/presentation = null)
 	if (!user)
 		user = usr
 	if (!istype(user))
@@ -45,7 +45,7 @@
 				return input(user, message, title, default) as text|null
 	*/
 
-	var/datum/tgui_input_text/text_input = new(user, message, title, default, max_length, multiline, encode, timeout, trim, ui_state)
+	var/datum/tgui_input_text/text_input = new(user, message, title, default, max_length, multiline, encode, timeout, trim, ui_state, theme, presentation)
 	text_input.tgui_interact(user)
 	text_input.wait()
 	if (text_input)
@@ -83,8 +83,12 @@
 	var/datum/ui_state/state
 	/// Whether to trim leading and trailing spaces
 	var/trim
+	/// Optional visual theme supplied by a neutral caller; null preserves the standard input appearance.
+	var/ui_theme
+	/// SS220 DemonicLynx "Lobby UI" - optional neutral presentation payload; null preserves standard TGUI.
+	var/list/ui_presentation
 
-/datum/tgui_input_text/New(mob/user, message, title, default, max_length, multiline, encode, timeout, trim, ui_state)
+/datum/tgui_input_text/New(mob/user, message, title, default, max_length, multiline, encode, timeout, trim, ui_state, theme = null, list/presentation = null)
 	src.default = default
 	src.encode = encode
 	src.max_length = max_length
@@ -93,6 +97,8 @@
 	src.title = title
 	src.state = ui_state
 	src.trim = trim
+	src.ui_theme = theme
+	src.ui_presentation = presentation
 	if (timeout)
 		src.timeout = timeout
 		start_time = world.time
@@ -135,6 +141,8 @@
 	//data["swapped_buttons"] = user.client.prefs.read_preference(/datum/preference/toggle/tgui_input_swapped)
 	data["swapped_buttons"] = FALSE
 	data["title"] = title
+	data["theme"] = ui_theme
+	data["presentation"] = ui_presentation
 	return data
 
 /datum/tgui_input_text/ui_data(mob/user)
@@ -150,7 +158,7 @@
 	switch(action)
 		if("submit")
 			if(max_length)
-				if(length(params["entry"]) > max_length)
+				if(length_char(params["entry"]) > max_length) // SS220 DemonicLynx "Lobby UI" - Unicode character count preserves the advertised input limit.
 					CRASH("[usr] typed a text string longer than the max length")
 				if(encode && (length(html_encode(params["entry"])) > max_length))
 					to_chat(usr, SPAN_NOTICE("Your message was clipped due to special character usage."))
