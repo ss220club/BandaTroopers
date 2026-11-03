@@ -10,8 +10,15 @@
 	w_class = SIZE_MEDIUM
 	/// is it *armor* or something different & irrelevant and always passes damage & doesnt take damage to itself?
 	var/is_armor = TRUE
-	var/armor_health = 10
-	var/armor_maxhealth = 10
+	// SS220 EDIT - START: percentage-based plate protection and rebalanced durability
+	var/armor_health = 250
+	var/armor_maxhealth = 250
+	/// Fraction of eligible post-armor projectile damage absorbed while the plate has durability.
+	// var/projectile_damage_block_mult = 0.75
+	var/projectile_damage_block_mult = 0.35 // SS220 EDIT: all functional plates absorb 35% of eligible bullet damage
+	/// Fraction of post-armor xenomorph slash damage absorbed while the plate has durability.
+	var/slash_damage_block_mult = 1
+	// SS220 EDIT - END
 	var/take_slash_damage = TRUE
 	var/slash_durability_mult = 0.25
 	var/FF_projectile_durability_mult = 0.1
@@ -24,7 +31,8 @@
 	)
 
 	var/scrappable = TRUE
-	var/armor_hitsound = 'sound/effects/metalhit.ogg'
+	// var/armor_hitsound = 'sound/effects/metalhit.ogg'
+	var/armor_hitsound = 'sound/effects/shields/fire_shield.ogg' // SS220 EDIT: use the shared shield impact sound for every functional armor plate
 	var/armor_shattersound = 'sound/effects/metal_shatter.ogg'
 
 /obj/item/clothing/accessory/health/update_icon()
@@ -51,6 +59,12 @@
 		else
 			. = "It is in pristine condition."
 
+	// SS220 EDIT - START: show exact plate durability in both direct and attached-item examination
+	var/displayed_health = round(armor_health, 0.1)
+	var/displayed_maxhealth = round(armor_maxhealth, 0.1)
+	. += " Durability: [displayed_health] / [displayed_maxhealth]."
+	// SS220 EDIT - END
+
 /obj/item/clothing/accessory/health/get_examine_text(mob/user)
 	. = ..()
 	. += "To use it, attach it to your uniform."
@@ -65,8 +79,15 @@
 		RegisterSignal(S, COMSIG_ITEM_EQUIPPED, PROC_REF(check_to_signal))
 		RegisterSignal(S, COMSIG_ITEM_DROPPED, PROC_REF(unassign_signals))
 
-		if(istype(user) && user.w_uniform == S)
-			check_to_signal(S, user, WEAR_BODY)
+		// SS220 EDIT - START: activate plates attached to already-worn uniforms or outer armor
+		// if(istype(user) && user.w_uniform == S)
+		// 	check_to_signal(S, user, WEAR_BODY)
+		if(istype(user))
+			if(user.w_uniform == S)
+				check_to_signal(S, user, WEAR_BODY)
+			else if(user.wear_suit == S)
+				check_to_signal(S, user, WEAR_JACKET)
+		// SS220 EDIT - END
 
 /obj/item/clothing/accessory/health/on_removed(mob/living/user, obj/item/clothing/C)
 	. = ..()
@@ -80,10 +101,11 @@
 /obj/item/clothing/accessory/health/proc/check_to_signal(obj/item/clothing/S, mob/living/user, slot)
 	SIGNAL_HANDLER
 
-	if(slot == WEAR_BODY)
+	// if(slot == WEAR_BODY)
+	if(slot == WEAR_BODY || slot == WEAR_JACKET) // SS220 EDIT: armor plates protect while attached to uniforms or worn outer armor
 		if(take_slash_damage)
 			RegisterSignal(user, COMSIG_HUMAN_XENO_ATTACK, PROC_REF(take_slash_damage))
-		RegisterSignal(user, COMSIG_HUMAN_BULLET_ACT, PROC_REF(take_bullet_damage))
+		RegisterSignal(user, COMSIG_HUMAN_ARMOR_PLATE_BULLET_ACT, PROC_REF(take_bullet_damage)) // SS220 EDIT: modify post-armor damage instead of cancelling the entire hit
 	else
 		unassign_signals(S, user)
 
@@ -92,11 +114,12 @@
 
 	UnregisterSignal(user, list(
 		COMSIG_HUMAN_XENO_ATTACK,
-		COMSIG_HUMAN_BULLET_ACT
+		COMSIG_HUMAN_ARMOR_PLATE_BULLET_ACT // SS220 EDIT: paired with percentage-based plate signal registration
 	))
 
-/obj/item/clothing/accessory/health/proc/take_bullet_damage(mob/living/carbon/human/user, damage, ammo_flags, obj/projectile/P)
+/obj/item/clothing/accessory/health/proc/take_bullet_damage(mob/living/carbon/human/user, list/damage_data, ammo_flags, obj/projectile/P)
 	SIGNAL_HANDLER
+	var/damage = damage_data["damage"]
 	if(damage <= 0 || (ammo_flags & AMMO_IGNORE_ARMOR))
 		return
 	if(!is_armor)
@@ -111,13 +134,15 @@
 
 	update_icon()
 	if(!armor_health && damage_to_nullify)
-		user.show_message(SPAN_WARNING("You feel [src] break apart."), null, null, null, CHAT_TYPE_ARMOR_DAMAGE)
+		// user.show_message(SPAN_WARNING("You feel [src] break apart."), null, null, null, CHAT_TYPE_ARMOR_DAMAGE)
+		user.show_message(SPAN_HIGHDANGER("Пластина треснула и больше не защищает вас!"), null, null, null, CHAT_TYPE_ARMOR_DAMAGE) // SS220 EDIT: prominent localized plate-break warning
 		playsound(user, armor_shattersound, 35, TRUE)
 
 	if(damage_to_nullify)
 		playsound(user, armor_hitsound, 25, TRUE)
-		P.play_hit_effect(user)
-		return COMPONENT_CANCEL_BULLET_ACT
+		// P.play_hit_effect(user)
+		// damage_data["damage"] = max(damage * (1 - projectile_damage_block_mult), 0)
+		damage_data["damage"] = max(damage * (1 - projectile_damage_block_mult), 0) // SS220 EDIT: absorb 35% and let the normal hit pipeline process the remaining 65%
 
 /obj/item/clothing/accessory/health/proc/take_slash_damage(mob/living/user, list/slashdata)
 	SIGNAL_HANDLER
@@ -129,11 +154,12 @@
 
 	update_icon()
 	if(!armor_health && damage_to_nullify)
-		user.show_message(SPAN_WARNING("You feel [src] break apart."), null, null, null, CHAT_TYPE_ARMOR_DAMAGE)
+		// user.show_message(SPAN_WARNING("You feel [src] break apart."), null, null, null, CHAT_TYPE_ARMOR_DAMAGE)
+		user.show_message(SPAN_HIGHDANGER("Пластина треснула и больше не защищает вас!"), null, null, null, CHAT_TYPE_ARMOR_DAMAGE) // SS220 EDIT: prominent localized plate-break warning
 		playsound(user, armor_shattersound, 50, TRUE)
 
 	if(damage_to_nullify)
-		slashdata["n_damage"] = 0
+		slashdata["n_damage"] = max(armor_damage * (1 - slash_damage_block_mult), 0) // SS220 EDIT: allow plate types to provide partial slash absorption
 		slashdata["slash_noise"] = armor_hitsound
 
 /obj/item/clothing/accessory/health/attackby(obj/item/clothing/accessory/health/I, mob/user)
@@ -153,23 +179,26 @@
 	icon_state = "ceramic2_100"
 	base_icon_state = "ceramic2"
 
-	take_slash_damage = FALSE
+	// take_slash_damage = FALSE
+	take_slash_damage = TRUE // SS220 EDIT: ceramic-family plates now absorb 30% of xenomorph slash damage
+	slash_damage_block_mult = 0.3 // SS220 EDIT: retain 70% of post-armor slash damage
 	scrappable = FALSE
 	FF_projectile_durability_mult = 0.3
 
-	armor_health = 100
-	armor_maxhealth = 100
+	armor_health = 300 // SS220 EDIT: rebalanced ceramic plate durability
+	armor_maxhealth = 300 // SS220 EDIT: rebalanced ceramic plate durability
 
 	armor_shattersound = 'sound/effects/ceramic_shatter.ogg'
 
-/obj/item/clothing/accessory/health/ceramic_plate/take_bullet_damage(mob/living/user, damage, ammo_flags)
+/obj/item/clothing/accessory/health/ceramic_plate/take_bullet_damage(mob/living/user, list/damage_data, ammo_flags)
 	if(ammo_flags & AMMO_ACIDIC)
 		return
 
 	return ..()
 
 /obj/item/clothing/accessory/health/ceramic_plate/take_slash_damage(mob/living/user, list/slashdata)
-	return
+	// return
+	return ..() // SS220 EDIT: use shared 30% slash absorption instead of ignoring xenomorph attacks
 
 /obj/item/clothing/accessory/health/ceramic_plate/marine
 	name = "ASAPP armor plate"
@@ -180,8 +209,10 @@
 	// SS220 EDIT - END
 	overlay_state = "armor_plate_100"
 	slot = ACCESSORY_SLOT_PLATE
-	armor_health = 300
-	armor_maxhealth = 300
+	// armor_health = 700
+	// armor_maxhealth = 700
+	armor_health = 400 // SS220 EDIT: rebalanced ASAPP durability
+	armor_maxhealth = 400 // SS220 EDIT: rebalanced ASAPP durability
 
 /obj/item/clothing/accessory/health/ceramic_plate/twe
 	name = "HASP armor plate"
@@ -189,8 +220,10 @@
 	icon_state = "regular2_100"
 	base_icon_state = "regular2"
 	slot = ACCESSORY_SLOT_PLATE2
-	armor_health = 350
-	armor_maxhealth = 350
+	// armor_health = 800
+	// armor_maxhealth = 800
+	armor_health = 500 // SS220 EDIT: rebalanced HASP durability
+	armor_maxhealth = 500 // SS220 EDIT: rebalanced HASP durability
 
 /obj/item/clothing/accessory/health/ceramic_plate/twe/wy
 	desc = "Hyper Advanced Shield Plate is a modular clip-on armor plate, designed to provide additional protection for RMC combat personell, though this one has been painted white for service with Weyland Yutani's elite tactical teams. gives you extremely good protection against any bullet types, stops full metal jacket, armor piercing and even HEAP rounds. This plate includes titanium and can stop even super sonic rounds."
@@ -201,12 +234,41 @@
 /obj/item/clothing/accessory/health/ceramic_plate/upp
 	name = "TNAP armor plate"
 	desc = "Titanium Nanocrystalline Alloy Plate is a modular clip-on armor plate, designed to provide additional protection for UPP combat personell, gives you extremely good protection against any bullet types, stops full metal jacket, armor piercing and even HEAP rounds. This plate can stop almost any firearm rounds and have highest protection."
-	icon_state = "ceramic2_100"
-	base_icon_state = "ceramic2"
-	overlay_state = "armor_plate_100"
+	// SS220 EDIT - START: use complete UPP-specific sprites instead of the USCM plate and missing overlays
+	icon = 'icons/obj/items/clothing/upp_armor_plate.dmi'
+	icon_state = "upp_armor_plate_100"
+	base_icon_state = "upp_armor_plate"
+	item_state = "upp_armor_plate"
+	overlay_state = "upp_armor_plate_100"
+	icon_override = 'icons/mob/humans/onmob/upp_armor_plate_overlays.dmi'
+	item_icons = list(
+		WEAR_L_HAND = 'icons/mob/humans/onmob/inhands/items/upp_armor_plate_lefthand.dmi',
+		WEAR_R_HAND = 'icons/mob/humans/onmob/inhands/items/upp_armor_plate_righthand.dmi',
+	)
+	// SS220 EDIT - END
 	slot = ACCESSORY_SLOT_PLATE3
-	armor_health = 400
-	armor_maxhealth = 400
+	// armor_health = 900
+	// armor_maxhealth = 900
+	armor_health = 600 // SS220 EDIT: rebalanced TNAP durability
+	armor_maxhealth = 600 // SS220 EDIT: rebalanced TNAP durability
+
+/obj/item/clothing/accessory/health/ceramic_plate/upp/Initialize()
+	. = ..()
+	// The accessory parent eagerly caches an overlay from the shared sheet.
+	// TNAP uses its own sheet, so let get_inv_overlay() rebuild the correct image.
+	inv_overlay = null
+
+/obj/item/clothing/accessory/health/ceramic_plate/upp/update_icon()
+	var/image/old_overlay = inv_overlay
+	. = ..()
+	overlay_state = icon_state
+	inv_overlay = null
+
+	if(has_suit)
+		if(old_overlay)
+			has_suit.overlays -= old_overlay
+		has_suit.overlays += get_inv_overlay()
+		has_suit.update_clothing_icon()
 
 /obj/item/clothing/accessory/health/scrap
 	name = "scrap metal"
@@ -219,6 +281,7 @@
 	)
 
 	scrappable = FALSE
+	slash_damage_block_mult = 0.3 // SS220 EDIT: scrap plate now absorbs 30% of xenomorph slash damage
 
 	armor_health = 7.5
 	armor_maxhealth = 7.5
@@ -228,14 +291,15 @@
 	if(. && !armor_health)
 		qdel(src)
 
-/obj/item/clothing/accessory/health/scrap/take_bullet_damage(mob/living/user, damage, ammo_flags)
+/obj/item/clothing/accessory/health/scrap/take_bullet_damage(mob/living/user, list/damage_data, ammo_flags)
 	if(ammo_flags & AMMO_ACIDIC)
 		return
 
 	return ..()
 
 /obj/item/clothing/accessory/health/scrap/take_slash_damage(mob/living/user, list/slashdata)
-	return
+	// return
+	return ..() // SS220 EDIT: use shared partial slash absorption
 
 /obj/item/clothing/accessory/health/research_plate
 	name = "experimental uniform attachment"
@@ -478,9 +542,3 @@
 	UnregisterSignal(wearer, COMSIG_HUMAN_REVIVED)
 	to_chat(wearer, SPAN_NOTICE("[icon2html(src, viewers(src))] \The <b>[src]</b> beeps: Chemical preservatives reserves depleted, replace the [src]"))
 	wearer.revive_grace_period = 5 MINUTES
-
-
-
-
-
-

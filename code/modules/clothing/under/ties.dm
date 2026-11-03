@@ -1550,6 +1550,8 @@
 /obj/item/clothing/accessory/upppads
 	name = "\improper 6B90 Arm Plates"
 	desc = "A set of arm plates designed for the 6B90 armor system."
+	// SS220 EDIT: keep canonical UPP accessory sprites on maps without UPP camouflage states
+	flags_atom = NO_SNOW_TYPE
 	icon_state = "upp_arms"
 	item_state = "upp_arms"
 	slot = ACCESSORY_SLOT_DECORARMOR

@@ -427,8 +427,8 @@
 	name = "\improper 6B90 pattern UPP armor"
 	desc = "Union frontline issue body armor. Part of protective complex Kuija-M, 6B90 is capable of rifle threats with new ultralight alloy plates over the vitals, while ballistic mesh inserts provide torso protection from shrapnel or ricochets. A small transmitter on the lower back supports low resolution video/audio and biotelemetry feeds for the TOC. While designed to be one size fits all, the support system proves difficult to comfortably adjust."
 	icon_state = "upp_armor"
-	// SS220 EDIT: CM-PVE #1255 UPP camouflage — NO_SNOW_TYPE removed for gamemode skin support
-	flags_atom = NO_NAME_OVERRIDE|FPRINT|CONDUCT
+	// UPP armor has no map-specific camouflage icon states.
+	flags_atom = NO_SNOW_TYPE|NO_NAME_OVERRIDE|FPRINT|CONDUCT
 	flags_armor_protection = BODY_FLAG_CHEST|BODY_FLAG_GROIN|BODY_FLAG_LEGS
 	slowdown = SLOWDOWN_ARMOR_MEDIUM
 	flags_inventory = BLOCKSHARPOBJ
@@ -455,8 +455,8 @@
 	desc = "Deep modification of the standard body armor, intended for Union machinegunners. Contains compact fire control computers and an encrypted data processing unit in the lower back, as well as an armored cable to connect to the machine gun. Covers all requirements to operate the weapon, but a common complaint is the bulkiness."
 	icon_state = "upp_armor_support"
 	slowdown = SLOWDOWN_ARMOR_LOWHEAVY
-	// SS220 EDIT: CM-PVE #1255 UPP camouflage — NO_SNOW_TYPE removed for gamemode skin support
-	flags_atom = NO_NAME_OVERRIDE
+	// SS220 EDIT: keep the base UPP smartgunner texture on every map; no prefixed icon states exist
+	flags_atom = NO_SNOW_TYPE|NO_NAME_OVERRIDE
 	flags_inventory = BLOCKSHARPOBJ|SMARTGUN_HARNESS
 	flags_armor_protection = BODY_FLAG_CHEST|BODY_FLAG_GROIN|BODY_FLAG_LEGS
 	armor_melee = CLOTHING_ARMOR_HIGH

@@ -1546,8 +1546,9 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 	attack_verb = list("whacked", "hit", "smacked", "beaten", "battered")
 	var/obj/structure/machinery/camera/camera
 	var/helmet_overlays[]
-	// SS220 EDIT: CM-PVE #1255 UPP camouflage — allow select_gamemode_skin
-	flags_atom = null
+	// UPP helmets have no map-specific desert/snow icon states.
+	// Keep the canonical UPP helmet sprite on all maps.
+	flags_atom = NO_SNOW_TYPE
 	flags_inventory = BLOCKSHARPOBJ
 	flags_inv_hide = NONE
 	clothing_traits = list(TRAIT_EAR_PROTECTION)
