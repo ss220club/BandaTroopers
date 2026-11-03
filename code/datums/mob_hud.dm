@@ -208,7 +208,7 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, flatten_numeric_alist(alist(
 
 //Factions
 /datum/mob_hud/faction
-	hud_icons = list(FACTION_HUD, ORDER_HUD, HOLOCARD_HUD)
+	hud_icons = list(FACTION_HUD, ORDER_HUD, HOLOCARD_HUD, COMBAT_STANCE_HUD)
 	var/faction_to_check = FACTION_MARINE
 
 /datum/mob_hud/faction/add_to_single_hud(mob/user, mob/target)
@@ -255,7 +255,7 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, flatten_numeric_alist(alist(
 // SS220 EDIT - END
 
 /datum/mob_hud/faction/observer
-	hud_icons = list(FACTION_HUD, ORDER_HUD, HUNTER_CLAN, HOLOCARD_HUD)
+	hud_icons = list(FACTION_HUD, ORDER_HUD, HUNTER_CLAN, HOLOCARD_HUD, COMBAT_STANCE_HUD)
 
 // SS220 EDIT - START - HALO VISR HUD
 /datum/mob_hud/visr
@@ -834,6 +834,23 @@ GLOBAL_DATUM(hud_icon_hudfocus, /image)
 /mob/living/carbon/human/hud_set_holocard()
 	var/image/holder = hud_list[HOLOCARD_HUD]
 	holder.icon_state = holo_card_color ? "holo_card_[holo_card_color]" : "hudblank"
+
+// COMBAT STANCE HUD
+GLOBAL_DATUM(hud_icon_combat_stance, /image)
+
+/mob/living/carbon/human/proc/hud_set_combat_stance()
+	var/image/holder = hud_list[COMBAT_STANCE_HUD]
+	if(!holder)
+		holder = image('icons/mob/hud/marine_hud.dmi', src, "hudblank")
+		holder.layer = HUD_LAYER
+		holder.plane = HUD_PLANE
+		holder.appearance_flags = RESET_COLOR|KEEP_APART
+		hud_list[COMBAT_STANCE_HUD] = holder
+
+	if(m_intent == MOVE_INTENT_COMBAT)
+		holder.icon_state = "hudcombat"
+	else
+		holder.icon_state = "hudblank"
 
 // SS220 EDIT - START - HALO VISR HUD
 /mob/proc/set_visr_hud()

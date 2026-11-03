@@ -1,6 +1,6 @@
 /*
 	Screen objects
-	Todo: improve/re-implement
+	Todo: improve/reimplement
 
 	Screen objects are only used for the hud and should not appear anywhere "in-game".
 	They are used with the client/screen list and the screen_loc var.
@@ -365,9 +365,19 @@
 	user.toggle_mov_intent()
 
 /mob/living/proc/set_movement_intent(new_intent)
+	if(m_intent == new_intent)
+		return
 	m_intent = new_intent
 	if(hud_used?.move_intent)
 		hud_used.move_intent.set_movement_intent_icon(m_intent)
+	if(m_intent == MOVE_INTENT_COMBAT)
+		visible_message(SPAN_NOTICE("[src] enters a combat stance."), SPAN_NOTICE("You enter a combat stance."), null, 5)
+		ADD_TRAIT(src, TRAIT_COMBAT_STANCE, "combat_stance")
+	else
+		REMOVE_TRAIT(src, TRAIT_COMBAT_STANCE, "combat_stance")
+	if(ishuman(src))
+		var/mob/living/carbon/human/H = src
+		H.hud_set_combat_stance()
 	recalculate_move_delay = TRUE
 
 /mob/living/proc/toggle_mov_intent()
@@ -379,6 +389,8 @@
 		if(MOVE_INTENT_RUN)
 			set_movement_intent(MOVE_INTENT_WALK)
 		if(MOVE_INTENT_WALK)
+			set_movement_intent(MOVE_INTENT_COMBAT)
+		if(MOVE_INTENT_COMBAT)
 			set_movement_intent(MOVE_INTENT_RUN)
 	return TRUE
 
@@ -388,6 +400,8 @@
 			icon_state = "walking"
 		if(MOVE_INTENT_RUN)
 			icon_state = "running"
+		if(MOVE_INTENT_COMBAT)
+			icon_state = "combat"
 
 /mob/living/carbon/xenomorph/toggle_mov_intent()
 	. = ..()

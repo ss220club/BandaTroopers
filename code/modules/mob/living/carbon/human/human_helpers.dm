@@ -1,5 +1,3 @@
-
-
 /mob/living/carbon/human/IsAdvancedToolUser()
 	return species.has_fine_manipulation
 
@@ -335,6 +333,46 @@ f
 				g_eyes = 0
 				b_eyes = 0
 		update_body()
+
+/mob/living/carbon/human/GetStunDuration(amount)
+	. = ..()
+	var/skill_resistance = skills ? (skills.get_skill_level(SKILL_ENDURANCE)-1)*0.08 : 0
+	// Начало изменений
+	if(m_intent == MOVE_INTENT_COMBAT)
+		skill_resistance += 0.08 // Добавляем 8% сопротивления
+	// Конец изменений
+	var/final_reduction = (1 - skill_resistance) / species.stun_reduction
+	return . * final_reduction
+
+/mob/living/carbon/human/GetKnockDownDuration(amount)
+	. = ..()
+	var/skill_resistance = skills ? (skills.get_skill_level(SKILL_ENDURANCE)-1)*0.08 : 0
+	// Начало изменений
+	if(m_intent == MOVE_INTENT_COMBAT)
+		skill_resistance += 0.08 // Добавляем 8% сопротивления
+	// Конец изменений
+	var/final_reduction = (1 - skill_resistance) / species.knock_down_reduction
+	return . * final_reduction
+
+/mob/living/carbon/human/GetKnockOutDuration(amount)
+	. = ..()
+	var/skill_resistance = skills ? (skills.get_skill_level(SKILL_ENDURANCE)-1)*0.08 : 0
+	// Начало изменений
+	if(m_intent == MOVE_INTENT_COMBAT)
+		skill_resistance += 0.08 // Добавляем 8% сопротивления
+	// Конец изменений
+	var/final_reduction = (1 - skill_resistance) / species.knock_out_reduction
+	return . * final_reduction
+
+/mob/living/carbon/human/GetDazeDuration(amount)
+	. = ..()
+	var/skill_resistance = skills ? (skills.get_skill_level(SKILL_ENDURANCE)-1)*0.08 : 0
+	// Начало изменений
+	if(m_intent == MOVE_INTENT_COMBAT)
+		skill_resistance += 0.08 // Добавляем 8% сопротивления
+	// Конец изменений
+	var/final_reduction = (1 - skill_resistance)
+	return . * final_reduction
 
 /mob/living/carbon/human/proc/is_bleeding()
 	for(var/datum/effects/bleeding/external/B in effects_list)

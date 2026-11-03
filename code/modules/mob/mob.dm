@@ -229,6 +229,8 @@
 			. = 2 + CONFIG_GET(number/run_speed)
 		if(MOVE_INTENT_WALK)
 			. = 7 + CONFIG_GET(number/walk_speed)
+		if(MOVE_INTENT_COMBAT)
+			. = (2 + CONFIG_GET(number/run_speed)) * 1.15
 	. += speed
 	move_delay = .
 
