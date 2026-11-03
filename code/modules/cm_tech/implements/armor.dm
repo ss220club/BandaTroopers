@@ -1,4 +1,3 @@
-
 /obj/item/clothing/accessory/health
 	name = "armor plate"
 	desc = "A metal trauma plate, able to absorb some blows."
@@ -8,144 +7,123 @@
 
 	slot = ACCESSORY_SLOT_ARMOR_C
 	w_class = SIZE_MEDIUM
-	/// is it *armor* or something different & irrelevant and always passes damage & doesnt take damage to itself?
+	/// Whether this accessory provides armor boost
 	var/is_armor = TRUE
-	var/armor_health = 10
-	var/armor_maxhealth = 10
-	var/take_slash_damage = TRUE
-	var/slash_durability_mult = 0.25
-	var/FF_projectile_durability_mult = 0.1
-	var/hostile_projectile_durability_mult = 1
 
-	var/list/health_states = list(
-		0,
-		50,
-		100
-	)
+	/// Reference to the suit this plate is attached to
+	var/obj/item/clothing/parent_suit
 
-	var/scrappable = TRUE
-	var/armor_hitsound = 'sound/effects/metalhit.ogg'
-	var/armor_shattersound = 'sound/effects/metal_shatter.ogg'
+// Global storage for armor plate data
+GLOBAL_LIST_EMPTY(armor_plate_data)
 
-/obj/item/clothing/accessory/health/update_icon()
-	for(var/health_state in health_states)
-		if(armor_health / armor_maxhealth * 100 <= health_state)
-			icon_state = "[base_icon_state]_[health_state]"
-			return
-
-/obj/item/clothing/accessory/health/proc/get_damage_status()
-	var/percentage = floor(armor_health / armor_maxhealth * 100)
-	switch(percentage)
-		if(0)
-			. = "It is broken."
-			if(scrappable)
-				. += " If you had two, you could repair it."
-		if(1 to 19)
-			. = "It is crumbling apart!"
-		if(20 to 49)
-			. = "It is seriously damaged."
-		if(50 to 79)
-			. = "It is moderately damaged."
-		if(80 to 99)
-			. = "It is slightly damaged."
-		else
-			. = "It is in pristine condition."
-
-/obj/item/clothing/accessory/health/get_examine_text(mob/user)
+/obj/item/clothing/accessory/health/Destroy()
+	if(parent_suit && is_armor)
+		remove_armor_boost(parent_suit)
+	parent_suit = null
 	. = ..()
-	. += "To use it, attach it to your uniform."
-	. += SPAN_NOTICE(get_damage_status())
-
-/obj/item/clothing/accessory/health/additional_examine_text()
-	return ". [get_damage_status()]"
 
 /obj/item/clothing/accessory/health/on_attached(obj/item/clothing/S, mob/living/carbon/human/user)
+	// Only one armor plate per suit
+	if(is_armor)
+		var/list/plates = get_attached_plates(S)
+		for(var/obj/item/clothing/accessory/health/A in plates)
+			if(A != src && A.is_armor)
+				to_chat(user, SPAN_WARNING("You cannot attach another armor plate, there is already one installed on this suit."))
+				return FALSE
+
 	. = ..()
 	if(.)
-		RegisterSignal(S, COMSIG_ITEM_EQUIPPED, PROC_REF(check_to_signal))
-		RegisterSignal(S, COMSIG_ITEM_DROPPED, PROC_REF(unassign_signals))
-
-		if(istype(user) && user.w_uniform == S)
-			check_to_signal(S, user, WEAR_BODY)
+		parent_suit = S
+		if(is_armor)
+			apply_armor_boost(S)
 
 /obj/item/clothing/accessory/health/on_removed(mob/living/user, obj/item/clothing/C)
 	. = ..()
 	if(.)
-		unassign_signals(C, user)
-		UnregisterSignal(C, list(
-			COMSIG_ITEM_EQUIPPED,
-			COMSIG_ITEM_DROPPED
-		))
+		if(is_armor)
+			remove_armor_boost(C)
+		parent_suit = null
 
-/obj/item/clothing/accessory/health/proc/check_to_signal(obj/item/clothing/S, mob/living/user, slot)
-	SIGNAL_HANDLER
+/// Helper: get stored original armor values for a suit
+/obj/item/clothing/accessory/health/proc/get_original_armor(obj/item/clothing/suit)
+	var/list/data = GLOB.armor_plate_data[suit]
+	if(data)
+		return data["original_armor"] // returns associative list with "bullet" and "bomb"
+	return null
 
-	if(slot == WEAR_BODY)
-		if(take_slash_damage)
-			RegisterSignal(user, COMSIG_HUMAN_XENO_ATTACK, PROC_REF(take_slash_damage))
-		RegisterSignal(user, COMSIG_HUMAN_BULLET_ACT, PROC_REF(take_bullet_damage))
-	else
-		unassign_signals(S, user)
+/// Helper: set stored original armor values for a suit
+/obj/item/clothing/accessory/health/proc/set_original_armor(obj/item/clothing/suit, bullet_value, bomb_value)
+	if(!GLOB.armor_plate_data[suit])
+		GLOB.armor_plate_data[suit] = list()
+	var/list/data = GLOB.armor_plate_data[suit]
+	data["original_armor"] = list("bullet" = bullet_value, "bomb" = bomb_value)
 
-/obj/item/clothing/accessory/health/proc/unassign_signals(obj/item/clothing/S, mob/living/user)
-	SIGNAL_HANDLER
+/// Helper: get list of attached plates for a suit
+/obj/item/clothing/accessory/health/proc/get_attached_plates(obj/item/clothing/suit)
+	var/list/data = GLOB.armor_plate_data[suit]
+	if(data && data["plates"])
+		return data["plates"]
+	return list()
 
-	UnregisterSignal(user, list(
-		COMSIG_HUMAN_XENO_ATTACK,
-		COMSIG_HUMAN_BULLET_ACT
-	))
+/// Helper: set list of attached plates for a suit
+/obj/item/clothing/accessory/health/proc/set_attached_plates(obj/item/clothing/suit, list/plates)
+	if(!GLOB.armor_plate_data[suit])
+		GLOB.armor_plate_data[suit] = list()
+	var/list/data = GLOB.armor_plate_data[suit]
+	data["plates"] = plates
 
-/obj/item/clothing/accessory/health/proc/take_bullet_damage(mob/living/carbon/human/user, damage, ammo_flags, obj/projectile/P)
-	SIGNAL_HANDLER
-	if(damage <= 0 || (ammo_flags & AMMO_IGNORE_ARMOR))
-		return
-	if(!is_armor)
-		return
-	var/damage_to_nullify = armor_health
-	var/final_proj_mult = FF_projectile_durability_mult
-
-	var/mob/living/carbon/human/pfirer = P.firer
-	if(user.faction != pfirer.faction)
-		final_proj_mult = hostile_projectile_durability_mult
-	armor_health = max(armor_health - damage*final_proj_mult, 0)
-
-	update_icon()
-	if(!armor_health && damage_to_nullify)
-		user.show_message(SPAN_WARNING("You feel [src] break apart."), null, null, null, CHAT_TYPE_ARMOR_DAMAGE)
-		playsound(user, armor_shattersound, 35, TRUE)
-
-	if(damage_to_nullify)
-		playsound(user, armor_hitsound, 25, TRUE)
-		P.play_hit_effect(user)
-		return COMPONENT_CANCEL_BULLET_ACT
-
-/obj/item/clothing/accessory/health/proc/take_slash_damage(mob/living/user, list/slashdata)
-	SIGNAL_HANDLER
-	if(!is_armor)
-		return
-	var/armor_damage = slashdata["n_damage"]
-	var/damage_to_nullify = armor_health
-	armor_health = max(armor_health - armor_damage*slash_durability_mult, 0)
-
-	update_icon()
-	if(!armor_health && damage_to_nullify)
-		user.show_message(SPAN_WARNING("You feel [src] break apart."), null, null, null, CHAT_TYPE_ARMOR_DAMAGE)
-		playsound(user, armor_shattersound, 50, TRUE)
-
-	if(damage_to_nullify)
-		slashdata["n_damage"] = 0
-		slashdata["slash_noise"] = armor_hitsound
-
-/obj/item/clothing/accessory/health/attackby(obj/item/clothing/accessory/health/I, mob/user)
-	if(!istype(I, src.type) || !scrappable || has_suit || I.has_suit || !is_armor)
+/// Applies armor boost to the suit: +10 bullet, +5 bomb
+/obj/item/clothing/accessory/health/proc/apply_armor_boost(obj/item/clothing/suit)
+	if(!suit)
 		return
 
-	if(!I.armor_health && !armor_health)
-		to_chat(user, SPAN_NOTICE("You use the shards of armor to cobble together an improvised ceramic plate."))
-		qdel(I)
-		qdel(src)
-		user.put_in_active_hand(new /obj/item/clothing/accessory/health/scrap())
+	// Store original armor values if not already stored
+	var/original = get_original_armor(suit)
+	if(original == null)
+		var/original_bullet = suit.armor_bullet
+		var/original_bomb = suit.armor_bomb // may be null or 0 if not defined
+		set_original_armor(suit, original_bullet, original_bomb)
 
+	var/list/attached_plates = get_attached_plates(suit)
+	if(!(src in attached_plates))
+		attached_plates += src
+		set_attached_plates(suit, attached_plates)
+
+	update_suit_armor(suit)
+
+/// Recalculates suit armor based on number of attached plates (each gives +10 bullet, +5 bomb)
+/obj/item/clothing/accessory/health/proc/update_suit_armor(obj/item/clothing/suit)
+	var/list/original_data = get_original_armor(suit)
+	var/original_bullet = original_data ? original_data["bullet"] : suit.armor_bullet
+	var/original_bomb = original_data ? original_data["bomb"] : (suit.armor_bomb || 0)
+
+	var/plate_count = length(get_attached_plates(suit))
+	var/new_bullet = original_bullet + (plate_count * 10)
+	var/new_bomb = original_bomb + (plate_count * 10)
+
+	suit.armor_bullet = new_bullet
+	suit.armor_bomb = new_bomb
+
+/// Removes armor boost from the suit
+/obj/item/clothing/accessory/health/proc/remove_armor_boost(obj/item/clothing/suit)
+	if(!suit)
+		return
+	var/list/attached_plates = get_attached_plates(suit)
+	if(attached_plates)
+		attached_plates -= src
+		if(length(attached_plates) == 0)
+			// Restore original values
+			var/list/original_data = get_original_armor(suit)
+			if(original_data)
+				suit.armor_bullet = original_data["bullet"]
+				suit.armor_bomb = original_data["bomb"]
+			// Clean up global data
+			GLOB.armor_plate_data -= suit
+		else
+			set_attached_plates(suit, attached_plates)
+			update_suit_armor(suit)
+
+// ==================== CONCRETE PLATE TYPES ====================
 
 /obj/item/clothing/accessory/health/ceramic_plate
 	name = "ceramic plate"
@@ -153,89 +131,39 @@
 	icon_state = "ceramic2_100"
 	base_icon_state = "ceramic2"
 
-	take_slash_damage = FALSE
-	scrappable = FALSE
-	FF_projectile_durability_mult = 0.3
-
-	armor_health = 100
-	armor_maxhealth = 100
-
-	armor_shattersound = 'sound/effects/ceramic_shatter.ogg'
-
-/obj/item/clothing/accessory/health/ceramic_plate/take_bullet_damage(mob/living/user, damage, ammo_flags)
-	if(ammo_flags & AMMO_ACIDIC)
-		return
-
-	return ..()
-
-/obj/item/clothing/accessory/health/ceramic_plate/take_slash_damage(mob/living/user, list/slashdata)
-	return
-
 /obj/item/clothing/accessory/health/ceramic_plate/marine
 	name = "ASAPP armor plate"
 	desc = "Advanced Small Arms Protective Plate is a modular clip-on armor plate, designed to provide additional protection for USCMC combat personell, gives you extremely good protection against any bullet types, stops full metal jacket, armor piercing and even HEAP rounds."
-	// SS220 EDIT - START
-	icon_state = "ceramic2_100"
-	base_icon_state = "ceramic2"
-	// SS220 EDIT - END
-	overlay_state = "armor_plate_100"
+	icon_state = "armor_plate_100"
+	base_icon_state = "armor_plate"
 	slot = ACCESSORY_SLOT_PLATE
-	armor_health = 300
-	armor_maxhealth = 300
 
 /obj/item/clothing/accessory/health/ceramic_plate/twe
 	name = "HASP armor plate"
 	desc = "Hyper Advanced Shield Plate is a modular clip-on armor plate, designed to provide additional protection for RMC combat personell, gives you extremely good protection against any bullet types, stops full metal jacket, armor piercing and even HEAP rounds. This plate includes titanium and can stop even super sonic rounds."
-	icon_state = "regular2_100"
-	base_icon_state = "regular2"
+	icon_state = "rmc_armor_plate_100"
+	base_icon_state = "rmc_armor_plate"
 	slot = ACCESSORY_SLOT_PLATE2
-	armor_health = 350
-	armor_maxhealth = 350
 
 /obj/item/clothing/accessory/health/ceramic_plate/twe/wy
 	desc = "Hyper Advanced Shield Plate is a modular clip-on armor plate, designed to provide additional protection for RMC combat personell, though this one has been painted white for service with Weyland Yutani's elite tactical teams. gives you extremely good protection against any bullet types, stops full metal jacket, armor piercing and even HEAP rounds. This plate includes titanium and can stop even super sonic rounds."
 	icon_state = "pmc_armor_plate_100"
-	overlay_state = "pmc_armor_plate_100"
 	base_icon_state = "pmc_armor_plate"
 
 /obj/item/clothing/accessory/health/ceramic_plate/upp
 	name = "TNAP armor plate"
 	desc = "Titanium Nanocrystalline Alloy Plate is a modular clip-on armor plate, designed to provide additional protection for UPP combat personell, gives you extremely good protection against any bullet types, stops full metal jacket, armor piercing and even HEAP rounds. This plate can stop almost any firearm rounds and have highest protection."
-	icon_state = "ceramic2_100"
-	base_icon_state = "ceramic2"
-	overlay_state = "armor_plate_100"
+	icon_state = "upp_armor_plate_100"
+	base_icon_state = "upp_armor_plate"
 	slot = ACCESSORY_SLOT_PLATE3
-	armor_health = 400
-	armor_maxhealth = 400
 
 /obj/item/clothing/accessory/health/scrap
 	name = "scrap metal"
 	desc = "A weak armor plate, only able to protect from a little bit of damage. Perhaps that will be enough."
 	icon_state = "scrap_100"
 	base_icon_state = "scrap"
-	health_states = list(
-		0,
-		100,
-	)
 
-	scrappable = FALSE
-
-	armor_health = 7.5
-	armor_maxhealth = 7.5
-
-/obj/item/clothing/accessory/health/scrap/on_removed(mob/living/user, obj/item/clothing/C)
-	. = ..()
-	if(. && !armor_health)
-		qdel(src)
-
-/obj/item/clothing/accessory/health/scrap/take_bullet_damage(mob/living/user, damage, ammo_flags)
-	if(ammo_flags & AMMO_ACIDIC)
-		return
-
-	return ..()
-
-/obj/item/clothing/accessory/health/scrap/take_slash_damage(mob/living/user, list/slashdata)
-	return
+// ==================== RESEARCH PLATES (no armor boost) ====================
 
 /obj/item/clothing/accessory/health/research_plate
 	name = "experimental uniform attachment"
@@ -437,7 +365,6 @@
 	var/mob/living/carbon/human/wearer
 	var/used = FALSE
 
-
 /obj/item/clothing/accessory/health/research_plate/anti_decay/Destroy()
 	. = ..()
 	wearer = null
@@ -478,9 +405,3 @@
 	UnregisterSignal(wearer, COMSIG_HUMAN_REVIVED)
 	to_chat(wearer, SPAN_NOTICE("[icon2html(src, viewers(src))] \The <b>[src]</b> beeps: Chemical preservatives reserves depleted, replace the [src]"))
 	wearer.revive_grace_period = 5 MINUTES
-
-
-
-
-
-
