@@ -132,7 +132,7 @@ endmap
 map binhai_supply_station
 endmap
 
-map lv671
+map badayaga_ground
 endmap
 
 map oil_depot
