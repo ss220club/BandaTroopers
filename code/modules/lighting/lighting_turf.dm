@@ -14,6 +14,7 @@
 	//consider dynamic lights
 	for(var/atom/movable/lighting_mask/mask as anything in hybrid_lights_affecting)
 		mask.queue_mask_update()
+	reconsider_directional_lights() // SS220 EDIT: notify geometry-only watchers behind partial blockers too.
 
 // Used to get a scaled lumcount.
 /turf/proc/get_lumcount(minlum = 0, maxlum = 1)
@@ -42,10 +43,14 @@
 		totallums = 1
 
 	for(var/atom/movable/lighting_mask/mask as anything in hybrid_lights_affecting)
+		if(mask.radius <= 0) // SS220 EDIT: inactive masks cannot contribute or divide by their radius.
+			continue
 		if(mask.blend_mode == BLEND_ADD)
-			totallums += LIGHT_POWER_ESTIMATION(mask.alpha, mask.radius, get_dist(src, get_turf(mask.attached_atom)))
+			// totallums += LIGHT_POWER_ESTIMATION(mask.alpha, mask.radius, get_dist(src, get_turf(mask.attached_atom)))
+			totallums += LIGHT_POWER_ESTIMATION(mask.alpha, mask.radius, get_dist(src, get_turf(mask.attached_atom))) * mask.turf_light_factor(src) // SS220 EDIT: cone/halo factor.
 		else
-			totallums -= LIGHT_POWER_ESTIMATION(mask.alpha, mask.radius, get_dist(src, get_turf(mask.attached_atom)))
+			// totallums -= LIGHT_POWER_ESTIMATION(mask.alpha, mask.radius, get_dist(src, get_turf(mask.attached_atom)))
+			totallums -= LIGHT_POWER_ESTIMATION(mask.alpha, mask.radius, get_dist(src, get_turf(mask.attached_atom))) * mask.turf_light_factor(src) // SS220 EDIT: ordinary masks retain factor1.
 	return clamp(totallums, 0.0, 1.0)
 
 ///Proc to add movable sources of opacity on the turf and let it handle lighting code.
@@ -54,6 +59,7 @@
 	if(opacity)
 		return
 	recalculate_directional_opacity()
+	reconsider_directional_lights() // SS220 EDIT: a full cell and four borders can have identical opacity bits.
 
 
 ///Proc to remove movable sources of opacity on the turf and let it handle lighting code.
@@ -62,10 +68,12 @@
 	if(opacity) //Still opaque, no need to worry on updating.
 		return
 	recalculate_directional_opacity()
+	reconsider_directional_lights() // SS220 EDIT: blocker kind can change without changing the directional bitmask.
 
 
 ///Calculate on which directions this turfs block view.
-/turf/proc/recalculate_directional_opacity()
+// /turf/proc/recalculate_directional_opacity()
+/turf/proc/recalculate_directional_opacity(atom/movable/turning_source, new_dir) // SS220 EDIT: direction signals precede assignment.
 	. = directional_opacity
 	if(opacity)
 		directional_opacity = ALL_CARDINALS
@@ -75,9 +83,12 @@
 	directional_opacity = NONE
 	for(var/atom/movable/opacity_source as anything in opacity_sources)
 		if(opacity_source.flags_atom & ON_BORDER)
-			directional_opacity |= opacity_source.dir
+			// directional_opacity |= opacity_source.dir
+			directional_opacity |= (opacity_source == turning_source ? new_dir : opacity_source.dir) // SS220 EDIT: use pending border direction.
 		else //If fulltile and opaque, then the whole tile blocks view, no need to continue checking.
 			directional_opacity = ALL_CARDINALS
 			break
 	if(. != directional_opacity && (. == ALL_CARDINALS || directional_opacity == ALL_CARDINALS))
 		reconsider_lights() //The lighting system only cares whether the tile is fully concealed from all directions or not.
+	else if(. != directional_opacity) // SS220 EDIT: directional masks also care about partial borders.
+		reconsider_directional_lights()

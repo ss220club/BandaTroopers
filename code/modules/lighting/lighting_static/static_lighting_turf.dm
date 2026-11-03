@@ -44,6 +44,7 @@
 		overlays -= old_area.lighting_effect
 	if(new_area.lighting_effect)
 		overlays += new_area.lighting_effect
+	refresh_lighting_visibility() // SS220 EDIT: area transfer must release or inherit base visibility too.
 
 
 
@@ -61,4 +62,3 @@
 		lighting_corner_NW = new/datum/static_lighting_corner(src, NORTH|WEST)
 
 	lighting_corners_initialised = TRUE
-

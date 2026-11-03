@@ -266,6 +266,7 @@
 
 	user.client.pixel_x = x_off * pixels_per_tile
 	user.client.pixel_y = y_off * pixels_per_tile
+	user.client?.directional_light_camera_changed() // SS220 EDIT: tracking the scope changes aim even without mouse movement.
 
 /// Handler for when the vulture spotter scope moves
 /obj/structure/vulture_spotter_tripod/proc/on_vulture_move(datum/source)

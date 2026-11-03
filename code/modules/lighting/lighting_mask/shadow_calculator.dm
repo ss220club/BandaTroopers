@@ -95,9 +95,13 @@
 		for(var/turf/T as anything in affecting_turfs)
 			LAZYREMOVE(T?.hybrid_lights_affecting, src)
 			//The turf is no longer affected by any lights, make it non-luminous.
-			var/area/A = T.loc
-			if(T?.luminosity && !A.base_lighting_alpha)
-				T.luminosity -= 1
+			// SS220 EDIT - START: keep contributions until the new dependency set is known.
+			// var/area/A = T.loc
+			// if(T?.luminosity && !A.base_lighting_alpha)
+			//     T.luminosity -= 1
+			// if(T)
+			//     remove_turf_luminosity(T)
+			// SS220 EDIT - END
 
 	//Clear the list
 	LAZYCLEARLIST(affecting_turfs)
@@ -113,20 +117,26 @@
 	for(var/turf/thing in dview(range, get_turf(attached_atom))) //most expensive part of shadow code is this dview and group_atoms
 		link_turf_to_light(thing)
 		//The turf is now affected by our light, make it luminous
-		thing.luminosity += 1
+		// thing.luminosity += 1
+		add_turf_luminosity(thing) // SS220 EDIT: cone contribution, radial shadow dependencies retained.
+	// SS220 EDIT: geometry behind a custom border may be absent from native dview; never grant it light here.
+	for(var/turf/blocker_turf in shadow_geometry_candidates(affecting_turfs, our_turf, range))
 		//Dont consider shadows about our turf.
 		if(!is_on_closed_turf)
-			if(thing == our_turf)
+			if(blocker_turf == our_turf)
 				continue
-		if(thing.directional_opacity)
+		// if(thing.directional_opacity)
+		if(blocker_turf.directional_opacity && is_full_shadow_blocker(blocker_turf)) // SS220 EDIT: directional borders are separate edges, not full cells.
 			//At this point we no longer care about
 			//the atom itself, only the position values
-			COORD_LIST_ADD(opaque_atoms_in_view, thing.x, thing.y)
-			DEBUG_HIGHLIGHT(thing.x, thing.y, "#0000FF")
+			COORD_LIST_ADD(opaque_atoms_in_view, blocker_turf.x, blocker_turf.y)
+			DEBUG_HIGHLIGHT(blocker_turf.x, blocker_turf.y, "#0000FF")
 
 	//We are too small to consider shadows on, luminsoty has been considered at least.
-	if(radius < 2)
-		return
+	// if(radius < 2)
+	if(radius < 2 && can_skip_small_shadows()) // SS220 EDIT: short directional flashes still respect blockers.
+		prune_turf_luminosity() // SS220 EDIT: release only cells no longer reached by this source.
+		return TRUE // SS220 EDIT: report a completed calculation to the publication gate.
 
 	DO_SOMETHING_IF_DEBUGGING_SHADOWS(log_game("[TICK_USAGE_TO_MS(timer)]ms to process view([range], src)."))
 	DO_SOMETHING_IF_DEBUGGING_SHADOWS(var/temp_timer = TICK_USAGE)
@@ -203,7 +213,9 @@
 
 	DO_SOMETHING_IF_DEBUGGING_SHADOWS(var/overlay_apply_time = TICK_USAGE)
 
+	append_border_shadows(overlays_to_add) // SS220 EDIT: modular directional border geometry, native compositor.
 	overlays += overlays_to_add //batch appearance generation for free lag(tm)
+	prune_turf_luminosity() // SS220 EDIT: unchanged contributions survive geometry rebuilds.
 
 	DO_SOMETHING_IF_DEBUGGING_SHADOWS(overlay_apply_time = TICK_USAGE_TO_MS(overlay_apply_time))
 	DO_SOMETHING_IF_DEBUGGING_SHADOWS(log_game("total_coordgroup_time: [total_coordgroup_time]ms"))
@@ -217,6 +229,7 @@
 	DO_SOMETHING_IF_DEBUGGING_SHADOWS(log_game("overlays_add_time: [overlays_add_time]ms"))
 	DO_SOMETHING_IF_DEBUGGING_SHADOWS(log_game("overlay_apply_time: [overlay_apply_time]ms"))
 	DO_SOMETHING_IF_DEBUGGING_SHADOWS(log_game("[TICK_USAGE_TO_MS(timer)]ms to process total."))
+	return TRUE // SS220 EDIT: publish only complete geometry, including empty unobstructed scenes.
 
 
 /**

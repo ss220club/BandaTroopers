@@ -41,10 +41,12 @@
 		add_base_lighting()
 
 /area/proc/remove_base_lighting()
+	area_has_base_lighting = FALSE // SS220 EDIT: refresh turfs against the removed base contribution.
 	for(var/turf/T in src)
 		T.overlays -= lighting_effect
+		T.refresh_lighting_visibility() // SS220 EDIT: preserve static/hybrid light after removing area light.
 	QDEL_NULL(lighting_effect)
-	area_has_base_lighting = FALSE
+	// area_has_base_lighting = FALSE // SS220 EDIT: moved before the turf pass.
 
 /area/proc/add_base_lighting()
 	lighting_effect = mutable_appearance('icons/effects/alphacolors.dmi', "white")
@@ -53,7 +55,9 @@
 	lighting_effect.blend_mode = BLEND_ADD
 	lighting_effect.alpha = base_lighting_alpha
 	lighting_effect.color = base_lighting_color
+	area_has_base_lighting = TRUE // SS220 EDIT: compose the base contribution during the existing turf pass.
 	for(var/turf/T in src)
 		T.overlays += lighting_effect
-		T.luminosity = 1
-	area_has_base_lighting = TRUE
+		// T.luminosity = 1
+		T.refresh_lighting_visibility() // SS220 EDIT: native luminosity is an output, not a source count.
+	// area_has_base_lighting = TRUE // SS220 EDIT: moved before the turf pass.

@@ -10,6 +10,7 @@
 	if(!ismovable(target))
 		return ELEMENT_INCOMPATIBLE
 	RegisterSignal(target, COMSIG_MOVABLE_MOVED, PROC_REF(on_target_move))
+	RegisterSignal(target, COMSIG_ATOM_DIR_CHANGE, PROC_REF(on_directional_blocker_turn)) // SS220 EDIT: invalidate rotating opaque borders.
 	var/atom/movable/movable_target = target
 	if(!isturf(movable_target.loc))
 		return
@@ -20,6 +21,7 @@
 /datum/element/light_blocking/Detach(datum/target)
 	. = ..()
 	UnregisterSignal(target, list(COMSIG_MOVABLE_MOVED))
+	UnregisterSignal(target, COMSIG_ATOM_DIR_CHANGE) // SS220 EDIT: balance border rotation subscription.
 	var/atom/movable/movable_target = target
 	if(!isturf(movable_target.loc))
 		return

@@ -903,17 +903,19 @@ Defined in conflicts.dm of the #defines folder.
 		attached_gun.set_light_range(attached_gun.light_range + light_mod)
 		attached_gun.set_light_power(attached_gun.light_power + (light_mod * 0.5))
 		if(!(attached_gun.flags_gun_features & GUN_FLASHLIGHT_ON))
+			attached_gun.flags_gun_features |= GUN_FLASHLIGHT_ON // SS220 EDIT: publish mode before the immediate light-on signal.
 			attached_gun.set_light_on(TRUE)
 			light_on = TRUE
-			attached_gun.flags_gun_features |= GUN_FLASHLIGHT_ON
+			// attached_gun.flags_gun_features |= GUN_FLASHLIGHT_ON // SS220 EDIT: moved before set_light_on.
 
 	if(!toggle_on && light_on)
 		attached_gun.set_light_range(attached_gun.light_range - light_mod)
 		attached_gun.set_light_power(attached_gun.light_power - (light_mod * 0.5))
 		if(attached_gun.flags_gun_features & GUN_FLASHLIGHT_ON)
+			attached_gun.flags_gun_features &= ~GUN_FLASHLIGHT_ON // SS220 EDIT: publish mode before the light-off signal.
 			attached_gun.set_light_on(FALSE)
 			light_on = FALSE
-			attached_gun.flags_gun_features &= ~GUN_FLASHLIGHT_ON
+			// attached_gun.flags_gun_features &= ~GUN_FLASHLIGHT_ON // SS220 EDIT: moved before set_light_on.
 
 	if(attached_gun.flags_gun_features & GUN_FLASHLIGHT_ON)
 		icon_state += "-on"
@@ -1873,6 +1875,7 @@ Defined in conflicts.dm of the #defines folder.
 	else
 		scoper.client.pixel_x = 0
 		scoper.client.pixel_y = 0
+	scoper.client?.directional_light_camera_changed() // SS220 EDIT: camera offsets can change with a stationary cursor.
 
 /// Handler for when the user begins scoping
 /obj/item/attachable/vulture_scope/proc/on_scope()
@@ -1947,6 +1950,7 @@ Defined in conflicts.dm of the #defines folder.
 	if(scoper.client)
 		scoper.client.pixel_x = 0
 		scoper.client.pixel_y = 0
+		scoper.client?.directional_light_camera_changed() // SS220 EDIT: refresh the beam after restoring the camera.
 
 /// Handler for if the mob moves or changes look direction
 /obj/item/attachable/vulture_scope/proc/on_mob_move_look(mob/living/mover, actually_moving, direction, specific_direction)

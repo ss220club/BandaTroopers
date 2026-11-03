@@ -27,3 +27,4 @@
 #include "halo/_halo.dme"
 #include "cm_pve/_cm_pve.dme"
 #include "localization/_localization.dme"
+#include "directional_light/_directional_light.dme"

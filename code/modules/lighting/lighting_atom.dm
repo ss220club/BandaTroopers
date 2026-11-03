@@ -34,6 +34,13 @@
 
 	if(QDELETED(src))
 		return
+	// SS220 EDIT - START: the directional component owns this emitter's lifecycle.
+	if(directional_beam_enabled)
+		var/datum/component/directional_beam/beam = GetComponent(/datum/component/directional_beam)
+		beam?.wake()
+		beam?.sync_position()
+		return
+	// SS220 EDIT - END
 	if(light_system == STATIC_LIGHT)
 		static_update_light()
 		return
@@ -80,6 +87,7 @@
 	if(isnull(.))
 		return
 	recalculate_directional_opacity()
+	reconsider_directional_lights() // SS220 EDIT: full turf vs four borders can retain identical opacity bits.
 
 /atom/vv_edit_var(var_name, var_value)
 	switch(var_name)

@@ -102,7 +102,9 @@ SUBSYSTEM_DEF(lighting)
 	if(!init_tick_checks)
 		MC_SPLIT_TICK
 
-	while(updators_num > length(mask_queue))
+	// while(updators_num > length(mask_queue))
+	prioritize_directional_shadows() // SS220 EDIT: fair movement priority in the existing hybrid queue.
+	while(updators_num < length(mask_queue)) // SS220 EDIT: consume pending hybrid shadows instead of skipping the queue.
 		updators_num += 1
 
 		var/atom/movable/lighting_mask/mask_to_update = mask_queue[updators_num]

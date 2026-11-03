@@ -23,7 +23,8 @@
 		stack_trace("a lighting object was assigned to a turf that already had a lighting object!")
 
 	affected_turf.static_lighting_object = src
-	affected_turf.luminosity = 0
+	// affected_turf.luminosity = 0
+	affected_turf.set_static_light_visibility(FALSE) // SS220 EDIT: keep independent hybrid/base contributions.
 
 	needs_update = TRUE
 	SSlighting.objects_queue += src
@@ -34,7 +35,8 @@
 	SSlighting.objects_queue -= src
 	if (isturf(affected_turf))
 		affected_turf.static_lighting_object = null
-		affected_turf.luminosity = 1
+		// affected_turf.luminosity = 1
+		affected_turf.set_static_light_visibility(TRUE) // SS220 EDIT: no static overlay means native full visibility.
 		affected_turf.underlays -= current_underlay
 	affected_turf = null
 	return ..()
@@ -106,10 +108,11 @@
 
 		affected_turf.underlays += current_underlay
 
-	var/area/A = affected_turf.loc
-	//We are luminous
-	if(set_luminosity)
-		affected_turf.luminosity = set_luminosity
-	//We are not lit by static light OR dynamic light.
-	else if(!LAZYLEN(affected_turf.hybrid_lights_affecting) && !A.base_lighting_alpha)
-		affected_turf.luminosity = 0
+	// SS220 EDIT - START: subscriptions are not light contributions; compose visibility in the module.
+	// var/area/A = affected_turf.loc
+	// if(set_luminosity)
+	//     affected_turf.luminosity = set_luminosity
+	// else if(!LAZYLEN(affected_turf.hybrid_lights_affecting) && !A.base_lighting_alpha)
+	//     affected_turf.luminosity = 0
+	affected_turf.set_static_light_visibility(set_luminosity)
+	// SS220 EDIT - END

@@ -54,11 +54,15 @@
 	//Remove from affecting turfs
 	if(affecting_turfs)
 		for(var/turf/thing as anything in affecting_turfs)
-			var/area/A = thing.loc
 			LAZYREMOVE(thing.hybrid_lights_affecting, src)
-			if(!A.base_lighting_alpha)
-				thing.luminosity -= 1
+			// SS220 EDIT - START: per-mask balanced luminosity accounting.
+			// var/area/A = thing.loc
+			// if(!A.base_lighting_alpha)
+			//     thing.luminosity -= 1
+			remove_turf_luminosity(thing)
+			// SS220 EDIT - END
 		affecting_turfs = null
+	clear_turf_luminosity() // SS220 EDIT: release any remaining actual contributions exactly once.
 	//Cut the shadows. Since they are overlays they will be deleted when cut from overlays.
 	LAZYCLEARLIST(shadows)
 	mask_holder = null
@@ -138,6 +142,7 @@
 	else
 		alpha = ALPHA_TO_INTENSITY(-intensity)
 		blend_mode = BLEND_SUBTRACT
+	refresh_turf_luminosity() // SS220 EDIT: intensity/sign changes reconcile actual visibility contributions.
 
 ///The holder atom turned, spins the mask if it's needed
 /atom/movable/lighting_mask/proc/rotate_mask_on_holder_turn(new_direction)

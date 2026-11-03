@@ -127,7 +127,9 @@
 	)
 	pockets.max_storage_space = 8
 
-	light_holder = new(src)
+	// light_holder = new(src)
+	if(!directional_beam_enabled) // SS220 EDIT: a single body-facing beam replaces the circular/helper pair.
+		light_holder = new(src)
 
 /obj/item/clothing/suit/storage/marine/Destroy()
 	QDEL_NULL(light_holder)
@@ -193,10 +195,17 @@
 	set_light_on(toggle_on)
 	flags_marine_armor ^= ARMOR_LAMP_ON
 
-	light_holder.set_light_flags(LIGHT_ATTACHED)
-	light_holder.set_light_range(initial(light_range))
-	light_holder.set_light_power(initial(light_power))
-	light_holder.set_light_on(toggle_on)
+	// SS220 EDIT - START: migrated armor has no legacy helper emitter.
+	// light_holder.set_light_flags(LIGHT_ATTACHED)
+	// light_holder.set_light_range(initial(light_range))
+	// light_holder.set_light_power(initial(light_power))
+	// light_holder.set_light_on(toggle_on)
+	if(!directional_beam_enabled && light_holder)
+		light_holder.set_light_flags(LIGHT_ATTACHED)
+		light_holder.set_light_range(initial(light_range))
+		light_holder.set_light_power(initial(light_power))
+		light_holder.set_light_on(toggle_on)
+	// SS220 EDIT - END
 
 	if(!toggle_on)
 		playsound(src, 'sound/handling/click_2.ogg', 50, 1)
@@ -735,7 +744,9 @@
 		post_vendor_spawn_hook()
 	update_icon()
 
-	light_holder = new(src)
+	// light_holder = new(src)
+	if(!directional_beam_enabled) // SS220 EDIT: a single body-facing beam replaces the circular/helper pair.
+		light_holder = new(src)
 
 /obj/item/clothing/suit/marine/Destroy()
 	QDEL_NULL(light_holder)
@@ -820,10 +831,17 @@
 	set_light_on(toggle_on)
 	flags_marine_armor ^= ARMOR_LAMP_ON
 
-	light_holder.set_light_flags(LIGHT_ATTACHED)
-	light_holder.set_light_range(initial(light_range))
-	light_holder.set_light_power(initial(light_power))
-	light_holder.set_light_on(toggle_on)
+	// SS220 EDIT - START: migrated armor has no legacy helper emitter.
+	// light_holder.set_light_flags(LIGHT_ATTACHED)
+	// light_holder.set_light_range(initial(light_range))
+	// light_holder.set_light_power(initial(light_power))
+	// light_holder.set_light_on(toggle_on)
+	if(!directional_beam_enabled && light_holder)
+		light_holder.set_light_flags(LIGHT_ATTACHED)
+		light_holder.set_light_range(initial(light_range))
+		light_holder.set_light_power(initial(light_power))
+		light_holder.set_light_on(toggle_on)
+	// SS220 EDIT - END
 
 	if(!toggle_on)
 		playsound(src, 'sound/handling/click_2.ogg', 50, 1)

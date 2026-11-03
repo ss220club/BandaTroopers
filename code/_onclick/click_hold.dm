@@ -17,6 +17,7 @@
 	var/datum/entity/clan_player/clan_info
 
 /client/MouseDown(atom/A, turf/T, skin_ctl, params)
+	directional_light_track(A, T, skin_ctl, params) // SS220 EDIT: keep flashlight aim current during firing.
 	ignore_next_click = FALSE
 	if(!A)
 		return
@@ -57,6 +58,7 @@
 		Click(A, T, skin_ctl, params)
 
 /client/MouseUp(atom/A, turf/T, skin_ctl, params)
+	directional_light_track(A, T, skin_ctl, params) // SS220 EDIT: preserve final drag position.
 	if(!A)
 		return
 
@@ -74,6 +76,7 @@
 		SEND_SIGNAL(src, COMSIG_CLIENT_LMB_UP, A, params)
 
 /client/MouseDrag(atom/src_obj, atom/over_obj, turf/src_loc, turf/over_loc, src_ctl, over_ctl, params)
+	directional_light_track(over_obj, over_loc, over_ctl, params) // SS220 EDIT: aim while mouse buttons are held.
 	if(!over_obj)
 		return
 

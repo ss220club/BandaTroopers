@@ -618,7 +618,8 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 
 /obj/item/clothing/head/helmet/marine/unequipped(mob/user, slot)
 	. = ..()
-	if(pockets)
+	// if(pockets)
+	if(pockets && !directional_beam_enabled) // SS220 EDIT: migrated lamps stay on across equipment transitions.
 		for(var/obj/item/attachable/flashlight/F in pockets)
 			if(F.light_on)
 				F.activate_attachment(src, user, TRUE)
@@ -628,7 +629,8 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 /obj/item/clothing/head/helmet/marine/dropped(mob/living/carbon/human/mob)
 	if(camera)
 		camera.c_tag = "Unknown"
-	if(pockets)
+	// if(pockets)
+	if(pockets && !directional_beam_enabled) // SS220 EDIT: floor cone follows the item's direction instead of forced off.
 		for(var/obj/item/attachable/flashlight/F in pockets)
 			if(F.light_on)
 				F.activate_attachment(src, mob, TRUE)
@@ -1195,7 +1197,9 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 
 /obj/item/clothing/head/helmet/marine/veteran/pmc/enclosed/Initialize()
 	. = ..()
-	light_holder = new(src)
+	// light_holder = new(src)
+	if(!directional_beam_enabled) // SS220 EDIT: no second circular emitter beside the directional lamp.
+		light_holder = new(src)
 	update_icon()
 
 /obj/item/clothing/head/helmet/marine/veteran/pmc/enclosed/Destroy()
@@ -1221,11 +1225,19 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 	set_light_on(toggle_on)
 	flags_marine_helmet ^= ARMOR_LAMP_ON
 
-	light_holder.set_light_flags(LIGHT_ATTACHED)
-	light_holder.set_light_range(initial(light_range))
-	light_holder.set_light_power(initial(light_power))
-	light_holder.set_light_color(initial(light_color))
-	light_holder.set_light_on(toggle_on)
+	// SS220 EDIT - START: legacy helper is absent for directional helmets.
+	// light_holder.set_light_flags(LIGHT_ATTACHED)
+	// light_holder.set_light_range(initial(light_range))
+	// light_holder.set_light_power(initial(light_power))
+	// light_holder.set_light_color(initial(light_color))
+	// light_holder.set_light_on(toggle_on)
+	if(!directional_beam_enabled && light_holder)
+		light_holder.set_light_flags(LIGHT_ATTACHED)
+		light_holder.set_light_range(initial(light_range))
+		light_holder.set_light_power(initial(light_power))
+		light_holder.set_light_color(initial(light_color))
+		light_holder.set_light_on(toggle_on)
+	// SS220 EDIT - END
 
 	if(!toggle_on)
 		playsound(src, 'sound/handling/click_2.ogg', 50, 1)

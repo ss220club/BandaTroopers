@@ -110,8 +110,10 @@
 	return INITIALIZE_HINT_NORMAL
 
 /turf/Destroy(force)
+	release_directional_shadow_watchers() // SS220 EDIT: geometry subscriptions are separate from actual illumination.
 	if(hybrid_lights_affecting)
 		for(var/atom/movable/lighting_mask/mask as anything in hybrid_lights_affecting)
+			mask.remove_turf_luminosity(src) // SS220 EDIT: release every hybrid contribution before turf replacement.
 			LAZYREMOVE(mask.affecting_turfs, src)
 		hybrid_lights_affecting.Cut()
 
@@ -402,6 +404,7 @@
 
 	//static lighting
 	var/old_lighting_object = static_lighting_object
+	var/old_static_light_visible = static_light_visible // SS220 EDIT: preserve static state independently of dynamic sources.
 	var/old_lighting_corner_NE = lighting_corner_NE
 	var/old_lighting_corner_SE = lighting_corner_SE
 	var/old_lighting_corner_SW = lighting_corner_SW
@@ -427,6 +430,7 @@
 
 	W.hybrid_lights_affecting = old_hybrid_lights_affecting
 	W.dynamic_lumcount = dynamic_lumcount
+	W.static_light_visible = old_static_light_visible // SS220 EDIT: new turf inherits the existing static overlay state.
 
 	lighting_corner_NE = old_lighting_corner_NE
 	lighting_corner_SE = old_lighting_corner_SE
@@ -446,6 +450,8 @@
 	if(W.hybrid_lights_affecting)
 		for(var/atom/movable/lighting_mask/mask as anything in W.hybrid_lights_affecting)
 			LAZYADD(mask.affecting_turfs, W)
+			mask.add_turf_luminosity(W) // SS220 EDIT: restore all hybrid contributions, including same-opacity replacement.
+	W.refresh_lighting_visibility() // SS220 EDIT: also restore static/base visibility when no hybrid source is present.
 
 	if(W.directional_opacity != old_directional_opacity)
 		W.reconsider_lights()

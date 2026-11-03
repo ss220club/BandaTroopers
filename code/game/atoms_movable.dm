@@ -88,6 +88,11 @@
 
 	if(opacity)
 		AddElement(/datum/element/light_blocking)
+	// SS220 EDIT - START: directional lamps own a single modular emitter.
+	if(directional_beam_enabled)
+		AddComponent(/datum/component/directional_beam)
+		return
+	// SS220 EDIT - END
 	if(light_system == MOVABLE_LIGHT)
 		AddComponent(/datum/component/overlay_lighting)
 	if(light_system == DIRECTIONAL_LIGHT)
