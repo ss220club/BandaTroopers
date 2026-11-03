@@ -8,6 +8,50 @@
 /obj/item/ammo_box/magazine/mk1/ap,
 /turf/open/floor/corsat/plate,
 /area/firefly/squad_theta)
+"ac" = (
+/obj/effect/decal/warning_stripes{
+	icon_state = "E";
+	pixel_x = 1
+	},
+/obj/effect/decal/warning_stripes{
+	icon_state = "N";
+	pixel_y = 1
+	},
+/obj/structure/machinery/landinglight/ds1/delaytwo{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame25,
+/area/firefly/hangar)
+"ad" = (
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame17,
+/area/firefly/hangar)
+"ae" = (
+/obj/structure/machinery/landinglight/ds1{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame9,
+/area/firefly/hangar)
+"af" = (
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"ag" = (
+/obj/structure/machinery/landinglight/ds1/delaytwo{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"ah" = (
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
 "ai" = (
 /obj/structure/barricade/handrail{
 	dir = 1;
@@ -19,10 +63,37 @@
 	},
 /turf/open/floor/corsat/squares,
 /area/firefly/hangar)
+"aj" = (
+/obj/structure/machinery/landinglight/ds1{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"ak" = (
+/obj/structure/machinery/landinglight/ds1/delaytwo{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame9,
+/area/firefly/hangar)
+"al" = (
+/obj/structure/machinery/landinglight/ds1{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame25,
+/area/firefly/hangar)
+"am" = (
+/turf/open/floor/hangar_airlock/inner/frame35,
+/area/firefly/hangar)
 "an" = (
 /obj/structure/machinery/sleep_console,
 /turf/open/floor/almayer/test_floor4,
 /area/firefly/medical)
+"ao" = (
+/turf/open/floor/hangar_airlock/inner/frame25,
+/area/firefly/hangar)
+"ap" = (
+/turf/open/floor/hangar_airlock/inner/frame17,
+/area/firefly/hangar)
 "aq" = (
 /obj/structure/machinery/camera/autoname/golden_arrow{
 	dir = 4;
@@ -35,6 +106,18 @@
 /obj/effect/landmark/start/marine/leader/pmc,
 /turf/open/floor/almayer/cargo_arrow,
 /area/firefly/cryo_cell)
+"ar" = (
+/turf/open/floor/hangar_airlock/inner/frame9,
+/area/firefly/hangar)
+"as" = (
+/turf/open/floor/hangar_airlock/inner/frame40,
+/area/firefly/hangar)
+"at" = (
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 1
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
 "au" = (
 /obj/structure/platform_decoration/kutjevo{
 	dir = 8
@@ -44,13 +127,96 @@
 	},
 /turf/open/floor/corsat/squares,
 /area/firefly/hangar)
+"av" = (
+/turf/open/floor/hangar_airlock/inner/frame30,
+/area/firefly/hangar)
+"aw" = (
+/turf/open/floor/hangar_airlock/inner/frame21,
+/area/firefly/hangar)
+"ax" = (
+/turf/open/floor/hangar_airlock/inner/frame13,
+/area/firefly/hangar)
+"ay" = (
+/turf/open/floor/hangar_airlock/inner/frame33,
+/area/firefly/hangar)
 "az" = (
 /obj/structure/machinery/door/airlock/multi_tile/elevator/freight,
 /turf/open/shuttle/elevator/grating,
 /area/firefly/supply)
+"aA" = (
+/obj/structure/machinery/landinglight/ds1/delayone,
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"aB" = (
+/obj/structure/machinery/landinglight/ds1/delaytwo{
+	dir = 1
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"aC" = (
+/obj/structure/machinery/landinglight/ds1,
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"aD" = (
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 1
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"aE" = (
+/obj/structure/machinery/landinglight/ds1/delaythree,
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"aF" = (
+/obj/structure/machinery/landinglight/ds1{
+	dir = 1
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"aG" = (
+/turf/open/floor/hangar_airlock/inner/frame11,
+/area/firefly/hangar)
+"aH" = (
+/obj/structure/machinery/landinglight/ds1/delaytwo,
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"aI" = (
+/turf/open/floor/hangar_airlock/inner/frame5,
+/area/firefly/hangar)
+"aJ" = (
+/obj/docking_port/stationary/marine_dropship/golden_arrow_hangar{
+	roundstart_template = /datum/map_template/shuttle/pmc
+	},
+/turf/open/floor/hangar_airlock/inner/frame5,
+/area/firefly/hangar)
+"aK" = (
+/obj/effect/decal/warning_stripes{
+	icon_state = "W"
+	},
+/obj/effect/decal/warning_stripes{
+	icon_state = "N";
+	pixel_y = 1
+	},
+/obj/structure/machinery/landinglight/ds1{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame25,
+/area/firefly/hangar)
 "aL" = (
 /obj/item/tool/warning_cone,
 /turf/open/floor/corsat/squares,
+/area/firefly/hangar)
+"aM" = (
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame17,
+/area/firefly/hangar)
+"aN" = (
+/obj/structure/machinery/landinglight/ds1/delaytwo{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame9,
 /area/firefly/hangar)
 "aO" = (
 /obj/item/device/radio/intercom{
@@ -60,6 +226,30 @@
 	},
 /turf/open/floor/wood/ship,
 /area/firefly/ptsgt)
+"aP" = (
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"aQ" = (
+/obj/structure/machinery/landinglight/ds1{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"aR" = (
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"aS" = (
+/obj/structure/machinery/landinglight/ds1/delaytwo{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
 "aT" = (
 /obj/structure/machinery/power/apc/almayer{
 	dir = 1
@@ -83,20 +273,109 @@
 	},
 /turf/open/floor/corsat/squares,
 /area/firefly/hangar)
+"aX" = (
+/obj/structure/barricade/handrail{
+	dir = 4
+	},
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
 "aY" = (
 /obj/structure/machinery/light/double,
 /turf/open/floor/corsat/squares,
 /area/firefly/squad_theta)
+"aZ" = (
+/obj/structure/machinery/landinglight/ds1{
+	dir = 8
+	},
+/obj/structure/barricade/handrail{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"ba" = (
+/obj/structure/barricade/handrail{
+	dir = 4
+	},
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"bb" = (
+/obj/structure/barricade/handrail{
+	dir = 4
+	},
+/obj/structure/machinery/landinglight/ds1/delaytwo{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/firefly/hangar)
+"bc" = (
+/obj/structure/machinery/landinglight/ds1{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame9,
+/area/firefly/hangar)
 "bd" = (
 /obj/structure/machinery/power/apc/almayer{
 	dir = 1
 	},
 /turf/open/floor/corsat/green/north,
 /area/firefly/medical)
+"be" = (
+/obj/structure/machinery/landinglight/ds1/delaytwo{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame25,
+/area/firefly/hangar)
+"bf" = (
+/obj/docking_port/stationary/marine_dropship/airlock/inner{
+	name = "Hangar Bay";
+	id = "golden arrow lz";
+	roundstart_template = /datum/map_template/shuttle/pmc;
+	dropship_airlock_id = "ship-firefly-42-80"
+	},
+/turf/open/floor/hangar_airlock/inner/frame5,
+/area/firefly/hangar)
+"bg" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 1;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame49,
+/area/space)
+"bh" = (
+/turf/open/floor/hangar_airlock/outer/frame49,
+/area/space)
+"bi" = (
+/obj/effect/hangar_airlock/half_tile{
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame49,
+/area/space)
 "bj" = (
 /obj/structure/cargo_container/wy/right,
 /turf/open/floor/corsat/squares,
 /area/firefly/hangar)
+"bk" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 1;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame43,
+/area/space)
+"bl" = (
+/turf/open/floor/hangar_airlock/outer/frame43,
+/area/space)
+"bm" = (
+/obj/effect/hangar_airlock/half_tile{
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame43,
+/area/space)
 "bn" = (
 /obj/structure/machinery/camera/autoname/golden_arrow{
 	dir = 4;
@@ -112,11 +391,97 @@
 /obj/effect/landmark/start/marine/pmc,
 /turf/open/floor/almayer/cargo_arrow,
 /area/firefly/cryo_cell)
+"bo" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 1;
+	layer = 2
+	},
+/obj/effect/hangar_airlock/half_tile{
+	dir = 1;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame35,
+/area/space)
 "bp" = (
 /turf/closed/shuttle/elevator{
 	dir = 10
 	},
 /area/firefly/supply)
+"bq" = (
+/turf/open/floor/hangar_airlock/outer/frame35,
+/area/space)
+"br" = (
+/obj/effect/hangar_airlock/half_tile{
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame35,
+/area/space)
+"bs" = (
+/turf/open/floor/hangar_airlock/outer/frame27,
+/area/space)
+"bt" = (
+/turf/open/floor/hangar_airlock/outer/frame19,
+/area/space)
+"bu" = (
+/turf/open/floor/hangar_airlock/outer/frame11,
+/area/space)
+"bv" = (
+/turf/open/floor/hangar_airlock/outer/frame4,
+/area/space)
+"bw" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 4;
+	layer = 2
+	},
+/obj/effect/hangar_airlock/half_tile{
+	dir = 4;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame35,
+/area/space)
+"bx" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 8;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame35,
+/area/space)
+"by" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 4;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame43,
+/area/space)
+"bz" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 8;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame43,
+/area/space)
+"bA" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 4;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame49,
+/area/space)
+"bB" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 8;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame49,
+/area/space)
+"bC" = (
+/obj/docking_port/stationary/marine_dropship/airlock/outer{
+	name = "Hangar Bay approach";
+	id = "golden arrow lz-outer";
+	dropship_airlock_id = "ship-firefly-42-80"
+	},
+/turf/open/floor/hangar_airlock/outer/frame4,
+/area/space)
 "bG" = (
 /obj/structure/largecrate/random/secure,
 /turf/open/floor/corsat/squares,
@@ -4664,25 +5029,25 @@ gR
 gR
 gR
 gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
+bi
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bg
 gR
 gR
 gR
@@ -4815,27 +5180,27 @@ gR
 gR
 gR
 gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
+bm
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bk
 gR
 gR
 "}
@@ -4966,29 +5331,29 @@ gR
 gR
 gR
 gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
+br
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bo
 gR
 "}
 (12,1,1) = {"
@@ -5118,29 +5483,29 @@ gR
 gR
 gR
 gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
 gR
 "}
 (13,1,1) = {"
@@ -5270,29 +5635,29 @@ gR
 gR
 gR
 gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
 gR
 "}
 (14,1,1) = {"
@@ -5422,29 +5787,29 @@ gR
 gR
 gR
 gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
 gR
 "}
 (15,1,1) = {"
@@ -5574,29 +5939,29 @@ gR
 gR
 gR
 gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
+bv
+bv
+bv
+bv
+bv
+bv
+bv
+bv
+bv
+bv
+bv
+bC
+bv
+bv
+bv
+bv
+bv
+bv
+bv
+bv
+bv
+bv
+bv
 gR
 "}
 (16,1,1) = {"
@@ -5726,29 +6091,29 @@ gR
 gR
 gR
 gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
+bu
 gR
 "}
 (17,1,1) = {"
@@ -5878,29 +6243,29 @@ gR
 gR
 gR
 gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
+bt
 gR
 "}
 (18,1,1) = {"
@@ -6030,29 +6395,29 @@ gR
 gR
 gR
 gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
+bs
 gR
 "}
 (19,1,1) = {"
@@ -6182,29 +6547,29 @@ gR
 gR
 gR
 gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
+bx
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bq
+bw
 gR
 "}
 (20,1,1) = {"
@@ -6335,27 +6700,27 @@ gR
 gR
 gR
 gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
+bz
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+bl
+by
 gR
 gR
 "}
@@ -6488,25 +6853,25 @@ gR
 gR
 gR
 gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
-gR
+bB
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bh
+bA
 gR
 gR
 gR
@@ -8701,25 +9066,25 @@ Bu
 zG
 MJ
 xX
-wB
-Px
-ii
-Kw
-wB
-Px
-ii
-Kw
-wB
-Px
-ii
-Kw
-wB
-Px
-ii
-Kw
-wB
-Px
-Pb
+al
+ad
+ak
+af
+aj
+ah
+ag
+af
+aj
+ah
+ag
+af
+aj
+ah
+ag
+af
+ae
+ad
+ac
 Hx
 hr
 Bu
@@ -8852,27 +9217,27 @@ Bu
 Bu
 Bu
 Wh
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
+am
+ao
+ap
+ar
+as
+as
+as
+as
+as
+as
+as
+as
+as
+as
+as
+as
+as
+ar
+ap
+ao
+am
 rD
 Bu
 Bu
@@ -9003,29 +9368,29 @@ YT
 Bu
 Bu
 Bu
-CM
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-vU
+aA
+as
+av
+aw
+ax
+ay
+ay
+ay
+ay
+ay
+ay
+ay
+ay
+ay
+ay
+ay
+ay
+ay
+ax
+aw
+av
+as
+at
 Bu
 Bu
 Bu
@@ -9155,29 +9520,29 @@ Bu
 Bu
 Bu
 Xv
-BF
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-bL
+aC
+as
+av
+aw
+ax
+ao
+ao
+ao
+ao
+ao
+ao
+ao
+ao
+ao
+ao
+ao
+ao
+ao
+ax
+aw
+av
+as
+aB
 Bu
 Bu
 Bu
@@ -9307,29 +9672,29 @@ fl
 Bu
 Bu
 rK
-sb
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-hw
+aE
+as
+av
+aw
+ax
+ap
+ap
+ap
+ap
+ap
+ap
+ap
+ap
+ap
+ap
+ap
+ap
+ap
+ax
+aw
+av
+as
+aD
 Bu
 Bu
 Bu
@@ -9459,29 +9824,29 @@ Bu
 Bu
 fl
 Uw
-Wh
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-rD
+aH
+as
+av
+aw
+ax
+aG
+aG
+aG
+aG
+aG
+aG
+aG
+aG
+aG
+aG
+aG
+aG
+aG
+ax
+aw
+av
+as
+aF
 Bu
 Bu
 Bu
@@ -9611,29 +9976,29 @@ Bu
 Bu
 fl
 Ns
-CM
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-Mf
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-vU
+aA
+as
+av
+aw
+ax
+aI
+aI
+aI
+aI
+aI
+aI
+bf
+aI
+aI
+aI
+aI
+aI
+aI
+ax
+aw
+av
+as
+at
 Bu
 Bu
 Bu
@@ -9763,29 +10128,29 @@ yl
 Bu
 Bu
 rK
-BF
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-bL
+aC
+as
+av
+aw
+ax
+aG
+aG
+aG
+aG
+aG
+aG
+aG
+aG
+aG
+aG
+aG
+aG
+aG
+ax
+aw
+av
+as
+aB
 Bu
 Bu
 Bu
@@ -9915,29 +10280,29 @@ KB
 Bu
 Bu
 JP
-sb
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-hw
+aE
+as
+av
+aw
+ax
+ap
+ap
+ap
+ap
+ap
+ap
+ap
+ap
+ap
+ap
+ap
+ap
+ap
+ax
+aw
+av
+as
+aD
 Bu
 Bu
 Bu
@@ -10067,29 +10432,29 @@ RE
 iU
 Bu
 Bu
-Wh
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-rD
+aH
+as
+av
+aw
+ax
+ao
+ao
+ao
+ao
+ao
+ao
+ao
+ao
+ao
+ao
+ao
+ao
+ao
+ax
+aw
+av
+as
+aF
 Bu
 Bu
 Bu
@@ -10219,29 +10584,29 @@ gc
 Bu
 Bu
 Bu
-CM
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-vU
+aA
+as
+av
+aw
+ax
+ay
+ay
+ay
+ay
+ay
+ay
+ay
+ay
+ay
+ay
+ay
+ay
+ay
+ax
+aw
+av
+as
+at
 Bu
 Bu
 Bu
@@ -10372,27 +10737,27 @@ iU
 Bu
 Bu
 BF
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
-yV
+am
+ao
+ap
+ar
+as
+as
+as
+as
+as
+as
+as
+as
+as
+as
+as
+as
+as
+ar
+ap
+ao
+am
 bL
 Bu
 Bu
@@ -10525,25 +10890,25 @@ Bu
 mV
 iy
 nz
-kj
-he
-yM
-gJ
-Ag
-OI
-Ek
-gJ
-kj
-he
-yM
-Jt
-kj
-he
-yM
-Jt
-kj
-he
-Au
+be
+aM
+bc
+aX
+bb
+ba
+aZ
+aX
+aS
+aR
+aQ
+aP
+aS
+aR
+aQ
+aP
+aN
+aM
+aK
 iH
 hB
 Bu

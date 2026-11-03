@@ -435,6 +435,12 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 
 			if(!islist(gear))
 				gear = list()
+			var/list/valid_gear = list()
+			for(var/gear_name in gear)
+				if(istype(GLOB.gear_datums_by_name[gear_name], /datum/gear))
+					valid_gear += gear_name
+			if(length(valid_gear) != length(gear))
+				gear = valid_gear
 
 			if(length(gear))
 				dat += "<br>"
@@ -1144,7 +1150,8 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 					if(length(gear))
 						for(var/gear_name in gear)
 							G = GLOB.gear_datums_by_name[gear_name]
-							total_cost += G?.cost
+							if(istype(G))
+								total_cost += G.cost
 
 					G = GLOB.gear_datums_by_category[gear_category][choice]
 					total_cost += G.cost

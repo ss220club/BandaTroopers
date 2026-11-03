@@ -1,0 +1,22 @@
+#if defined(UNIT_TESTS) || defined(SPACEMAN_DMM)
+/datum/unit_test/shuttle_flight_airlock/Run()
+	var/checked = 0
+	for(var/obj/docking_port/stationary/marine_dropship/airlock/inner/inner_port in GLOB.dropship_airlock_docking_ports)
+		if(!inner_port.linked_outer)
+			return Fail("[inner_port] has no outer port", __FILE__, __LINE__)
+		if(inner_port.linked_outer.linked_inner != inner_port)
+			return Fail("[inner_port] has an incorrect outer link", __FILE__, __LINE__)
+		if(inner_port.linked_outer.dropship_airlock_id != inner_port.dropship_airlock_id)
+			return Fail("[inner_port] has mismatched identifiers", __FILE__, __LINE__)
+		if(inner_port.roundstart_template && !inner_port.get_docked())
+			return Fail("[inner_port] has no loaded dropship", __FILE__, __LINE__)
+		if(inner_port.id == "dock" || inner_port.dropship_airlock_id == "generic")
+			return Fail("[inner_port] lost its mapped identifiers", __FILE__, __LINE__)
+		checked++
+	if(SSmapping.configs[SHIP_MAP].map_name == "SSV Laituri" && checked != 1)
+		return Fail("Laituri must have one linked hangar airlock", __FILE__, __LINE__)
+	if(!("close" in icon_states('modular/shuttle_flight/icons/effects/airlock_inner.dmi')))
+		return Fail("Inner airlock close sprite is missing", __FILE__, __LINE__)
+	if(!("close" in icon_states('modular/shuttle_flight/icons/effects/airlock_outer.dmi')))
+		return Fail("Outer airlock close sprite is missing", __FILE__, __LINE__)
+#endif

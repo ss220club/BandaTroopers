@@ -6,6 +6,9 @@
 #include "_helpers220/_helpers220.dme"
 #include "_signals220/_signals220.dme"
 #include "_singletons/_singletons.dme"
+#include "pixel_shift/_pixel_shift.dme"
+#include "tank_roof/_tank_roof.dme"
+#include "shuttle_flight/_shuttle_flight.dme"
 
 #include "admin/_admin.dme"
 #include "speech_filter/_speech_filter.dme"
@@ -22,6 +25,7 @@
 #include "xeno_races/_xeno_races.dme"
 #include "trees/_trees.dme"
 #include "rto_support/_rto_support.dme"
+#include "radio_packs/_radio_packs.dme"
 #include "cyrillic_fixes/_cyrillic_fixes.dme"
 #include "translations/_translations.dme"
 #include "halo/_halo.dme"

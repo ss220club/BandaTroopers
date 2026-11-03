@@ -425,6 +425,12 @@
 				sound = pick('sound/weapons/gun_rmcdmr_1.ogg','sound/weapons/gun_rmcdmr_2.ogg','sound/weapons/gun_rmcdmr_3.ogg')
 			if("gun_jam_rack")
 				sound = pick('sound/weapons/handling/gun_jam_rack_1.ogg', 'sound/weapons/handling/gun_jam_rack_2.ogg', 'sound/weapons/handling/gun_jam_rack_3.ogg')
+			// SS220 EDIT - START
+			if("gun_ag80")
+				sound = pick('sound/weapons/gun_ag80_1.ogg', 'sound/weapons/gun_ag80_2.ogg')
+			if("gun_mg82")
+				sound = pick('modular/cm_pve/sound/weapons/gun_mg82_1.ogg', 'modular/cm_pve/sound/weapons/gun_mg82_2.ogg', 'modular/cm_pve/sound/weapons/gun_mg82_3.ogg')
+			// SS220 EDIT - END
 			//A:CM gun sounds
 			if("gun_shotgun_tactical")
 				sound = pick('sound/weapons/gun_shotgun_tactical_1.ogg','sound/weapons/gun_shotgun_tactical_2.ogg','sound/weapons/gun_shotgun_tactical_3.ogg','sound/weapons/gun_shotgun_tactical_4.ogg')

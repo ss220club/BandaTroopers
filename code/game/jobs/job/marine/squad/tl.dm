@@ -162,6 +162,7 @@
 	job = /datum/job/marine/tl/ai/rmc2ic
 
 #undef SSGT_VARIANT
+#undef SRSGT_VARIANT
 #undef SGT_VARIANT
 #undef CPL_VARIANT
 #undef JSGT_VARIANT

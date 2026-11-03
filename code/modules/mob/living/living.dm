@@ -617,6 +617,7 @@
 //		body_position_pixel_y_offset = PIXEL_Y_OFFSET_LYING
 
 	// CM legacy canmove procs, replace this with signal procs probably
+	unpixel_shift() // SS220 EDIT
 	drop_l_hand()
 	drop_r_hand()
 	add_temp_pass_flags(PASS_MOB_THRU)

@@ -96,7 +96,8 @@ GLOBAL_LIST_INIT(platoon_to_jobs, list(/datum/squad/marine/alpha = list(/datum/j
 		/datum/job/marine/medic/ai/upp = JOB_SQUAD_MEDIC,\
 		/datum/job/marine/tl/ai/upp = JOB_SQUAD_TEAM_LEADER,\
 		/datum/job/marine/smartgunner/ai/upp = JOB_SQUAD_SMARTGUN,\
-		/datum/job/marine/standard/ai/upp = JOB_SQUAD_MARINE),\
+		/datum/job/marine/standard/ai/upp = JOB_SQUAD_MARINE,\
+		/* SS220 EDIT - START*/ /datum/job/marine/standard/ai/rto/upp = JOB_SQUAD_RTO /* SS220 EDIT - END */),\
 		/datum/squad/marine/pmc = list(/datum/job/marine/tl/ai/pmc = JOB_SQUAD_TEAM_LEADER,\
 		/datum/job/marine/standard/ai/pmc =  JOB_SQUAD_MARINE,\
 		/datum/job/marine/medic/ai/pmc = JOB_SQUAD_MEDIC,\

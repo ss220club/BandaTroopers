@@ -1,0 +1,5 @@
+#include "code/tank_roof.dm"
+
+#ifdef UNIT_TESTS
+#include "code/tank_roof_test.dm"
+#endif

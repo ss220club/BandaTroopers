@@ -108,6 +108,9 @@
 	if(!direct)
 		return FALSE
 
+	if(mob.handle_pixel_shift_movement(direct)) // SS220 EDIT
+		return FALSE
+
 	if(mob.control_object)
 		next_movement = world.time + MINIMAL_MOVEMENT_INTERVAL
 		return Move_object(direct)

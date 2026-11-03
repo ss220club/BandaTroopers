@@ -29,6 +29,7 @@
 	var/automated_lz_id
 	var/automated_delay
 	var/automated_timer
+	var/automated_target_id
 	var/datum/cas_signal/paradrop_signal
 
 
@@ -92,6 +93,7 @@
 	if(!(MODE_HAS_TOGGLEABLE_FLAG(MODE_DISABLE_INTRO_BLURB)))
 		if(SSticker?.mode && !(SSticker.mode.flags_round_type & MODE_DS_LANDED)) //Launching on first drop.
 			SSticker.mode.ds_first_drop(src)
+	start_flight_effects()
 
 /obj/docking_port/mobile/marine_dropship/beforeShuttleMove(turf/newT, rotation, move_mode, obj/docking_port/mobile/moving_dock)
 	. = ..()
@@ -335,31 +337,59 @@
 	hijack?.check()
 
 /obj/docking_port/mobile/marine_dropship/proc/automated_check()
+	if(!automated_hangar_id || !automated_lz_id || !automated_delay || automated_timer || automated_target_id || mode != SHUTTLE_IDLE)
+		return
 	var/obj/structure/machinery/computer/shuttle/dropship/flight/root_console = getControlConsole()
-	if(root_console.dropship_control_lost)
+	if(!root_console || root_console.dropship_control_lost)
 		automated_hangar_id = null
 		automated_lz_id = null
 		automated_delay = null
 		return
-
-	if(automated_hangar_id && automated_lz_id && automated_delay && !automated_timer && mode == SHUTTLE_IDLE)
-		ai_silent_announcement("The [name] will automatically depart in [automated_delay * 0.1] seconds")
-		automated_timer = addtimer(CALLBACK(src, PROC_REF(automated_fly)), automated_delay, TIMER_STOPPABLE)
+	var/obj/docking_port/stationary/current_dock = get_docked()
+	if(istype(current_dock, /obj/docking_port/stationary/marine_dropship/airlock/outer))
+		return
+	if(istype(current_dock, /obj/docking_port/stationary/marine_dropship/airlock/inner))
+		var/obj/docking_port/stationary/marine_dropship/airlock/inner/inner_dock = current_dock
+		if(inner_dock.processing)
+			return
+	ai_silent_announcement("The [name] will automatically depart in [automated_delay * 0.1] seconds")
+	automated_timer = addtimer(CALLBACK(src, PROC_REF(automated_fly)), automated_delay, TIMER_STOPPABLE)
 
 /obj/docking_port/mobile/marine_dropship/proc/automated_fly()
 	automated_timer = null
-	if(!automated_hangar_id || !automated_lz_id || !automated_delay)
+	if(!automated_hangar_id || !automated_lz_id || !automated_delay || mode != SHUTTLE_IDLE)
 		return
 	var/obj/structure/machinery/computer/shuttle/dropship/flight/root_console = getControlConsole()
-	if(root_console.dropship_control_lost)
+	if(!root_console || root_console.dropship_control_lost)
 		return
-	if(mode != SHUTTLE_IDLE)
+	var/obj/docking_port/stationary/current_dock = get_docked()
+	if(!current_dock)
 		return
-	var/obj/docking_port/stationary/dockedAt = get_docked()
-	if(dockedAt.id == automated_hangar_id)
-		SSshuttle.moveShuttle(id, automated_lz_id, TRUE)
-	else
-		SSshuttle.moveShuttle(id, automated_hangar_id, TRUE)
+	if(istype(current_dock, /obj/docking_port/stationary/marine_dropship/airlock/inner))
+		var/obj/docking_port/stationary/marine_dropship/airlock/inner/inner_dock = current_dock
+		if(inner_dock.processing || inner_dock.linked_outer?.id != automated_hangar_id || inner_dock.linked_outer.get_docked())
+			return
+		automated_target_id = automated_lz_id
+		var/list/result = inner_dock.automatic_process("down")
+		if(result && !result["successful"])
+			automated_target_id = null
+		return
+	if(istype(current_dock, /obj/docking_port/stationary/marine_dropship/airlock/outer))
+		return
+	var/target_id
+	if(automated_target_id && current_dock == assigned_transit)
+		target_id = automated_target_id
+		automated_target_id = null
+	else if(current_dock.id == automated_lz_id)
+		var/obj/docking_port/stationary/marine_dropship/airlock/outer/return_dock = SSshuttle.getDock(automated_hangar_id)
+		if(istype(return_dock) && (!return_dock.linked_inner || return_dock.get_docked() || return_dock.linked_inner.get_docked() || return_dock.linked_inner.processing))
+			return
+		target_id = automated_hangar_id
+	else if(current_dock.id == automated_hangar_id)
+		target_id = automated_lz_id
+	if(!target_id)
+		return
+	SSshuttle.moveShuttle(id, target_id, TRUE)
 	ai_silent_announcement("Dropship '[name]' departing.")
 
 /obj/docking_port/stationary/marine_dropship

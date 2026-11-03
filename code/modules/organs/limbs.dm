@@ -1522,7 +1522,7 @@ treat_grafted var tells it to apply to grafted but unsalved wounds, for burn kit
 	. += eyes
 
 	if(lip_style && (species && species.flags & HAS_LIPS))
-		var/image/lips = image('icons/mob/humans/onmob/human_face.dmi', "paint_[lip_style]", layer = -BODYPARTS_LAYER)
+		var/image/lips = image(get_loadout_face_icon(lip_style), "paint_[lip_style]", layer = -BODYPARTS_LAYER)
 		. += lips
 
 /obj/limb/head/get_limb_icon_key()

@@ -1552,6 +1552,7 @@
 	desc = "A set of arm plates designed for the 6B90 armor system."
 	icon_state = "upp_arms"
 	item_state = "upp_arms"
+	flags_atom = NO_SNOW_TYPE
 	slot = ACCESSORY_SLOT_DECORARMOR
 
 /obj/item/clothing/accessory/upppads/Initialize(mapload)

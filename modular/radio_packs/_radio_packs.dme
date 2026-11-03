@@ -1,0 +1,5 @@
+#include "code/radio_packs.dm"
+
+#ifdef UNIT_TESTS
+#include "code/radio_packs_test.dm"
+#endif

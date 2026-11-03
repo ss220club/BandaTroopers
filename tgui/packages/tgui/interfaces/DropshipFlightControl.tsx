@@ -42,6 +42,15 @@ interface AutomatedControl {
   ground_lz: null | string;
 }
 
+interface AirlockData {
+  processing: boolean;
+  playing_alarm: boolean;
+  inner_open: boolean;
+  lowered: boolean;
+  outer_open: boolean;
+  clamps_disengaged: boolean;
+}
+
 type ShuttleRef = {
   name: string;
   id: string;
@@ -60,6 +69,7 @@ interface DropshipNavigationProps extends NavigationProps {
   playing_launch_announcement_alarm: boolean;
   can_change_shuttle: 0 | 1;
   alternative_shuttles: Array<ShuttleRef>;
+  airlock_data: AirlockData | null;
 }
 
 const DropshipDoorControl = () => {
@@ -159,6 +169,67 @@ const DropshipDoorControl = () => {
               </Stack.Item>
             );
           })}
+      </Stack>
+    </Section>
+  );
+};
+
+
+const DropshipAirlockControl = () => {
+  const { data, act } = useBackend<DropshipNavigationProps>();
+  const airlock = data.airlock_data;
+  if (!airlock) {
+    return null;
+  }
+  const disabled = airlock.processing;
+  return (
+    <Section m="0" mb="6px" title="Hangar Airlock Control">
+      <Stack vertical>
+        <Stack.Item>
+          <Button
+            disabled={disabled}
+            icon={airlock.playing_alarm ? 'bell-slash' : 'bell'}
+            onClick={() => act('airlock-control', { step: 'alarm' })}
+          >
+            {airlock.playing_alarm ? 'Silence Alarm' : 'Sound Alarm'}
+          </Button>
+        </Stack.Item>
+        <Stack.Item>
+          <Button
+            disabled={disabled}
+            icon={airlock.inner_open ? 'door-closed' : 'door-open'}
+            onClick={() => act('airlock-control', { step: 'inner' })}
+          >
+            {airlock.inner_open ? 'Close Inner Airlock' : 'Open Inner Airlock'}
+          </Button>
+        </Stack.Item>
+        <Stack.Item>
+          <Button
+            disabled={disabled}
+            icon={airlock.lowered ? 'arrow-up' : 'arrow-down'}
+            onClick={() => act('airlock-control', { step: 'height' })}
+          >
+            {airlock.lowered ? 'Raise Dropship' : 'Lower Dropship'}
+          </Button>
+        </Stack.Item>
+        <Stack.Item>
+          <Button
+            disabled={disabled}
+            icon={airlock.outer_open ? 'door-closed' : 'door-open'}
+            onClick={() => act('airlock-control', { step: 'outer' })}
+          >
+            {airlock.outer_open ? 'Close Outer Airlock' : 'Open Outer Airlock'}
+          </Button>
+        </Stack.Item>
+        <Stack.Item>
+          <Button
+            disabled={disabled}
+            icon={airlock.clamps_disengaged ? 'link' : 'link-slash'}
+            onClick={() => act('airlock-control', { step: 'clamps' })}
+          >
+            {airlock.clamps_disengaged ? 'Engage Clamps' : 'Disengage Clamps'}
+          </Button>
+        </Stack.Item>
       </Stack>
     </Section>
   );
@@ -482,6 +553,7 @@ const RenderScreen = () => {
         <DropshipDestinationSelection />
       )}
       {data.door_status.length > 0 && <DropshipDoorControl />}
+      {data.airlock_data && <DropshipAirlockControl />}
       {data.alternative_shuttles.length === 0 && <LaunchAnnouncementAlarm />}
     </Section>
   );
