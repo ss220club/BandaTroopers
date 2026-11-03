@@ -50,6 +50,24 @@
 // Factor of how fast mob nutrition decreases
 #define HUNGER_FACTOR 0.05
 
+// ---- Body type effects ----
+// Строки совпадают с /datum/body_type/*.name
+#define BODY_TYPE_NO_MUSCLES "No Muscles"
+#define BODY_TYPE_LEAN       "Lean"
+#define BODY_TYPE_RIPPED     "Ripped"
+
+// Множители расхода калорий (nutrition per tick)
+#define HUNGER_MULT_NO_MUSCLES 0.50
+#define HUNGER_MULT_LEAN       1.00
+#define HUNGER_MULT_RIPPED     2.00
+
+// Множители скорости передвижения (>1 = медленнее, <1 = быстрее)
+#define SPEED_MULT_NO_MUSCLES  1.00
+#define SPEED_MULT_LEAN        1.05
+#define SPEED_MULT_RIPPED      0.90
+
+#define BODY_TYPE_CQC_BONUS    1
+
 // Nutrition levels
 #define NUTRITION_MAX 550
 #define NUTRITION_HIGH 540
@@ -87,7 +105,6 @@
 #define CHEM_EFFECT_HYPER_THROTTLE (1<<2) //universal understand but not speech
 #define CHEM_EFFECT_ORGAN_STASIS (1<<3) //peri stabiliser
 #define CHEM_EFFECT_NO_BLEEDING (1<<4) //replacement for quickclot
-
 
 //Blood plasma
 #define PLASMA_PURPLE "purpleplasma"
@@ -226,7 +243,6 @@
 #define PROPERTY_UNKNOWN "unknown" //just has an OD effect
 #define PROPERTY_HEMOSITIC "hemositic"
 #define PROPERTY_REVITALIZING "revitalizing"
-
 
 //Property rarity
 

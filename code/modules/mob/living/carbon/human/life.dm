@@ -1,5 +1,68 @@
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:32
 
+/// Сколько бонуса к CQC уже выдано телосложением. 0 — ничего.
+/mob/living/carbon/human/var/body_type_cqc_bonus_applied = 0
+
+/// Телосложение == Ripped?
+/// Работает независимо от того, хранится ли body_type как строка,
+/// как путь /datum/body_type/ripped или как сам датум.
+/mob/living/carbon/human/proc/is_body_type_ripped()
+	if(istext(body_type))
+		return (lowertext(body_type) == "ripped")
+	if(istype(body_type, /datum/body_type/ripped))
+		return TRUE
+	if(ispath(body_type, /datum/body_type/ripped))
+		return TRUE
+	return FALSE
+
+/// Телосложение == No Muscles?
+/mob/living/carbon/human/proc/is_body_type_no_muscles()
+	if(istext(body_type))
+		return (lowertext(body_type) == "no muscles")
+	if(istype(body_type, /datum/body_type/twig))
+		return TRUE
+	if(ispath(body_type, /datum/body_type/twig))
+		return TRUE
+	return FALSE
+
+/// Множитель расхода калорий от телосложения.
+/mob/living/carbon/human/proc/get_body_type_hunger_mult()
+	if(is_body_type_ripped())
+		return HUNGER_MULT_RIPPED
+	if(is_body_type_no_muscles())
+		return HUNGER_MULT_NO_MUSCLES
+	return HUNGER_MULT_LEAN
+
+/// Множитель скорости передвижения от телосложения.
+/// >1 = медленнее, <1 = быстрее.
+/mob/living/carbon/human/proc/get_body_type_speed_mult()
+	if(is_body_type_ripped())
+		return SPEED_MULT_RIPPED
+	if(is_body_type_no_muscles())
+		return SPEED_MULT_NO_MUSCLES
+	return SPEED_MULT_LEAN
+
+/// Применяет бонус к CQC от телосложения. Реактивно: если body_type
+/// сменился, старый бонус снимается, новый выдаётся.
+/// Вызывается из Life() — там skills уже точно есть.
+/mob/living/carbon/human/proc/apply_body_type_skill_bonuses()
+	if(!skills)
+		return // скиллы ещё не выданы — попробуем на следующем тике
+
+	var/want_bonus = is_body_type_ripped() ? BODY_TYPE_CQC_BONUS : 0
+	if(want_bonus == body_type_cqc_bonus_applied)
+		return // ничего не поменялось
+
+	// Снимаем прошлый бонус
+	if(body_type_cqc_bonus_applied > 0)
+		skills.decrement_skill(SKILL_CQC, body_type_cqc_bonus_applied)
+
+	// Выдаём новый
+	if(want_bonus > 0)
+		skills.increment_skill(SKILL_CQC, want_bonus)
+
+	body_type_cqc_bonus_applied = want_bonus
+
 /mob/living/carbon/human/Life(delta_time)
 	if(monkeyizing)
 		return
@@ -17,6 +80,8 @@
 		return
 
 	..()
+
+	apply_body_type_skill_bonuses()
 
 	blinded = FALSE
 	fire_alert = 0 //Reset this here, because both breathe() and handle_environment() have a chance to set it.

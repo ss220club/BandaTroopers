@@ -26,8 +26,7 @@
 	if(!(species.flags & IS_SYNTHETIC))
 		//Nutrition decrease
 		if(nutrition > 0 && stat != 2)
-			nutrition = max (0, nutrition - HUNGER_FACTOR)
-
+			nutrition = max(0, nutrition - HUNGER_FACTOR * get_body_type_hunger_mult())
 
 		handle_trace_chems()
 

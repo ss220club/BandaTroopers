@@ -97,6 +97,13 @@
 		. += HUMAN_SLOWED_AMOUNT
 
 	. += CONFIG_GET(number/human_delay)
+
+	// Body type: телосложение влияет на итоговую скорость.
+	// Ripped — медленнее, No Muscles — быстрее, Lean — базово.
+	// Применяется ко ВСЕМУ финальному значению, включая броню, боль,
+	// реагенты и т.д., но после всех аддитивных модификаторов.
+	. *= get_body_type_speed_mult()
+
 	var/list/movedata = list("move_delay" = .)
 	SEND_SIGNAL(src, COMSIG_HUMAN_POST_MOVE_DELAY, movedata)
 	move_delay = movedata["move_delay"]

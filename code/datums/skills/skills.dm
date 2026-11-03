@@ -237,11 +237,17 @@
 		return
 	return S.set_skill(new_level, owner)
 
+/// Increments a skill by `increment`, capped at `cap`.
+/// If `cap` is omitted, it defaults to the skill's own `max_skill_level`.
 /datum/skills/proc/increment_skill(skill, increment, cap)
 	var/datum/skill/S = skills[skill]
-	if(!S || skillcheck(owner, skill, cap))
+	if(!S)
 		return
-	return S.set_skill(min(cap,S.skill_level+increment), owner)
+	if(isnull(cap))
+		cap = S.max_skill_level
+	if(S.skill_level >= cap)
+		return
+	return S.set_skill(min(cap, S.skill_level + increment), owner)
 
 /datum/skills/proc/decrement_skill(skill, increment)
 	var/datum/skill/S = skills[skill]
