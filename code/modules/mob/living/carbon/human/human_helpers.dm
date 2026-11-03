@@ -480,8 +480,10 @@ f
 	temp_drop_inv_item(to_move, 0)
 	equip_to_slot_or_del(to_move, WEAR_R_HAND)
 	equip_to_slot_or_del(new /obj/item/parachute(src), WEAR_BACK)
-	if(get_ai_brain()) //have to do this again because slot swapping fucks with hAI
-		get_ai_brain().appraise_inventory(armor = TRUE)
+	var/datum/human_ai_context/context = get_ai_brain()?.create_context()
+	var/datum/human_ai_module/inventory/inventory = context?.get_module(/datum/human_ai_module/inventory)
+	inventory?.appraise_inventory(armor = TRUE) //have to do this again because slot swapping fucks with hAI
+	qdel(context)
 
 /mob/living/carbon/human/proc/strip_all()
 	for(var/obj/item/current_item in src)
@@ -489,8 +491,10 @@ f
 		if(istype(current_item, /obj/item/card/id/))
 			continue
 		qdel(current_item)
-	if(get_ai_brain())
-		get_ai_brain().appraise_inventory(armor = TRUE)
+	var/datum/human_ai_context/context = get_ai_brain()?.create_context()
+	var/datum/human_ai_module/inventory/inventory = context?.get_module(/datum/human_ai_module/inventory)
+	inventory?.appraise_inventory(armor = TRUE)
+	qdel(context)
 
 /mob/living/carbon/human/proc/strip_weapons()
 	var/obj/item_storage
@@ -519,5 +523,7 @@ f
 
 		if(istype(hand_item, /obj/item/explosive))
 			qdel(hand_item)
-	if(get_ai_brain())
-		get_ai_brain().appraise_inventory(armor = TRUE)
+	var/datum/human_ai_context/context = get_ai_brain()?.create_context()
+	var/datum/human_ai_module/inventory/inventory = context?.get_module(/datum/human_ai_module/inventory)
+	inventory?.appraise_inventory(armor = TRUE)
+	qdel(context)

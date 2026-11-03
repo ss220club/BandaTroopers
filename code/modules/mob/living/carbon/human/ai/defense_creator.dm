@@ -74,9 +74,12 @@
 	var/list/data = list()
 
 	data["defenses"] = lazy_ui_data
-	// SS220 EDIT - START
-	// Expose HALO and split Covenant factions to the shared defense creator UI.
-	data["valid_factions"] = list(
+	data["valid_factions"] = get_valid_factions()
+
+	return data
+
+/datum/human_defense_creator_menu/proc/get_valid_factions()
+	var/list/valid_factions = list(
 		FACTION_MARINE,
 		FACTION_UA_REBEL,
 		FACTION_UPP,
@@ -86,22 +89,10 @@
 		FACTION_TWE,
 		FACTION_TWE_REBEL,
 		FACTION_MERCENARY,
-		FACTION_COVENANT,
-		FACTION_UNSC,
-		FACTION_INSURGENT,
-		FACTION_ONI,
-		FACTION_UNSCN,
-		FACTION_UEG_POLICE,
-		FACTION_UNGGOY,
-		FACTION_SANGHEILI,
-		FACTION_KIGYAR,
-		FACTION_SPECOPS_SANGHEILI,
-		FACTION_SPECOPS_UNGGOY,
-		FACTION_SPECOPS_KIGYAR
 	)
-	// SS220 EDIT - END
-
-	return data
+	if(hascall(src, "modular_append_human_defense_creator_factions"))
+		call(src, "modular_append_human_defense_creator_factions")(valid_factions)
+	return valid_factions
 
 /datum/human_defense_creator_menu/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()

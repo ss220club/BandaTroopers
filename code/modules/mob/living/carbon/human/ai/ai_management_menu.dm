@@ -26,34 +26,44 @@
 
 	data["ai_humans"] = list()
 	for(var/datum/human_ai_brain/brain as anything in GLOB.human_ai_brains)
-		if(!brain.tied_human || brain.tied_human.stat == DEAD)
+		var/datum/human_ai_context/context = brain.create_context()
+		var/datum/human_tied_controller/controller = context.controller
+		if(!controller || controller.is_dead())
+			qdel(context)
 			continue
 
 		data["ai_humans"] += list(list(
-			"name" = brain.tied_human.real_name,
-			"health" = FLOOR((brain.tied_human.health / brain.tied_human.maxHealth * 100), 1),
-			"loc" = list(brain.tied_human.x, brain.tied_human.y, brain.tied_human.z),
-			"faction" = brain.tied_human.faction,
-			"ref" = REF(brain.tied_human),
+			"name" = controller.get_real_name(),
+			"health" = FLOOR((controller.get_health_ratio() * 100), 1),
+			"loc" = list(controller.get_x(), controller.get_y(), controller.get_z()),
+			"faction" = controller.get_faction(),
+			"ref" = controller.get_ref(),
 			"brain_ref" = REF(brain),
-			"in_combat" = brain.in_combat,
-			"squad_id" = brain.squad_id,
-			"can_assign_squad" = brain.can_assign_squad,
+			"in_combat" = brain.is_in_combat(),
+			"squad_id" = brain.get_squad_id(),
+			"can_assign_squad" = brain.can_assign_squad(),
 		))
+		qdel(context)
 
 	data["squads"] = list()
 	for(var/datum/human_ai_squad/squad as anything in SShuman_ai.squads)
 		var/list/name_list = list()
 		for(var/datum/human_ai_brain/brain as anything in squad.ai_in_squad)
-			name_list += brain.tied_human?.real_name
+			var/datum/human_ai_context/context = brain.create_context()
+			name_list += context.controller?.get_real_name()
+			qdel(context)
+		var/datum/human_ai_context/leader_context
+		if(squad.squad_leader)
+			leader_context = squad.squad_leader.create_context()
 		data["squads"] += list(list(
 			"id" = squad.id,
 			"name" = squad.name,
 			"members" = english_list(name_list),
 			"order" = squad.current_order?.name,
 			"ref" = REF(squad),
-			"squad_leader" = squad.squad_leader?.tied_human?.real_name,
+			"squad_leader" = leader_context?.controller?.get_real_name(),
 		))
+		qdel(leader_context)
 
 	return data
 
@@ -108,7 +118,7 @@
 				return
 
 			var/datum/human_ai_brain/brain = locate(params["ai"])
-			if(!brain.can_assign_squad)
+			if(!brain?.can_assign_squad())
 				return TRUE
 
 			brain.add_to_squad(params["squad"])
@@ -171,9 +181,17 @@
 		qdel(ai_human)
 		return
 
-	ai_human.face_dir(mob.dir)
-	ai_human.forceMove(get_turf(mob))
-	ai_human.get_ai_brain().appraise_inventory(armor = TRUE)
+	var/datum/human_ai_brain/ai_brain = ai_human.get_ai_brain()
+	var/datum/human_ai_context/context = ai_brain.create_context()
+	var/datum/human_tied_controller/controller = context.controller
+	if(!controller)
+		qdel(context)
+		qdel(ai_human)
+		return
+	controller.face_dir(mob.dir)
+	controller.forceMove(get_turf(mob))
+	ai_brain.appraise_inventory(armor = TRUE)
+	qdel(context)
 
 /client/proc/make_human_ai(mob/living/carbon/human/mob in GLOB.human_mob_list)
 	set name = "Make AI"
@@ -194,7 +212,7 @@
 		return
 
 	mob.AddComponent(/datum/component/human_ai)
-	mob.get_ai_brain().appraise_inventory()
+	mob.get_ai_brain()?.appraise_inventory()
 
 	message_admins("[key_name_admin(usr)] assigned an AI component to [mob.real_name].")
 

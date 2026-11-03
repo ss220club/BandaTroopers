@@ -4,6 +4,8 @@
 	var/datum/human_ai_brain/ai_brain
 	/// Ref to the owning human
 	var/mob/living/carbon/human/ai_human
+	/// Guards the component-owned Human AI lifetime teardown path.
+	var/teardown_started = FALSE
 	var/static/human_ai_has_spawned = FALSE
 
 /datum/component/human_ai/Initialize()
@@ -27,11 +29,19 @@
 	if(hascall(ai_brain, "modular_finalize_human_ai_brain"))
 		call(ai_brain, "modular_finalize_human_ai_brain")(ai_human)
 	GLOB.ai_humans += ai_human
-	ai_human.mob_flags |= AI_CONTROLLED
+	ai_brain.tied_controller.mark_ai_controlled()
 
 /datum/component/human_ai/Destroy(force, silent)
-	handle_qdel()
-	return ..()
+	var/clear_ai_flag = ai_human && !QDELETED(ai_human)
+	. = ..()
+	teardown_ai(clear_ai_flag)
+
+/datum/component/human_ai/RemoveComponent()
+	if(!parent)
+		return
+
+	. = ..()
+	teardown_ai(TRUE)
 
 /datum/component/human_ai/RegisterWithParent()
 	..()
@@ -47,12 +57,21 @@
 /datum/component/human_ai/proc/handle_qdel()
 	SIGNAL_HANDLER
 
+	teardown_ai(FALSE)
+
+/datum/component/human_ai/proc/teardown_ai(clear_ai_flag = FALSE)
+	if(teardown_started)
+		return FALSE
+
+	teardown_started = TRUE
 	GLOB.ai_humans -= ai_human
-	ai_brain?.tied_human = null
+	ai_brain?.shutdown_runtime()
+	ai_brain?.tied_controller?.detach(clear_ai_flag)
 	QDEL_NULL(ai_brain)
 	ai_human = null
+	return TRUE
 
 /datum/component/human_ai/proc/on_species_set(datum/source, new_species)
 	SIGNAL_HANDLER
 
-	ai_human.mob_flags |= AI_CONTROLLED
+	ai_brain?.tied_controller?.mark_ai_controlled()

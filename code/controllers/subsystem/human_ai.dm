@@ -25,6 +25,11 @@ SUBSYSTEM_DEF(human_ai)
 	/// If TRUE, then combat has been initiated at some point ever. Used for optimization reasons
 	var/combat_ever_started = FALSE
 
+	/// Patient -> human AI brain currently allowed to treat that patient.
+	var/list/treatment_reservations = list()
+	/// Patient -> world.time when the treatment reservation expires.
+	var/list/treatment_reservation_expiries = list()
+
 /datum/controller/subsystem/human_ai/Initialize()
 	for(var/faction_path in subtypesof(/datum/human_ai_faction))
 		var/datum/human_ai_faction/faction_obj = new faction_path
@@ -61,7 +66,7 @@ SUBSYSTEM_DEF(human_ai)
 	while(length(current_run))
 		var/datum/human_ai_brain/brain = current_run[length(current_run)]
 		current_run.len--
-		if(!QDELETED(brain) && !brain.tied_human?.client)
+		if(!QDELETED(brain)) // SS220 EDIT: brain.process() owns player-control/dead/incap lifecycle gating
 			brain.process(wait * 0.1)
 
 		if(MC_TICK_CHECK)
@@ -80,3 +85,55 @@ SUBSYSTEM_DEF(human_ai)
 	if(!squad_id || !(squad_id in squad_id_dict))
 		return null
 	return squad_id_dict[squad_id]
+
+/datum/controller/subsystem/human_ai/proc/try_reserve_treatment(mob/living/carbon/human/patient, datum/human_ai_brain/healer, duration = 15 SECONDS)
+	if(QDELETED(patient) || QDELETED(healer))
+		return FALSE
+
+	cleanup_treatment_reservation(patient)
+	var/datum/human_ai_brain/current_healer = treatment_reservations[patient]
+	if(current_healer && current_healer != healer)
+		return FALSE
+
+	var/expires_at = world.time + duration
+	treatment_reservations[patient] = healer
+	treatment_reservation_expiries[patient] = expires_at
+	addtimer(CALLBACK(src, PROC_REF(expire_treatment_reservation), patient, healer, expires_at), duration, TIMER_UNIQUE | TIMER_NO_HASH_WAIT)
+	return TRUE
+
+/datum/controller/subsystem/human_ai/proc/release_treatment_reservation(mob/living/carbon/human/patient, datum/human_ai_brain/healer)
+	if(!patient || !(patient in treatment_reservations))
+		return FALSE
+	if(healer && treatment_reservations[patient] != healer)
+		return FALSE
+
+	treatment_reservations -= patient
+	treatment_reservation_expiries -= patient
+	return TRUE
+
+/datum/controller/subsystem/human_ai/proc/release_treatment_reservations_for(datum/human_ai_brain/healer)
+	if(!healer || !length(treatment_reservations))
+		return
+
+	for(var/mob/living/carbon/human/patient as anything in treatment_reservations.Copy())
+		if(treatment_reservations[patient] == healer)
+			release_treatment_reservation(patient, healer)
+
+/datum/controller/subsystem/human_ai/proc/cleanup_treatment_reservation(mob/living/carbon/human/patient)
+	if(!patient || !(patient in treatment_reservations))
+		return
+
+	var/datum/human_ai_brain/current_healer = treatment_reservations[patient]
+	var/expires_at = treatment_reservation_expiries[patient]
+	if(QDELETED(patient) || QDELETED(current_healer) || world.time >= expires_at)
+		release_treatment_reservation(patient, current_healer)
+
+/datum/controller/subsystem/human_ai/proc/expire_treatment_reservation(mob/living/carbon/human/patient, datum/human_ai_brain/healer, expected_expiry)
+	if(!patient || !(patient in treatment_reservations))
+		return
+	if(treatment_reservations[patient] != healer)
+		return
+	if(treatment_reservation_expiries[patient] != expected_expiry)
+		return
+
+	release_treatment_reservation(patient, healer)

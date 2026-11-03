@@ -2,9 +2,13 @@
 	name = "HALO"
 	desc = "Modular HALO content and integration hooks."
 	author = "CMSS13-PVE-HALO, PhantomRU"
+	var/human_ai_bridge_enabled = FALSE
 
 /datum/modpack/halo/initialize()
 	. = ..()
+	if(!human_ai_bridge_enabled)
+		return
+
 	if(!SShuman_ai)
 		return "Human AI subsystem is unavailable."
 
@@ -18,10 +22,16 @@
 	SIGNAL_HANDLER
 
 	UnregisterSignal(subsystem, COMSIG_SUBSYSTEM_POST_INITIALIZE)
+	if(!human_ai_bridge_enabled)
+		return
+
 	apply_human_ai_faction_bridge(subsystem)
 
 // Validate the HALO faction entries and then extend the existing USCM datum.
 /datum/modpack/halo/proc/apply_human_ai_faction_bridge(datum/controller/subsystem/human_ai/subsystem)
+	if(!human_ai_bridge_enabled)
+		return
+
 	require_human_ai_faction(subsystem, FACTION_UNSC)
 	require_human_ai_faction(subsystem, FACTION_UNSCN)
 	require_human_ai_faction(subsystem, FACTION_ONI)

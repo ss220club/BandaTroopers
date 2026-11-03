@@ -11,7 +11,7 @@
 
 /datum/world_edit_generator/outpost_radius
 	requires_preview_before_apply = TRUE
-	var/static/list/valid_factions = list(FACTION_MARINE, FACTION_UA_REBEL, FACTION_UPP, FACTION_CANC, FACTION_WY, FACTION_FREELANCER, FACTION_TWE, FACTION_TWE_REBEL, FACTION_MERCENARY, FACTION_COVENANT)
+	var/static/list/valid_factions = list(FACTION_MARINE, FACTION_UA_REBEL, FACTION_UPP, FACTION_CANC, FACTION_WY, FACTION_FREELANCER, FACTION_TWE, FACTION_TWE_REBEL, FACTION_MERCENARY)
 	var/static/list/allowed_barricade_types = list(
 		/datum/human_ai_defense/barricade/metal,
 		/datum/human_ai_defense/barricade/metal/wired,
@@ -21,7 +21,6 @@
 		/datum/human_ai_defense/barricade/wooden,
 		/datum/human_ai_defense/barricade/snow,
 		/datum/human_ai_defense/barricade/deployable,
-		/datum/human_ai_defense/barricade/covenant,
 	)
 	var/static/list/allowed_outpost_door_types = list(
 		/datum/human_ai_defense/barricade/metal_folding,
@@ -70,8 +69,6 @@
 		/datum/human_ai_defense/mine/fzd91/strong,
 		/datum/human_ai_defense/mine/tn13,
 		/datum/human_ai_defense/mine/tn13/strong,
-		/datum/human_ai_defense/mine/covenant/plasma,
-		/datum/human_ai_defense/mine/covenant/needle,
 	)
 	var/static/list/outpost_defense_profiles = list(
 		"none" = list(
@@ -289,6 +286,8 @@
 			"wired_groups" = list(),
 		),
 	)
+	var/static/type_list_extensions_applied = FALSE
+
 	var/static/list/outpost_layout_profiles = list(
 		"crossroads" = list(
 			"label" = "Крест",
@@ -433,6 +432,22 @@
 			"opening_width" = 1,
 		),
 	)
+
+/datum/world_edit_generator/outpost_radius/New()
+	. = ..()
+	apply_type_list_extensions()
+
+/datum/world_edit_generator/outpost_radius/proc/apply_type_list_extensions()
+	if(type_list_extensions_applied)
+		return
+	type_list_extensions_applied = TRUE
+	if(hascall(src, "modular_append_outpost_radius_valid_factions"))
+		call(src, "modular_append_outpost_radius_valid_factions")(valid_factions)
+	if(hascall(src, "modular_append_outpost_radius_allowed_barricade_types"))
+		call(src, "modular_append_outpost_radius_allowed_barricade_types")(allowed_barricade_types)
+	if(hascall(src, "modular_append_outpost_radius_allowed_mine_types"))
+		call(src, "modular_append_outpost_radius_allowed_mine_types")(allowed_mine_types)
+
 /datum/world_edit_generator/outpost_radius/get_supported_placement_modes()
 	return list("single", "repeat")
 

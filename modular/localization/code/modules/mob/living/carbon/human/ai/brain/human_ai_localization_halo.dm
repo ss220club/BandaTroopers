@@ -568,12 +568,12 @@
 	if(!brain)
 		return
 
-	halo_ai_apply_line_pack(brain, halo_ai_get_sangheili_base_pack())
-	halo_ai_apply_line_pack(brain, halo_ai_get_sangheili_bonus_pack(), TRUE)
-	halo_ai_apply_line_pack(brain, halo_ai_get_sangheili_rank_extra_pack(rank_value, sword_only), TRUE)
-	halo_ai_apply_line_pack(brain, halo_ai_get_sangheili_rank_bonus_pack(rank_value), TRUE)
+	halo_ai_apply_brain_line_pack(brain, halo_ai_get_sangheili_base_pack())
+	halo_ai_apply_brain_line_pack(brain, halo_ai_get_sangheili_bonus_pack(), TRUE)
+	halo_ai_apply_brain_line_pack(brain, halo_ai_get_sangheili_rank_extra_pack(rank_value, sword_only), TRUE)
+	halo_ai_apply_brain_line_pack(brain, halo_ai_get_sangheili_rank_bonus_pack(rank_value), TRUE)
 	if(sword_only)
-		halo_ai_apply_line_pack(brain, halo_ai_get_sangheili_sword_bonus_pack(), TRUE)
+		halo_ai_apply_brain_line_pack(brain, halo_ai_get_sangheili_sword_bonus_pack(), TRUE)
 
 /datum/modpack/localization/proc/halo_ai_get_sangheili_bonus_pack()
 	return halo_ai_build_line_pack(
@@ -810,10 +810,10 @@
 	if(!brain)
 		return
 
-	halo_ai_apply_line_pack(brain, halo_ai_get_unggoy_base_pack())
-	halo_ai_apply_line_pack(brain, halo_ai_get_unggoy_bonus_pack(), TRUE)
-	halo_ai_apply_line_pack(brain, halo_ai_get_unggoy_role_extra_pack(role_name), TRUE)
-	halo_ai_apply_line_pack(brain, halo_ai_get_unggoy_role_bonus_pack(role_name), TRUE)
+	halo_ai_apply_brain_line_pack(brain, halo_ai_get_unggoy_base_pack())
+	halo_ai_apply_brain_line_pack(brain, halo_ai_get_unggoy_bonus_pack(), TRUE)
+	halo_ai_apply_brain_line_pack(brain, halo_ai_get_unggoy_role_extra_pack(role_name), TRUE)
+	halo_ai_apply_brain_line_pack(brain, halo_ai_get_unggoy_role_bonus_pack(role_name), TRUE)
 
 /datum/modpack/localization/proc/halo_ai_get_unggoy_bonus_pack()
 	return halo_ai_build_line_pack(

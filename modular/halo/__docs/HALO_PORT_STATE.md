@@ -50,6 +50,16 @@ Canonical source of truth for the current HALO modular sync state on BandaTroope
 - HALO-only states must not be injected into existing generic root `.dmi` files. If a generic root item needs a HALO state, the HALO branch must use a separate modular `.dmi` and point the HALO type at that file.
 - Shared compile-time HALO constants that root glue must see live in `code/__DEFINES/bandamarines/halo_species_support.dm`; concrete species, presets, skills, pain, Warthog, and equipment content stay modular.
 
+## 2026-10-09 Human AI Alignment
+
+- HALO Human AI is enabled again in `_halo.dme`; the temporary no-op facade and copied spawn helper were removed.
+- Sangheili and Unggoy presets select HALO action sets. Their action requirements and explicit module dependencies now drive the standard Human AI module factory.
+- HALO module getters no longer create modules lazily, and the generic Human AI component no longer runs a HALO-specific finalize pass.
+- Sangheili actions delegate through brain APIs. Unggoy panic retreat and suicide-bomber execution are owned by the Unggoy module rather than action datums.
+- Projectile-pressure cache, nearby-item, ranged-fire, navigation, and cover integration use the shared modular extension hooks.
+- `halo_ai_composition` covers factory registration, species action policy, and suicide-bomber module composition. `halo_ai_runtime_coverage` covers grenade capability, Human AI preset/faction mapping, Covenant friendship, and squad preset references.
+- The broad `halo_preset_coverage` equipment/icon asset audit remains outside the default include graph: when evaluated during this alignment it reported existing ammo-case and modular icon-state gaps unrelated to Human AI composition.
+
 ## 2026-04-28 Modularity Audit
 
 - Current `PR #94` branch assets were normalized so Ruuhtian/Kig-Yar, Spartan, Sangheili, Unggoy, Warthog, New Irvine, Covenant mine, and PR96 HALO icon assets are resolved from `modular/halo/**`.

@@ -348,3 +348,6 @@ GLOBAL_VAR_INIT(halo_perf_window_id, -1)
 
 /datum/human_ai_brain/proc/modular_on_navigation_path_queued(turf/destination, max_range)
 	halo_perf_bump_path_requests()
+
+/datum/human_ai_brain/proc/modular_on_cover_scan_started()
+	halo_perf_bump_cover_scans()

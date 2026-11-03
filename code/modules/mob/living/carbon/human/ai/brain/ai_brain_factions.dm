@@ -17,36 +17,37 @@
 
 /// Given an AI brain, apply all the faction's data to the AI.
 /datum/human_ai_faction/proc/apply_faction_data(datum/human_ai_brain/brain)
-	if(length(enter_combat_lines))
-		brain.enter_combat_lines = enter_combat_lines
+	if(!brain)
+		return
 
-	if(length(exit_combat_lines))
-		brain.exit_combat_lines = exit_combat_lines
+	var/datum/human_ai_context/context = brain.create_context()
+	var/datum/human_ai_module/communication/communication = context?.get_module(/datum/human_ai_module/communication)
+	var/datum/human_ai_module/profile/profile = context?.get_module(/datum/human_ai_module/profile)
+	var/datum/human_ai_module/faction/faction_module = context?.get_module(/datum/human_ai_module/faction)
 
-	if(length(squad_member_death_lines))
-		brain.squad_member_death_lines = squad_member_death_lines
+	communication?.apply_faction_lines(
+		enter_combat_lines,
+		exit_combat_lines,
+		squad_member_death_lines,
+		grenade_thrown_lines,
+		reload_lines,
+		reload_internal_mag_lines,
+		need_healing_lines,
+	)
 
-	if(length(grenade_thrown_lines))
-		brain.grenade_thrown_lines = grenade_thrown_lines
+	profile?.set_shoot_to_kill(shoot_to_kill)
+	faction_module?.apply_relationships(friendly_factions, neutral_factions)
 
-	if(length(reload_lines))
-		brain.reload_lines = reload_lines
-
-	if(length(reload_internal_mag_lines))
-		brain.reload_internal_mag_lines = reload_internal_mag_lines
-
-	if(length(need_healing_lines))
-		brain.need_healing_lines = need_healing_lines
-
-	brain.shoot_to_kill = shoot_to_kill
-	brain.friendly_factions = friendly_factions
-	brain.neutral_factions = neutral_factions
+	qdel(context)
 
 /// Reapplies the faction's data to all AI that belong to this faction
 /datum/human_ai_faction/proc/reapply_faction_data()
 	for(var/datum/human_ai_brain/brain in GLOB.human_ai_brains)
-		if(brain.tied_human?.faction == faction)
+		var/datum/human_ai_context/context = brain.create_context()
+		var/datum/human_tied_controller/controller = context.controller
+		if(controller?.faction_matches(faction))
 			apply_faction_data(brain)
+		qdel(context)
 
 /// Given a faction string, makes this faction friendly to them.
 /datum/human_ai_faction/proc/add_friendly_faction(faction)

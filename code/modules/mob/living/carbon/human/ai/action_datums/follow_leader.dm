@@ -1,56 +1,54 @@
 /datum/ai_action/follow_leader
 	name = "Follow Leader"
 	action_flags = ACTION_USING_LEGS
-	var/follow_distance = 1
+	required_ai_modules = list(/datum/human_ai_module/squad, /datum/human_ai_module/navigation, /datum/human_ai_module/combat)
 
-/datum/ai_action/follow_leader/get_weight(datum/human_ai_brain/brain)
-	if(brain.in_cover)
+/datum/ai_action/follow_leader/get_context_weight(datum/human_ai_context/context)
+	var/datum/human_ai_brain/brain = context?.brain
+	var/datum/human_tied_controller/controller = context?.controller
+	if(!brain || !controller)
 		return 0
 
-	if(brain.is_squad_leader)
+	if(brain.is_in_cover())
 		return 0
 
-	if(brain.hold_position)
+	if(brain.is_squad_leader())
 		return 0
 
-	if(length(brain.to_pickup))
+	if(brain.is_in_combat())
 		return 0
 
-	var/datum/human_ai_squad/squad = SShuman_ai.squad_id_dict["[brain.squad_id]"]
-	if(!squad)
+	if(!brain.can_move_for_action())
 		return 0
 
-	var/mob/squad_leader = squad.squad_leader?.tied_human
-	if(!squad_leader)
+	if(brain.has_pickup_queue())
 		return 0
 
-	if(get_dist(brain.tied_human, squad_leader) <= (1 + length(squad.ai_in_squad) / 2))
+	var/list/squad_members = brain.get_squad_members()
+	if(!length(squad_members))
 		return 0
 
+	var/datum/human_ai_context/squad_leader_context = brain.get_squad_leader()?.create_context()
+	var/datum/human_tied_controller/squad_leader_controller = squad_leader_context?.controller
+	if(!squad_leader_controller?.has_valid_tied_human())
+		qdel(squad_leader_context)
+		return 0
+
+	if(controller.get_distance_to_controller(squad_leader_controller) <= (1 + length(squad_members) / 2))
+		qdel(squad_leader_context)
+		return 0
+
+	qdel(squad_leader_context)
 	return 5
-
-/datum/ai_action/follow_leader/Added()
-	if(!brain.squad_id)
-		return
-
-	var/datum/human_ai_squad/squad = SShuman_ai.squad_id_dict["[brain.squad_id]"]
-	follow_distance = 1 + length(squad.ai_in_squad) / 2
 
 /datum/ai_action/follow_leader/trigger_action()
 	. = ..()
+	if(. == ONGOING_ACTION_COMPLETED)
+		return .
 
-	if(brain.in_combat || length(brain.to_pickup))
+	var/datum/human_ai_brain/brain = context?.brain
+	var/datum/human_tied_controller/controller = context?.controller
+	if(!brain || !controller)
 		return ONGOING_ACTION_COMPLETED
 
-	var/datum/human_ai_squad/squad = SShuman_ai.squad_id_dict["[brain.squad_id]"]
-	var/mob/squad_leader = squad.squad_leader?.tied_human
-
-	var/mob/tied_human = brain.tied_human
-	if(get_dist(tied_human, squad_leader) > follow_distance)
-		if(!brain.move_to_next_turf(get_turf(squad_leader)))
-			return ONGOING_ACTION_COMPLETED
-
-		if(get_dist(tied_human, squad_leader) > follow_distance)
-			return ONGOING_ACTION_UNFINISHED
-
-	return ONGOING_ACTION_COMPLETED
+	return brain.perform_follow_leader(controller)

@@ -1,55 +1,28 @@
 /datum/ai_action/treat_self
 	name = "Treat Self"
 	action_flags = ACTION_USING_HANDS
+	required_ai_modules = list(/datum/human_ai_module/health, /datum/human_ai_module/inventory)
 
-/datum/ai_action/treat_self/get_weight(datum/human_ai_brain/brain)
-	if(iszombie(brain.tied_human))
+/datum/ai_action/treat_self/get_context_weight(datum/human_ai_context/context)
+	var/datum/human_ai_brain/brain = context?.brain
+	var/datum/human_tied_controller/controller = context?.controller
+	if(!brain || !controller)
 		return 0
 
-	if(brain.healing_someone)
-		return 0
-
-	var/should_fire_offscreen = (brain.target_turf && !COOLDOWN_FINISHED(brain, fire_offscreen))
-	if(brain.current_target || should_fire_offscreen)
-		return 0
-
-	if(length(brain.to_pickup))
-		return 0
-
-	if(!length(brain.equipment_map[HUMAN_AI_HEALTHITEMS]))
-		return 0
-
-	if(brain.cant_be_treated_stacks >= brain.treatment_stack_threshold)
-		return 0
-
-	if(!brain.healing_start_check(brain.tied_human))
-		return 0
-
-	return 4
+	return brain.get_self_treatment_weight(controller)
 
 /datum/ai_action/treat_self/Destroy(force, ...)
-	brain.healing_someone = FALSE
+	brain?.stop_self_treatment_action()
 	return ..()
 
 /datum/ai_action/treat_self/trigger_action()
 	. = ..()
+	if(. == ONGOING_ACTION_COMPLETED)
+		return .
 
-	if(brain.current_target)
+	var/datum/human_ai_brain/brain = context?.brain
+	var/datum/human_tied_controller/controller = context?.controller
+	if(!brain || !controller)
 		return ONGOING_ACTION_COMPLETED
 
-	if(!length(brain.equipment_map[HUMAN_AI_HEALTHITEMS]))
-		return ONGOING_ACTION_COMPLETED
-
-	var/mob/living/tied_human = brain.tied_human
-	if(tied_human.on_fire)
-		return ONGOING_ACTION_COMPLETED
-
-	if(brain.healing_someone)
-		return ONGOING_ACTION_UNFINISHED
-
-	if(brain.healing_start_check(tied_human))
-		if(!brain.start_healing(tied_human))
-			brain.cant_be_treated_stacks++
-		return ONGOING_ACTION_UNFINISHED
-
-	return ONGOING_ACTION_COMPLETED
+	return brain.perform_self_treatment(controller)

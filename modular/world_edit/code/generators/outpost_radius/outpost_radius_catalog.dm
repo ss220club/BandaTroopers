@@ -27,6 +27,16 @@
 	return options
 
 /datum/world_edit_generator/outpost_radius/proc/build_faction_options()
+	var/list/labels = get_faction_option_labels()
+	var/list/options = list()
+	for(var/faction as anything in valid_factions)
+		options += list(list(
+			"label" = labels[faction] || "[faction]",
+			"value" = "[faction]",
+		))
+	return options
+
+/datum/world_edit_generator/outpost_radius/proc/get_faction_option_labels()
 	var/list/labels = list(
 		FACTION_MARINE = "USCM",
 		FACTION_UA_REBEL = "UA Rebel",
@@ -37,15 +47,10 @@
 		FACTION_TWE = "TWE",
 		FACTION_TWE_REBEL = "TWE Rebel",
 		FACTION_MERCENARY = "Mercenary",
-		FACTION_COVENANT = "Covenant",
 	)
-	var/list/options = list()
-	for(var/faction as anything in valid_factions)
-		options += list(list(
-			"label" = labels[faction] || "[faction]",
-			"value" = "[faction]",
-		))
-	return options
+	if(hascall(src, "modular_append_outpost_radius_faction_option_labels"))
+		call(src, "modular_append_outpost_radius_faction_option_labels")(labels)
+	return labels
 
 /datum/world_edit_generator/outpost_radius/proc/build_sentry_layer_profile_options()
 	return build_id_options(list("none", "guard", "rear", "corners", "guard_corners"), list(

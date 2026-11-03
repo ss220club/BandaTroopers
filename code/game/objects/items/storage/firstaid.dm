@@ -966,14 +966,19 @@
 	if(issynth(target))
 		return FALSE
 
-	if(!length(contents) || !COOLDOWN_FINISHED(ai_brain, pill_use_cooldown))
+	var/datum/human_ai_module/health/health_module = ai_brain.get_health_module()
+	if(!length(contents) || !health_module || !COOLDOWN_FINISHED(health_module, pill_use_cooldown))
 		return FALSE
 
 	var/obj/item/reagent_container/pill/pill = contents[1]
-	var/datum/reagent/reagent_datum = GLOB.chemical_reagents_list[pill.pill_initial_reagents[1]]
-
-	if((target.reagents.get_reagent_amount(reagent_datum.id) + pill.reagents.total_volume) > reagent_datum.overdose)
+	if(!pill?.reagents?.total_volume)
 		return FALSE
+
+	for(var/datum/reagent/reagent as anything in pill.reagents.reagent_list)
+		if(!reagent.overdose)
+			continue
+		if((target.reagents?.get_reagent_amount(reagent.id) + reagent.volume) > reagent.overdose)
+			return FALSE
 
 	if(skilllock && !skillcheck(user, SKILL_MEDICAL, SKILL_MEDICAL_MEDIC))
 		return FALSE
@@ -982,14 +987,19 @@
 
 /obj/item/storage/pill_bottle/ai_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain, mob/living/carbon/human/target)
 	var/obj/item/pill = contents[1]
+	var/datum/human_ai_module/health/health_module = ai_brain.get_health_module()
 	user.swap_hand()
 	if(user.put_in_active_hand(pill))
 		remove_from_storage(pill, user)
 		pill.attack(target, user)
-		COOLDOWN_START(ai_brain, pill_use_cooldown, 5 SECONDS)
-		sleep(ai_brain.medium_action_delay * ai_brain.action_delay_mult)
+		if(health_module)
+			COOLDOWN_START(health_module, pill_use_cooldown, 5 SECONDS)
+		sleep(ai_brain.get_medium_action_delay(TRUE))
 
-	ai_brain.appraise_inventory() // For some reason it removes pill bottles from equipment_map after usage
+	var/datum/human_ai_context/context = ai_brain.create_context()
+	var/datum/human_ai_module/inventory/inventory = context?.get_module(/datum/human_ai_module/inventory)
+	inventory?.appraise_inventory() // For some reason it removes pill bottles from equipment_map after usage
+	qdel(context)
 
 /obj/item/storage/pill_bottle/proc/choose_color(mob/user)
 	if(!user)

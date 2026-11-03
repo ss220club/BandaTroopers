@@ -78,6 +78,7 @@
 /obj/item/ammo_box/magazine
 	name = "magazine box (M41A x 10)"
 	icon_state = "base_m41" //base color of box
+	flags_human_ai = AMMUNITION_ITEM
 	var/overlay_ammo_type = "_reg" //used for ammo type color overlay
 	var/overlay_gun_type = "_m41" //used for text overlay
 	var/overlay_content = "_reg"
@@ -157,6 +158,9 @@
 		var/obj/item/ammo_magazine/AM = locate(/obj/item/ammo_magazine) in contents
 		return AM?.current_rounds
 	return length(contents)
+
+/obj/item/ammo_box/magazine/ai_can_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain)
+	return holds_ammo && !burning && is_loaded()
 
 /obj/item/ammo_box/magazine/deploy_ammo_box(mob/living/user, turf/T)
 	if(burning && holds_ammo)

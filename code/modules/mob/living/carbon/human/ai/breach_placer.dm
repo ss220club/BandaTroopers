@@ -5,7 +5,6 @@
 		/obj/item/explosive/plastic/breaching_charge::name = /obj/item/explosive/plastic/breaching_charge,
 		/obj/item/explosive/plastic/breaching_charge/rubber::name = /obj/item/explosive/plastic/breaching_charge/rubber,
 		/obj/item/explosive/plastic/breaching_charge/plasma::name = /obj/item/explosive/plastic/breaching_charge/plasma,
-		/obj/item/explosive/plastic/breaching_charge/plasma/halo::name = /obj/item/explosive/plastic/breaching_charge/plasma/halo, // SS220 EDIT: expose modular HALO Covenant plasma charges to the shared Human AI breach placer.
 	)
 	var/static/list/acceptable_place_types = list(
 		/turf/closed/wall,
@@ -22,6 +21,12 @@
 	)
 	var/obj/item/explosive/plastic/selected_charge_path = /obj/item/explosive/plastic
 	var/selected_place_dir = NORTH
+
+/datum/human_ai_breach_placer/proc/get_charge_options()
+	var/list/charge_options = charge_dict.Copy()
+	if(hascall(src, "modular_append_human_ai_breach_charges"))
+		call(src, "modular_append_human_ai_breach_charges")(charge_options)
+	return charge_options
 
 /datum/human_ai_breach_placer/Destroy(force, ...)
 	holder.click_intercept = null
@@ -53,10 +58,11 @@
 		to_chat(user, SPAN_BOLDNOTICE("[selected_charge_path::name] planted, will explode in [new_c4.timer] seconds."))
 
 	else if(LAZYACCESS(modifiers, MIDDLE_CLICK))
-		var/chosen_charge = tgui_input_list(user, "Select explosive type.", "Select", charge_dict)
+		var/list/charge_options = get_charge_options()
+		var/chosen_charge = tgui_input_list(user, "Select explosive type.", "Select", charge_options)
 		if(!chosen_charge)
 			return
-		selected_charge_path = charge_dict[chosen_charge]
+		selected_charge_path = charge_options[chosen_charge]
 		var/chosen_dir = tgui_input_list(user, "Select placement direction.", "Select", direction_dict)
 		if(!chosen_dir)
 			return

@@ -26,7 +26,7 @@
 
 
 /datum/human_ai_spawner_menu/New()
-	usr.client.click_intercept = src
+	usr?.client?.click_intercept = src
 	if(!length(lazy_ui_data))
 		for(var/datum/human_ai_equipment_preset/preset_type as anything in subtypesof(/datum/human_ai_equipment_preset))
 			if(!preset_type::name || !preset_type::path)
@@ -34,7 +34,11 @@
 			var/datum/human_ai_equipment_preset/preset_obj = new preset_type()
 			//GLOB.human_ai_equipment_presets["[preset_type]"] = preset_obj
 			add_preset(preset_obj.path, preset_obj.desc, update_ui = FALSE)
+			qdel(preset_obj)
 
+/datum/human_ai_spawner_menu/Destroy(force, ...)
+	QDEL_NULL(species_dummy)
+	return ..()
 
 /datum/human_ai_spawner_menu/ui_close(mob/user)
 	. = ..()
@@ -223,7 +227,7 @@
 			selected_faction = params["selected_faction"]
 			spawn_click_intercept = TRUE
 			current_click_intercept_action = SPAWN_CLICK_INTERCEPT_ACTION
-			usr.client.click_intercept = src
+			ui.user?.client?.click_intercept = src
 			return TRUE
 		if("add_preset")
 			var/datum/equipment_preset/dresscode = tgui_input_list(ui.user, "Pick a Preset", "Equipment", GLOB.gear_name_presets_list)
@@ -245,7 +249,7 @@
 			zombie_delimb_multi = delimb_multi
 			SStgui.try_update_ui(usr, src, ui)
 		if("auto_clean")
-			zombie_outer_wear = !zombie_outer_wear
+			auto_clean = !auto_clean
 			if(auto_clean)
 				GLOB.gm_set_zombie_disable_auto_clean = TRUE
 			else
@@ -294,24 +298,31 @@
 				var/datum/equipment_preset/assigned_preset = ai_human.assigned_equipment_preset
 				var/expected_species = assigned_preset?.expected_species
 				var/needs_species_intrinsic_refresh = FALSE // SS220 EDIT: restore owner-bound intrinsic equipment after shared Create AI cleanup
-				if(expected_species && ai_human.species?.group != expected_species && ai_human.species?.name != expected_species) // SS220 EDIT: accept canonical HALO species ids through group as well as species.name
+				if(expected_species && ai_human.species?.group != expected_species && ai_human.species?.name != expected_species) // SS220 EDIT: accept canonical species ids through group as well as species.name
 					ai_human.set_species(expected_species)
 				var/final_species = species || ai_human.species?.name // SS220 EDIT: only refresh intrinsic equipment when the finished species remains the same
+				var/datum/human_ai_brain/ai_brain = ai_human.get_ai_brain()
+				var/datum/human_ai_context/setup_context = ai_brain?.create_context()
+				var/datum/human_tied_controller/tied_controller = setup_context?.controller
+				var/datum/human_tied_controller/temporary_tied_controller
+				if(!tied_controller)
+					temporary_tied_controller = new(null, ai_human)
+					tied_controller = temporary_tied_controller
 				if(selected_equipment == "No Weapons")
-					ai_human.strip_weapons()
+					tied_controller?.strip_weapons()
 					needs_species_intrinsic_refresh = TRUE // SS220 EDIT: preserve species-owned weapons like zombie claws after shared weapon stripping
 				else if(selected_equipment == "Birthday Suit")
-					ai_human.strip_all()
+					tied_controller?.strip_all()
 					needs_species_intrinsic_refresh = TRUE // SS220 EDIT: preserve species-owned intrinsics after full strip
 
-				ai_human.face_dir(user.dir)
-				ai_human.forceMove(get_turf(object))
+				tied_controller?.force_setup_move(get_turf(object))
+				tied_controller?.face_dir(user.dir)
 
 				if(paradrop)
-					ai_human.paradrop()
+					tied_controller?.paradrop()
 				if(species == SPECIES_ZOMBIE) //setting species to zombie throws off all of these
 					var/keep_outer_wear = prob(zombie_outer_wear_chance) && zombie_outer_wear
-					ai_human.strip_weapons() // SS220 EDIT: keep zombie-specific cleanup, then restore zombie intrinsics via species hook below
+					tied_controller?.strip_weapons() // SS220 EDIT: keep zombie-specific cleanup, then restore zombie intrinsics via species hook below
 					needs_species_intrinsic_refresh = TRUE
 					if(!keep_outer_wear)
 						if(ai_human.head)
@@ -332,7 +343,7 @@
 							/obj/item/clothing/head/hardhat/red,
 							/obj/item/clothing/head/hardhat/white,
 						)
-						ai_human.equip_to_slot_or_del(new helmetpath(ai_human), WEAR_HEAD, TRUE)
+						tied_controller?.equip_to_slot_or_del(new helmetpath(ai_human), WEAR_HEAD, TRUE)
 					if(ai_human.gloves)
 						qdel(ai_human.gloves)
 					if(ai_human.glasses && !istype(ai_human.glasses, /obj/item/clothing/glasses/zombie_eyes))
@@ -341,9 +352,9 @@
 						qdel(ai_human.wear_mask)
 				// if(species != ai_human.species?.name) //might be redundant
 				if(species && species != ai_human.species?.name) // SS220 EDIT: skip empty overrides so preset species do not fall back to Human
-					ai_human.set_species(species)
+					tied_controller?.set_species(species)
 					if(issynth(ai_human))
-						ai_human.set_skills(/datum/skills/synthetic)
+						tied_controller?.set_skills(/datum/skills/synthetic)
 				if(needs_species_intrinsic_refresh && ai_human.species?.name == final_species)
 					ai_human.species.refresh_intrinsic_equipment(ai_human) // SS220 EDIT: reapply owner-bound intrinsic equipment after Create AI cleanup if the resulting species is unchanged
 				if(selected_faction != faction_of_preset)
@@ -369,6 +380,8 @@
 					if(!ai_component)
 						ai_component = ai_human.AddComponent(/datum/component/human_ai)
 					ai_component?.ai_brain?.appraise_inventory(armor = TRUE)
+				qdel(setup_context)
+				QDEL_NULL(temporary_tied_controller)
 
 /client/proc/open_human_ai_spawner_panel()
 	set name = "Create Human AI"

@@ -317,7 +317,7 @@ GLOBAL_LIST_EMPTY(human_ai_squad_presets)
 			if(!chosen_turf)
 				continue
 
-			var/mob/living/carbon/human/ai_human = modular_spawn_human_ai_from_equipment_preset(ai_equipment, chosen_turf, TRUE) // SS220 EDIT: modular HALO spawn flow validates preset species before the AI brain is attached
+			var/mob/living/carbon/human/ai_human = modular_spawn_human_ai_from_equipment_preset(ai_equipment, chosen_turf, TRUE) // SS220 EDIT: shared spawn flow validates preset species before the AI brain is attached
 			if(!ai_human)
 				continue
 

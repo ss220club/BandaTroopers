@@ -67,6 +67,34 @@
 	else
 		. += SPAN_NOTICE("It is empty.")
 
+/obj/item/reagent_container/hypospray/autoinjector/ai_can_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain, mob/living/carbon/human/target)
+	if(!user || !ai_brain || !target || issynth(target))
+		return FALSE
+
+	if(uses_left <= 0 || !reagents?.total_volume)
+		return FALSE
+
+	if(!target.can_inject(user, FALSE))
+		return FALSE
+
+	if(skilllock && !skillcheck(user, SKILL_MEDICAL, skilllock))
+		return FALSE
+
+	for(var/datum/reagent/reagent as anything in reagents.reagent_list)
+		if(!reagent.overdose)
+			continue
+		var/reagent_transfer_amount = min(reagent.volume, amount_per_transfer_from_this * (reagent.volume / reagents.total_volume))
+		if((target.reagents?.get_reagent_amount(reagent.id) + reagent_transfer_amount) > reagent.overdose)
+			return FALSE
+
+	return TRUE
+
+/obj/item/reagent_container/hypospray/autoinjector/ai_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain, mob/living/carbon/human/target)
+	if(!ai_can_use(user, ai_brain, target))
+		return FALSE
+
+	return attack(target, user)
+
 /obj/item/reagent_container/hypospray/autoinjector/equipped()
 	..()
 	update_icon()

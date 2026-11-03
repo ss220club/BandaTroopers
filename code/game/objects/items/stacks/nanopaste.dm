@@ -35,7 +35,7 @@
 				to_chat(user, SPAN_NOTICE("Nothing to fix here."))
 
 /obj/item/stack/nanopaste/ai_can_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain, mob/living/carbon/human/target)
-	if(!issynth(target))
+	if(!target || !issynth(target))
 		return FALSE
 
 	for(var/obj/limb/limb as anything in target.limbs)
@@ -48,6 +48,9 @@
 	return FALSE
 
 /obj/item/stack/nanopaste/ai_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain, mob/living/carbon/human/target)
+	if(!target)
+		return FALSE
+
 	for(var/obj/limb/limb as anything in target.limbs)
 		if(QDELETED(src))
 			return
@@ -61,4 +64,4 @@
 
 			user.zone_selected = limb.name
 			attack(target, user)
-			sleep(ai_brain.short_action_delay * ai_brain.action_delay_mult)
+			sleep(ai_brain.get_short_action_delay(TRUE))

@@ -2189,7 +2189,11 @@ not all weapons use normal magazines etc. load_into_chamber() itself is designed
 	return target
 
 /obj/item/weapon/gun/ai_can_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain)
-	if(!has_ammunition() && (!ai_brain || !ai_brain.weapon_ammo_search(src)))
+	var/datum/human_ai_context/context = ai_brain?.create_context()
+	var/datum/human_ai_module/inventory/inventory = context?.get_module(/datum/human_ai_module/inventory)
+	var/has_reload_item = inventory?.find_ammo_for_weapon(src)
+	qdel(context)
+	if(!has_ammunition() && (!ai_brain || !has_reload_item))
 		return FALSE
 
 	if((flags_gun_features & GUN_WY_RESTRICTED) && !wy_allowed_check(user))

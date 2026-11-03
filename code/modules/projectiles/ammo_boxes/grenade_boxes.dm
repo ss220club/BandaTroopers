@@ -3,6 +3,7 @@
 	desc = "A secure box holding 25 M40 High-Explosive Dual-Purpose grenades. Highly explosive, don't store near the flamer fuel."
 	icon = 'icons/obj/items/weapons/guns/ammo_boxes/boxes_and_lids.dmi'
 	icon_state = "base_uscm_nade"
+	flags_human_ai = GRENADE_ITEM
 	w_class = SIZE_LARGE
 	holds_ammo = FALSE
 	holds_grenades = TRUE
@@ -23,6 +24,9 @@
 
 	var/grenade_text_markings_icon = 'icons/obj/items/weapons/guns/ammo_boxes/grenade_markings.dmi'
 	flames_icon = 'icons/obj/items/weapons/guns/ammo_boxes/misc.dmi'
+
+/obj/item/ammo_box/magazine/nade_box/ai_can_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain)
+	return !burning && is_loaded()
 
 //---------------------GENERAL PROCS
 

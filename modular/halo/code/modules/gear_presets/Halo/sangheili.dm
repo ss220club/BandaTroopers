@@ -8,6 +8,7 @@
 
 /datum/equipment_preset/covenant/sangheili
 	name = "Сангхейли"
+	human_ai_action_set_type = /datum/human_ai_action_set/halo_sangheili
 	expected_species = SPECIES_SANGHEILI
 	rank = JOB_COV_CIV
 	assignment = JOB_COV_CIV
@@ -99,14 +100,15 @@
 	if(!brain)
 		return
 
-	brain.halo_sangheili_runtime = TRUE
-	brain.halo_sangheili_has_sword = sangheili_rank_has_sword(rank) || halo_sangheili_sword_only
-	brain.halo_sangheili_sword_only = halo_sangheili_sword_only
-	brain.halo_sangheili_sword_charge_range = halo_sangheili_sword_charge_range
-	brain.halo_sangheili_unarmed_commit_range = halo_sangheili_unarmed_commit_range
+	brain.halo_configure_sangheili_behavior(
+		sangheili_rank_has_sword(rank) || halo_sangheili_sword_only,
+		halo_sangheili_sword_only,
+		halo_sangheili_sword_charge_range,
+		halo_sangheili_unarmed_commit_range,
+	)
 	brain.halo_apply_navigation_profile(halo_sangheili_sword_charge_range + 1, 2, 1 SECONDS)
 	if(halo_sangheili_sword_only)
-		brain.ignore_looting = TRUE
+		brain.set_looting_disabled(TRUE)
 
 /datum/equipment_preset/covenant/sangheili/proc/modular_apply_human_ai_brain_overrides(datum/human_ai_brain/brain, mob/living/carbon/human/new_human)
 	apply_sangheili_ai_behavior(brain)

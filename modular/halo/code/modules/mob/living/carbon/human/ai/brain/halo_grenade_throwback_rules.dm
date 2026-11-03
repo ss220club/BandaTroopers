@@ -1,12 +1,19 @@
 /datum/equipment_preset
 	var/halo_ai_can_throw_back_grenades = TRUE
 
+/datum/equipment_preset/get_human_ai_action_blacklist()
+	. = ..()
+	if(halo_ai_can_throw_back_grenades)
+		return
+	LAZYOR(., /datum/ai_action/throw_back_nade)
+
 /datum/human_ai_brain/proc/halo_disable_grenade_throwback()
-	can_throw_back_grenades = FALSE
-	active_grenade_found = null
+	add_action_blacklist(list(/datum/ai_action/throw_back_nade))
+	set_grenade_throwback_enabled(FALSE)
 
 /datum/human_ai_brain/proc/halo_enable_grenade_throwback()
-	can_throw_back_grenades = TRUE
+	remove_action_blacklist(list(/datum/ai_action/throw_back_nade))
+	set_grenade_throwback_enabled(TRUE)
 
 /datum/equipment_preset/proc/modular_apply_human_ai_brain_capabilities(datum/human_ai_brain/brain, mob/living/carbon/human/new_human)
 	if(!brain)
