@@ -316,3 +316,84 @@ GLOBAL_LIST_INIT(cm_vending_mortar_gear, list(
 
 /obj/structure/machinery/cm_vending/gear/mortar_stuff/get_listed_products(mob/user)
 	return GLOB.cm_vending_mortar_gear
+
+
+/obj/effect/essentials_set/clf_engi
+	spawned_gear_list = list(
+		/obj/item/clothing/glasses/welding/superior,
+		/obj/item/tool/shovel/etool/folded,
+		/obj/item/device/lightreplacer,
+		/obj/item/weapon/gun/smg/nailgun/compact/tactical,
+		/obj/item/device/sentry_computer,
+	)
+
+GLOBAL_LIST_INIT(cm_vending_clothing_clf_engi, list(
+		list("ENGINEERING SET (MANDATORY)", 0, null, null, null),
+		list("Essential Engineering Set", 0, /obj/effect/essentials_set/clf_engi, MARINE_CAN_BUY_ESSENTIALS, VENDOR_ITEM_MANDATORY),
+
+		list("HANDHELD DEFENSE (CHOOSE 1)", 0, null, null, null),
+		list("JIMA Planted Flag", 0, /obj/item/defenses/handheld/planted_flag/clf, MARINE_CAN_BUY_ATTACHMENT, VENDOR_ITEM_MANDATORY),
+		list("UA 571-C Sentry Gun", 0, /obj/item/defenses/handheld/sentry/clf, MARINE_CAN_BUY_ATTACHMENT, VENDOR_ITEM_MANDATORY),
+
+		list("ENGINEERING SUPPLIES", 0, null, null, null),
+		list("Super-Capacity Power Cell", 10, /obj/item/cell/super, null, VENDOR_ITEM_REGULAR),
+		list("Hyper-Capacity Power Cell", 15, /obj/item/cell/hyper, null, VENDOR_ITEM_REGULAR),
+		list("Metal x10", 5, /obj/item/stack/sheet/metal/small_stack, null, VENDOR_ITEM_RECOMMENDED),
+		list("Plasteel x10", 7, /obj/item/stack/sheet/plasteel/small_stack, null, VENDOR_ITEM_RECOMMENDED),
+		list("Sandbags x25", 10, /obj/item/stack/sandbags_empty/half, null, VENDOR_ITEM_REGULAR),
+		list("Plastic Explosive", 3, /obj/item/explosive/plastic, null, VENDOR_ITEM_REGULAR),
+		list("Breaching Charge", 5, /obj/item/explosive/plastic/breaching_charge, null, VENDOR_ITEM_RECOMMENDED),
+		list("ES-11 Mobile Fuel Canister", 4, /obj/item/tool/weldpack/minitank, null, VENDOR_ITEM_REGULAR),
+		list("Nailgun Magazine (7x45mm)", 3, /obj/item/ammo_magazine/smg/nailgun, null, VENDOR_ITEM_REGULAR),
+		list("Nailgun Magazine Box (x10)", 12, /obj/item/ammo_box/magazine/nailgun, null, VENDOR_ITEM_REGULAR),
+
+		list("EXPLOSIVES", 0, null, null, null),
+		list("M40 HEDP High Explosive Packet (x3 grenades)", 10, /obj/item/storage/box/packet/high_explosive, null, VENDOR_ITEM_REGULAR),
+		list("M40 HIDP Incendiary Packet (x3 grenades)", 15, /obj/item/storage/box/packet/incendiary, null, VENDOR_ITEM_REGULAR),
+		list("M40 WPDP White Phosphorus Packet (x3 grenades)", 15, /obj/item/storage/box/packet/phosphorus, null, VENDOR_ITEM_REGULAR),
+		list("M40 HSDP Smoke Packet (x3 grenades)", 5, /obj/item/storage/box/packet/smoke, null, VENDOR_ITEM_REGULAR),
+		list("M20 Mine Box (x5 mines)", 15, /obj/item/storage/box/explosive_mines, null, VENDOR_ITEM_REGULAR),
+		list("M40 MFHS Metal Foam Grenade", 5, /obj/item/explosive/grenade/metal_foam, null, VENDOR_ITEM_REGULAR),
+		list("G2 Electroshock Grenade Packet (x3 grenades)",  20, /obj/item/storage/box/packet/sebb, null, VENDOR_ITEM_REGULAR),
+
+		list("PRIMARY AMMUNITION", 0, null, null, null),
+		list("M16 Incendiary Magazine (5.56x45mm)", 12, /obj/item/ammo_magazine/rifle/m16/incendiary, null, VENDOR_ITEM_REGULAR),
+		list("M16 Toxin Magazine (10x20mm)", 16, /obj/item/ammo_magazine/rifle/m16/toxin, null, VENDOR_ITEM_REGULAR),
+		list("M16 HEAP Magazine (10x20mm)", 20, /obj/item/ammo_magazine/rifle/m16/heap, null, VENDOR_ITEM_REGULAR),
+
+		list("SIDEARM AMMUNITION", 0, null, null, null),
+		list("HG 44 Heavy Magazine (.44)", 5, /obj/item/ammo_magazine/pistol/highpower/automag/heavy, null, VENDOR_ITEM_REGULAR),
+		list("HG 44 Incendiary Magazine (.44)", 8, /obj/item/ammo_magazine/pistol/highpower/automag/incendiary, null, VENDOR_ITEM_REGULAR),
+		list("HG 44 Toxin Magazine (.44)", 10, /obj/item/ammo_magazine/pistol/highpower/automag/toxin, null, VENDOR_ITEM_REGULAR),
+		list("HG 44 Wall-Penetrating Magazine (.44)", 12, /obj/item/ammo_magazine/pistol/highpower/automag/penetrating, null, VENDOR_ITEM_REGULAR),
+
+		list("POUCHES (CHOOSE 2)", 0, null, null, null),
+		list("Pistol Pouch", 0, /obj/item/storage/pouch/pistol, MARINE_CAN_BUY_POUCH, VENDOR_ITEM_REGULAR),
+		list("Large Pistol Magazine Pouch", 0, /obj/item/storage/pouch/magazine/pistol/large, MARINE_CAN_BUY_POUCH, VENDOR_ITEM_REGULAR),
+		list("Construction Pouch", 0, /obj/item/storage/pouch/construction, MARINE_CAN_BUY_POUCH, VENDOR_ITEM_REGULAR),
+		list("Electronics Pouch (Full)", 0, /obj/item/storage/pouch/electronics/full, MARINE_CAN_BUY_POUCH, VENDOR_ITEM_REGULAR),
+		list("Tools Pouch (Full)", 0, /obj/item/storage/pouch/tools/full, MARINE_CAN_BUY_POUCH, VENDOR_ITEM_REGULAR),
+		list("Engineer kit Pouch", 0, /obj/item/storage/pouch/engikit, MARINE_CAN_BUY_POUCH, VENDOR_ITEM_RECOMMENDED),
+
+		list("BELT (CHOOSE 1)", 0, null, null, null),
+		list("Combat Toolbelt Rig", 0, /obj/item/storage/belt/gun/utility, MARINE_CAN_BUY_BELT, VENDOR_ITEM_RECOMMENDED),
+		list("Tactical Toolbelt Rig", 0, /obj/item/storage/belt/utility/tactical, MARINE_CAN_BUY_BELT, VENDOR_ITEM_REGULAR),
+		list("Flare Gun Holster Rig", 0, /obj/item/storage/belt/gun/flaregun/full, MARINE_CAN_BUY_BELT, VENDOR_ITEM_REGULAR),
+		list("Customized Nailgun Holster", 0, /obj/item/storage/belt/gun/m4a3/nailgun, MARINE_CAN_BUY_BELT, VENDOR_ITEM_REGULAR),
+
+		list("ACCESSORIES (CHOOSE 1)", 0, null, null, null),
+		list("Drop Pouch", 0, /obj/item/clothing/accessory/storage/droppouch, MARINE_CAN_BUY_ACCESSORY, VENDOR_ITEM_RECOMMENDED),
+		list("Small Pouch", 0, /obj/item/clothing/accessory/storage/smallpouch, MARINE_CAN_BUY_ACCESSORY, VENDOR_ITEM_REGULAR),
+		list("Waist Holster", 0, /obj/item/clothing/accessory/storage/holster/waist, MARINE_CAN_BUY_ACCESSORY, VENDOR_ITEM_REGULAR),
+	))
+
+/obj/structure/machinery/cm_vending/clothing/engi/clf
+	name = "\improper WeyTech Section Engineering Equipment Rack"
+	desc = "An automated rack hooked up to a colossal storage of standard-issue Engineering equipment."
+	icon_state = "eng_gear"
+	req_access = list(ACCESS_CLF_ENGINEERING)
+	vendor_role = list(JOB_SQUAD_ENGI)
+	vendor_theme = VENDOR_THEME_CLF
+
+/obj/structure/machinery/cm_vending/clothing/engi/clf/get_listed_products(mob/user)
+	return GLOB.cm_vending_clothing_clf_engi

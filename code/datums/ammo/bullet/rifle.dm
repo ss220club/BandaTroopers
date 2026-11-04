@@ -601,7 +601,6 @@
 /datum/ammo/bullet/rifle/mar40
 	name = "8.8x29 rifle bullet"
 	damage = 45
-	shell_casing = /obj/effect/decal/ammo_casing/cartridge
 
 /datum/ammo/bullet/rifle/m16
 	name = "5.56x45 rifle bullet"
@@ -612,6 +611,42 @@
 	name = "armor-piercing 5.56x45 rifle bullet"
 	damage = 30
 	penetration = ARMOR_PENETRATION_TIER_5
+
+/datum/ammo/bullet/rifle/m16/heap
+	name = "high-explosive armor-piercing 5.56x45 rifle bullet"
+	headshot_state = HEADSHOT_OVERLAY_HEAVY
+	damage = 60
+	penetration = ARMOR_PENETRATION_TIER_8
+	shrapnel_chance = SHRAPNEL_CHANCE_TIER_3
+
+/datum/ammo/bullet/rifle/m16/incendiary
+	name = "incendiary 5.56x45 rifle bullet"
+	damage_type = BURN
+	damage = 35
+	shrapnel_chance = 0
+	flags_ammo_behavior = AMMO_BALLISTIC
+	shell_speed = AMMO_SPEED_TIER_4
+	accuracy = -HIT_ACCURACY_TIER_2
+	damage_falloff = DAMAGE_FALLOFF_TIER_10
+
+/datum/ammo/bullet/rifle/m16/ap/toxin
+	name = "toxic 5.56x45 bullet"
+	var/acid_per_hit = 7
+	var/organic_damage_mult = 3
+
+/datum/ammo/bullet/rifle/m16/ap/toxin/on_hit_mob(mob/M, obj/projectile/P)
+	. = ..()
+	M.AddComponent(/datum/component/status_effect/toxic_buildup, acid_per_hit)
+
+/datum/ammo/bullet/rifle/m16/ap/toxin/on_hit_turf(turf/T, obj/projectile/P)
+	. = ..()
+	if(T.turf_flags & TURF_ORGANIC)
+		P.damage *= organic_damage_mult
+
+/datum/ammo/bullet/rifle/m16/ap/toxin/on_hit_obj(obj/O, obj/projectile/P)
+	. = ..()
+	if(O.flags_obj & OBJ_ORGANIC)
+		P.damage *= organic_damage_mult
 
 /datum/ammo/bullet/rifle/ar10
 	name = "7.62x51 rifle bullet"

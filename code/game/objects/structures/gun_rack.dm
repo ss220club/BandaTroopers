@@ -221,3 +221,69 @@
 
 /obj/structure/gun_rack/nsg/Empty
 	initial_stored = 0
+
+/obj/structure/gun_rack/m41a2_elite
+	name = "W-Y M41A2 MK2 pulse rifle rack"
+	icon_state = "m41a2_elite"
+	max_stored = 5
+	initial_stored = 5
+	allowed_type = /obj/item/weapon/gun/rifle/m41a/elite
+	populate_type = /obj/item/weapon/gun/rifle/m41a/elite
+
+/obj/structure/gun_rack/m41a2_elite/empty
+	initial_stored = 0
+
+/obj/structure/gun_rack/m41a2_elite/unloaded
+	initial_stored = 5
+	populate_type = /obj/item/weapon/gun/rifle/m41a/elite/unloaded
+
+/obj/structure/gun_rack/m41a2_elite/unloaded/platoon
+	populate_type = /obj/item/weapon/gun/rifle/m41a/elite/unloaded/platoon
+
+/obj/structure/gun_rack/m41a_corporate
+	name = "W-Y M41A MK2 pulse rifle rack"
+	icon_state = "m41a_white"
+	max_stored = 5
+	initial_stored = 5
+	allowed_type = /obj/item/weapon/gun/rifle/m41a/corporate
+	populate_type = /obj/item/weapon/gun/rifle/m41a/corporate
+
+/obj/structure/gun_rack/m41a_corporate/empty
+	initial_stored = 0
+
+/obj/structure/gun_rack/m41a_corporate/unloaded
+	initial_stored = 5
+	populate_type = /obj/item/weapon/gun/rifle/m41a/corporate/unloaded
+
+/obj/structure/gun_rack/m41a_corporate/unloaded/platoon
+	populate_type = /obj/item/weapon/gun/rifle/m41a/corporate/unloaded/platoon
+
+/obj/structure/gun_rack/mar40
+	name = "MAR-30 battle carbine rack"
+	icon_state = "mar40"
+	max_stored = 2
+	initial_stored = 2
+	allowed_type = /obj/item/weapon/gun/rifle/mar40/carbine/tactical/clf
+	populate_type = /obj/item/weapon/gun/rifle/mar40/carbine/tactical/clf
+
+/obj/structure/gun_rack/mar40/empty
+	initial_stored = 0
+
+/obj/structure/gun_rack/mar40/unloaded
+	initial_stored = 2
+	populate_type = /obj/item/weapon/gun/rifle/mar40/carbine/tactical/clf/unloaded
+
+/obj/structure/gun_rack/m16
+	name = "MAR-30 battle carbine rack"
+	icon_state = "m16"
+	max_stored = 2
+	initial_stored = 2
+	allowed_type = /obj/item/weapon/gun/rifle/m16/tactical
+	populate_type = /obj/item/weapon/gun/rifle/m16/tactical
+
+/obj/structure/gun_rack/m16/empty
+	initial_stored = 0
+
+/obj/structure/gun_rack/m16/unloaded
+	initial_stored = 2
+	populate_type = /obj/item/weapon/gun/rifle/m16/tactical/unloaded

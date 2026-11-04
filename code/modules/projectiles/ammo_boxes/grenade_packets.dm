@@ -243,3 +243,25 @@ GLOBAL_LIST_INIT(grenade_packets, list(
 	desc = "It contains eight L108A1 high-explosive, squash-head grenades. Handle with care."
 	packet_icon = "heap-p"
 	content_type = /obj/item/explosive/grenade/high_explosive/impact/heap/rmc20mm
+
+/obj/item/storage/box/packet/m203_he
+	name = "\improper M203 40mm HE grenade packet"
+	desc = "It contains six M203 40mm HE grenades. Can only be used via a grenade launcher."
+	storage_slots = 6
+	icon_state = "nadeboxupp"
+	packet_icon = "upp-p"
+	content_type = /obj/item/explosive/grenade/high_explosive/impact
+
+/obj/item/storage/box/packet/m203_inc
+	name = "\improper M203 40mm incendiary grenade packet"
+	desc = "It contains six M203 40mm incendiary grenades. Handle with care."
+	storage_slots = 6
+	icon_state = "nadeboxupp"
+	packet_icon = "upp-p"
+	content_type = /obj/item/explosive/grenade/incendiary/impact
+
+/obj/item/storage/box/packet/stick
+	name = "\improper Webley Mk15 stick grenade packet"
+	desc = "It contains five Webley Mk15 high explosive stick grenades."
+	packet_icon = "hedp-p"
+	content_type = /obj/item/explosive/grenade/high_explosive/stick

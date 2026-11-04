@@ -544,14 +544,14 @@ cases. Override_icon_state should be a list.*/
 			if(WEAR_L_HAND)
 				if(human.l_hand)
 					return FALSE
-				if(human.body_position == LYING_DOWN)
+				if(human.body_position == LYING_DOWN && !human.can_use_hands_lying())
 					to_chat(human, SPAN_WARNING("You can't equip that while lying down."))
 					return
 				return TRUE
 			if(WEAR_R_HAND)
 				if(human.r_hand)
 					return FALSE
-				if(human.body_position == LYING_DOWN)
+				if(human.body_position == LYING_DOWN && !human.can_use_hands_lying())
 					to_chat(human, SPAN_WARNING("You can't equip that while lying down."))
 					return
 				return TRUE
@@ -566,11 +566,19 @@ cases. Override_icon_state should be a list.*/
 					return FALSE
 				if(!(flags_equip_slot & SLOT_BACK))
 					return FALSE
+				if(HAS_TRAIT(human, TRAIT_WOUNDED_DOWN) && usr == human)
+					if(!disable_warning)
+						to_chat(human, SPAN_WARNING("You're too weak to put that on."))
+					return FALSE
 				return TRUE
 			if(WEAR_JACKET)
 				if(human.wear_suit)
 					return FALSE
 				if(!(flags_equip_slot & SLOT_OCLOTHING))
+					return FALSE
+				if(HAS_TRAIT(human, TRAIT_WOUNDED_DOWN) && usr == human)
+					if(!disable_warning)
+						to_chat(human, SPAN_WARNING("You're too weak to put that on."))
 					return FALSE
 				return TRUE
 			if(WEAR_HANDS)

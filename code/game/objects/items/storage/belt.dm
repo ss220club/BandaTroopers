@@ -2041,7 +2041,9 @@
 		/obj/item/ammo_magazine/pistol/t73_impact,
 		/obj/item/weapon/gun/pistol/np92,
 		/obj/item/ammo_magazine/pistol/np92,
-		/obj/item/ammo_magazine/pistol/np92/tranq,
+		// SS220 EDIT - START
+		/obj/item/ammo_magazine/pistol/np92/suppressed/tranq,
+		// SS220 EDIT - END
 		/obj/item/weapon/gun/revolver/upp,
 		/obj/item/ammo_magazine/revolver/upp,
 		/obj/item/ammo_magazine/revolver/upp/shrapnel,

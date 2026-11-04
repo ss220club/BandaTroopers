@@ -21,7 +21,7 @@ United States Colonial Marines
 		SKILL_MEDICAL = SKILL_MEDICAL_DOCTOR, // SS220 EDIT: USCM corpsmen keep the raised BT baseline medical tier
 		SKILL_ENDURANCE = SKILL_ENDURANCE_TRAINED,
 		// SKILL_SURGERY = SKILL_SURGERY_NOVICE,
-		SKILL_SURGERY = SKILL_SURGERY_TRAINED, // SS220 EDIT: USCM corpsmen keep the raised BT baseline surgery tier
+		SKILL_SURGERY = SKILL_SURGERY_NOVICE, // SS220 EDIT: USCM corpsmen keep the raised BT baseline surgery tier
 		SKILL_JTAC = SKILL_JTAC_BEGINNER,
 	)
 
@@ -30,7 +30,7 @@ United States Colonial Marines
 	skills = list(
 		SKILL_MEDICAL = SKILL_MEDICAL_DOCTOR,
 		// SKILL_SURGERY = SKILL_SURGERY_NOVICE,
-		SKILL_SURGERY = SKILL_SURGERY_TRAINED, // SS220 EDIT: recon corpsmen keep the raised BT baseline surgery tier
+		SKILL_SURGERY = SKILL_SURGERY_NOVICE, // SS220 EDIT: recon corpsmen keep the raised BT baseline surgery tier
 		SKILL_JTAC = SKILL_JTAC_BEGINNER,
 		SKILL_ENDURANCE = SKILL_ENDURANCE_MASTER,
 	)

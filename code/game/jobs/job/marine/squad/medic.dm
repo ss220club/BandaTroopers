@@ -188,6 +188,19 @@
 	squad = SQUAD_RMC
 	job = /datum/job/marine/medic/ai/rmc
 
+
+/datum/job/marine/medic/ai/clf
+	title = JOB_SQUAD_MEDIC_CLF
+	gear_preset = /datum/equipment_preset/uscm/clf/med
+	job_options = null
+	supervisors = "the cell leader and cell command"
+	entry_message_body = "You are an experienced medic in your cell. You have a lot of combat and medical experience behind you.<br>Unfortunately, your only problem as a doctor is the lack of medicine for long-term operations."
+
+/obj/effect/landmark/start/marine/medic/clf
+	name = JOB_SQUAD_MEDIC_CLF
+	squad = SQUAD_CLF
+	job = /datum/job/marine/medic/ai/clf
+
 #undef SGT_VARIANT
 #undef JSGT_VARIANT
 #undef CPL_VARIANT

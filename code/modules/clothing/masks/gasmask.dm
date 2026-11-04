@@ -1,4 +1,3 @@
-
 /obj/item/clothing/mask/gas
 	name = "gas mask"
 	desc = "A civilian grade, face-covering mask that can be connected to an air supply. Filters harmful gases from the air."
@@ -27,13 +26,37 @@
 	var/ignore_zoom_tint_on_store = FALSE
 	// SS220 EDIT - END
 	var/gas_filter_strength = 1 //For gas mask filters
-	var/list/filtered_gases = list("phoron", "sleeping_agent", "carbon_dioxide")
+	var/list/filtered_gases = list("phoron", "sleeping_agent", "carbon_dioxide", "condensedcapsaicin")
+
+/obj/item/clothing/mask/gas/attack_self(mob/user)
+	if(user.get_active_hand() != src)
+		return ..()
+
+	var/obj/item/clothing/accessory/gaspacked/P = new(get_turf(user))
+	user.temp_drop_inv_item(src)
+	qdel(src)
+	user.put_in_active_hand(P)
+
+	playsound(user, 'sound/handling/armorequip_2.ogg', 25, TRUE)
+	to_chat(user, SPAN_NOTICE("You fold and pack the gas mask."))
 
 /obj/item/clothing/mask/gas/kutjevo
 	name = "kutjevo respirator"
 	desc = "A respirator worn on the face that filters out harmful air particles often present in the air of Kutjevo."
 	icon_state = "kutjevo_respirator"
 	item_state = "kutjevo_respirator"
+
+/obj/item/clothing/mask/gas/military/attack_self(mob/user)
+	if(user.get_active_hand() != src)
+		return ..()
+
+	var/obj/item/clothing/accessory/m5packed/P = new(get_turf(user))
+	user.temp_drop_inv_item(src)
+	qdel(src)
+	user.put_in_active_hand(P)
+
+	playsound(user, 'sound/handling/armorequip_2.ogg', 25, TRUE)
+	to_chat(user, SPAN_NOTICE("You fold and pack the M5 gasmask."))
 
 /obj/item/clothing/mask/gas/military
 	name = "\improper M5 gasmask"
@@ -94,6 +117,20 @@
 	desc = "The standard issue gasmask utilized by the UPP Armed Collective and many UPP civilian organizations."
 	icon_state = "pfb"
 	item_state = "pfb"
+	flags_atom = NO_NAME_OVERRIDE|NO_SNOW_TYPE
+	flags_inv_hide = HIDEEARS|HIDEFACE|HIDEALLHAIR
+
+/obj/item/clothing/mask/gas/military/upp/attack_self(mob/user)
+	if(user.get_active_hand() != src)
+		return ..()
+
+	var/obj/item/clothing/accessory/pfbpacked/P = new(get_turf(user))
+	user.temp_drop_inv_item(src)
+	qdel(src)
+	user.put_in_active_hand(P)
+
+	playsound(user, 'sound/handling/armorequip_2.ogg', 25, TRUE)
+	to_chat(user, SPAN_NOTICE("You fold and pack the ShMB/4 gasmask."))
 
 /obj/item/clothing/mask/gas/pve_mopp
 	name = "\improper M2 MOPP mask"
@@ -115,17 +152,29 @@
 	// SS220 EDIT: CM-PVE #1287 Gas Mask Vision — PMC mask has weak impair, allows scopes
 	vision_impair = VISION_IMPAIR_WEAK
 	ignore_zoom_tint = TRUE
-	armor_melee = CLOTHING_ARMOR_LOW
+	armor_melee = CLOTHING_ARMOR_NONE
 	armor_bullet = CLOTHING_ARMOR_NONE
 	armor_laser = CLOTHING_ARMOR_NONE
 	armor_energy = CLOTHING_ARMOR_NONE
-	armor_bomb = CLOTHING_ARMOR_LOW
-	armor_bio = CLOTHING_ARMOR_HIGH
-	armor_rad = CLOTHING_ARMOR_LOW
+	armor_bomb = CLOTHING_ARMOR_NONE
+	armor_bio = CLOTHING_ARMOR_NONE
+	armor_rad = CLOTHING_ARMOR_NONE
 	armor_internaldamage = CLOTHING_ARMOR_NONE
 	flags_inventory = COVERMOUTH|ALLOWINTERNALS|BLOCKGASEFFECT|ALLOWREBREATH|ALLOWCPR
 	flags_inv_hide = HIDEFACE
 	flags_equip_slot = SLOT_FACE
+
+/obj/item/clothing/mask/gas/pmc/attack_self(mob/user)
+	if(user.get_active_hand() != src)
+		return ..()
+
+	var/obj/item/clothing/accessory/pmcpacked/P = new(get_turf(user))
+	user.temp_drop_inv_item(src)
+	qdel(src)
+	user.put_in_active_hand(P)
+
+	playsound(user, 'sound/handling/armorequip_2.ogg', 25, TRUE)
+	to_chat(user, SPAN_NOTICE("You fold and pack the tactical filtration mask."))
 
 /obj/item/clothing/mask/gas/pmc/balaclava
 	name = "\improper M7 pattern armored balaclava"
@@ -236,7 +285,6 @@
 	unacidable = TRUE
 // flags_item = NODROP|DELONDROP
 	flags_inventory = CANTSTRIP|COVEREYES|COVERMOUTH|ALLOWINTERNALS|ALLOWREBREATH|BLOCKGASEFFECT|ALLOWCPR|BLOCKSHARPOBJ
-
 //=ROYAL MARINES=\\
 
 /obj/item/clothing/mask/gas/pmc/royal_marine
@@ -245,9 +293,18 @@
 	icon_state = "rmc_mask"
 	flags_atom = NO_NAME_OVERRIDE|NO_SNOW_TYPE
 	flags_inventory = COVERMOUTH|COVEREYES|ALLOWINTERNALS|BLOCKGASEFFECT|ALLOWREBREATH|ALLOWCPR
-	// SS220 EDIT: CM-PVE #1287 Gas Mask Vision — RMC mask has medium impair, allows scopes
-	vision_impair = VISION_IMPAIR_MED
-	ignore_zoom_tint = TRUE
+
+/obj/item/clothing/mask/gas/pmc/royal_marine/attack_self(mob/user)
+	if(user.get_active_hand() != src)
+		return ..()
+
+	var/obj/item/clothing/accessory/rmcpacked/P = new(get_turf(user))
+	user.temp_drop_inv_item(src)
+	qdel(src)
+	user.put_in_active_hand(P)
+
+	playsound(user, 'sound/handling/armorequip_2.ogg', 25, TRUE)
+	to_chat(user, SPAN_NOTICE("You fold and pack the L7 gasmask."))
 
 //--FIL--\\
 

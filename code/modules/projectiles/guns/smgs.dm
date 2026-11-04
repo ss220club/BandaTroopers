@@ -702,7 +702,7 @@
 	icon_state = "fp9000"
 	item_state = "fp9000"
 
-	fire_sound = 'sound/weapons/gun_p90.ogg'
+	fire_sound = "gun_p90"
 	current_mag = /obj/item/ammo_magazine/smg/fp9000
 
 	attachable_allowed = list(

@@ -933,6 +933,16 @@
 /turf/open/floor/almayer/tcomms
 	icon_state = "tcomms"
 
+/turf/open/floor/almayer/tcomms/glowing
+	icon_state = "tcomms"
+	light_color = "#2a9abf"
+	light_range = 3
+
+/turf/open/floor/almayer/tcomms/glowing/Initialize(mapload, ...)
+	. = ..()
+	set_light_on(TRUE)
+
+
 /turf/open/floor/almayer/test_floor4
 	icon_state = "test_floor4"
 
@@ -4103,3 +4113,22 @@
 
 /turf/open/floor/yellowfull
 	icon_state = "yellowfull"
+
+/turf/open/floor/almayer/arena/north
+	dir = NORTH
+
+/turf/open/floor/almayer/arena
+	icon_state = "arena_smooth"
+	dir = SOUTH
+
+/turf/open/floor/almayer/arena/east
+	dir = EAST
+
+/turf/open/floor/almayer/arena/west
+	dir = WEST
+
+/turf/open/floor/almayer/arena/tile_smooth
+	icon_state = "silver_smooth"
+
+/turf/open/floor/almayer/arena/tilefull_smooth
+	icon_state = "silverfull_smooth"

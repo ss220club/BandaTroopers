@@ -747,6 +747,19 @@
 		source_image.pixel_x = 18
 		overlays += source_image
 
+/obj/item/storage/box/guncase/heavy/motiondetectors/clf
+	name = "\improper motion detectors case"
+	desc = "A case containing four individual handheld motion detectors."
+	icon_state = "mdcase"
+	storage_slots = 4
+	can_hold = list(/obj/item/device/motiondetector/hacked/pmc)
+
+/obj/item/storage/box/guncase/heavy/motiondetectors/clf/fill_preset_inventory()
+	new /obj/item/device/motiondetector/hacked/clf(src)
+	new /obj/item/device/motiondetector/upp/hacked/clf(src)
+	new /obj/item/device/motiondetector/hacked/clf(src)
+	new /obj/item/device/motiondetector/upp/hacked/clf(src)
+
 /obj/item/storage/box/guncase/heavy/fuel
 	name = "\improper M240A1 fuel canister case"
 	desc = "A heavy case containing six fuel canisters for the M240A1 incinerator unit."

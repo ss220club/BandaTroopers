@@ -375,6 +375,9 @@
 	user.show_speech_bubble("warcry")
 
 /datum/emote/living/carbon/human/warcry/get_sound(mob/living/user)
+	var/language_sound = get_language_warcry_sound(user)
+	if(language_sound)
+		return language_sound
 	if(ishumansynth_strict(user))
 		if(user.gender == MALE)
 			if(user.faction == FACTION_UPP)

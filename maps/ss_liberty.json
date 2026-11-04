@@ -1,0 +1,22 @@
+{
+    "map_name": "SS Liberty",
+    "map_path": "map_files/SS_Liberty",
+    "map_file": "ss_liberty.dmm",
+    "webmap_url": "GoldenArrow",
+    "traits": [
+        {
+            "Marine Main Ship": true,
+            "Up": 1
+        },
+        {
+            "Marine Main Ship": true,
+            "Up": 1,
+            "Down": -1
+        },
+        {
+            "Marine Main Ship": true,
+            "Down": -1
+        }
+    ],
+    "platoon": "/datum/squad/marine/clf"
+}

@@ -7,6 +7,12 @@
 
 	if (usr.is_mob_incapacitated())
 		return
+	if(isliving(src))
+		var/mob/living/living_src = src
+		if(living_src.body_position == LYING_DOWN && !living_src.can_use_hands_lying())
+			return
+		if(!living_src.wounded_action_delay())
+			return
 
 	if(hand)
 		var/obj/item/W = l_hand

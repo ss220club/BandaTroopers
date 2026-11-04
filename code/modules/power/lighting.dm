@@ -202,6 +202,35 @@
 	light_type = /obj/item/light_bulb/bulb
 	light_color = LIGHT_COLOR_XENON_UA
 
+/obj/structure/machinery/light/small/blue/liberty
+	light_color = LIGHT_COLOR_BLUE
+
+/obj/structure/machinery/light/small/blue/bridge/liberty
+	name = "ship status indicator"
+	desc = "A small indicator light wired into the ship's systems. It changes color to signal the current shipwide code."
+	brightness = 1
+	light_color = "#0090ff"
+
+/obj/structure/machinery/light/small/blue/bridge/liberty/Initialize(mapload, ...)
+	. = ..()
+	set_light_on(TRUE)
+
+	RegisterSignal(SSdcs, COMSIG_GLOB_SECURITY_LEVEL_CHANGED, PROC_REF(color_change))
+
+/obj/structure/machinery/light/small/blue/bridge/liberty/proc/color_change(datum/source, new_color)
+	SIGNAL_HANDLER
+	var/obj/structure/machinery/light/small/blue/bridge/lampa = src
+	switch(new_color)
+		if(SEC_LEVEL_GREEN)
+			set_light(l_color = "#0090ff")
+			lampa.remove_filter("sprite_color")
+		if(SEC_LEVEL_BLUE)
+			set_light(l_color = "#c70f0f")
+			lampa.add_filter("sprite_color", 1, list("type" = "color", "color" = "#C02526"))
+		if(SEC_LEVEL_RED, SEC_LEVEL_DELTA)
+			set_light(l_color = "#c70f0f")
+			lampa.add_filter("sprite_color", 1, list("type" = "color", "color" = "#C02526"))
+
 /obj/structure/machinery/light/small/red
 	icon_state = "bulb1"
 	base_state = "bulb"
@@ -211,6 +240,9 @@
 	desc = "A small red lighting fixture that is dark shade of red. Looking at it for too long makes your eyes go watery."
 	light_type = /obj/item/light_bulb/bulb
 	light_color = LIGHT_COLOR_RED_BULB
+
+/obj/structure/machinery/light/small/red/without_offset/set_pixel_location()
+	return
 
 /obj/structure/machinery/light/double
 	icon_state = "ptube1"
@@ -228,6 +260,9 @@
 	base_state = "bptube"
 	desc = "A lighting fixture that can be fitted with two bright fluorescent light tubes for that extra eye-watering goodness."
 	light_color = LIGHT_COLOR_XENON_UA
+
+/obj/structure/machinery/light/double/blue/liberty
+	light_color = LIGHT_COLOR_BLUE
 
 /obj/structure/machinery/light/spot
 	name = "spotlight"

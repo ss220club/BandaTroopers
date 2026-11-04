@@ -9,6 +9,7 @@
 	skin_color = random_skin_color()
 	body_type = random_body_type()
 	body_size = random_body_size()
+	blood_type = pick(7;"O-", 38;"O+", 6;"A-", 34;"A+", 2;"B-", 9;"B+", 1;"AB-", 3;"AB+")
 
 	h_style = random_hair_style(gender, species)
 	f_style = random_facial_hair_style(gender, species)
@@ -296,6 +297,20 @@
 			return /datum/equipment_preset/upp/squadlead
 		if(JOB_SO_UPP)
 			return /datum/equipment_preset/uscm_ship/so/upp/equipped
+// SS220 EDIT START
+		if(JOB_SQUAD_TEAM_LEADER_FORECON_UPP)
+			return /datum/equipment_preset/upp/forecon_preview/team_leader
+		if(JOB_SQUAD_LEADER_FORECON_UPP)
+			return /datum/equipment_preset/upp/forecon_preview/leader
+		if(JOB_SQUAD_MEDIC_FORECON_UPP)
+			return /datum/equipment_preset/upp/forecon_preview/medic
+		if(JOB_SQUAD_RTO_FORECON_UPP)
+			return /datum/equipment_preset/upp/forecon_preview/rto
+		if(JOB_SQUAD_MARINE_FORECON_UPP)
+			return /datum/equipment_preset/upp/forecon_preview
+		if(JOB_SQUAD_SMARTGUN_FORECON_UPP)
+			return /datum/equipment_preset/upp/forecon_preview/smartgunner
+// SS220 EDIT END
 //FORECON Squad
 		if(JOB_SQUAD_TEAM_LEADER_FORECON)
 			return /datum/equipment_preset/uscm/forecon/squad_leader

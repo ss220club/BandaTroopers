@@ -58,6 +58,7 @@
 #define MOB_HUD_FACTION_UNSC 24 // SS220 EDIT: HALO UNSC faction HUD slot
 #define MOB_HUD_FACTION_COVENANT 25 // SS220 EDIT: HALO Covenant faction HUD slot
 #define MOB_HUD_VISR 26 // SS220 EDIT: HALO VISR HUD
+#define MOB_HUD_FACTION_IASF 27
 
 //for SL/FTL/LZ targeting on locator huds
 #define TRACKER_SL "track_sl"

@@ -6,6 +6,8 @@
 #include "_helpers220/_helpers220.dme"
 #include "_signals220/_signals220.dme"
 #include "_singletons/_singletons.dme"
+#include "pixel_shift/_pixel_shift.dme"
+#include "shuttle_flight/_shuttle_flight.dme"
 
 #include "admin/_admin.dme"
 #include "speech_filter/_speech_filter.dme"
@@ -16,6 +18,9 @@
 #include "squads/_squads.dme"
 #include "world_edit/_world_edit.dme"
 #include "weapons/_weapons.dme"
+#include "iasf/_iasf.dme"
+#include "clf/_clf.dme"
+#include "uscm_camouflage/_uscm_camouflage.dme"
 #include "player_survival/_player_survival.dme"
 #include "supply_packs/_supply_packs.dme"
 #include "arachnid/_arachnid.dme"

@@ -81,6 +81,12 @@
 	if (is_mob_incapacitated(TRUE))
 		return
 
+	// Knocked down while already lying: still clutching whatever is in hand, but can't use it
+	if(ishuman(src))
+		var/mob/living/carbon/human/human_src = src
+		if(human_src.body_position == LYING_DOWN && !human_src.can_use_hands_lying())
+			return
+
 	face_atom(A)
 
 	if(mods[MIDDLE_CLICK] || mods[BUTTON4] || mods[BUTTON5])
@@ -132,6 +138,12 @@
 		return
 
 	next_move = world.time
+	if(HAS_TRAIT(src, TRAIT_WOUNDED_DOWN) && !isgun(W) && !isturf(A) && A.Adjacent(src))
+		var/mob/living/living_src = src
+		if(!living_src.wounded_action_delay(A == src ? WOUNDED_SELF_INTERACTION_DELAY : WOUNDED_INTERACTION_DELAY))
+			return
+		if(QDELETED(A) || get_active_hand() != W || !A.Adjacent(src))
+			return
 	if(A.Adjacent(src)) // If standing next to the atom clicked.
 		if(get_turf(A) == src.loc || (client && client.prefs && !(client.prefs.toggle_prefs & TOGGLE_COMBAT_POINTBLANK_OVERRIDE)))
 			click_adjacent(A, W, mods)

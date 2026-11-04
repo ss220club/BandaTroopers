@@ -97,9 +97,6 @@
 	return L
 
 /obj/item/storage/proc/show_to(mob/user as mob)
-	if(!user?.client)
-		return
-
 	if(user.s_active != src)
 		for(var/obj/item/I in src)
 			if(I.on_found(user))
@@ -157,8 +154,22 @@
 			del_from_watchers(M)
 	return lookers
 
+/// Badly wounded mobs can take a backpack off, but not dig through it
+/obj/item/storage/proc/wounded_can_access(mob/user, silent = FALSE)
+	if(!HAS_TRAIT(user, TRAIT_WOUNDED_DOWN))
+		return TRUE
+	for(var/atom/holder = src; isobj(holder); holder = holder.loc)
+		if(istype(holder, /obj/item/storage/backpack))
+			if(!silent)
+				to_chat(user, SPAN_WARNING("You're too weak to dig through [holder], you can only take it off."))
+			return FALSE
+	return TRUE
+
 /obj/item/storage/proc/open(mob/user)
 	if(user.s_active == src) //Spam prevention.
+		return
+
+	if(!wounded_can_access(user))
 		return
 
 	if(istype(loc, /obj/item/storage) && required_skill_for_nest_opening)
@@ -316,6 +327,10 @@ GLOBAL_LIST_EMPTY_TYPED(item_storage_box_cache, /datum/item_storage_box)
 			if(world.time <= user.next_move && !user_carried_master) //Click delay doesn't apply to clicking items in your first-layer inventory.
 				return TRUE
 			user.next_move = world.time
+			if(isliving(user))
+				var/mob/living/living_user = user
+				if(!living_user.wounded_action_delay() || user.get_active_hand() != I)
+					return TRUE
 			if(master.Adjacent(user)) //Throwing a storage item (or, possibly, other people pulling it away) doesn't close its screen.
 				user.click_adjacent(master, I, mods)
 			return TRUE
@@ -337,6 +352,10 @@ GLOBAL_LIST_EMPTY_TYPED(item_storage_box_cache, /datum/item_storage_box)
 					if(world.time <= user.next_move) //Clicking an item in storage respects click delays.
 						return TRUE
 					user.next_move = world.time
+					if(isliving(user))
+						var/mob/living/living_user = user
+						if(!living_user.wounded_action_delay() || QDELETED(I) || !I.Adjacent(user))
+							return TRUE
 					user.click_adjacent(I, null, mods)
 					return TRUE
 	return FALSE
@@ -443,6 +462,9 @@ GLOBAL_LIST_EMPTY_TYPED(item_storage_box_cache, /datum/item_storage_box)
 
 	if(src.loc == W)
 		return 0 //Means the item is already in the storage item
+
+	if(user && !wounded_can_access(user, stop_messages))
+		return
 
 	//specific labeler check
 	if(istype(W, /obj/item/tool/hand_labeler))
@@ -582,6 +604,8 @@ W is always an item. stop_warning prevents messaging. user may be null.**/
 
 /obj/item/storage/attack_hand(mob/user, mods)
 	if (loc == user)
+		if(!wounded_can_access(user))
+			return
 		if((mods && mods[ALT_CLICK] || storage_flags & STORAGE_USING_DRAWING_METHOD) && ishuman(user) && length(contents)) //Alt mod can reach attack_hand through the clicked() override.
 			var/obj/item/I
 			if(storage_flags & STORAGE_USING_FIFO_DRAWING)

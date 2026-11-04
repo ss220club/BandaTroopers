@@ -80,6 +80,7 @@
 #define RADIO_CHANNEL_VAI "VAI"
 #define RADIO_CHANNEL_CMB "CMB"
 #define RADIO_CHANNEL_ROYAL_MARINE "Royal Marine"
+#define RADIO_CHANNEL_IASF "IASF"
 #define RADIO_CHANNEL_CIA "CIA"
 #define RADIO_CHANNEL_MERC "Mercenaries"
 #define RADIO_CHANNEL_fil "FIL"

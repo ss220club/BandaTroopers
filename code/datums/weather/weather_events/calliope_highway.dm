@@ -39,3 +39,10 @@
 	ambience = 'sound/ambience/strata/strata_blizzard.ogg'
 
 	fire_smothering_strength = 3
+
+/obj/effect/big_fog
+	icon = 'icons/effects/192x192.dmi'
+	icon_state = "massive_fog"
+	alpha = 0
+	layer = WEATHER_LAYER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT

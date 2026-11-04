@@ -6,6 +6,7 @@
 
 // Clothing
 #include "code/modules/clothing/under/vai.dm"
+#include "code/modules/loadout/pr165_items.dm"
 
 // Food
 #include "code/game/objects/items/reagent_containers/food/mre_food/dog_war.dm"
@@ -17,6 +18,13 @@
 #include "code/modules/vehicles/twe_tank/interior.dm"
 #include "code/modules/vehicles/twe_tank/twe_apc.dm"
 #include "code/modules/vehicles/twe_tank/twe_tank.dm"
+#include "code/modules/vehicles/pmc_apc.dm"
 
 // Vehicles — Heavy Autocannon
 #include "code/modules/vehicles/hardpoints/hardpoint_ammo/heavy_autocannon.dm"
+
+#include "code/upp_forecon/weapons.dm"
+#include "code/upp_forecon/equipment.dm"
+#include "code/upp_forecon/presets.dm"
+#include "code/upp_forecon/vendors.dm"
+#include "code/upp_airborne/ak82.dm"

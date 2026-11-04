@@ -96,7 +96,8 @@ GLOBAL_LIST_INIT(platoon_to_jobs, list(/datum/squad/marine/alpha = list(/datum/j
 		/datum/job/marine/medic/ai/upp = JOB_SQUAD_MEDIC,\
 		/datum/job/marine/tl/ai/upp = JOB_SQUAD_TEAM_LEADER,\
 		/datum/job/marine/smartgunner/ai/upp = JOB_SQUAD_SMARTGUN,\
-		/datum/job/marine/standard/ai/upp = JOB_SQUAD_MARINE),\
+		/datum/job/marine/standard/ai/upp = JOB_SQUAD_MARINE,\
+		/* SS220 EDIT - START*/ /datum/job/marine/standard/ai/rto/upp = JOB_SQUAD_RTO /* SS220 EDIT - END */),\
 		/datum/squad/marine/pmc = list(/datum/job/marine/tl/ai/pmc = JOB_SQUAD_TEAM_LEADER,\
 		/datum/job/marine/standard/ai/pmc =  JOB_SQUAD_MARINE,\
 		/datum/job/marine/medic/ai/pmc = JOB_SQUAD_MEDIC,\
@@ -147,7 +148,10 @@ GLOBAL_LIST_INIT(platoon_to_jobs, list(/datum/squad/marine/alpha = list(/datum/j
 		/datum/job/marine/standard/ai/upp = JOB_SQUAD_MARINE,\
 		/datum/job/civilian/advisor_upp = JOB_UPP_ADVISOR),\
 // SS220 EDIT - END
-		))
+		/datum/squad/marine/clf = list(/datum/job/marine/leader/ai/clf = JOB_SQUAD_LEADER,\
+		/datum/job/marine/engineer/ai/clf = JOB_SQUAD_ENGI,\
+		/datum/job/marine/medic/ai/clf = JOB_SQUAD_MEDIC,\
+		/datum/job/marine/standard/ai/clf =  JOB_SQUAD_MARINE)))
 
 GLOBAL_LIST_INIT(platoon_to_role_list, list(/datum/squad/marine/alpha = ROLES_AI,\
 												/datum/squad/marine/upp = ROLES_AI_UPP,\
@@ -160,8 +164,7 @@ GLOBAL_LIST_INIT(platoon_to_role_list, list(/datum/squad/marine/alpha = ROLES_AI
 												/datum/squad/marine/movie = ROLES_AI_MARINE_MOVIE,\
 												/datum/squad/marine/upp/movie = ROLES_AI_UPP_MOVIE,\
 // SS220 EDIT - END
-												))
-
+												/datum/squad/marine/clf = ROLES_AI_CLF))
 
 // SS220 EDIT - START
 /*

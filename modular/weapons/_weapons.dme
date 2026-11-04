@@ -2,6 +2,11 @@
 
 #include "code/ammo/rocket_he_c.dm"
 #include "code/sharp_icon_compat.dm"
+#include "code/pvp/weapon_variants.dm"
+#include "code/machineguns.dm"
+#include "code/machineguns_tests.dm"
+#include "code/f90_equipment.dm"
+#include "code/f90_equipment_tests.dm"
 #include "code/rpg/disposable_rpg_prop.dm"
 #include "code/rpg/disposable_rpg.dm"
 #include "code/gamemode_setup.dm"

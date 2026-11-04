@@ -23,6 +23,10 @@ SUBSYSTEM_DEF(fz_transitions)
 		if(!P || !P.loc)
 			GLOB.projectors -= P
 			continue
+		if(istype(P, /obj/effect/projector/airlock))
+			var/obj/effect/projector/airlock/airlock_projector = P
+			airlock_projector.update_projection()
+			continue
 		if(!P.loc.clone)
 			P.loc.create_clone(P.vector_x, P.vector_y, P.vector_z)
 

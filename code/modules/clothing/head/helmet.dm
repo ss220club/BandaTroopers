@@ -308,6 +308,10 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 	/obj/item/prop/helmetgarb/helmet_nvg/cosmetic = HELMET_GARB_RELAY_ICON_STATE,
 	/obj/item/prop/helmetgarb/helmet_nvg/cosmetic/larp = HELMET_GARB_RELAY_ICON_STATE,
 	/obj/item/prop/helmetgarb/helmet_nvg/marsoc = HELMET_GARB_RELAY_ICON_STATE,
+	// SS220 EDIT - START
+	/obj/item/prop/helmetgarb/helmet_nvg/upp = HELMET_GARB_RELAY_ICON_STATE,
+	/obj/item/prop/helmetgarb/helmet_nvg/upp/frogmen = HELMET_GARB_RELAY_ICON_STATE,
+	// SS220 EDIT - END
 	/obj/item/prop/helmetgarb/flair_initech = "flair_initech",
 	/obj/item/prop/helmetgarb/flair_io = "flair_io",
 	/obj/item/prop/helmetgarb/flair_peace ="flair_peace_smiley",
@@ -1546,8 +1550,8 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 	attack_verb = list("whacked", "hit", "smacked", "beaten", "battered")
 	var/obj/structure/machinery/camera/camera
 	var/helmet_overlays[]
-	// SS220 EDIT: CM-PVE #1255 UPP camouflage — allow select_gamemode_skin
-	flags_atom = null
+	// SS220 EDIT
+	flags_atom = NO_SNOW_TYPE
 	flags_inventory = BLOCKSHARPOBJ
 	flags_inv_hide = NONE
 	clothing_traits = list(TRAIT_EAR_PROTECTION)
@@ -2413,6 +2417,8 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 	flags_inventory = BLOCKSHARPOBJ
 	flags_inv_hide = NO_FLAGS
 	flags_marine_helmet = NO_FLAGS
+	clothing_traits = list(TRAIT_EAR_PROTECTION)
+	flags_atom = NO_SNOW_TYPE|NO_NAME_OVERRIDE
 
 /obj/item/clothing/head/helmet/marine/veteran/iasf_beret/tl
 	icon_state = "beret_iasf_tl"

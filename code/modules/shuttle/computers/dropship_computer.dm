@@ -37,7 +37,7 @@
 /obj/structure/machinery/computer/shuttle/dropship/flight/proc/get_landing_zones()
 	. = list()
 	for(var/obj/docking_port/stationary/marine_dropship/dock in SSshuttle.stationary)
-		if(istype(dock, /obj/docking_port/stationary/marine_dropship/crash_site))
+		if(istype(dock, /obj/docking_port/stationary/marine_dropship/crash_site) || istype(dock, /obj/docking_port/stationary/marine_dropship/airlock/inner))
 			continue
 		. += list(dock)
 
@@ -396,6 +396,7 @@
 
 	// Launch Alarm Variables
 	.["playing_launch_announcement_alarm"] = shuttle?.playing_launch_announcement_alarm
+	.["airlock_data"] = get_airlock_ui_data()
 
 	.["destinations"] = list()
 	// add flight
@@ -415,6 +416,10 @@
 			if(dock == other_shuttle.destination)
 				dock_reserved = TRUE
 				break
+		if(istype(dock, /obj/docking_port/stationary/marine_dropship/airlock/outer))
+			var/obj/docking_port/stationary/marine_dropship/airlock/outer/outer_port = dock
+			if(!outer_port.linked_inner || outer_port.linked_inner.get_docked() || outer_port.linked_inner.processing)
+				dock_reserved = TRUE
 		var/can_dock = shuttle?.canDock(dock)
 		var/list/dockinfo = list(
 			"id" = dock.id,
@@ -446,6 +451,9 @@
 		if("move")
 			if(!shuttle)
 				return FALSE
+			if(get_linked_airlock())
+				to_chat(user, SPAN_WARNING("The dropship is held in a hangar airlock. Complete the airlock sequence before launching."))
+				return TRUE
 			if(shuttle.mode != SHUTTLE_IDLE && (shuttle.mode != SHUTTLE_CALL && !shuttle.destination))
 				to_chat(usr, SPAN_WARNING("You can't move to a new destination right now."))
 				return TRUE
@@ -502,6 +510,8 @@
 		if("button-push")
 			playsound(loc, get_sfx("terminal_button"), KEYBOARD_SOUND_VOLUME, 1)
 			return FALSE
+		if("airlock-control")
+			return handle_airlock_control(params["step"], user)
 		if("door-control")
 			if(!shuttle)
 				return FALSE

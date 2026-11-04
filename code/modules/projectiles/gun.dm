@@ -780,6 +780,10 @@ As sniper rifles have both and weapon mods can change them as well. ..() deals w
 	if(!(flags_item & TWOHANDED) || flags_item & WIELDED)
 		return
 
+	if(HAS_TRAIT(user, TRAIT_WOUNDED_DOWN))
+		to_chat(user, SPAN_WARNING("You're too weak to shoulder [src]!"))
+		return
+
 	if(world.time < pull_time) //Need to wait until it's pulled out to aim
 		return
 
@@ -1643,6 +1647,10 @@ not all weapons use normal magazines etc. load_into_chamber() itself is designed
 		return TRUE
 	if(user.is_mob_incapacitated())
 		return
+	if(isliving(user))
+		var/mob/living/living_user = user
+		if(living_user.body_position == LYING_DOWN && !living_user.can_use_hands_lying())
+			return
 	if(world.time < guaranteed_delay_time)
 		return
 	if((world.time < wield_time || world.time < pull_time) && (delay_style & WEAPON_DELAY_NO_FIRE > 0))
@@ -1673,6 +1681,9 @@ not all weapons use normal magazines etc. load_into_chamber() itself is designed
 					return
 		if((flags_gun_features & GUN_WIELDED_FIRING_ONLY) && !(flags_item & WIELDED) && !active_attachable) //If we're not holding the weapon with both hands when we should.
 			to_chat(user, SPAN_WARNING("You need a more secure grip to fire this weapon!"))
+			return
+		if(HAS_TRAIT(user, TRAIT_WOUNDED_DOWN) && gun_firemode != GUN_FIREMODE_SEMIAUTO && !active_attachable)
+			to_chat(user, SPAN_WARNING("You're too weak to control [src] on anything but single shots!"))
 			return
 
 		if((flags_gun_features & GUN_WY_RESTRICTED) && !wy_allowed_check(user))
@@ -1779,6 +1790,10 @@ not all weapons use normal magazines etc. load_into_chamber() itself is designed
 
 	if(dual_wield) //akimbo firing gives terrible accuracy
 		gun_accuracy_mult = max(0.1, gun_accuracy_mult - 0.1*rand(5,7))
+		gun_scatter += SCATTER_AMOUNT_TIER_3
+
+	if(user && HAS_TRAIT(user, TRAIT_WOUNDED_DOWN)) //shaking hands of a badly wounded shooter
+		gun_accuracy_mult = max(0.1, gun_accuracy_mult - HIT_ACCURACY_MULT_TIER_10)
 		gun_scatter += SCATTER_AMOUNT_TIER_3
 
 	// Apply any skill-based bonuses to accuracy

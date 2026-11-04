@@ -145,6 +145,19 @@ OverrideTimelock(/datum/job/marine/leader, list(
 	squad = SQUAD_RMC
 	job = /datum/job/marine/leader/ai/rmc
 
+
+/datum/job/marine/leader/ai/clf
+	title = JOB_SQUAD_LEADER_CLF
+	gear_preset = /datum/equipment_preset/uscm/clf/sl
+	job_options = null
+	supervisors = "the cell command"
+	entry_message_body = "You are the leader of your cell. Give orders, complete your tasks, but always remember that <b>you and your guys are one team</b>.<br>You don't like the rigor of the entire army, so you shouldn't torment your people with formations and demands to take something specific if the task doesn't require it. "
+
+/obj/effect/landmark/start/marine/leader/clf
+	name = JOB_SQUAD_LEADER_CLF
+	squad = SQUAD_CLF
+	job = /datum/job/marine/leader/ai/clf
+
 #undef MSSGT_VARIANT
 #undef GYSGT_VARIANT
 #undef SGTMJR_VARIANT

@@ -1039,5 +1039,21 @@
 	density = FALSE
 	handheld_type = /obj/item/defenses/handheld/sentry/upp/light
 
+/obj/structure/machinery/defenses/sentry/clf
+	name = "\improper hacked UPPA 30-H sentry gun"
+	desc = "A deployable, semi-automated turret with AI targeting capabilities. This is an older, modified model of the UPPA 32-H: its targeting routines and firing cycle are slower than modern sentries, but the reinforced frame and armor plating make it significantly more durable."
+	icon = 'icons/obj/structures/machinery/defenses/clf_defenses.dmi'
+	health = 350
+	health_max = 350
+	choice_categories = list(
+		SENTRY_CATEGORY_IFF = list(FACTION_CLF, FACTION_COLONIST, SENTRY_FACTION_HUMAN),
+	)
+
+	selected_categories = list(
+		SENTRY_CATEGORY_IFF = FACTION_CLF,
+	)
+	handheld_type = /obj/item/defenses/handheld/planted_flag/clf
+	fire_delay = 3
+
 #undef SENTRY_FIREANGLE
 #undef SENTRY_RANGE

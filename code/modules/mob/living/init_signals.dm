@@ -20,6 +20,9 @@
 	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_DAZED), PROC_REF(on_dazed_trait_gain))
 	RegisterSignal(src, SIGNAL_REMOVETRAIT(TRAIT_DAZED), PROC_REF(on_dazed_trait_loss))
 
+	RegisterSignal(src, SIGNAL_ADDTRAIT(TRAIT_WOUNDED_DOWN), PROC_REF(on_wounded_down_trait_gain))
+	RegisterSignal(src, SIGNAL_REMOVETRAIT(TRAIT_WOUNDED_DOWN), PROC_REF(on_wounded_down_trait_loss))
+
 /// Called when [TRAIT_KNOCKEDOUT] is added to the mob.
 /mob/living/proc/on_knockedout_trait_gain(datum/source)
 	SIGNAL_HANDLER
@@ -54,6 +57,9 @@
 	if(HAS_TRAIT(src, TRAIT_FORCED_STANDING))
 		return // Don't go horizontal if mob has forced standing trait.
 	mobility_flags &= ~MOBILITY_STAND
+	if(body_position == LYING_DOWN) // Already down with free hands, lets go of them now
+		drop_l_hand()
+		drop_r_hand()
 	on_floored_start()
 
 
@@ -77,12 +83,15 @@
 	if(HAS_TRAIT(src, TRAIT_FLOORED))
 		on_fall()
 		set_lying_down()
-	else if(resting)
+	else if(resting || HAS_TRAIT(src, TRAIT_WOUNDED_DOWN))
 		set_lying_down()
 
 /// Called when [TRAIT_INCAPACITATED] is added to the mob.
 /mob/living/proc/on_incapacitated_trait_gain(datum/source)
 	SIGNAL_HANDLER
+	if(body_position == LYING_DOWN) // Already down with free hands, lets go of them now
+		drop_l_hand()
+		drop_r_hand()
 	//add_traits(list(TRAIT_UI_BLOCKED, TRAIT_PULL_BLOCKED), TRAIT_INCAPACITATED)
 	//update_appearance()
 	return
@@ -101,6 +110,25 @@
 /// Called when [TRAIT_DAZED] is removed from the mob.
 /mob/living/proc/on_dazed_trait_loss(datum/source)
 	SIGNAL_HANDLER
+
+/// Called when [TRAIT_WOUNDED_DOWN] is added to the mob.
+/mob/living/proc/on_wounded_down_trait_gain(datum/source)
+	SIGNAL_HANDLER
+	if(s_active && !s_active.wounded_can_access(src, silent = TRUE))
+		s_active.storage_close(src)
+	if(buckled && buckled.buckle_lying != NO_BUCKLE_LYING)
+		return // Handled by the buckle.
+	if(HAS_TRAIT(src, TRAIT_FORCED_STANDING))
+		return
+	if(body_position == STANDING_UP)
+		set_body_position(LYING_DOWN)
+		set_lying_angle(pick(90, 270), on_movement = TRUE)
+
+/// Called when [TRAIT_WOUNDED_DOWN] is removed from the mob.
+/mob/living/proc/on_wounded_down_trait_loss(datum/source)
+	SIGNAL_HANDLER
+	if(!resting)
+		get_up()
 
 /// Called when [TRAIT_UNDENSE] is gained or lost
 /mob/living/proc/undense_changed(datum/source)

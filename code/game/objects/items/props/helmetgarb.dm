@@ -145,8 +145,10 @@
 	remove_attached_item()
 
 	var/obj/item/MO = S.master_object
-	if(!istype(MO, /obj/item/clothing/head/helmet/marine) && !istype(MO, /obj/item/clothing/head/cmcap)) // Do not bother if it's not a helmet or at least a hat
+	// SS220 EDIT - START
+	if(!istype(MO, /obj/item/clothing/head/helmet/marine) && !istype(MO, /obj/item/clothing/head/cmcap) && !istype(MO, /obj/item/clothing/head/helmet/upp))
 		return
+	// SS220 EDIT - END
 
 	attached_item = MO
 
@@ -388,11 +390,14 @@
 	set category = "Object"
 	set name = "Toggle M2 night vision goggles"
 
-	var/obj/item/clothing/head/helmet/marine/H = usr.get_item_by_slot(WEAR_HEAD)
-	if(istype(H))
-		for(var/obj/item/prop/helmetgarb/helmet_nvg/G in H.pockets.contents)
+	// SS220 EDIT - START
+	var/obj/item/clothing/head/headgear = usr.get_item_by_slot(WEAR_HEAD)
+	var/obj/item/storage/internal/headgear/headgear_pockets = headgear?.get_pockets()
+	if(headgear_pockets)
+		for(var/obj/item/prop/helmetgarb/helmet_nvg/G in headgear_pockets.contents)
 			G.toggle_nods(usr)
 			break
+	// SS220 EDIT - END
 
 
 /obj/item/prop/helmetgarb/helmet_nvg/proc/toggle_nods(mob/living/carbon/human/user)
@@ -457,8 +462,12 @@
 		src.color = "#4e4e4e"
 		if(shape != NVG_SHAPE_COSMETIC)
 			shape = NVG_SHAPE_BROKEN
-		var/obj/item/clothing/head/helmet/marine/H = attached_item
-		H.pockets.remove_from_storage(src, get_turf(H))
+		// SS220 EDIT - START
+		var/obj/item/clothing/head/headgear = attached_item
+		var/obj/item/storage/internal/headgear/headgear_pockets = headgear?.get_pockets()
+		if(headgear_pockets)
+			headgear_pockets.remove_from_storage(src, get_turf(headgear))
+		// SS220 EDIT - END
 
 /obj/item/prop/helmetgarb/helmet_nvg/cosmetic //for "custom loadout", purely cosmetic
 	name = "old M2 night vision goggles"

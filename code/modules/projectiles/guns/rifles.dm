@@ -1037,6 +1037,12 @@
 	starting_attachment_types = list(/obj/item/attachable/verticalgrip, /obj/item/attachable/suppressor, /obj/item/attachable/magnetic_harness)
 	flags_gun_features = GUN_AMMO_COUNTER|GUN_AUTO_EJECTOR|GUN_CAN_POINTBLANK|GUN_AUTO_EJECT_CASINGS
 
+/obj/item/weapon/gun/rifle/mar40/carbine/tactical/clf
+	starting_attachment_types = null
+
+/obj/item/weapon/gun/rifle/mar40/carbine/tactical/clf/unloaded
+	current_mag = null
+
 /obj/item/weapon/gun/rifle/mar40/lmg
 	name = "\improper MAR-50 light machine gun"
 	desc = "A cheap, reliable LMG chambered in 8.8x29mm. Commonly found in the hands of slightly better funded criminals."
@@ -1181,6 +1187,13 @@
 	damage_mult = BASE_BULLET_DAMAGE_MULT
 	recoil_unwielded = RECOIL_AMOUNT_TIER_2
 
+/obj/item/weapon/gun/rifle/m16/tactical
+	desc = "Chambered in 5.56x45mm, popular on the Frontier for home defense and hunting. This one has been equipped with an after-market ammo-counter."
+	flags_gun_features = GUN_AMMO_COUNTER|GUN_AUTO_EJECTOR|GUN_CAN_POINTBLANK|GUN_AUTO_EJECT_CASINGS
+
+/obj/item/weapon/gun/rifle/m16/tactical/unloaded
+	current_mag = null
+
 /obj/item/weapon/gun/rifle/m16/grenadier
 	name = "\improper M16 grenadier rifle"
 	desc = "The little worn and faded sticker on the lower receiver claims that this is a Mustang Special, Little Friend Edition. Point is, it's an M16 repro with an irremovable M203 underslung. 40mm, careful where you point it." // SS220 EDIT: CM-PVE PR #169 — desc update
@@ -1225,6 +1238,13 @@
 	integrated.hidden = FALSE
 	integrated.Attach(src)
 	update_attachable(integrated.slot)
+
+/obj/item/weapon/gun/rifle/m16/grenadier/tactical
+	desc = "The little worn and faded sticker on the lower receiver claims that this is a Mustang Special, Little Friend Edition. Point is, it's an M16 repro with an irremovable M203 underslung. 40mm, careful where you point it. This one has been equipped with an after-market ammo-counter."
+	flags_gun_features = GUN_AMMO_COUNTER|GUN_AUTO_EJECTOR|GUN_CAN_POINTBLANK|GUN_AUTO_EJECT_CASINGS
+
+/obj/item/weapon/gun/rifle/m16/grenadier/tactical/unloaded
+	current_mag = null
 
 //-------------------------------------------------------
 //XM177 carbine
@@ -2371,6 +2391,7 @@
 	scatter_unwielded = SCATTER_AMOUNT_TIER_2
 	damage_mult = BASE_BULLET_DAMAGE_MULT
 	recoil_unwielded = RECOIL_AMOUNT_TIER_2
+	damage_falloff_mult = 0.5
 
 /obj/item/weapon/gun/rifle/rmc_f90/a_grip
 	name = "\improper F903A2 Rifle"
@@ -2408,7 +2429,7 @@
 	accuracy_mult_unwielded = BASE_ACCURACY_MULT - HIT_ACCURACY_MULT_TIER_7
 	scatter = SCATTER_AMOUNT_TIER_8
 	scatter_unwielded = SCATTER_AMOUNT_TIER_2
-	damage_mult = BASE_BULLET_DAMAGE_MULT
+	damage_mult = BASE_BULLET_DAMAGE_MULT + BULLET_DAMAGE_MULT_TIER_2
 	recoil_unwielded = RECOIL_AMOUNT_TIER_2
 	damage_falloff_mult = 0
 

@@ -93,7 +93,7 @@
 /obj/item/device/helmet_visor/twe
 	name = "squad optic"
 	desc = "An insertable visor HUD into a standard RMC helmet."
-	hud_type = list(MOB_HUD_FACTION_TWE)
+	hud_type = list(MOB_HUD_FACTION_TWE, MOB_HUD_FACTION_IASF)
 
 /obj/item/device/helmet_visor/pmc
 	name = "C/PAV-Mk.1 visor"
@@ -134,7 +134,7 @@
 /obj/item/device/helmet_visor/medical/advanced/rmc
 	name = "HBVS visor"
 	desc = "One of the few successful components from the otherwise disastrous Commando Upgrade Program ran in the mid 2170s, the head-mounted, biomonitor vision system comes as standard in all RMC helmets."
-	hud_type = list(MOB_HUD_FACTION_WY, MOB_HUD_FACTION_TWE, MOB_HUD_MEDICAL_ADVANCED)
+	hud_type = list(MOB_HUD_FACTION_WY, MOB_HUD_FACTION_TWE, MOB_HUD_FACTION_IASF, MOB_HUD_MEDICAL_ADVANCED)
 	icon_state = "hud_sight"
 	action_icon_string = "hud_sight_down"
 	helmet_overlay = "hud_sight_full"
@@ -271,10 +271,10 @@
 	toggle_off_sound = 'sound/handling/toggle_nv2.ogg'
 
 	/// The internal battery for the visor
-	var/obj/item/cell/high/power_cell
+	var/obj/item/cell/super/power_cell
 
 	/// About 5 minutes active use charge (hypothetically)
-	var/power_use = 33
+	var/power_use = 10
 
 	/// The alpha of darkness we set to for the mob while the visor is on, not completely fullbright but see-able
 	var/lighting_alpha = 140
@@ -283,7 +283,7 @@
 	var/atom/movable/nvg_light/on_light
 
 	/// Whether or not the sight uses on_light and produces light
-	var/visor_glows = TRUE
+	var/visor_glows = FALSE
 
 /obj/item/device/helmet_visor/night_vision/Initialize(mapload, ...)
 	. = ..()
@@ -431,7 +431,7 @@
 /obj/item/device/helmet_visor/night_vision/marine_raider/rmc
 	name = "HIBVS night-sight visor"
 	desc = "A heavily modified version of the standard HBVS, that offers infrared night-vision capabilities alongside the existent biomonitoring systems."
-	hud_type = list(MOB_HUD_FACTION_TWE, MOB_HUD_FACTION_WY, MOB_HUD_MEDICAL_ADVANCED)
+	hud_type = list(MOB_HUD_FACTION_TWE, MOB_HUD_FACTION_WY, MOB_HUD_FACTION_IASF, MOB_HUD_MEDICAL_ADVANCED)
 	helmet_overlay = "nvg_sight_rmc"
 	power_use = 0
 	visor_glows = FALSE

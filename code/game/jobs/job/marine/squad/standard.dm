@@ -140,9 +140,11 @@
 	total_positions = 1
 	spawn_positions = 1
 	title = JOB_SQUAD_RTO_FORECON_UPP
-	gear_preset = /datum/equipment_preset/uscm/rto/upp
-	gear_preset_secondary = /datum/equipment_preset/uscm/rto/upp/corporal
-	gear_preset_tertiary = /datum/equipment_preset/uscm/rto/upp/senior_private
+	// SS220 EDIT - START
+	gear_preset = /datum/equipment_preset/uscm/rto/upp/forecon
+	gear_preset_secondary = /datum/equipment_preset/uscm/rto/upp/forecon/corporal
+	gear_preset_tertiary = /datum/equipment_preset/uscm/rto/upp/forecon/senior_private
+	// SS220 EDIT - END
 	job_options = list(SR_PVT_VARIANT = "SrPVT", CPL_VARIANT = "CPL", JSGT_VARIANT = "JrSGT")
 
 /obj/effect/landmark/start/marine/rto/upp/forecon
@@ -213,6 +215,21 @@
 	name = JOB_TWE_RMC_RIFLEMAN
 	squad = SQUAD_RMC
 	job = /datum/job/marine/standard/ai/rmc
+
+
+/datum/job/marine/standard/ai/clf
+	title = JOB_SQUAD_MARINE_CLF
+	total_positions = 4
+	spawn_positions = 4
+	gear_preset = /datum/equipment_preset/uscm/clf
+	job_options = null
+	supervisors = "the cell leader and cell command"
+	entry_message_body = "You are an ordinary fighter in your cell. You don't have any specific functions in the squad, so you can be anyone and anything.<br> There makes no difference whether you were an experienced veteran who left the army after the Xibou massacre, or were an ordinary volunteer. Now you are an experienced rebel with a wealth of military experience behind you."
+
+/obj/effect/landmark/start/marine/clf
+	name = JOB_SQUAD_MARINE_CLF
+	squad = SQUAD_CLF
+	job = /datum/job/marine/standard/ai/clf
 
 #undef JSGT_VARIANT
 #undef CPL_VARIANT

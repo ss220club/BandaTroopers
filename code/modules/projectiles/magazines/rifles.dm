@@ -253,7 +253,7 @@
 	icon = 'icons/obj/items/weapons/guns/ammo_by_faction/colony.dmi'
 	icon_state = "m16"
 	default_ammo = /datum/ammo/bullet/rifle/m16
-	max_rounds = 20
+	max_rounds = 40
 	gun_type = /obj/item/weapon/gun/rifle/m16
 	w_class = SIZE_MEDIUM
 	ammo_band_icon = "+m16_band"
@@ -265,21 +265,56 @@
 	caliber = "5.56x45mm"
 	icon = 'icons/obj/items/weapons/guns/ammo_by_faction/colony.dmi'
 	icon_state = "m16"
-	max_rounds = 30
+	max_rounds = 60
 	gun_type = /obj/item/weapon/gun/rifle/m16
 	w_class = SIZE_MEDIUM
 	ammo_band_icon = "+m16_band"
 	ammo_band_icon_empty = "+m16_band_e"
+
+/obj/item/ammo_magazine/rifle/m16/extended/pve
+	name = "\improper M16 extended magazine"
+	desc = "An FMJ 5.56x45mm magazine for the M16 assault rifle and its clones. Holds 80 rounds."
+	max_rounds = 80
 
 /obj/item/ammo_magazine/rifle/m16/ap
 	name = "\improper M16 AP magazine" // SS220 EDIT: CM-PVE PR #169 — name/desc update
 	desc = "An AP 5.56x45mm magazine for the M16 assault rifle and its clones. Holds 20 rounds." // SS220 EDIT: CM-PVE PR #169
 	caliber = "5.56x45mm"
 	default_ammo = /datum/ammo/bullet/rifle/m16/ap
-	max_rounds = 20
+	max_rounds = 40
 	gun_type = /obj/item/weapon/gun/rifle/m16
 	w_class = SIZE_MEDIUM
 	ammo_band_color = AMMO_BAND_COLOR_AP
+
+/obj/item/ammo_magazine/rifle/m16/incendiary
+	name = "\improper M16 incendiary magazine"
+	desc = "An incendiary 5.56x45mm magazine for the M16 assault rifle and its clones. Holds 20 rounds."
+	caliber = "5.56x45mm"
+	default_ammo = /datum/ammo/bullet/rifle/m16/incendiary
+	max_rounds = 40
+	gun_type = /obj/item/weapon/gun/rifle/m16
+	w_class = SIZE_MEDIUM
+	ammo_band_color = AMMO_BAND_COLOR_INCENDIARY
+
+/obj/item/ammo_magazine/rifle/m16/toxin
+	name = "\improper M16 toxin magazine"
+	desc = "An toxin 5.56x45mm magazine for the M16 assault rifle and its clones. Holds 20 rounds."
+	caliber = "5.56x45mm"
+	default_ammo = /datum/ammo/bullet/rifle/m16/ap/toxin
+	max_rounds = 40
+	gun_type = /obj/item/weapon/gun/rifle/m16
+	w_class = SIZE_MEDIUM
+	ammo_band_color = AMMO_BAND_COLOR_TOXIN
+
+/obj/item/ammo_magazine/rifle/m16/heap
+	name = "\improper M16 HEAP magazine"
+	desc = "An HEAP 5.56x45mm magazine for the M16 assault rifle and its clones. Holds 20 rounds."
+	caliber = "5.56x45mm"
+	default_ammo = /datum/ammo/bullet/rifle/m16/heap
+	max_rounds = 40
+	gun_type = /obj/item/weapon/gun/rifle/m16
+	w_class = SIZE_MEDIUM
+	ammo_band_color = AMMO_BAND_COLOR_HEAP
 
 //-------------------------------------------------------
 //AR10 RIFLE
@@ -551,7 +586,7 @@
 	icon = 'icons/obj/items/weapons/guns/ammo_by_faction/WY/assault_rifles.dmi'
 	icon_state = "nsg23"
 	item_state = "nsg23"
-	bonus_overlay = "nsg23_mag_overlay" //needs to be an overlay, as the mag has a hole that would be filled over by the ext overlay
+	bonus_overlay = null
 	max_rounds = 65
 	gun_type = /obj/item/weapon/gun/rifle/nsg23
 	ammo_band_icon = "+nsg23_band"

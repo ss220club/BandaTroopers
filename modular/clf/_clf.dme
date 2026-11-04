@@ -1,0 +1,6 @@
+#include "code\accessories.dm"
+#include "code\armor.dm"
+#include "code\weapons.dm"
+#include "code\map_compat.dm"
+#include "code\shuttle.dm"
+#include "code\preview.dm"

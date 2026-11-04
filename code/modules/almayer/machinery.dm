@@ -410,6 +410,10 @@
 	unslashable = TRUE
 	unacidable = TRUE
 
+/obj/structure/prop/almayer/name_stencil/liberty
+	name = "SS Liberty"
+	icon_state = "l1"
+
 /obj/structure/prop/almayer/hangar_stencil
 	name = "floor"
 	desc = "A large number stenciled on the hangar floor used to designate which dropship it is."
