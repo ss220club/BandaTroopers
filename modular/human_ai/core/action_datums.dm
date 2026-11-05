@@ -25,14 +25,22 @@ GLOBAL_LIST_INIT_TYPED(AI_actions, /datum/ai_action, setup_ai_actions())
 /datum/ai_action/proc/get_conflicts(datum/human_ai_brain/brain)
 	SHOULD_CALL_PARENT(TRUE)
 	RETURN_TYPE(/list)
-	. = list()
 
 	if(!action_flags)
-		return
+		return list()
 
-	for(var/action_type as anything in GLOB.AI_actions)
-		if(GLOB.AI_actions[action_type].action_flags & action_flags)
-			. += action_type
+	// Prototype flags are immutable after setup_ai_actions(). Subtypes append
+	// their own dynamic conflicts to a copy, never to the shared base list.
+	var/static/list/conflicts_by_flags = list()
+	var/key = "[action_flags]"
+	var/list/base_conflicts = conflicts_by_flags[key]
+	if(isnull(base_conflicts))
+		base_conflicts = list()
+		for(var/action_type as anything in GLOB.AI_actions)
+			if(GLOB.AI_actions[action_type].action_flags & action_flags)
+				base_conflicts += action_type
+		conflicts_by_flags[key] = base_conflicts
+	return base_conflicts.Copy()
 
 /datum/ai_action/New(datum/human_ai_brain/brain)
 	. = ..()

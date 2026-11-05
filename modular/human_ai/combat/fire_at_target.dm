@@ -6,6 +6,7 @@
 	var/rounds_burst_fired = 0
 	var/currently_firing
 	var/list/watched_turfs = list()
+	var/followup_fire_timer
 
 /datum/ai_action/fire_at_target/get_weight(datum/human_ai_brain/brain)
 	if(world.time < brain.settings_reaction_until)
@@ -58,6 +59,9 @@
 /datum/ai_action/fire_at_target/proc/stop_firing(datum/human_ai_brain/brain)
 	currently_firing = FALSE
 	rounds_burst_fired = 0
+	if(followup_fire_timer)
+		deltimer(followup_fire_timer)
+		followup_fire_timer = null
 	clear_watched_turfs()
 
 	if(!brain)
@@ -93,7 +97,7 @@
 	if(brain.halo_should_defer_ranged_fire(brain.current_target || brain.target_turf))
 		return ONGOING_ACTION_COMPLETED
 
-	if(currently_firing || !COOLDOWN_FINISHED(brain, fire_overload_cooldown))
+	if(currently_firing || followup_fire_timer || !COOLDOWN_FINISHED(brain, fire_overload_cooldown))
 		return ONGOING_ACTION_UNFINISHED
 
 	var/mob/living/carbon/tied_human = brain.tied_human
@@ -166,9 +170,6 @@
 			else if((tile_dist > 3) && thing.projectile_coverage >= PROJECTILE_COVERAGE_MEDIUM)
 				return FALSE
 
-	if(listen)
-		clear_watched_turfs()
-
 	var/list/checked_turfs = list()
 	for(var/i in 2 to length(turf_list))
 		var/turf/tile = turf_list[i]
@@ -186,10 +187,6 @@
 				continue
 			checked_turfs[T] = TRUE
 
-			if(listen)
-				RegisterSignal(T, COMSIG_TURF_ENTERED, PROC_REF(cheap_friendly_check))
-				watched_turfs += T
-
 			for(var/mob/living/possible_friendly in T)
 				if(possible_friendly == tied_human)
 					continue
@@ -200,31 +197,84 @@
 				if(brain.faction_check(possible_friendly))
 					return FALSE
 
+	if(listen)
+		// Every shot still checks live contents; only unchanged subscriptions are reused.
+		for(var/turf/old_turf as anything in watched_turfs)
+			if(!checked_turfs[old_turf])
+				UnregisterSignal(old_turf, COMSIG_TURF_ENTERED)
+		for(var/turf/new_turf as anything in checked_turfs)
+			if(!signal_procs?[new_turf]?[COMSIG_TURF_ENTERED])
+				RegisterSignal(new_turf, COMSIG_TURF_ENTERED, PROC_REF(cheap_friendly_check))
+		watched_turfs = checked_turfs
+
 	return TRUE
+
+/// Delayed semi-auto/burst shots belong to this action, so cancellation also cancels the shot.
+/datum/ai_action/fire_at_target/proc/fire_followup(obj/item/weapon/gun/weapon, atom/target)
+	HAI_PROFILE_BEGIN(event)
+	followup_fire_timer = null
+	if(QDELETED(src) || !brain || !brain.has_valid_tied_human())
+		HAI_PROFILE_END(event, "fire_followup")
+		return
+	var/mob/living/carbon/human/owner = brain.tied_human
+	if(owner.client || owner.stat == DEAD || owner.is_mob_incapacitated())
+		HAI_PROFILE_END(event, "fire_followup")
+		return
+	if(QDELETED(weapon) || brain.primary_weapon != weapon || QDELETED(target))
+		HAI_PROFILE_END(event, "fire_followup")
+		return
+	var/current_target_matches = brain.current_target == target
+	var/offscreen_target_matches = !brain.current_target && target == brain.target_turf && !COOLDOWN_FINISHED(brain, fire_offscreen)
+	if(!current_target_matches && !offscreen_target_matches)
+		HAI_PROFILE_END(event, "fire_followup")
+		return
+	if(brain.active_grenade_found || !COOLDOWN_FINISHED(brain, stop_fire_cooldown) || !COOLDOWN_FINISHED(brain, fire_overload_cooldown))
+		HAI_PROFILE_END(event, "fire_followup")
+		return
+	if(brain.halo_should_defer_ranged_fire(target))
+		HAI_PROFILE_END(event, "fire_followup")
+		return
+	if(!firing_line_check(brain, target))
+		stop_firing(brain)
+		qdel(src)
+		HAI_PROFILE_END(event, "fire_followup")
+		return
+	weapon.start_fire(object = target, bypass_checks = TRUE)
+	HAI_PROFILE_END(event, "fire_followup")
+
 
 /datum/ai_action/fire_at_target/proc/cheap_friendly_check(datum/source, atom/movable/entering)
 	SIGNAL_HANDLER
+	HAI_PROFILE_BEGIN(event)
 	if(!brain)
+		HAI_PROFILE_END(event, "fire_safety")
 		return
 	if(entering == brain.tied_human)
+		HAI_PROFILE_END(event, "fire_safety")
 		return
 
 	if(!istype(entering, /mob/living))
+		HAI_PROFILE_END(event, "fire_safety")
 		return
 
 	var/mob/living/H = entering
 	if(H.body_position == LYING_DOWN)
+		HAI_PROFILE_END(event, "fire_safety")
 		return
 
 	if(brain.faction_check(H))
 		stop_firing(brain)
 		qdel(src)
+	HAI_PROFILE_END(event, "fire_safety")
+
 
 /datum/ai_action/fire_at_target/proc/on_gun_fire(datum/source, obj/item/weapon/gun/fired)
 	SIGNAL_HANDLER
+	HAI_PROFILE_BEGIN(event)
 
 	if(!brain || !brain.has_valid_tied_human()) // SS220 EDIT: late gun callbacks can outlive the modular AI owner for a tick
 		qdel(src)
+		HAI_PROFILE_END(event, "fire_event")
 		return
 
 	var/turf/target_turf = brain.target_turf
@@ -244,6 +294,7 @@
 			brain.set_primary_weapon(null)
 		stop_firing(brain)
 		qdel(src)
+		HAI_PROFILE_END(event, "fire_event")
 		return
 
 	var/should_fire_offscreen = (target_turf && !COOLDOWN_FINISHED(brain, fire_offscreen))
@@ -253,6 +304,7 @@
 		if(!should_fire_offscreen)
 			stop_firing(brain)
 			qdel(src)
+			HAI_PROFILE_END(event, "fire_event")
 			return
 		shoot_next = target_turf
 
@@ -262,17 +314,20 @@
 			stop_firing(brain)
 			brain.lose_target()
 			qdel(src)
+			HAI_PROFILE_END(event, "fire_event")
 			return
 
 		var/is_unconscious = (mob_target.stat == UNCONSCIOUS || (locate(/datum/effects/crit) in mob_target.effects_list))
 		if(!brain.shoot_to_kill && is_unconscious)
 			brain.lose_target()
 			qdel(src)
+			HAI_PROFILE_END(event, "fire_event")
 			return
 
 	if(brain.halo_should_defer_ranged_fire(shoot_next))
 		stop_firing(brain)
 		qdel(src)
+		HAI_PROFILE_END(event, "fire_event")
 		return
 
 	var/count_shot_against_burst_limit = ((brain.primary_weapon.gun_firemode == GUN_FIREMODE_AUTOMATIC) || gun_data.count_every_shot_toward_burst_limit)
@@ -283,21 +338,25 @@
 		var/short_action_delay = brain.short_action_delay
 		COOLDOWN_START(brain, fire_overload_cooldown, max(short_action_delay, short_action_delay * brain.action_delay_mult, brain.setting("burst_pause") * 10))
 		stop_firing(brain)
+		HAI_PROFILE_END(event, "fire_event")
 		return
 
 	if((get_dist(tied_human, shoot_next) > gun_data.maximum_range) && !should_fire_offscreen)
 		brain.lose_target()
 		stop_firing(brain)
 		qdel(src)
+		HAI_PROFILE_END(event, "fire_event")
 		return
 
 	if(brain.current_target && (get_dist(tied_human, brain.current_target) <= 1))
 		currently_firing = FALSE
+		HAI_PROFILE_END(event, "fire_event")
 		return
 
 	if(!firing_line_check(brain, shoot_next, listen = TRUE))
 		stop_firing(brain)
 		qdel(src)
+		HAI_PROFILE_END(event, "fire_event")
 		return
 
 	// SS220 EDIT - START: HALO covenant AI vents overheating plasma guns before they hard-lock in sustained fire
@@ -316,6 +375,7 @@
 				brain.unholster_primary()
 				brain.ensure_primary_hand(plasma_weapon)
 				plasma_weapon.unload(tied_human)
+				HAI_PROFILE_END(event, "fire_event")
 				return
 			else if(plasma_weapon.heat >= 100)
 				currently_firing = FALSE
@@ -329,6 +389,7 @@
 			COOLDOWN_START(brain, stop_fire_cooldown, max(shotgun.pump_delay, shotgun.get_fire_delay()) + 1)
 			stop_firing(brain)
 			qdel(src)
+			HAI_PROFILE_END(event, "fire_event")
 			return
 		else
 			var/obj/item/weapon/gun/shotgun/autoshotty = brain.primary_weapon
@@ -336,6 +397,7 @@
 			COOLDOWN_START(brain, stop_fire_cooldown, max(autoshotty.get_fire_delay()) + 3)
 			stop_firing(brain)
 			qdel(src)
+			HAI_PROFILE_END(event, "fire_event")
 			return
 
 	else if(istype(brain.primary_weapon, /obj/item/weapon/gun/rifle/xm51))
@@ -345,6 +407,7 @@
 		COOLDOWN_START(brain, stop_fire_cooldown, max(scattergun.pump_delay, scattergun.get_fire_delay()) + 1)
 		stop_firing(brain)
 		qdel(src)
+		HAI_PROFILE_END(event, "fire_event")
 		return
 
 	else if(istype(brain.primary_weapon, /obj/item/weapon/gun/boltaction))
@@ -355,6 +418,7 @@
 		COOLDOWN_START(brain, stop_fire_cooldown, max(bolt.bolt_delay * 2, bolt.get_fire_delay()) + 1)
 		stop_firing(brain)
 		qdel(src)
+		HAI_PROFILE_END(event, "fire_event")
 		return
 
 	// SS220 EDIT - START
@@ -369,17 +433,21 @@
 		COOLDOWN_START(brain, stop_fire_cooldown, max(followup_fire_cooldown, followup_fire_delay))
 		stop_firing(brain)
 		qdel(src)
+		HAI_PROFILE_END(event, "fire_event")
 		return
 	// SS220 EDIT - END
 
 	else if(brain.primary_weapon.gun_firemode == GUN_FIREMODE_SEMIAUTO)
 		currently_firing = FALSE
-		addtimer(CALLBACK(brain.primary_weapon, TYPE_PROC_REF(/obj/item/weapon/gun, start_fire), null, brain.current_target, null, null, null, TRUE), brain.primary_weapon.get_fire_delay())
+		if(!followup_fire_timer)
+			followup_fire_timer = addtimer(CALLBACK(src, PROC_REF(fire_followup), brain.primary_weapon, shoot_next), brain.primary_weapon.get_fire_delay(), TIMER_STOPPABLE)
 
 	else if(brain.primary_weapon.gun_firemode == GUN_FIREMODE_BURSTFIRE)
 		currently_firing = FALSE
-		addtimer(CALLBACK(brain.primary_weapon, TYPE_PROC_REF(/obj/item/weapon/gun, start_fire), null, brain.current_target, null, null, null, TRUE), brain.primary_weapon.get_burst_fire_delay())
+		if(!followup_fire_timer)
+			followup_fire_timer = addtimer(CALLBACK(src, PROC_REF(fire_followup), brain.primary_weapon, shoot_next), brain.primary_weapon.get_burst_fire_delay(), TIMER_STOPPABLE)
 
 	brain.primary_weapon?.set_target(shoot_next)
+	HAI_PROFILE_END(event, "fire_event")
 
 #undef FRIENDLY_FIRE_ADJACENT_CHECK_START_INDEX

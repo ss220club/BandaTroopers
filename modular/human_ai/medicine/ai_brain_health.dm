@@ -72,6 +72,10 @@
 
 	/// Reference for found injured ally
 	var/mob/living/carbon/human/found_injured_ally
+	/// Scoped to synchronous preemption/selection; never an authorization to administer treatment.
+	var/ally_treatment_decision_active = FALSE
+	var/ally_treatment_decision_checked = FALSE
+	var/mob/living/carbon/human/ally_treatment_decision_target
 
 	/// Cooldown on using pills to avoid OD. This isn't the best solution as it prevents the AI from using more than 1 pill of any kind every 20s, but it'll work for now
 	COOLDOWN_DECLARE(pill_use_cooldown)
@@ -108,14 +112,17 @@
 	for(var/mob/living/carbon/human/possible_buddy as anything in GLOB.alive_human_list)
 		if(possible_buddy == tied_human)
 			continue
+		// Preserve contained patients and tie ordering, but reject distant mobs before treatment or LOS work.
+		if(possible_buddy.z != tied_human.z || get_dist(tied_human, possible_buddy) > medical_view_distance)
+			continue
 
 		if(!faction_check(possible_buddy))
 			continue
 
-		if(!medical_target_in_view(possible_buddy))
+		if(!can_treat_ally(possible_buddy))
 			continue
 
-		if(!can_treat_ally(possible_buddy))
+		if(!medical_target_in_view(possible_buddy))
 			continue
 
 		var/distance = get_dist(tied_human, possible_buddy)
@@ -221,6 +228,12 @@
 		return FALSE
 	return has_usable_treatment(possible_buddy)
 
+/// End the decision snapshot before actions can move, change equipment or start asynchronous treatment.
+/datum/human_ai_brain/proc/clear_ally_treatment_decision()
+	ally_treatment_decision_active = FALSE
+	ally_treatment_decision_checked = FALSE
+	ally_treatment_decision_target = null
+
 /// Returns the patient that should preempt routine movement or looting, if medical action is currently safe.
 /datum/human_ai_brain/proc/get_priority_ally_treatment_target()
 	if(has_live_grenade_emergency())
@@ -230,8 +243,20 @@
 	var/should_fire_offscreen = (target_turf && !COOLDOWN_FINISHED(src, fire_offscreen))
 	if(should_fire_offscreen || !length(equipment_map[HUMAN_AI_HEALTHITEMS]))
 		return
-	var/mob/living/carbon/human/treatment_target = get_injured_ally()
+	var/mob/living/carbon/human/treatment_target
+	if(ally_treatment_decision_active && ally_treatment_decision_checked)
+		treatment_target = ally_treatment_decision_target
+		// A rejected candidate waits for the next decision, rather than repeating the world scan.
+		if(!can_treat_ally(treatment_target) || !medical_target_in_view(treatment_target))
+			ally_treatment_decision_target = null
+			return
+	else
+		treatment_target = get_injured_ally()
+		if(ally_treatment_decision_active)
+			ally_treatment_decision_checked = TRUE
+			ally_treatment_decision_target = treatment_target
 	if(treatment_target)
+		// Deleting a conflicting treatment action can clear found_injured_ally during selection.
 		set_injured_ally(treatment_target)
 	return treatment_target
 
@@ -292,11 +317,13 @@
 		return TRUE
 
 	for(var/mob/living/carbon/human/possible_buddy as anything in GLOB.alive_human_list)
+		if(possible_buddy.z != tied_human.z || get_dist(tied_human, possible_buddy) > medical_view_distance)
+			continue
 		if(possible_buddy == tied_human || !faction_check(possible_buddy))
 			continue
-		if(!medical_target_in_view(possible_buddy))
+		if(!healing_start_check(possible_buddy) || !medical_item_can_treat(heal_item, possible_buddy))
 			continue
-		if(healing_start_check(possible_buddy) && medical_item_can_treat(heal_item, possible_buddy))
+		if(medical_target_in_view(possible_buddy))
 			return TRUE
 	return FALSE
 

@@ -99,6 +99,9 @@
 #include "../../../modular/human_ai/tests/migration_regressions.dm" // SS220 EDIT: migration safety contracts
 #include "../../../modular/human_ai/tests/obstacle_permissions.dm" // SS220 EDIT: shared NPC obstacle policy contracts
 #include "../../../modular/human_ai/tests/settings.dm" // SS220 EDIT: profile validation and alive-only settings
+#include "../../../modular/human_ai/tests/performance_core.dm" // SS220 EDIT: bounded NPC scheduler regression coverage
+#include "../../../modular/human_ai/tests/performance_navigation.dm" // SS220 EDIT: bounded NPC path request and cancellation coverage
+#include "../../../modular/human_ai/tests/performance_combat.dm" // SS220 EDIT: NPC combat lifetime and medical scan coverage
 
 #undef TEST_ASSERT
 #undef TEST_ASSERT_EQUAL

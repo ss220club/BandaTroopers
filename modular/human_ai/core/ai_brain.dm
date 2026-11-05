@@ -55,6 +55,9 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 	var/combat_decay_time_min = 15 SECONDS
 	/// The maximum amount of time that can pass before this AI can leave combat
 	var/combat_decay_time_max = 30 SECONDS
+	/// Refresh a deadline, not the timer object, on every combat update.
+	var/combat_decay_deadline = 0
+	var/combat_decay_timer
 	/// Minimum spacing between AI combat voicelines to avoid runaway chatter loops in prolonged fights.
 	var/combat_voiceline_cooldown_time = 4 SECONDS
 
@@ -125,6 +128,11 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 	return tied_human && !QDELETED(tied_human) && !isnull(tied_human.loc)
 
 /datum/human_ai_brain/proc/reset_ai()
+	clear_ally_treatment_decision()
+	if(combat_decay_timer)
+		deltimer(combat_decay_timer)
+		combat_decay_timer = null
+	combat_decay_deadline = 0
 	pursuit_forget()
 	clear_navigation_path()
 	treatment_generation++
@@ -154,11 +162,14 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 	invalidate_nearby_item_search()
 
 /datum/human_ai_brain/process(delta_time)
+	HAI_PROFILE_BEGIN(whole)
+	clear_ally_treatment_decision()
 	last_process_tick = world.time // SS220 EDIT: track scheduler entry to guard same-tick wake rethinks
 	wake_rethink_queued_at = -1 // SS220 EDIT: any queued wake rethink has been serviced once processing starts
 	if(!has_valid_tied_human()) // SS220 EDIT: upstream process loop must no-op once modular AI owner is gone
 		clear_detection_radius() // SS220 EDIT: stop listening to turf signals once the owner is gone
 		reset_ai()
+		HAI_PROFILE_END(whole, "process")
 		return
 
 	if(tied_human.stat == DEAD) // SS220 EDIT: dead HALO AI must never remain in the wake-up recovery path
@@ -172,15 +183,20 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 			tied_human.set_resting(TRUE, TRUE)
 		else
 			tied_human.set_lying_down()
+		HAI_PROFILE_END(whole, "process")
 		return
 
 	sync_settings()
+	HAI_PROFILE_BEGIN(pursuit)
+	pursuit_update()
+	HAI_PROFILE_END(pursuit, "pursuit_update")
 	if(tied_human.is_mob_incapacitated())
 		clear_detection_radius() // SS220 EDIT: stunned or dead AI should not keep turf-enter listeners alive
 		for(var/action in ongoing_actions)
 			qdel(action)
 		ongoing_actions.Cut()
 		lose_target()
+		HAI_PROFILE_END(whole, "process")
 		return
 
 	if(!length(detection_turfs))
@@ -199,6 +215,7 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 		ongoing_actions.Cut()
 		to_pickup.Cut() // SS220 EDIT: lying crit AI must drop stale pickup goals so it does not keep chasing far-away weapons after forced prone
 		invalidate_nearby_item_search()
+		HAI_PROFILE_END(whole, "process")
 		return
 	else if((tied_human.stat == CONSCIOUS) && tied_human.resting && !HAS_TRAIT(tied_human, TRAIT_FLOORED))
 		// SS220 EDIT - START: final stand-up gate must stay exactly aligned with the existing wake rethink eligibility rules
@@ -210,23 +227,37 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 	if(tied_human.buckled)
 		tied_human.set_buckled(FALSE) // AI never buckle themselves into chairs at the moment, change if this becomes the case
 
+	HAI_PROFILE_BEGIN(targeting)
 	if(!current_target)
-		set_target(get_target())
+		set_target(get_target(), visibility_confirmed = TRUE)
 
 	if(current_target)
 		update_target_pos()
 	if(current_target)
 		cancel_treatment_for_combat() // SS220 EDIT: a confirmed hostile target immediately outranks medical work
 		enter_combat()
+	HAI_PROFILE_END(targeting, "targeting")
 
+	HAI_PROFILE_BEGIN(items)
 	if(!iszombie(tied_human) && should_run_nearby_item_search())
 		item_search(range(2, tied_human))
+	HAI_PROFILE_END(items, "item_scan")
 
+	HAI_PROFILE_BEGIN(grenades)
 	scan_nearby_live_grenade_threat() // SS220 EDIT: active floor grenades require a dedicated four-tile emergency scan
 	preempt_actions_for_live_grenade() // SS220 EDIT: grenade reactions immediately release occupied hand and movement slots
+	HAI_PROFILE_END(grenades, "grenade_scan")
+	// Preemption and action weights share a patient search, not execution safety checks.
+	ally_treatment_decision_active = TRUE
+	HAI_PROFILE_BEGIN(medicine)
 	preempt_routine_actions_for_ally_treatment() // SS220 EDIT: safe medical emergencies displace stale routine action-slot owners
+	HAI_PROFILE_END(medicine, "medical_preemption")
+	HAI_PROFILE_BEGIN(safety)
 	preempt_actions_for_unsafe_turf() // SS220 EDIT: never let an interrupted traversal leave an NPC hidden inside scenery
 
+	HAI_PROFILE_END(safety, "navigation_safety")
+
+	HAI_PROFILE_BEGIN(selection)
 	// List all allowed action types for AI to consider
 	var/list/allowed_actions = (action_whitelist ? action_whitelist.Copy() : GLOB.AI_actions.Copy()) - action_blacklist
 	for(var/datum/ongoing_action as anything in ongoing_actions)
@@ -259,7 +290,7 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 		// SS220 EDIT: skip hand-using actions while a grenade throw is in async flight
 		if(grenade_throw_in_progress && (glob_ref.action_flags & ACTION_USING_HANDS))
 			continue
-		var/weight = glob_ref.get_weight(src)
+		var/weight = SShuman_ai.performance_profile_enabled ? glob_ref.profiled_get_weight(src) : glob_ref.get_weight(src)
 		if(weight) // No weight means we shouldn't consider this action at all
 			possible_actions[action_type] = weight
 
@@ -275,7 +306,7 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 		for(var/datum/ai_action/ongoing_action as anything in ongoing_actions)
 			if(!(ongoing_action.type in conflicting_actions))
 				continue
-			if(action_is_committed(ongoing_action) || possible_actions[action_type] <= max(ongoing_action.scheduled_weight, ongoing_action.get_weight(src)))
+			if(action_is_committed(ongoing_action) || possible_actions[action_type] <= max(ongoing_action.scheduled_weight, (SShuman_ai.performance_profile_enabled ? ongoing_action.profiled_get_weight(src) : ongoing_action.get_weight(src))))
 				possible_action = null
 				break
 			actions_to_preempt += ongoing_action
@@ -292,6 +323,10 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 		message_admins("action of type [action_type] was added to [tied_human.real_name]")
 #endif
 
+	HAI_PROFILE_END(selection, "selection")
+	clear_ally_treatment_decision()
+
+	HAI_PROFILE_BEGIN(dispatch)
 	for(var/datum/ai_action/action as anything in ongoing_actions)
 		if(!settings_allow_action(action))
 			qdel(action)
@@ -301,14 +336,22 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 		// SS220 EDIT: suppress hand-using actions while a grenade throw is in async flight
 		if(grenade_throw_in_progress && (action.action_flags & ACTION_USING_HANDS))
 			continue
+		var/profile_action_bucket = SShuman_ai.performance_profile_enabled ? SShuman_ai.performance_profile_action_keys[action.type] : null
+		HAI_PROFILE_BEGIN(action_dispatch)
 		var/retval = action.trigger_action()
+		HAI_PROFILE_END(action_dispatch, profile_action_bucket)
 		switch(retval)
 			if(ONGOING_ACTION_UNFINISHED_BLOCK)
+				HAI_PROFILE_END(dispatch, "dispatch")
+				HAI_PROFILE_END(whole, "process")
 				return
 			if(ONGOING_ACTION_COMPLETED)
 				qdel(action)
+	HAI_PROFILE_END(dispatch, "dispatch")
+	HAI_PROFILE_END(whole, "process")
 
-/datum/human_ai_brain/proc/set_target(mob/living/new_target)
+
+/datum/human_ai_brain/proc/set_target(atom/movable/new_target, visibility_confirmed = FALSE)
 	if(!new_target || QDELETED(new_target) || new_target == current_target)
 		return
 	lose_target()
@@ -320,7 +363,7 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 	settings_reaction_until = world.time + setting("reaction") * 10
 	settings_last_seen = world.time
 	target_turf = get_turf(current_target)
-	pursuit_record_observation(current_target)
+	pursuit_record_observation(current_target, visibility_confirmed)
 	invalidate_nearby_item_search()
 
 /datum/human_ai_brain/proc/lose_target()
@@ -349,18 +392,25 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 	nearby_item_search_dirty = TRUE
 
 /datum/human_ai_brain/proc/update_target_pos()
+	HAI_PROFILE_BEGIN(event)
 	if(!has_valid_tied_human())
 		target_turf = null
+		HAI_PROFILE_END(event, "target_tracking")
 		return
 
 	if(current_target)
-		if(tied_human in viewers(view_distance, current_target))
+		var/turf/observer_position = get_turf(tied_human)
+		var/turf/target_position = get_turf(current_target)
+		// Keep live viewers() authoritative; view() at acquisition is not its inverse.
+		if(observer_position && target_position && observer_position.z == target_position.z && (tied_human in viewers(view_distance, current_target)))
 			settings_last_seen = world.time
-			target_turf = get_turf(current_target)
+			target_turf = target_position
 			pursuit_record_observation(current_target, TRUE)
 		else
 			COOLDOWN_START(src, fire_offscreen, 2 SECONDS)
 			lose_target()
+	HAI_PROFILE_END(event, "target_tracking")
+
 
 /datum/human_ai_brain/proc/on_target_delete(datum/source, force)
 	SIGNAL_HANDLER
@@ -447,12 +497,17 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 		clear_detection_radius()
 		return
 
-	if(length(detection_turfs))
-		clear_detection_radius()
-
-	for(var/turf/open/floor in range(1, tied_human))
-		RegisterSignal(floor, COMSIG_TURF_ENTERED, PROC_REF(on_detection_turf_enter))
-		detection_turfs += floor
+	var/turf/center = get_turf(tied_human)
+	var/list/next_turfs = list()
+	for(var/turf/open/floor in range(1, center))
+		next_turfs += floor
+		// ChangeTurf tears down signals even when the turf remains in our old footprint.
+		if(!signal_procs?[floor]?[COMSIG_TURF_ENTERED])
+			RegisterSignal(floor, COMSIG_TURF_ENTERED, PROC_REF(on_detection_turf_enter))
+	for(var/turf/open/floor as anything in detection_turfs)
+		if(!(floor in next_turfs))
+			UnregisterSignal(floor, COMSIG_TURF_ENTERED)
+	detection_turfs = next_turfs
 
 /datum/human_ai_brain/proc/clear_detection_radius()
 	for(var/turf/open/floor as anything in detection_turfs)
@@ -462,22 +517,28 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 
 /datum/human_ai_brain/proc/on_detection_turf_enter(datum/source, atom/movable/entering)
 	SIGNAL_HANDLER
+	HAI_PROFILE_BEGIN(event)
 	if(!has_valid_tied_human())
+		HAI_PROFILE_END(event, "projectile_event")
 		return
 
 	if(tied_human.client)
+		HAI_PROFILE_END(event, "projectile_event")
 		return
 
 	if(entering == tied_human)
+		HAI_PROFILE_END(event, "projectile_event")
 		return
 
 	if(istype(entering, /obj/projectile))
 		var/obj/projectile/bullet = entering
 		if((last_detected_projectile == bullet) && (last_detected_projectile_time == world.time)) // SS220 EDIT: debounce same-tick projectile re-entry storms
+			HAI_PROFILE_END(event, "projectile_event")
 			return
 		last_detected_projectile = bullet
 		last_detected_projectile_time = world.time
 		if(!bullet.firer)
+			HAI_PROFILE_END(event, "projectile_event")
 			return
 
 		enter_combat()
@@ -495,6 +556,7 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 						on_neutral_faction_betray(faction)
 
 		if(faction_check(bullet.firer))
+			HAI_PROFILE_END(event, "projectile_event")
 			return
 		cancel_treatment_for_combat() // SS220 EDIT: only hostile projectile contact interrupts treatment
 
@@ -503,9 +565,13 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 		else
 			COOLDOWN_START(src, fire_offscreen, 4 SECONDS)
 			target_turf = get_turf(bullet.firer)
+	HAI_PROFILE_END(event, "projectile_event")
+
 
 /datum/human_ai_brain/proc/on_move(atom/oldloc, direction, forced)
+	HAI_PROFILE_BEGIN(event)
 	if(!has_valid_tied_human())
+		HAI_PROFILE_END(event, "movement_event")
 		return
 	report_scenery_containment()
 
@@ -515,6 +581,8 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 		end_cover()
 
 	update_target_pos()
+	HAI_PROFILE_END(event, "movement_event")
+
 
 /datum/human_ai_brain/proc/enter_combat()
 	SIGNAL_HANDLER
@@ -532,8 +600,19 @@ GLOBAL_LIST_EMPTY(human_ai_brains)
 		try_cover(Get_Angle(current_target, tied_human), current_target)
 
 	in_combat = TRUE
-	addtimer(CALLBACK(src, PROC_REF(exit_combat)), rand(combat_decay_time_min, combat_decay_time_max), TIMER_UNIQUE | TIMER_NO_HASH_WAIT | TIMER_OVERRIDE)
+	combat_decay_deadline = world.time + rand(combat_decay_time_min, combat_decay_time_max)
+	if(!combat_decay_timer)
+		combat_decay_timer = addtimer(CALLBACK(src, PROC_REF(check_combat_decay)), max(1, min(combat_decay_time_min, combat_decay_deadline - world.time)), TIMER_STOPPABLE)
 	SShuman_ai.combat_ever_started = TRUE
+
+/datum/human_ai_brain/proc/check_combat_decay()
+	combat_decay_timer = null
+	if(!has_valid_tied_human() || !in_combat)
+		return
+	if(world.time < combat_decay_deadline)
+		combat_decay_timer = addtimer(CALLBACK(src, PROC_REF(check_combat_decay)), max(1, min(combat_decay_time_min, combat_decay_deadline - world.time)), TIMER_STOPPABLE)
+		return
+	exit_combat()
 
 /datum/human_ai_brain/proc/exit_combat()
 	if(has_valid_tied_human() && pursuit_active && setting("pursuit_enabled") && world.time < pursuit_deadline)

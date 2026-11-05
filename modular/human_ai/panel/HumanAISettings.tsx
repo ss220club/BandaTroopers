@@ -32,10 +32,22 @@ type Data = {
 	revision: number;
 	base_revision: number;
 	dead: number;
+	performance_profile?: {
+		enabled: number;
+		session: number;
+		path: string | null;
+		error: string | null;
+	};
 };
 
 export const HumanAISettings = () => {
 	const { data, act } = useBackend<Data>();
+	const performanceProfile = data.performance_profile ?? {
+		enabled: 0,
+		session: 0,
+		path: null,
+		error: null,
+	};
 	const [section, setSection] = useState('Бой');
 	const sections = [
 		'Бой',
@@ -155,6 +167,48 @@ export const HumanAISettings = () => {
 				<Section title={section}>
 					{section === 'Диагностика' ? (
 						<Box>
+							<Box mb={1}>
+								<Button
+									selected={!!performanceProfile.enabled}
+									disabled={disabled || !data.performance_profile}
+									onClick={() =>
+										act('profile_set_enabled', {
+											value: performanceProfile.enabled
+												? 0
+												: 1,
+										})
+									}
+								>
+									Диагностика нагрузки:{' '}
+									{performanceProfile.enabled
+										? 'Вкл'
+										: 'Выкл'}
+								</Button>
+								<Button
+									icon="question-circle"
+									aria-label="О диагностике нагрузки"
+									tooltip="Действует сразу для всего сервера, без применения черновика и изменения поведения NPC. Синхронные замеры включают вложенные вызовы: пересекающиеся строки нельзя складывать. Агрегированный CSV записывается каждые 10 секунд. Продолжения после ожиданий и работа снарядов сюда не входят. В личные слоты и настройки сервера не сохраняется; после перезапуска выключена."
+								/>
+							</Box>
+							<Box color="label" mb={1}>
+								{data.performance_profile
+									? 'Переключается сразу; «Применить настройки» не требуется. После перезапуска выключена.'
+									: 'Для диагностики запустите обновлённую сборку сервера.'}
+							</Box>
+							{performanceProfile.path && (
+								<Box mb={1}>
+									{performanceProfile.enabled
+										? `Сеанс ${performanceProfile.session}. `
+										: ''}
+									CSV:{' '}
+									{performanceProfile.path}
+								</Box>
+							)}
+							{performanceProfile.error && (
+								<NoticeBox danger>
+									{performanceProfile.error}
+								</NoticeBox>
+							)}
 							<Box>
 								Живых NPC: {data.alive}. Исключено мёртвых:{' '}
 								{data.dead}.

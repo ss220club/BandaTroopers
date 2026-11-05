@@ -1,3 +1,6 @@
+// SS220 EDIT: share the existing MC budget fairly between pending human and xeno routes.
+#define PATHFINDING_EXPANSIONS_PER_TURN 8
+
 SUBSYSTEM_DEF(pathfinding)
 	name = "Pathfinding"
 	priority = SS_PRIORITY_PATHFINDING
@@ -9,7 +12,7 @@ SUBSYSTEM_DEF(pathfinding)
 	var/list/datum/xeno_pathinfo/paths_to_calculate = list()
 
 	var/list/hash_path = list()
-	var/current_position = 1
+	// var/current_position = 1 // SS220 EDIT: consumptive round snapshots need no mutable cursor.
 
 /datum/controller/subsystem/pathfinding/stat_entry(msg)
 	msg = "P:[length(paths_to_calculate)]"
@@ -24,13 +27,30 @@ SUBSYSTEM_DEF(pathfinding)
 	if(!resumed)
 		current_processing = paths_to_calculate.Copy()
 
-	while(length(current_processing))
-		// A* Pathfinding. Uses priority queue
-		if(current_position < 1 || current_position > length(current_processing))
-			current_position = length(current_processing)
+	// SS220 EDIT - START: consume one bounded slice per request before beginning another round.
+	while(length(paths_to_calculate))
+		if(MC_TICK_CHECK)
+			return
+		if(!length(current_processing))
+			current_processing = paths_to_calculate.Copy()
 
-		var/datum/xeno_pathinfo/current_run = current_processing[current_position]
-		current_position++
+		var/datum/xeno_pathinfo/current_run = current_processing[length(current_processing)]
+		current_processing.len--
+		if(QDELETED(current_run))
+			paths_to_calculate -= current_run
+			continue
+
+		var/is_xeno = isxeno(current_run.agent)
+		var/datum/human_ai_brain/brain
+		if(!is_xeno && !QDELETED(current_run.agent))
+			var/datum/component/human_ai/ai_component = current_run.agent.GetComponent(/datum/component/human_ai)
+			brain = ai_component?.ai_brain
+		if(QDELETED(current_run.agent) || (!is_xeno && QDELETED(brain)))
+			var/datum/callback/failed_callback = current_run.to_return
+			QDEL_NULL(current_run)
+			failed_callback?.Invoke()
+			continue
+		// SS220 EDIT - END
 
 		var/turf/target = current_run.finish
 
@@ -39,14 +59,22 @@ SUBSYSTEM_DEF(pathfinding)
 		var/list/f_distances = current_run.f_distances
 		var/list/prev = current_run.prev
 
-		while(length(visited_nodes))
+		// SS220 EDIT - START: only a popped goal or an exhausted frontier completes a search.
+		var/reached_target = FALSE
+		var/expanded_nodes = 0
+		while(length(visited_nodes) && expanded_nodes < PATHFINDING_EXPANSIONS_PER_TURN)
+			expanded_nodes++
+			// SS220 EDIT - END
 			current_run.current_node = visited_nodes[length(visited_nodes)]
 			visited_nodes.len--
 			if(current_run.current_node == target)
+				reached_target = TRUE // SS220 EDIT: discovering a goal is not the same as selecting it.
 				break
 
 			for(var/direction in GLOB.cardinals)
 				var/turf/neighbor = get_step(current_run.current_node, direction)
+				if(!neighbor) // SS220 EDIT: map-edge steps have no turf to inspect.
+					continue
 				var/distance_between = distances[current_run.current_node] * DISTANCE_PENALTY
 				if(isnull(distances[neighbor]))
 					if(get_dist(neighbor, current_run.agent) > current_run.path_range)
@@ -57,7 +85,7 @@ SUBSYSTEM_DEF(pathfinding)
 				if(direction != get_dir(prev[neighbor], neighbor))
 					distance_between += DIRECTION_CHANGE_PENALTY
 
-				if(isxeno(current_run.agent) && !neighbor.weeds)
+				if(is_xeno && !neighbor.weeds) // SS220 EDIT: agent type is constant during this slice.
 					distance_between += NO_WEED_PENALTY
 
 				for(var/i in neighbor)
@@ -67,12 +95,11 @@ SUBSYSTEM_DEF(pathfinding)
 				var/list/L = LinkBlocked(current_run.agent, current_run.current_node, neighbor, current_run.ignore, TRUE)
 				L += check_special_blockers(current_run.agent, neighbor)
 				if(length(L))
-					if(isxeno(current_run.agent))
+					if(is_xeno) // SS220 EDIT: reuse the validated slice-local agent type.
 						for(var/atom/A as anything in L)
 							distance_between += A.xeno_ai_obstacle(current_run.agent, direction, target)
 					else
-						var/datum/component/human_ai/ai_component = current_run.agent.GetComponent(/datum/component/human_ai)
-						var/datum/human_ai_brain/brain = ai_component.ai_brain
+						// SS220 EDIT: the human brain is validated once before this slice.
 						for(var/atom/A as anything in L)
 							distance_between += A.human_ai_obstacle(current_run.agent, brain, direction, target)
 
@@ -91,11 +118,16 @@ SUBSYSTEM_DEF(pathfinding)
 							break
 
 						if(f_distance < f_distances[visited_nodes[index_to_check]])
-							visited_nodes.Insert(index_to_check, neighbor)
+							// visited_nodes.Insert(index_to_check, neighbor)
+							visited_nodes.Insert(index_to_check + 1, neighbor) // SS220 EDIT: minimum cost is popped from the tail.
 							break
 
 			if(MC_TICK_CHECK)
 				return
+
+		// SS220 EDIT: unfinished work rejoins only after the other requests receive their slice.
+		if(!reached_target && length(visited_nodes))
+			continue
 
 		#ifdef TESTING
 		for(var/i in distances)
@@ -117,30 +149,37 @@ SUBSYSTEM_DEF(pathfinding)
 			T.color = "#[red][green]00"
 		#endif
 
-		if(!prev[target])
-			current_run.to_return.Invoke()
-			QDEL_NULL(current_run)
-			return
+		// SS220 EDIT - START: finish failures without abandoning the queue; release ownership before callbacks.
+		var/list/path
+		if(reached_target)
+			path = list()
+			var/turf/current_node = target
+			var/remaining_steps = length(prev) + 1
+			while(current_node && current_node != current_run.start && remaining_steps > 0)
+				remaining_steps--
+				path += current_node
+				current_node = prev[current_node]
+			// Do not return a partial or cyclic predecessor chain as a usable route.
+			if(current_node != current_run.start)
+				path = null
 
-		var/list/path = list()
-		var/turf/current_node = target
-		while(current_node)
-			if(current_node == current_run.start)
-				break
-			path += current_node
-			current_node = prev[current_node]
-
-		current_run.to_return.Invoke(path)
+		var/datum/callback/completed_callback = current_run.to_return
 		QDEL_NULL(current_run)
+		completed_callback?.Invoke(path)
+		// SS220 EDIT - END
 
 /datum/controller/subsystem/pathfinding/proc/check_special_blockers(mob/agent, turf/checking_turf)
 	var/list/pass_back = list()
 
 	for(var/spec_blocker in AI_SPECIAL_BLOCKERS)
-		pass_back += istype(checking_turf, spec_blocker) ? checking_turf : list()
+		// SS220 EDIT - START: preserve blocker order/multiplicity without allocating lists for nonmatches.
+		if(istype(checking_turf, spec_blocker))
+			pass_back += checking_turf
 
 		for(var/atom/checked_atom as anything in checking_turf)
-			pass_back += istype(checked_atom, spec_blocker) ? checked_atom : list()
+			if(istype(checked_atom, spec_blocker))
+				pass_back += checked_atom
+		// SS220 EDIT - END
 
 	return pass_back
 
@@ -218,7 +257,11 @@ SUBSYSTEM_DEF(pathfinding)
 	visited_nodes += current_node
 
 /datum/xeno_pathinfo/Destroy(force)
-	SSpathfinding.hash_path -= agent
+	// SS220 EDIT - START: deleting an obsolete request must not remove a replacement's ownership.
+	// SSpathfinding.hash_path -= agent
+	if(SSpathfinding.hash_path[agent] == src)
+		SSpathfinding.hash_path -= agent
+	// SS220 EDIT - END
 	SSpathfinding.paths_to_calculate -= src
 	SSpathfinding.current_processing -= src
 
@@ -245,3 +288,5 @@ SUBSYSTEM_DEF(pathfinding)
 			A.color = null
 		T.color = null
 #endif
+
+#undef PATHFINDING_EXPANSIONS_PER_TURN // SS220 EDIT: keep the scheduling quantum local to this subsystem.

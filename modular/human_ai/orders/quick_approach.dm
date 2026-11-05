@@ -6,12 +6,10 @@
 	var/turf/previous_turf
 
 /datum/ai_action/quick_approach/get_weight(datum/human_ai_brain/brain)
-	if(brain.has_live_grenade_emergency() || brain.healing_someone || brain.get_priority_ally_treatment_target())
-		return 0
-	if(!brain.quick_approach)
+	if(!brain.quick_approach || brain.hold_position)
 		return 0
 
-	if(brain.hold_position)
+	if(brain.has_live_grenade_emergency() || brain.healing_someone || brain.get_priority_ally_treatment_target())
 		return 0
 
 	return INFINITY

@@ -8,10 +8,10 @@
 
 /// Only confirmed visual observations enter here. Reports are never rebroadcast.
 /datum/human_ai_brain/proc/pursuit_record_observation(atom/movable/enemy, visibility_confirmed = FALSE)
-	if(!has_valid_tied_human() || (!visibility_confirmed && !(enemy in view(view_distance, tied_human))))
+	if(!has_valid_tied_human() || !setting("pursuit_enabled"))
 		return
 	var/turf/position = get_turf(enemy)
-	if(!position || !setting("pursuit_enabled"))
+	if(!position || (!visibility_confirmed && !(enemy in view(view_distance, tied_human))))
 		return
 	var/identity = REF(enemy)
 	if(identity != pursuit_observed_identity)

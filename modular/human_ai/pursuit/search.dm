@@ -94,6 +94,10 @@
 	pursuit_progress_turf = get_turf(tied_human)
 	pursuit_progress_at = world.time
 
+/// Keep the observed goal as the search anchor, but recognize navigation's safe standing endpoint.
+/datum/human_ai_brain/proc/pursuit_has_reached_goal()
+	return has_reached_navigation_destination(human_ai_get_safe_standing_turf_near(pursuit_goal))
+
 /// Three bounded rays, not a room scan. Native navigation handles intervening doors.
 /datum/human_ai_brain/proc/pursuit_pick_point(flanking = FALSE)
 	if(!pursuit_anchor)
@@ -123,7 +127,7 @@
 
 /datum/human_ai_brain/proc/pursuit_next_point()
 	if(pursuit_goal == pursuit_anchor && !pursuit_inspecting)
-		if(get_turf(tied_human) != pursuit_anchor)
+		if(!pursuit_has_reached_goal())
 			pursuit_finish()
 			return
 		pursuit_inspecting = TRUE

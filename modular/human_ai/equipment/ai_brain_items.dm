@@ -487,9 +487,10 @@
 
 	store_item(active_hand, storage_id)
 
-/datum/human_ai_brain/proc/storage_has_room(obj/item/inserting)
+/datum/human_ai_brain/proc/storage_has_room(obj/item/inserting, list/storage_roots = null)
 	// SS220 EDIT - START: consider every equipped root and its nested storage, not only six top-level refs
-	var/list/storage_roots = get_storage_roots()
+	if(isnull(storage_roots))
+		storage_roots = get_storage_roots()
 	var/list/storage_queue = list()
 	var/list/visited_storages = list()
 	for(var/obj/item/storage/root_storage as anything in storage_roots)
@@ -621,6 +622,8 @@
 		gun_data = default
 
 /datum/human_ai_brain/proc/item_search(list/things_around)
+	// Only root discovery is shared within this scan; capacity and nested contents stay live.
+	var/list/search_storage_roots
 	// SS220 EDIT - START: preserve a live floor threat throughout the four-tile reaction, or a grenade already held for throw-back.
 	var/grenade_threat_is_local = active_grenade_found && !QDELETED(active_grenade_found) && active_grenade_found.active \
 		&& ((active_grenade_found.loc == tied_human) || (isturf(active_grenade_found.loc) && get_dist(tied_human, active_grenade_found) <= 4))
@@ -686,14 +689,22 @@
 				continue
 			// SS220 EDIT - END
 
-			var/storage_spot = storage_has_room(thing)
-			if(!storage_spot || !thing.ai_can_use(tied_human, src, tied_human))
-				continue
-
+			var/compatible_ammunition = FALSE
 			if((thing.flags_human_ai & AMMUNITION_ITEM) && primary_weapon)
 				var/obj/item/ammo_magazine/mag = thing
-				if(istype(primary_weapon, mag.gun_type))
-					add_to_pickup(thing)
+				compatible_ammunition = istype(primary_weapon, mag.gun_type)
+			if(!compatible_ammunition && !(thing.flags_human_ai & (GRENADE_ITEM|TOOL_ITEM)))
+				continue
+
+			if(!thing.ai_can_use(tied_human, src, tied_human))
+				continue
+			if(isnull(search_storage_roots))
+				search_storage_roots = get_storage_roots()
+			if(!storage_has_room(thing, search_storage_roots))
+				continue
+
+			if(compatible_ammunition)
+				add_to_pickup(thing)
 
 			if(thing.flags_human_ai & GRENADE_ITEM)
 				add_to_pickup(thing)

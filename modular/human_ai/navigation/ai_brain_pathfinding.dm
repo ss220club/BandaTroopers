@@ -14,6 +14,10 @@
 
 /datum/human_ai_brain
 	var/navigation_generation = 0
+	/// Own the pending request even if component teardown has already detached tied_human.
+	var/datum/xeno_pathinfo/navigation_request
+	/// An emergency may replace routine work once without restarting its own pending search.
+	var/obj/item/explosive/grenade/navigation_request_grenade
 	var/turf/navigation_failure_destination
 	/// Delay timer for when the AI can next move, based on the tied_human's move delay
 	var/ai_move_delay = 0
@@ -77,6 +81,11 @@
 
 /datum/human_ai_brain/proc/clear_navigation_path()
 	navigation_generation++
+	var/datum/xeno_pathinfo/pending_request = navigation_request
+	navigation_request = null
+	navigation_request_grenade = null
+	if(pending_request && !QDELETED(pending_request) && SSpathfinding.hash_path[pending_request.agent] == pending_request)
+		SSpathfinding.stop_calculating_path(pending_request.agent)
 	current_path = null
 	current_path_target = null
 
@@ -276,23 +285,38 @@
 	if(!destination)
 		return FALSE
 
-	if(CALCULATING_PATH(tied_human) && !refresh_path_target)
+	if(!should_queue_navigation_path(destination, refresh_path_target))
 		return FALSE
+	if(navigation_needs_emergency_preemption())
+		clear_navigation_path()
+	navigation_request_grenade = has_live_grenade_emergency() ? active_grenade_found : null
 
 	// SS220 EDIT: modular brains may observe or meter path requests without forking shared navigation flow
 	if(hascall(src, "modular_on_navigation_path_queued"))
 		call(src, "modular_on_navigation_path_queued")(destination, max_range)
 	navigation_generation++
 	SSpathfinding.calculate_path(tied_human, destination, max_range, tied_human, CALLBACK(src, PROC_REF(accept_navigation_path), navigation_generation), list(tied_human, current_target))
+	navigation_request = SSpathfinding.hash_path[tied_human]
 	current_path_target = destination
 	next_path_generation = world.time + path_update_period
 	return TRUE
 
+/datum/human_ai_brain/proc/navigation_needs_emergency_preemption()
+	return has_live_grenade_emergency() && navigation_request_grenade != active_grenade_found
+
 /datum/human_ai_brain/proc/should_queue_navigation_path(turf/destination, refresh_path_target = path_target_needs_refresh(destination))
-	if(!destination || !COOLDOWN_FINISHED(src, no_path_found_cooldown))
+	if(!tied_human || !destination)
+		return FALSE
+	// A new live-grenade emergency must not wait behind an unrelated route or its cooldown.
+	if(navigation_needs_emergency_preemption())
+		return TRUE
+	if(!COOLDOWN_FINISHED(src, no_path_found_cooldown))
 		return FALSE
 
-	return !current_path || (next_path_generation < world.time && refresh_path_target)
+	// Finish accepted work before retargeting; moving targets must not reset its frontier every AI tick.
+	if(CALCULATING_PATH(tied_human) || world.time < next_path_generation)
+		return FALSE
+	return !current_path || refresh_path_target
 
 /datum/human_ai_brain/proc/trim_current_path_step()
 	if(length(current_path))
@@ -385,4 +409,6 @@
 /datum/human_ai_brain/proc/accept_navigation_path(generation, list/path)
 	if(generation != navigation_generation || !has_valid_tied_human())
 		return
+	// The completed request is detached before delivery; release our reference too.
+	navigation_request = null
 	set_path(path)

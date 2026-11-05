@@ -20,9 +20,19 @@ This directory owns the panel: `settings_panel.dm`, `HumanAISettings.tsx` and it
 
 ## Application
 
-All edits are drafts. Difficulty and slot loading never apply automatically. Settings are global only: no individual NPC selection, override API or reset-exceptions action exists. Applying displays a confirmation and rechecks authorization and global revision after the dialog. Application affects living current and future NPCs. Dead NPCs keep their snapshots; revival adopts the latest globals on the first living process tick.
+NPC setting edits are drafts. Difficulty and slot loading never apply automatically. Settings are global only: no individual NPC selection, override API or reset-exceptions action exists. Applying displays a confirmation and rechecks authorization and global revision after the dialog. Application affects living current and future NPCs. Dead NPCs keep their snapshots; revival adopts the latest globals on the first living process tick.
 
 «Применить настройки» confirms and applies the draft. «Показать текущие настройки с сервера» replaces the draft with the active global profile without changing NPC behavior. Its question-mark tooltip explains draft loss. Every numeric control has a question-mark tooltip with semantics, units and valid bounds. Personal slots store full global profiles, never NPC references.
+
+## Диагностика нагрузки
+
+Подробная инструкция, поля CSV и ограничения замеров: [PERFORMANCE_DIAGNOSTICS.md](../__docs/PERFORMANCE_DIAGNOSTICS.md).
+
+Во вкладке «Диагностика» кнопка «Диагностика нагрузки: Вкл/Выкл» сразу переключает сбор для всего сервера; «Применить настройки» не требуется. Доступ проверяется по владельцу панели и R_DEBUG, во время другого подтверждения кнопка заблокирована. Переключение не меняет черновик, ревизию профиля или поведение NPC. Фактические изменения состояния записываются в административный журнал и сообщаются администраторам.
+
+По умолчанию сбор выключен после каждого запуска. Он не входит в пресеты сложности, личные слоты и сохранённые настройки сервера. При включении начинается новый сеанс; путь к отдельному CSV и возможная ошибка записи показываются здесь же. Раз в 10 секунд сохраняются агрегированные измерения, при выключении — остаток окна. Подробные условия нагрузочного прогона: [PERFORMANCE_AUDIT.md](../__docs/PERFORMANCE_AUDIT.md).
+
+Измеряется только синхронное выполнение; стоимость включает вложенные вызовы, поэтому пересекающиеся строки нельзя складывать или трактовать как проценты общего CPU. Продолжения лечения и бросков после ожиданий, а также общая обработка снарядов сюда не входят. Сама диагностика добавляет некоторую нагрузку, поэтому включать её следует на время измерения.
 
 ## Persistence
 

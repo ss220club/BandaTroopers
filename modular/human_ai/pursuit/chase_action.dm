@@ -25,7 +25,7 @@
 		brain.pursuit_finish(FALSE)
 		return ONGOING_ACTION_COMPLETED
 	var/turf/position = get_turf(brain.tied_human)
-	if(position == goal)
+	if(brain.pursuit_has_reached_goal())
 		if(brain.pursuit_returning)
 			brain.pursuit_clear_search()
 		else if(brain.pursuit_role == 1)

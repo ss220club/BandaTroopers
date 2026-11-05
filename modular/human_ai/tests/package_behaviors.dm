@@ -72,6 +72,7 @@
 	var/turf/start_turf = run_loc_floor_bottom_left
 	var/mob/living/carbon/human/ai_human = allocate(/mob/living/carbon/human, start_turf)
 	var/datum/human_ai_brain/brain = allocate(/datum/human_ai_brain, ai_human)
+	brain.action_whitelist = list() // Manual traversal must not race autonomous scenery egress during sleep().
 
 	var/turf/stairs_turf = get_step(start_turf, EAST)
 	TEST_ASSERT_NOTNULL(stairs_turf, "Human AI traversal test area must contain a stairs turf.")
@@ -102,6 +103,7 @@
 	TEST_ASSERT_NOTNULL(platform_landing_turf, "Human AI traversal test area must contain a platform stair landing turf.")
 	var/mob/living/carbon/human/platform_human = allocate(/mob/living/carbon/human, platform_start_turf)
 	var/datum/human_ai_brain/platform_brain = allocate(/datum/human_ai_brain, platform_human)
+	platform_brain.action_whitelist = list()
 	var/obj/structure/platform/stair_cut/platform_stairs = allocate(/obj/structure/platform/stair_cut, platform_stair_turf)
 	platform_stairs.setDir(NORTH)
 	var/obj/structure/platform/platform_entry = allocate(/obj/structure/platform, platform_stair_turf)
@@ -200,7 +202,8 @@
 	qdel(passable_barricade)
 
 	// retain a generic table path node until canonical delayed climbing reaches it.
-	var/turf/table_start_turf = get_step(start_turf, SOUTH)
+	// The row south of the bottom-left landmark is the test room's wall, not floor.
+	var/turf/table_start_turf = get_step(get_step(get_step(start_turf, NORTH), NORTH), NORTH)
 	var/turf/table_turf = get_step(table_start_turf, EAST)
 	var/turf/table_landing_turf = get_step(table_turf, EAST)
 	TEST_ASSERT_NOTNULL(table_start_turf, "Human AI table traversal test requires a starting turf.")
@@ -208,6 +211,7 @@
 	TEST_ASSERT_NOTNULL(table_landing_turf, "Human AI table traversal test requires a landing turf.")
 	var/mob/living/carbon/human/table_human = allocate(/mob/living/carbon/human, table_start_turf)
 	var/datum/human_ai_brain/table_brain = allocate(/datum/human_ai_brain, table_human)
+	table_brain.action_whitelist = list()
 	var/obj/structure/surface/table/climbed_table = allocate(/obj/structure/surface/table, table_turf)
 	climbed_table.climb_delay = 1
 	TEST_ASSERT(!table_brain.human_ai_turf_is_safe(table_turf), "Human AI accepted a table as a standing destination.")
@@ -227,6 +231,7 @@
 
 	var/mob/living/carbon/human/vaulting_human = allocate(/mob/living/carbon/human, start_turf)
 	var/datum/human_ai_brain/vaulting_brain = allocate(/datum/human_ai_brain, vaulting_human)
+	vaulting_brain.action_whitelist = list()
 	var/turf/vault_target = get_step(start_turf, NORTH)
 	TEST_ASSERT_NOTNULL(vault_target, "Human AI traversal test area must contain a handrail destination.")
 	var/obj/structure/barricade/handrail/handrail = allocate(/obj/structure/barricade/handrail, start_turf)
@@ -497,7 +502,9 @@
 	medical_supply.amount = 100
 	TEST_ASSERT(medical_belt.attempt_item_insertion(medical_supply, FALSE, medic), "Human AI medic scheduler test could not preload its medical supply.")
 	// SS220 EDIT - END
-	var/datum/human_ai_brain/brain = allocate(/datum/human_ai_brain, medic)
+	// Exercise the production owner/component link required by asynchronous pathfinding.
+	var/datum/component/human_ai/ai_component = medic.AddComponent(/datum/component/human_ai)
+	var/datum/human_ai_brain/brain = ai_component.ai_brain
 	brain.action_whitelist = list(/datum/ai_action/treat_ally, /datum/ai_action/quick_approach)
 	TEST_ASSERT_EQUAL(brain.container_refs["belt"], medical_belt, "Pre-equipped Human AI medic did not initialize its belt storage root.") // SS220 EDIT: regression from 27682a8
 	TEST_ASSERT_EQUAL(brain.equipment_map[HUMAN_AI_HEALTHITEMS][medical_supply], medical_belt, "Pre-equipped Human AI medic did not index medicine during brain construction.") // SS220 EDIT: do not mask with manual appraisal
@@ -510,8 +517,10 @@
 	// SS220 EDIT - START: AI chemical treatment must respect patient OD levels and recheck immediately before use
 	var/turf/dose_patient_turf = get_step(medic_turf, NORTH)
 	TEST_ASSERT_NOTNULL(dose_patient_turf, "Human AI medic scheduler test area must contain an adjacent dose-safety patient turf.")
-	var/mob/living/carbon/human/dose_patient = allocate(/mob/living/carbon/human, dose_patient_turf)
+	var/mob/living/carbon/human/dose_patient = allocate(/mob/living/carbon/human/dummy, dose_patient_turf)
 	dose_patient.faction = FACTION_UNSC
+	brain.healing_someone = TRUE
+	TEST_ASSERT(brain.treatment_can_continue(brain.treatment_generation, dose_patient), "Dose-safety fixture did not establish active treatment")
 
 	var/obj/item/reagent_container/hypospray/autoinjector/tricord/tricord_injector = allocate(/obj/item/reagent_container/hypospray/autoinjector/tricord, medic)
 	var/datum/reagent/injector_reagent = tricord_injector.reagents.reagent_list[1]
@@ -538,6 +547,7 @@
 	TEST_ASSERT_EQUAL(dose_patient.reagents.get_reagent_amount(pill_reagent.id), pill_amount_before_race + 1, "Rejected Human AI pill use transferred medicine in addition to the simulated concurrent dose.")
 	TEST_ASSERT_EQUAL(length(tramadol_bottle.contents), pills_before_rejected_use, "Rejected Human AI pill use consumed a pill.")
 	TEST_ASSERT_EQUAL(tramadol_pill.loc, tramadol_bottle, "Human AI did not return a pill rejected by the transfer-point OD guard to its bottle.")
+	brain.healing_someone = FALSE
 	qdel(dose_patient)
 	// SS220 EDIT - END
 
@@ -586,6 +596,10 @@
 		brain.process(0)
 		sleep(1)
 	TEST_ASSERT(patient.getBruteLoss() < initial_patient_damage, "Human AI medic did not approach and treat the patient after a treatment turf became free.")
+	// ai_use treats several limbs asynchronously; the first healed limb is not completion.
+	var/return_timeout = world.time + 15 SECONDS
+	while((brain.healing_someone || medical_supply.loc != medical_belt) && world.time < return_timeout)
+		sleep(1)
 	TEST_ASSERT_EQUAL(medical_supply.loc, medical_belt, "Human AI medic did not return medicine after scheduler-driven treatment.")
 	// SS220 EDIT - END
 

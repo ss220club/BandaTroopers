@@ -77,7 +77,13 @@
 	for(var/index in 1 to 3)
 		var/list/entry = personal.slots[index]
 		slots += list(list("index" = index, "name" = entry ? entry["name"] : null))
-	return list("fields" = fields, "alive" = alive, "slots" = slots, "busy" = busy, "status" = status, "revision" = GLOB.human_ai_settings.revision, "base_revision" = base_revision, "dead" = dead)
+	var/list/performance_profile = list(
+		"enabled" = SShuman_ai.performance_profile_enabled,
+		"session" = SShuman_ai.performance_profile_generation,
+		"path" = SShuman_ai.performance_profile_path,
+		"error" = SShuman_ai.performance_profile_error,
+	)
+	return list("fields" = fields, "alive" = alive, "slots" = slots, "busy" = busy, "status" = status, "revision" = GLOB.human_ai_settings.revision, "base_revision" = base_revision, "dead" = dead, "performance_profile" = performance_profile)
 
 /datum/human_ai_settings_panel/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()
@@ -85,6 +91,21 @@
 		return
 	var/key = params["key"]
 	switch(action)
+		if("profile_set_enabled")
+			var/value = params["value"]
+			if(!isnum(value) || (value != FALSE && value != TRUE))
+				return
+			var/was_enabled = SShuman_ai.performance_profile_enabled
+			if(value == was_enabled)
+				return TRUE
+			var/updated = SShuman_ai.set_performance_profile(value)
+			if(SShuman_ai.performance_profile_enabled != was_enabled)
+				log_admin("[key_name(owner)] [SShuman_ai.performance_profile_enabled ? "enabled" : "disabled"] Human AI performance diagnostics.")
+				message_admins("[key_name_admin(owner)] [SShuman_ai.performance_profile_enabled ? "enabled" : "disabled"] Human AI performance diagnostics.")
+			if(!updated)
+				status = "Ошибка записи диагностики нагрузки. Подробности — во вкладке «Диагностика»."
+				return TRUE
+			status = SShuman_ai.performance_profile_enabled ? "Диагностика нагрузки включена сразу. Черновик и поведение NPC не изменены." : "Диагностика нагрузки выключена. Накопленные измерения сохранены."
 		if("reload")
 			load_current()
 			status = "Показаны текущие настройки с сервера. Неприменённый черновик сброшен."

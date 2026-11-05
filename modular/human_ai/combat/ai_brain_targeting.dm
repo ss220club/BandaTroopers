@@ -18,6 +18,10 @@
 // SS220 EDIT AI - START
 /// Locates a viable target within vision
 /datum/human_ai_brain/proc/get_target()
+	if(!has_valid_tied_human())
+		return
+
+	// Values record fire-lane checks made during this call only, never cached visibility.
 	var/list/viable_targets = list()
 	var/atom/movable/closest_target
 	var/smallest_distance = INFINITY
@@ -39,15 +43,26 @@
 		if(!is_mob && !is_vehicle && !is_defense)
 			continue
 
+		// Reject invalid/friendly targets before facing, lighting and fire-lane scans.
+		if(is_mob)
+			if(!can_target(potential_target, check_fire_lane = FALSE))
+				continue
+		else if(is_vehicle)
+			var/obj/vehicle/multitile/vehicle = potential_target
+			if(vehicle.health <= 0 || faction_check(vehicle))
+				continue
+		else
+			var/obj/structure/machinery/defenses/defense = potential_target
+			if(tied_human.faction in defense.faction_group)
+				continue
+
 		var/distance = get_dist(tied_human, potential_target)
 
 		if(scope_vision && (distance > 7) && !(get_dir(tied_human, potential_target) in dir_cone))
 			continue
 
-		if(hascall(src, "human_ai_can_visually_detect_target"))
-			var/can_visually_detect = call(src, "human_ai_can_visually_detect_target")(potential_target)
-			if(!can_visually_detect)
-				continue // SS220 EDIT: initial visual acquisition cannot see through the NPC's rear blind spot
+		if(!human_ai_can_visually_detect_target(potential_target))
+			continue
 
 		if(is_mob)
 			if(!has_nightvision && (distance > 1))
@@ -59,28 +74,16 @@
 				if(!seen)
 					continue
 
-			if(!can_target(potential_target))
+		var/fire_lane_checked = !is_mob
+		if(distance < smallest_distance)
+			if(is_mob && !path_check(potential_target))
 				continue
+			fire_lane_checked = TRUE
+			closest_target = potential_target
+			smallest_distance = distance
 
-		else if(is_vehicle)
-			var/obj/vehicle/multitile/vehicle = potential_target
-			if(vehicle.health <= 0)
-				continue
-			if(faction_check(vehicle))
-				continue
-
-		else if(is_defense)
-			var/obj/structure/machinery/defenses/defense = potential_target
-			if(tied_human.faction in defense.faction_group)
-				continue
-
-		viable_targets += potential_target
-
-		if(smallest_distance <= distance)
-			continue
-
-		closest_target = potential_target
-		smallest_distance = distance
+		// Farther candidates only need a lane check if they enter the final selection pool.
+		viable_targets[potential_target] = fire_lane_checked
 
 	var/extra_check_distance = round(smallest_distance * EXTRA_CHECK_DISTANCE_MULTIPLIER)
 
@@ -91,8 +94,11 @@
 	for(var/atom/movable/target as anything in viable_targets)
 		if(target == closest_target)
 			continue
-		if(get_dist(target, closest_target) <= extra_check_distance)
-			final_targets += target
+		if(get_dist(target, closest_target) > extra_check_distance)
+			continue
+		if(!viable_targets[target] && !path_check(target))
+			continue
+		final_targets += target
 
 	return length(final_targets) ? pick(final_targets) : closest_target
 
@@ -130,8 +136,7 @@
 				if(istype(obstacle, /obj/structure/window) || istype(obstacle, /obj/structure/grille) || istype(obstacle, /obj/structure/barricade))
 					continue
 				return FALSE
-	//модифицируем список для проверки на союзников, добавляя соседние тайлы и уберая тайл стрелка.
-	turf_list.Cut(1, 2) // starting turf
+	// get_line(..., FALSE) already excludes the shooter; keep the first adjacent turf.
 	var/list/checked_turfs = list()// SS220 EDIT AI
 	for(var/i in 1 to length(turf_list))
 		var/turf/tile = turf_list[i]

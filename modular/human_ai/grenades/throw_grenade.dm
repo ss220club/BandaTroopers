@@ -206,8 +206,11 @@
 	tied_human.visible_message(SPAN_WARNING("[tied_human] has thrown [grenade]."), null, null, 5)
 	if(!tied_human.drop_inv_item_on_ground(grenade, TRUE))
 		return FALSE
+	var/datum/human_ai_brain/acting_brain = brain
 	grenade.throw_atom(target_turf, effective_throw_range, SPEED_SLOW, tied_human, TRUE, HIGH_LAUNCH, PASS_MOB_THRU)
-	brain.consume_combat_grenade_decision() // SS220 EDIT: consume the encounter decision only after an actual launch
+	// Flight yields between turfs; death or action cancellation can detach this action meanwhile.
+	if(!QDELETED(acting_brain) && acting_brain.has_valid_tied_human() && acting_brain.tied_human == tied_human)
+		acting_brain.consume_combat_grenade_decision()
 	return TRUE
 
 /datum/ai_action/throw_grenade/proc/finish_async_throw()
