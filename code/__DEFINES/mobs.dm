@@ -4,6 +4,13 @@
 #define HEALTH_THRESHOLD_DEAD -200
 #define HEALTH_THRESHOLD_CRIT -50
 
+/// do_after() duration multiplier for a mob with TRAIT_WOUNDED_DOWN
+#define WOUNDED_ACTION_DELAY_MULT 2
+/// Delay before a mob with TRAIT_WOUNDED_DOWN interacts with an adjacent atom, before WOUNDED_ACTION_DELAY_MULT is applied
+#define WOUNDED_INTERACTION_DELAY (0.5 SECONDS)
+/// Same as WOUNDED_INTERACTION_DELAY, when the wounded mob uses something on themselves (an autoinjector, a pill)
+#define WOUNDED_SELF_INTERACTION_DELAY (2 SECONDS)
+
 //Some mob defines below
 #define AI_CAMERA_LUMINOSITY 6
 

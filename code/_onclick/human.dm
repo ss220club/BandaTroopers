@@ -70,7 +70,9 @@
 
 /mob/living/carbon/human/UnarmedAttack(atom/A, proximity, click_parameters)
 
-	if(body_position == LYING_DOWN) //No attacks while laying down
+	if(HAS_TRAIT(src, TRAIT_WOUNDED_DOWN) && ismob(A) && a_intent != INTENT_HELP) // Too weak to fight, but can still reach for things
+		return 0
+	if(body_position == LYING_DOWN && (!can_use_hands_lying() || (ismob(A) && a_intent != INTENT_HELP))) //No attacks while laying down
 		return 0
 
 	var/obj/item/clothing/gloves/G = gloves // not typecast specifically enough in defines

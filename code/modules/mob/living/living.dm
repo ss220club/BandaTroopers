@@ -584,17 +584,29 @@
 		if(.) // We unbuckled from something.
 			//var/atom/movable/old_buckled = .
 			var/obj/old_buckled = . // /tg/ code has buckling defined on /atom/movable - consider refactoring this sometime
-			if(old_buckled.buckle_lying == 0 && (resting || HAS_TRAIT(src, TRAIT_FLOORED))) // The buckle forced us to stay up (like a chair)
+			if(old_buckled.buckle_lying == 0 && (resting || HAS_TRAIT(src, TRAIT_FLOORED) || HAS_TRAIT(src, TRAIT_WOUNDED_DOWN))) // The buckle forced us to stay up (like a chair)
 				set_lying_down() // We want to rest or are otherwise floored, so let's drop on the ground.
 
 /mob/living/proc/get_up(instant = FALSE) // arg ignored
 //	set waitfor = FALSE
 //	if(!instant && !do_after(src, 1 SECONDS, src, timed_action_flags = (IGNORE_USER_LOC_CHANGE|IGNORE_TARGET_LOC_CHANGE|IGNORE_HELD_ITEM), extra_checks = CALLBACK(src, TYPE_PROC_REF(/mob/living, rest_checks_callback)), interaction_key = DOAFTER_SOURCE_GETTING_UP))
 //		return
-	if(resting || body_position == STANDING_UP || HAS_TRAIT(src, TRAIT_FLOORED))
+	if(resting || body_position == STANDING_UP || HAS_TRAIT(src, TRAIT_FLOORED) || HAS_TRAIT(src, TRAIT_WOUNDED_DOWN))
 		return
 	set_body_position(STANDING_UP)
 	set_lying_angle(0)
+
+/// Lying down by choice or badly wounded leaves the hands free, being knocked down doesn't
+/mob/living/proc/can_use_hands_lying()
+	return !HAS_TRAIT(src, TRAIT_FLOORED) && (resting || HAS_TRAIT(src, TRAIT_WOUNDED_DOWN))
+
+/// Badly wounded mobs fumble with everything, hotkeys included. Returns FALSE if the action was interrupted
+/mob/living/proc/wounded_action_delay(delay = WOUNDED_INTERACTION_DELAY)
+	if(!HAS_TRAIT(src, TRAIT_WOUNDED_DOWN))
+		return TRUE
+	if(action_busy)
+		return FALSE
+	return do_after(src, delay, INTERRUPT_ALL, BUSY_ICON_GENERIC)
 
 /// Change the [body_position] to [LYING_DOWN] and update associated behavior.
 /mob/living/proc/set_lying_down(new_lying_angle)
@@ -618,8 +630,9 @@
 
 	// CM legacy canmove procs, replace this with signal procs probably
 	unpixel_shift() // SS220 EDIT
-	drop_l_hand()
-	drop_r_hand()
+	if(!resting || HAS_TRAIT(src, TRAIT_FLOORED) || HAS_TRAIT(src, TRAIT_WOUNDED_DOWN)) // Lying down by choice keeps what's in hand
+		drop_l_hand()
+		drop_r_hand()
 	add_temp_pass_flags(PASS_MOB_THRU)
 	update_layer()
 
@@ -702,10 +715,10 @@
 
 // legacy procs
 /mob/living/put_in_l_hand(obj/item/W)
-	if(body_position == LYING_DOWN)
+	if(body_position == LYING_DOWN && !can_use_hands_lying())
 		return
 	return ..()
 /mob/living/put_in_r_hand(obj/item/W)
-	if(body_position == LYING_DOWN)
+	if(body_position == LYING_DOWN && !can_use_hands_lying())
 		return
 	return ..()

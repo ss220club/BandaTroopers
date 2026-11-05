@@ -446,6 +446,10 @@ DEFINES in setup.dm, referenced here.
 /obj/item/weapon/gun/proc/get_active_firearm(mob/user, restrictive = TRUE)
 	if(user.is_mob_incapacitated() || !isturf(usr.loc))
 		return
+	if(isliving(user))
+		var/mob/living/living_user = user
+		if(living_user.body_position == LYING_DOWN && !living_user.can_use_hands_lying())
+			return
 	if(!ishuman(user) && !HAS_TRAIT(user, TRAIT_OPPOSABLE_THUMBS))
 		to_chat(user, SPAN_WARNING("Not right now."))
 		return
@@ -514,8 +518,10 @@ DEFINES in setup.dm, referenced here.
 /mob/living/carbon/human/verb/holster_verb(unholster_number_offset = 1 as num)
 	set name = "holster"
 	set hidden = TRUE
-	if(usr.is_mob_incapacitated(TRUE) || usr.is_mob_restrained() || IsKnockDown() || HAS_TRAIT_FROM(src, TRAIT_UNDENSE, LYING_DOWN_TRAIT))
+	if(usr.is_mob_incapacitated(TRUE) || usr.is_mob_restrained() || IsKnockDown() || (HAS_TRAIT_FROM(src, TRAIT_UNDENSE, LYING_DOWN_TRAIT) && !can_use_hands_lying()))
 		to_chat(src, SPAN_WARNING("You can't draw a weapon in your current state."))
+		return
+	if(!wounded_action_delay())
 		return
 
 	var/obj/item/active_hand = get_active_hand()

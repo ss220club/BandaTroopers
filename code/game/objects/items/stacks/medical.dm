@@ -423,6 +423,9 @@
 				SPAN_HELPFUL("[user] <b>starts splinting</b> your <b>[affecting.display_name]</b>."),
 				SPAN_NOTICE("[user] starts splinting [possessive_their] [affecting.display_name]."))
 		else
+			if(HAS_TRAIT(user, TRAIT_WOUNDED_DOWN))
+				to_chat(user, SPAN_WARNING("You're too weak to splint yourself!"))
+				return
 			if((!user.hand && (affecting.name in list("r_arm", "r_hand"))) || (user.hand && (affecting.name in list("l_arm", "l_hand"))))
 				to_chat(user, SPAN_WARNING("You can't apply a splint to the \
 					[affecting.name == "r_hand"||affecting.name == "l_hand" ? "hand":"arm"] you're using!"))
