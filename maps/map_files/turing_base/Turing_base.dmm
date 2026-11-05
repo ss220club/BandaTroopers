@@ -658,7 +658,7 @@
 /turf/open/floor/prison/red/north,
 /area/turing/base/barracks)
 "eu" = (
-/obj/structure/machinery/power/apc/no_power/north,
+/obj/structure/machinery/power/apc/power/north,
 /obj/structure/flora/pottedplant{
 	icon_state = "pottedplant_25";
 	pixel_x = 6;
@@ -1160,7 +1160,7 @@
 /turf/open/asphalt/cement/cement12,
 /area/turing/streets/west)
 "hk" = (
-/obj/structure/machinery/power/apc/no_power/north,
+/obj/structure/machinery/power/apc/power/north,
 /turf/open/floor/hybrisa/carpet/carpetdarkerblue,
 /area/turing/base/barracks)
 "ho" = (
@@ -1687,7 +1687,7 @@
 /obj/structure/barricade/handrail/strata{
 	dir = 8
 	},
-/obj/structure/machinery/power/apc/upgraded/no_power/north,
+/obj/structure/machinery/power/apc/upgraded/power/north,
 /turf/open/floor/kutjevo/fake_wood,
 /area/turing/streets/east)
 "kO" = (
@@ -1831,7 +1831,7 @@
 "lR" = (
 /obj/effect/decal/cleanable/dirt,
 /obj/effect/decal/cleanable/dirt,
-/obj/structure/machinery/power/apc/no_power/north,
+/obj/structure/machinery/power/apc/power/north,
 /turf/open/floor/prison/darkbrown2/north,
 /area/turing/base/engineering)
 "lT" = (
@@ -2040,7 +2040,7 @@
 /turf/open/floor/prison/bright_clean/southwest,
 /area/turing/base/barracks)
 "no" = (
-/obj/structure/machinery/power/apc/no_power/north,
+/obj/structure/machinery/power/apc/power/north,
 /obj/structure/filingcabinet/chestdrawer{
 	pixel_x = 10;
 	pixel_y = 15
@@ -2292,7 +2292,7 @@
 /turf/open/floor/prison,
 /area/turing/base/garage)
 "pl" = (
-/obj/structure/machinery/power/apc/no_power/west,
+/obj/structure/machinery/power/apc/power/west,
 /obj/structure/machinery/vending/cigarette/wy,
 /turf/open/floor/prison/blue/west,
 /area/turing/base/command)
@@ -2496,7 +2496,7 @@
 /turf/open/floor/prison/red/northeast,
 /area/turing/base/barracks)
 "qW" = (
-/obj/structure/machinery/power/apc/no_power/north,
+/obj/structure/machinery/power/apc/power/north,
 /turf/open/floor/plating,
 /area/turing/base/hangar)
 "qY" = (
@@ -2872,7 +2872,7 @@
 /turf/open/auto_turf/snow/brown_base/layer3,
 /area/turing/streets/east)
 "tx" = (
-/obj/structure/machinery/power/smes/buildable/charged,
+/obj/structure/machinery/power/smes/magical,
 /turf/open/floor/prison/darkbrown2/north,
 /area/turing/base/engineering)
 "ty" = (
@@ -3190,7 +3190,7 @@
 /obj/structure/machinery/light/double{
 	dir = 8
 	},
-/obj/structure/machinery/power/apc/no_power/north,
+/obj/structure/machinery/power/apc/power/north,
 /obj/structure/closet/firecloset/full,
 /turf/open/floor/prison/bright_clean/southwest,
 /area/turing/base/barracks)
@@ -4069,7 +4069,7 @@
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
 	},
-/obj/structure/machinery/power/apc/no_power/north,
+/obj/structure/machinery/power/apc/power/north,
 /turf/open/floor/prison/whitegreen/north,
 /area/turing/base/medical)
 "Cy" = (
@@ -5806,7 +5806,7 @@
 	},
 /obj/effect/decal/hybrisa/dirt,
 /obj/effect/decal/cleanable/dirt,
-/obj/structure/machinery/power/apc/upgraded/no_power/north,
+/obj/structure/machinery/power/apc/upgraded/power/north,
 /turf/open/auto_turf/snow/brown_base/layer0,
 /area/turing/streets/west)
 "Oe" = (
@@ -7043,7 +7043,7 @@
 /area/turing/streets/east)
 "VK" = (
 /obj/effect/decal/cleanable/hybrisa/dirt,
-/obj/structure/machinery/power/apc/no_power/north,
+/obj/structure/machinery/power/apc/power/north,
 /obj/structure/reagent_dispensers/fueltank,
 /turf/open/floor/prison,
 /area/turing/base/garage)

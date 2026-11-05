@@ -148,6 +148,7 @@
 		list("IASF ballistic shield", 0, /obj/item/weapon/shield/riot/ballistic/iasf, MARINE_CAN_BUY_ATTACHMENT, VENDOR_ITEM_REGULAR),
 		list("IASF breacher helmet", 0, /obj/item/clothing/head/helmet/marine/veteran/royal_marine/breacher/iasf, MARINE_CAN_BUY_ATTACHMENT, VENDOR_ITEM_REGULAR),
 		list("IASF breacher vest", 0, /obj/item/clothing/suit/marine/veteran/royal_marine/heavy/iasf_breacher, MARINE_CAN_BUY_ATTACHMENT, VENDOR_ITEM_REGULAR),
+		list("TWE M40 stimulant breacher kit", 0, /obj/item/storage/box/spec/breacher/twe, MARINE_CAN_BUY_ATTACHMENT, VENDOR_ITEM_REGULAR),
 		list("Buckshot box", 10, /obj/item/ammo_magazine/shotgun/buckshot, null, VENDOR_ITEM_REGULAR),
 	)
 

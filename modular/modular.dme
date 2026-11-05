@@ -19,6 +19,7 @@
 #include "world_edit/_world_edit.dme"
 #include "weapons/_weapons.dme"
 #include "iasf/_iasf.dme"
+#include "breacher/_breacher.dme"
 #include "clf/_clf.dme"
 #include "uscm_camouflage/_uscm_camouflage.dme"
 #include "player_survival/_player_survival.dme"

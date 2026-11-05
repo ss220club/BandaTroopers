@@ -285,6 +285,7 @@ GLOBAL_LIST_INIT(cm_vending_mortar_gear, list(
 		list("FIRE SUPPORT SET (MANDATORY)", 0, null, null, null),
 		list("L53A1 light mortar kit", 0, /obj/effect/essentials_set/rmcmortar, MARINE_CAN_BUY_ESSENTIALS, VENDOR_ITEM_MANDATORY),
 		list("L164A3 MGL kit", 0, /obj/effect/essentials_set/rmcgl, MARINE_CAN_BUY_ESSENTIALS, VENDOR_ITEM_REGULAR),
+		list("TWE Breacher Set", 0, /obj/item/storage/box/spec/breacher/twe, MARINE_CAN_BUY_ESSENTIALS, VENDOR_ITEM_REGULAR),
 
 		list("MORTAR SHELLS", 0, null, null, null),
 		list("High Explosive Mortar Shell", 15, /obj/item/mortar_shell/he, null, VENDOR_ITEM_REGULAR),

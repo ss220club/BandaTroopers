@@ -21,6 +21,10 @@
 		var/datum/job/registered_job = GLOB.RoleAuthority.roles_by_path[job_type]
 		if(!registered_job || registered_job.total_positions < 1 || registered_job.spawn_positions < 1)
 			return Fail("[job_type] is absent from role authority", __FILE__, __LINE__)
+		if(ship_config?.map_name == "Turing Base")
+			var/list/iasf_spawns = GLOB.spawns_by_squad_and_job[SQUAD_IASF_TURING]
+			if(!length(iasf_spawns) || !length(iasf_spawns[job_type]))
+				return Fail("[job_type] has no registered Turing spawn", __FILE__, __LINE__)
 		var/datum/job/job = new job_type()
 		if(!ispath(job.gear_preset, /datum/equipment_preset/iasf))
 			return Fail("[job_type] has no IASF preset", __FILE__, __LINE__)
@@ -54,5 +58,32 @@
 		if(!(armor.icon_state in icon_states(armor.icon)))
 			return Fail("[armor_type] has no object sprite", __FILE__, __LINE__)
 		qdel(armor)
+
+/datum/unit_test/iasf_turing_power_and_comms/Run()
+	if(SSmapping?.configs?[SHIP_MAP]?.map_name != "Turing Base")
+		return
+	var/apcs = 0
+	for(var/obj/structure/machinery/power/apc/controller in world)
+		if(!istype(get_area(controller), /area/turing))
+			continue
+		apcs++
+		if(!controller.cell || controller.cell.charge <= 0)
+			return Fail("Turing has an unpowered APC in [get_area(controller)]", __FILE__, __LINE__)
+	if(apcs < 10)
+		return Fail("Turing has fewer than ten active APCs", __FILE__, __LINE__)
+	var/has_storage = FALSE
+	for(var/obj/structure/machinery/power/smes/magical/storage in world)
+		if(istype(get_area(storage), /area/turing))
+			has_storage = TRUE
+			break
+	if(!has_storage)
+		return Fail("Turing has no sustainable power storage", __FILE__, __LINE__)
+	var/has_relay = FALSE
+	for(var/obj/structure/machinery/telecomms/relay/preset/tower/relay in world)
+		if(istype(get_area(relay), /area/turing) && !relay.inoperable())
+			has_relay = TRUE
+			break
+	if(!has_relay)
+		return Fail("Turing has no working telecom relay", __FILE__, __LINE__)
 
 #endif
