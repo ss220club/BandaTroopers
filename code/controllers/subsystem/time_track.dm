@@ -67,6 +67,7 @@ SUBSYSTEM_DEF(time_track)
 		var/list/modular_headers = call(src, "modular_perf_headers")()
 		if(islist(modular_headers) && length(modular_headers))
 			perf_headers += modular_headers
+	perf_headers += SShuman_ai.performance_headers() // SS220 EDIT: modular NPC workload metrics independent of HALO debug mode
 	log_perf(perf_headers + sendmaps_headers)
 	return SS_INIT_SUCCESS
 
@@ -130,4 +131,5 @@ SUBSYSTEM_DEF(time_track)
 		var/list/modular_values = call(src, "modular_perf_values")()
 		if(islist(modular_values) && length(modular_values))
 			perf_values += modular_values
+	perf_values += SShuman_ai.performance_values() // SS220 EDIT: low-frequency modular NPC workload sample
 	log_perf(perf_values + send_maps_values)

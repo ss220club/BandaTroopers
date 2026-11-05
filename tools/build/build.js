@@ -217,6 +217,9 @@ export const TguiTarget = new Juke.Target({
     "tgui/webpack.config.js",
     "tgui/**/package.json",
     "tgui/packages/**/*.+(js|jsx|cjs|ts|tsx|scss)",
+    // SS220 EDIT: module-owned Human AI panel must invalidate cached bundles.
+    "modular/human_ai/panel/**/*.tsx",
+    "modular/human_ai/panel/.swcrc",
   ],
   outputs: [
     "tgui/public/tgui.bundle.css",

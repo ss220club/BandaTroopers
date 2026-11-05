@@ -2,7 +2,8 @@
 /mob/living/carbon/human/updatehealth()
 
 	if(status_flags & GODMODE)
-		health = species.total_health
+		// health = species.total_health
+		health = human_ai_health_capacity() // SS220 EDIT: NPC global health capacity
 		set_stat(CONSCIOUS)
 		return
 	var/total_burn = 0
@@ -15,7 +16,8 @@
 	var/tox_l = ((species && species.flags & NO_POISON) ? 0 : getToxLoss())
 	var/clone_l = getCloneLoss()
 
-	health = ((species != null)? species.total_health : 200) - oxy_l - tox_l - clone_l - total_burn - total_brute
+	// health = ((species != null)? species.total_health : 200) - oxy_l - tox_l - clone_l - total_burn - total_brute
+	health = human_ai_health_capacity() - oxy_l - tox_l - clone_l - total_burn - total_brute // SS220 EDIT: modular NPC health pool
 
 	recalculate_move_delay = TRUE
 

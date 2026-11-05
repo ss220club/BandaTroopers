@@ -61,6 +61,10 @@
 	. += ..()
 
 /obj/item/reagent_container/pill/attack(mob/M, mob/user)
+	var/npc_treatment_generation // SS220 EDIT: retain cancellation token across feeding delay
+	if(ishuman(user))
+		var/mob/living/carbon/human/npc_user = user
+		npc_treatment_generation = npc_user.get_ai_brain()?.treatment_generation
 	if(M == user)
 		if(istype(M, /mob/living/carbon/human))
 			var/mob/living/carbon/human/H = M
@@ -103,8 +107,14 @@
 		if(QDELETED(src))
 			return
 
-		user.drop_inv_item_on_ground(src) //icon update
+		// SS220 EDIT: revalidate AI dosing after the feeding delay, immediately before transfer.
+		if(ishuman(user))
+			var/mob/living/carbon/human/human_user = user
+			var/datum/human_ai_brain/ai_brain = human_user.get_ai_brain()
+			if(ai_brain && (!ai_brain.treatment_can_continue(npc_treatment_generation, H) || !ai_brain.can_safely_administer_reagents(src, H, reagents.total_volume)))
+				return
 
+		user.drop_inv_item_on_ground(src) //icon update
 		user.affected_message(M,
 			SPAN_HELPFUL("You <b>fed</b> [M] a [fluff_text]."),
 			SPAN_HELPFUL("[user] <b>fed</b> you a [fluff_text]."),
@@ -313,4 +323,3 @@
 	pill_initial_reagents = list("ethylredoxrazine" = 7.5)
 	pill_icon_class = "alky"
 	color = COLOR_OLIVE
-

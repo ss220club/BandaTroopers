@@ -1,0 +1,7 @@
+{
+  "jsc": {
+    "loose": true,
+    "parser": { "syntax": "typescript", "tsx": true },
+    "transform": { "react": { "runtime": "classic", "pragma": "createElement" } }
+  }
+}

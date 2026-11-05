@@ -1792,6 +1792,9 @@ not all weapons use normal magazines etc. load_into_chamber() itself is designed
 		if(skill_accuracy)
 			gun_accuracy_mult += skill_accuracy * HIT_ACCURACY_MULT_TIER_3 // Accuracy mult increase/decrease per level is equal to attaching/removing a red dot sight
 
+	// SS220 EDIT: per-NPC profile affects this projectile, not the shared weapon statistics.
+	if(user)
+		gun_accuracy_mult *= user.human_ai_accuracy_multiplier()
 	projectile_to_fire.accuracy = floor(projectile_to_fire.accuracy * gun_accuracy_mult) // Apply gun accuracy multiplier to projectile accuracy
 	projectile_to_fire.scatter += gun_scatter
 
@@ -1851,6 +1854,10 @@ not all weapons use normal magazines etc. load_into_chamber() itself is designed
 			var/gun_ho_bonus = max(user.skills.get_skill_level(SKILL_GUN_HO) - SKILL_GUN_HO_UNTRAINED, 0) // SS220 EDIT: keep Gun Ho scatter reduction linear and preserve the untrained baseline
 			total_scatter_angle -= (user.skills.get_skill_level(SKILL_FIREARMS) + gun_ho_bonus) * SCATTER_AMOUNT_TIER_8
 
+
+	// SS220 EDIT: scale final directional scatter only for Human AI; keep weapon stats unchanged.
+	if(user)
+		total_scatter_angle *= user.human_ai_scatter_multiplier()
 
 	//Not if the gun doesn't scatter at all, or negative scatter.
 	if(total_scatter_angle > 0)

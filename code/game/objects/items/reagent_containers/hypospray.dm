@@ -168,6 +168,10 @@
 		. += SPAN_INFO("It is set to administer [amount_per_transfer_from_this] units per dose.")
 
 /obj/item/reagent_container/hypospray/attack(mob/living/M, mob/living/user)
+	var/npc_treatment_generation // SS220 EDIT: retain cancellation token across injection delay
+	if(ishuman(user))
+		var/mob/living/carbon/human/npc_user = user
+		npc_treatment_generation = npc_user.get_ai_brain()?.treatment_generation
 	if(magfed && !mag)
 		to_chat(user, SPAN_DANGER("[src] has no vial!"))
 		return
@@ -209,6 +213,12 @@
 		return 0
 
 	to_chat(user, SPAN_NOTICE(" You inject [M] with [src]."))
+	// SS220 EDIT: validate AI treatment after do_after, immediately before transfer.
+	if(ishuman(user) && ishuman(M))
+		var/mob/living/carbon/human/human_user = user
+		var/datum/human_ai_brain/ai_brain = human_user.get_ai_brain()
+		if(ai_brain && (!ai_brain.treatment_can_continue(npc_treatment_generation, M) || !ai_brain.can_safely_administer_reagents(src, M, amount_per_transfer_from_this)))
+			return FALSE
 	to_chat(M, SPAN_WARNING("You feel a tiny prick!"))
 	playsound(loc, injectSFX, injectVOL, 1)
 	SEND_SIGNAL(M, COMSIG_LIVING_HYPOSPRAY_INJECTED, src)

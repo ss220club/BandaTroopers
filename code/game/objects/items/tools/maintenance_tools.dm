@@ -421,41 +421,7 @@
 				return FALSE
 
 // Medical purposes for synths
-/obj/item/tool/weldingtool/ai_can_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain, mob/living/carbon/human/target)
-	if(!issynth(target) || (get_fuel() <= 0))
-		return FALSE
 
-	for(var/obj/limb/limb as anything in target.limbs)
-		for(var/datum/wound/wound in limb.wounds)
-			if(wound.internal || (wound.damage_type == BURN))
-				continue
-
-			return TRUE
-
-	return FALSE
-
-/obj/item/tool/weldingtool/ai_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain, mob/living/carbon/human/target)
-	user.a_intent_change(INTENT_HELP)
-	if(!welding)
-		toggle(FALSE)
-
-	for(var/obj/limb/limb as anything in target.limbs)
-		if(QDELETED(src))
-			return
-
-		for(var/datum/wound/wound in limb.wounds)
-			if(wound.internal || (wound.damage_type == BURN))
-				continue
-
-			if(QDELETED(src))
-				return
-
-			user.zone_selected = limb.name
-			attack(target, user)
-			sleep(ai_brain.short_action_delay * ai_brain.action_delay_mult)
-
-	if(welding)
-		toggle(FALSE)
 
 /obj/item/tool/weldingtool/largetank
 	name = "industrial blowtorch"
@@ -517,8 +483,6 @@
 	pry_capable = IS_PRY_CAPABLE_CROWBAR
 	preferred_storage = list(/obj/item/clothing/accessory/storage/tool_webbing = WEAR_ACCESSORY)
 
-/obj/item/tool/crowbar/ai_can_use(mob/living/carbon/human/user, datum/human_ai_brain/ai_brain)
-	return TRUE
 
 /obj/item/tool/crowbar/red
 	icon = 'icons/obj/items/items.dmi'

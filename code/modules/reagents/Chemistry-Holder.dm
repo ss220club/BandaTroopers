@@ -157,6 +157,7 @@
 		if(RG.flags & REAGENT_NOT_INGESTIBLE)
 			V.del_reagent(RG.id)
 
+	V.human_ai_track_ingestion(target) // SS220 EDIT: expose pending oral doses to NPC medical safety
 	addtimer(CALLBACK(V, TYPE_PROC_REF(/datum/reagents/vessel, inject_vessel), target, INGEST, TRUE, 0.5 SECONDS), 9.5 SECONDS)
 	return amount
 
