@@ -11,6 +11,24 @@
 	else if(ID)
 		_role = ID.rank
 	switch(_role)
+		if(JOB_IASF_TROOPER)
+			hud_icon_state = "rifleman"
+		if(JOB_IASF_MEDIC)
+			hud_icon_state = "medic"
+		if(JOB_IASF_BREACHER)
+			hud_icon_state = "engi"
+		if(JOB_IASF_GUNNER)
+			hud_icon_state = "smartgunner"
+		if(JOB_IASF_SNIPER)
+			hud_icon_state = "sniper"
+		if(JOB_IASF_SUPPORT)
+			hud_icon_state = "spec"
+		if(JOB_IASF_TEAM)
+			hud_icon_state = "teamleader_alt"
+		if(JOB_IASF_SERGEANT)
+			hud_icon_state = "troopleader_alt"
+		if(JOB_IASF_OFFICER)
+			hud_icon_state = "lieutenant"
 		if(JOB_TWE_IASF_RIFLEMAN)
 			hud_icon_state = "rifleman"
 		if(JOB_TWE_IASF_MEDIC)

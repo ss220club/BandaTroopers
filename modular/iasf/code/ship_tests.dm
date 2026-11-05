@@ -1,0 +1,58 @@
+#if defined(UNIT_TESTS) || defined(SPACEMAN_DMM)
+/datum/unit_test/iasf_turing_roles/Run()
+	var/datum/modular_ship_platoon_profile/iasf/profile = new()
+	profile.initialize_profile()
+	if(length(profile.role_mappings) != 9)
+		return Fail("Turing Base does not have all IASF roles", __FILE__, __LINE__)
+	if(!islist(GLOB.RoleAuthority?.roles_by_path))
+		return Fail("Role authority is unavailable", __FILE__, __LINE__)
+	var/datum/squad/marine/iasf/iasf_squad = GLOB.RoleAuthority.squads_by_type[/datum/squad/marine/iasf]
+	if(!iasf_squad?.usable)
+		return Fail("IASF platoon is unavailable", __FILE__, __LINE__)
+	var/datum/map_config/ship_config = SSmapping?.configs?[SHIP_MAP]
+	if(ship_config?.map_name == "Turing Base" && text2path(ship_config.platoon) != /datum/squad/marine/iasf)
+		return Fail("Turing Base does not use the IASF platoon", __FILE__, __LINE__)
+	if(ship_config?.map_name == "Turing Base")
+		if(!locate(/obj/docking_port/stationary/marine_dropship/golden_arrow_hangar))
+			return Fail("Turing Base has no Gibraltar hangar port", __FILE__, __LINE__)
+		if(!SSshuttle.getShuttle(DROPSHIP_GIBRALTAR))
+			return Fail("Turing Base has no Gibraltar shuttle", __FILE__, __LINE__)
+	for(var/job_type in profile.role_mappings)
+		var/datum/job/registered_job = GLOB.RoleAuthority.roles_by_path[job_type]
+		if(!registered_job || registered_job.total_positions < 1 || registered_job.spawn_positions < 1)
+			return Fail("[job_type] is absent from role authority", __FILE__, __LINE__)
+		var/datum/job/job = new job_type()
+		if(!ispath(job.gear_preset, /datum/equipment_preset/iasf))
+			return Fail("[job_type] has no IASF preset", __FILE__, __LINE__)
+		var/preset_type = job.gear_preset
+		var/datum/equipment_preset/preset = new preset_type()
+		if(preset.origin_override != ORIGIN_TWE || preset.assignment != job.title)
+			return Fail("[job_type] has incorrect origin or assignment", __FILE__, __LINE__)
+		var/skill_type = preset.skills
+		var/datum/skills/skillset = new skill_type()
+		if(skillset.get_skill_level(SKILL_CONSTRUCTION) != SKILL_CONSTRUCTION_ENGI || skillset.get_skill_level(SKILL_ENGINEER) != SKILL_ENGINEER_TRAINED)
+			return Fail("[job_type] has incorrect construction or engineering", __FILE__, __LINE__)
+		var/expected_medical = job.title == JOB_IASF_MEDIC ? SKILL_MEDICAL_DOCTOR : job.title == JOB_IASF_SERGEANT ? SKILL_MEDICAL_MEDIC : SKILL_MEDICAL_DEFAULT
+		var/expected_surgery = job.title == JOB_IASF_MEDIC || job.title == JOB_IASF_SERGEANT ? SKILL_SURGERY_NOVICE : SKILL_SURGERY_DEFAULT
+		if(skillset.get_skill_level(SKILL_MEDICAL) != expected_medical || skillset.get_skill_level(SKILL_SURGERY) != expected_surgery)
+			return Fail("[job_type] has incorrect medical or surgery skill", __FILE__, __LINE__)
+		qdel(skillset)
+		qdel(preset)
+		qdel(job)
+	qdel(profile)
+
+/datum/unit_test/iasf_turing_equipment/Run()
+	for(var/magazine_type as anything in list(/obj/item/ammo_magazine/rifle/rmc_f90/marksman/incendiary, /obj/item/ammo_magazine/rifle/rmc_f90/marksman/impact))
+		var/obj/item/ammo_magazine/rifle/rmc_f90/marksman/magazine = new magazine_type()
+		if(magazine.max_rounds != 60 || magazine.current_rounds != 60)
+			return Fail("[magazine_type] does not contain 60 rounds", __FILE__, __LINE__)
+		if(!(magazine.icon_state in icon_states(magazine.icon)))
+			return Fail("[magazine_type] has no sprite", __FILE__, __LINE__)
+		qdel(magazine)
+	for(var/armor_type as anything in list(/obj/item/clothing/head/helmet/marine/veteran/royal_marine/breacher/iasf, /obj/item/clothing/suit/marine/veteran/royal_marine/heavy/iasf_breacher))
+		var/obj/item/clothing/armor = new armor_type()
+		if(!(armor.icon_state in icon_states(armor.icon)))
+			return Fail("[armor_type] has no object sprite", __FILE__, __LINE__)
+		qdel(armor)
+
+#endif
