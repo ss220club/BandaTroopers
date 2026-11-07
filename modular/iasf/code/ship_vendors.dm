@@ -143,13 +143,13 @@
 /obj/structure/machinery/cm_vending/clothing/engi/iasf/get_listed_products(mob/user)
 	return list(
 		list("BREACHER KIT", 0, null, null, null),
-		list("Combat shotgun", 0, /obj/item/weapon/gun/shotgun/combat, MARINE_CAN_BUY_ESSENTIALS, VENDOR_ITEM_MANDATORY),
+		list("XM52 IASF penetrator", 0, /obj/item/weapon/gun/rifle/xm52/iasf, MARINE_CAN_BUY_ESSENTIALS, VENDOR_ITEM_MANDATORY),
 		list("Breaching hammer", 0, /obj/item/weapon/twohanded/breacher, MARINE_CAN_BUY_ESSENTIALS, VENDOR_ITEM_REGULAR),
 		list("IASF ballistic shield", 0, /obj/item/weapon/shield/riot/ballistic/iasf, MARINE_CAN_BUY_ATTACHMENT, VENDOR_ITEM_REGULAR),
 		list("IASF breacher helmet", 0, /obj/item/clothing/head/helmet/marine/veteran/royal_marine/breacher/iasf, MARINE_CAN_BUY_ATTACHMENT, VENDOR_ITEM_REGULAR),
 		list("IASF breacher vest", 0, /obj/item/clothing/suit/marine/veteran/royal_marine/heavy/iasf_breacher, MARINE_CAN_BUY_ATTACHMENT, VENDOR_ITEM_REGULAR),
-		list("TWE M40 stimulant breacher kit", 0, /obj/item/storage/box/spec/breacher/twe, MARINE_CAN_BUY_ATTACHMENT, VENDOR_ITEM_REGULAR),
-		list("Buckshot box", 10, /obj/item/ammo_magazine/shotgun/buckshot, null, VENDOR_ITEM_REGULAR),
+		list("XM52 AP magazine", 8, /obj/item/ammo_magazine/rifle/xm52/iasf_ap, null, VENDOR_ITEM_REGULAR),
+		list("16g AP shell box", 4, /obj/item/ammo_magazine/shotgun/light/breaching/sparkshots/iasf_ap, null, VENDOR_ITEM_REGULAR),
 	)
 
 /obj/structure/machinery/cm_vending/gear/mortar_stuff/iasf

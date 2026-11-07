@@ -8,6 +8,7 @@
 #include "_singletons/_singletons.dme"
 #include "pixel_shift/_pixel_shift.dme"
 #include "shuttle_flight/_shuttle_flight.dme"
+#include "tank_roof/_tank_roof.dme"
 
 #include "admin/_admin.dme"
 #include "speech_filter/_speech_filter.dme"
@@ -32,4 +33,5 @@
 #include "translations/_translations.dme"
 #include "halo/_halo.dme"
 #include "cm_pve/_cm_pve.dme"
+#include "bastion/_bastion.dme"
 #include "localization/_localization.dme"

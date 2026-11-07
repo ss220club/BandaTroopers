@@ -11,6 +11,9 @@
 		/obj/item/weapon/shield/riot/montage/twe,
 		/obj/item/weapon/shield/riot/ballistic/iasf,
 		/obj/item/weapon/gun/rifle/xm52,
+		/obj/item/weapon/gun/rifle/xm52/iasf,
+		/obj/item/ammo_magazine/rifle/xm52/iasf_ap,
+		/obj/item/ammo_magazine/shotgun/light/breaching/sparkshots/iasf_ap,
 		/obj/item/weapon/gun/launcher/rocket/brute/breacher,
 		/obj/item/storage/belt/gun/xm52,
 		/obj/item/storage/belt/gun/brutepack,
@@ -35,4 +38,45 @@
 	qdel(uscm_shield)
 	qdel(twe_shield)
 	qdel(iasf_shield)
+
+/datum/unit_test/breacher_shield_stance/Run()
+	var/list/shield_types = list(
+		/obj/item/weapon/shield/riot/montage,
+		/obj/item/weapon/shield/riot/montage/marine,
+		/obj/item/weapon/shield/riot/montage/twe,
+		/obj/item/weapon/shield/riot/ballistic/iasf,
+	)
+	for(var/shield_type as anything in shield_types)
+		var/turf/test_turf = locate(run_loc_floor_bottom_left.x + 2, run_loc_floor_bottom_left.y + 2, run_loc_floor_bottom_left.z)
+		var/mob/living/carbon/human/human = allocate(/mob/living/carbon/human, test_turf)
+		var/obj/item/weapon/shield/riot/shield = allocate(shield_type, human)
+		if(!human.put_in_active_hand(shield))
+			return Fail("[shield_type] cannot be held", __FILE__, __LINE__)
+		human.setDir(NORTH)
+		shield.attack_self(human)
+		if(shield.stance_user != human)
+			return Fail("[shield_type] did not enter stance", __FILE__, __LINE__)
+		if(shield.icon_state != "[shield.base_icon_state]_ready" || !(shield.icon_state in icon_states(shield.icon)))
+			return Fail("[shield_type] has no ready sprite", __FILE__, __LINE__)
+		if(!HAS_TRAIT(human, TRAIT_IMMOBILIZED) || !HAS_TRAIT(human, TRAIT_INCAPACITATED))
+			return Fail("[shield_type] did not immobilize its user", __FILE__, __LINE__)
+		var/obj/projectile/shot = allocate(/obj/projectile, test_turf)
+		shot.ammo = allocate(/datum/ammo/bullet)
+		shot.starting = get_step(human, NORTH)
+		if(!(SEND_SIGNAL(human, COMSIG_HUMAN_PRE_BULLET_ACT, shot) & COMPONENT_CANCEL_BULLET_ACT))
+			return Fail("[shield_type] did not stop a frontal shot", __FILE__, __LINE__)
+		shot.starting = get_step(human, SOUTH)
+		if(SEND_SIGNAL(human, COMSIG_HUMAN_PRE_BULLET_ACT, shot) & COMPONENT_CANCEL_BULLET_ACT)
+			return Fail("[shield_type] stopped a rear shot", __FILE__, __LINE__)
+		if(!(SEND_SIGNAL(human, COMSIG_KB_MOB_ACTIVATEINHAND_DOWN) & COMPONENT_KB_ACTIVATED))
+			return Fail("[shield_type] did not respond to Z", __FILE__, __LINE__)
+		if(shield.stance_user)
+			return Fail("[shield_type] stayed planted after Z", __FILE__, __LINE__)
+		if(shield.icon_state != shield.base_icon_state || !(shield.icon_state in icon_states(shield.icon)))
+			return Fail("[shield_type] did not restore its normal sprite", __FILE__, __LINE__)
+		if(HAS_TRAIT(human, TRAIT_IMMOBILIZED) || HAS_TRAIT(human, TRAIT_INCAPACITATED))
+			return Fail("[shield_type] kept its user incapacitated", __FILE__, __LINE__)
+		shield.attack_self(human)
+		if(shield.stance_user)
+			return Fail("[shield_type] ignored its cooldown", __FILE__, __LINE__)
 #endif

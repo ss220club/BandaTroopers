@@ -71,7 +71,7 @@
 	role_comm_title = "BR"
 	assignment = JOB_IASF_BREACHER
 	rank = JOB_IASF_BREACHER
-	skills = /datum/skills/iasf/ship
+	skills = /datum/skills/iasf/ship/breacher
 	access = list(ACCESS_WY_GENERAL, ACCESS_TWE_COMMANDO, ACCESS_TWE_ARMORY)
 
 /datum/equipment_preset/iasf/breacher/load_gear(mob/living/carbon/human/new_human)

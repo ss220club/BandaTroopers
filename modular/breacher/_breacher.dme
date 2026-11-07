@@ -13,5 +13,6 @@
 #include "code/helmet.dm"
 #include "code/armor.dm"
 #include "code/variants.dm"
+#include "code/shield_stance.dm"
 #include "code/kits.dm"
 #include "code/tests.dm"

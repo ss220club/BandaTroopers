@@ -17,5 +17,6 @@
 #include "code/ship_roles.dm"
 #include "code/ship_profile.dm"
 #include "code/ship_vendors.dm"
+#include "code/breacher_shotgun.dm"
 #include "code/ship_ammo.dm"
 #include "code/ship_tests.dm"
