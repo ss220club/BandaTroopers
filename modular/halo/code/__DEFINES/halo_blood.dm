@@ -1,2 +1,0 @@
-#define BLOOD_COLOR_SANGHEILI "#5b3278"
-#define BLOOD_COLOR_UNGGOY "#26d9dc"

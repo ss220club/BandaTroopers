@@ -9,7 +9,6 @@
   4. Только после этого planning-mutation в task-state; implementation-правки начинаются только после актуального контракта задачи.
 - Не читать крупные директории целиком, если задачу можно сузить выборочными запросами.
 - Для задач в `modular/**` сначала проверять `colonialmarines.dme`, `modular/modular.dme`, relevant `_*.dme`, затем целевой модуль и его callsites.
-- Для HALO port/sync/update задач до анализа кода открыть [`../../halo/__docs/HALO_PORT_STATE.md`](../../halo/__docs/HALO_PORT_STATE.md); pinned upstream commit из него считать каноническим baseline, пока этот документ не обновлен в той же задаче.
 - Для правок в upstream сначала проверять, существует ли уже modular hook, adapter или modpack-level abstraction, через которые можно закрыть задачу.
 - Для runtime/performance/freeze задач перед планом правок обязательно выполнить `Runtime freeze / MC / CPU spike triage`.
 - Для BYOND/DM planner/list-heavy задач перед планом правок обязательно выполнить `BYOND/DM list mutation safety` audit.

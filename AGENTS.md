@@ -16,8 +16,7 @@
    - [`modular/__agents/.AI_AGENT/TODO.md`](./modular/__agents/.AI_AGENT/TODO.md)
    - [`modular/__agents/.AI_AGENT/DECISIONS.md`](./modular/__agents/.AI_AGENT/DECISIONS.md)
    - [`modular/__agents/.AI_AGENT/EVIDENCE.md`](./modular/__agents/.AI_AGENT/EVIDENCE.md)
-4. Затем только релевантные продуктовые документы:
-   - module-local docs в `modular/**/__docs/**`, если задача привязана к конкретному модулю. Для HALO port/sync/update задач сначала читать [`modular/halo/__docs/HALO_PORT_STATE.md`](./modular/halo/__docs/HALO_PORT_STATE.md)
+5. Затем только релевантные продуктовые документы:
    - [`.github/guides/STANDARDS.md`](./.github/guides/STANDARDS.md)
    - [`.github/guides/STYLES.md`](./.github/guides/STYLES.md)
    - [`tools/build/README.md`](./tools/build/README.md)
@@ -45,4 +44,4 @@
 ## Маршрутизация
 - Агентная база знаний: [`modular/__agents/.AI_AGENT/`](./modular/__agents/.AI_AGENT/README.md)
 - SS220/BandaTroopers-specific overlay: [`modular/__docs/SS220_DEVELOPMENT_RULES.md`](./modular/__docs/SS220_DEVELOPMENT_RULES.md)
-- Продуктовые документы: `modular/__docs/**`, `modular/**/__docs/**`, `.github/guides/**`, `tools/**/README.md`, `tgui/**`
+- Продуктовые документы: `modular/__docs/**`, `.github/guides/**`, `tools/**/README.md`, `tgui/**`

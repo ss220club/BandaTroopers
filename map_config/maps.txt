@@ -140,39 +140,3 @@ endmap
 
 map derelict_almayer_infested
 endmap
-
-# SS220 EDIT - START: HALO ground map rotation
-map halo_new_irvine
-	default # SS220 EDIT
-endmap
-
-map halo_new_irvine_covenant
-endmap
-
-map oni_shield_base
-endmap
-
-map valorous_chant
-endmap
-
-map 686_regretful_flame
-endmap
-
-map mackay_station
-endmap
-
-map oni_digsite_451
-endmap
-
-map traxus_gamma_zone
-endmap
-
-map jungle_delta
-endmap
-
-map prospector_canyon
-endmap
-
-map arctic_valley
-endmap
-# SS220 EDIT - END

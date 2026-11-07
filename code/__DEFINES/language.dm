@@ -21,10 +21,6 @@
 #define LANGUAGE_APOLLO "APOLLO Link"
 
 #define LANGUAGE_TELEPATH "Telepath Implant"
-// SS220 EDIT - START: HALO language ids
-#define LANGUAGE_SANGHEILI "Сангхейли" // SS220 EDIT: HALO language names stay localized on player-facing language surfaces
-#define LANGUAGE_UNGGOY "Унггой" // SS220 EDIT: HALO language names stay localized on player-facing language surfaces
-// SS220 EDIT - END
 
 #define ALL_HUMAN_LANGUAGES list(LANGUAGE_ENGLISH, LANGUAGE_JAPANESE, LANGUAGE_CHINESE, LANGUAGE_RUSSIAN, LANGUAGE_GERMAN, LANGUAGE_SPANISH, LANGUAGE_PORTUGUESE, LANGUAGE_FRENCH, LANGUAGE_FILIPINO, LANGUAGE_RUSPATOIS, LANGUAGE_POLISH)
 

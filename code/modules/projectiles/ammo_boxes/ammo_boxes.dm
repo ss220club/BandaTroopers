@@ -17,7 +17,6 @@
 	var/handfuls_icon = 'icons/obj/items/weapons/guns/ammo_boxes/handfuls.dmi'
 	var/magazines_icon = 'icons/obj/items/weapons/guns/ammo_boxes/magazines.dmi'
 	var/flames_icon = 'icons/obj/items/weapons/guns/ammo_boxes/misc.dmi'
-	var/deployed_object = /obj/structure/magazine_box // SS220 EDIT: HALO ammo boxes can deploy custom structure subtype
 
 //---------------------GENERAL PROCS
 
@@ -173,7 +172,7 @@
 			to_chat(user, SPAN_WARNING("You can't cram any more boxes in here!"))
 			return
 
-	var/obj/structure/magazine_box/M = new deployed_object(T) // SS220 EDIT: support custom deploy target path for HALO crates
+	var/obj/structure/magazine_box/M = new /obj/structure/magazine_box(T)
 	M.icon_state = icon_state_deployed ? icon_state_deployed : icon_state
 	M.name = name
 	M.desc = desc

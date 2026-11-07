@@ -1732,10 +1732,6 @@
 		if(FACTION_TWE)
 			alert_type = /atom/movable/screen/text/screen_text/picture/starting/twe
 			platoon = "Gamma Troop"
-		if(FACTION_UNSC) // SS220 EDIT: HALO UNSC manifest branch
-			if(ship_profile)
-				alert_type = ship_profile["manifest_picture"]
-				platoon = ship_profile["label"]
 	play_screen_text("<u>[SSmapping.configs[SHIP_MAP].map_name]<br></u>" + "[platoon]<br><br>" + human_manifest, alert_type)
 
 /mob/living/carbon/human/point_to_atom(atom/A, turf/T)

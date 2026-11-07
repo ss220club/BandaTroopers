@@ -412,13 +412,6 @@
 					human.play_screen_text("<span class='maptext' style=text-align:left valign='top'><u>[uppertext(GLOB.round_statistics.round_name)]</u></span><br>" + "[SSmapping.configs[GROUND_MAP].map_name]<br>" + "[worldtime2text("hh:mm")], [time2text(REALTIMEOFDAY, "DD-MMM-[GLOB.game_year]")]<br>" + "Azure-15<br>" + "[human.job], [human]<br>", /atom/movable/screen/text/screen_text/picture/azure) // SS220 FONTS FIX
 				if(FACTION_TWE)
 					human.play_screen_text("<span class='maptext' style=text-align:left valign='top'><u>[uppertext(GLOB.round_statistics.round_name)]</u></span><br>" + "[SSmapping.configs[GROUND_MAP].map_name]<br>" + "[worldtime2text("hh:mm")], [time2text(REALTIMEOFDAY, "DD-MMM-[GLOB.game_year]")]<br>" + "Gamma Troop<br>" + "[human.job], [human]<br>", /atom/movable/screen/text/screen_text/picture/gamma_troop) // SS220 FONTS FIX
-				if(FACTION_UNSC) // SS220 EDIT: HALO UNSC intro branch
-					// SS220 EDIT - START: platoon label and art now come from the active ship display profile
-					var/list/ship_profile = GLOB.RoleAuthority?.get_main_ship_display_profile()
-					var/set_squad = ship_profile ? ship_profile["label"] : ""
-					var/intro_picture = ship_profile ? ship_profile["intro_picture"] : /atom/movable/screen/text/screen_text/picture/dark_was_the_night
-					human.play_screen_text("<span class='maptext' style=text-align:left valign='top'><u>[uppertext(GLOB.round_statistics.round_name)]</u></span><br>" + "[SSmapping.configs[GROUND_MAP].map_name]<br>" + "[worldtime2text("hh:mm")], [time2text(REALTIMEOFDAY, "DD-MMM-[GLOB.game_year]")]<br>" + "[set_squad]<br>" + "[human.job], [human]<br>", intro_picture)
-					// SS220 EDIT - END
 			var/admin_names
 			for(var/client/admin in GLOB.admins)
 				admin_names += "[admin.ckey]<br>"

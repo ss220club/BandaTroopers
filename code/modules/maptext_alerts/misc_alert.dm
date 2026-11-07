@@ -42,10 +42,6 @@
 /atom/movable/screen/text/screen_text/picture/gamma_troop
 	image_to_play = "gamma_troop"
 
-/atom/movable/screen/text/screen_text/picture/dark_was_the_night
-	icon = 'modular/halo/icons/halo/ui_icons/screen_alert_images.dmi' // SS220 EDIT: HALO intro artwork
-	image_to_play = "dwtn"
-
 /atom/movable/screen/text/screen_text/picture/starting
 	layer = ABOVE_INTRO_LAYER
 	plane = FULLSCREEN_PLANE
@@ -70,14 +66,6 @@
 
 /atom/movable/screen/text/screen_text/picture/starting/twe
 	image_to_play = "twe"
-
-/atom/movable/screen/text/screen_text/picture/starting/unsc
-	icon = 'modular/halo/icons/halo/ui_icons/screen_alert_images.dmi' // SS220 EDIT: HALO UNSC intro artwork
-	image_to_play = "unsc"
-
-/atom/movable/screen/text/screen_text/picture/starting/odst
-	icon = 'modular/halo/icons/halo/ui_icons/screen_alert_images.dmi' // SS220 EDIT: HALO ODST intro artwork
-	image_to_play = "odst"
 
 /atom/movable/screen/text/screen_text/hypersleep_status
 	maptext_height = 480

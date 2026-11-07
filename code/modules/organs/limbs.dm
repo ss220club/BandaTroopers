@@ -767,10 +767,6 @@ This function completely restores a damaged organ to perfect condition.
 		skin_color = owner.skin_color
 		body_type = owner.body_type
 
-	if(isspeciessangheili(owner) || isspeciesunggoy(owner) || isspeciesruuhtian(owner) || isspeciesspartan(owner)) // SS220 EDIT: HALO limb visuals
-		skin_color = owner.skin_color
-		body_type = owner.body_type
-
 	species = owner?.species ? owner.species : GLOB.all_species[SPECIES_HUMAN]
 	limb_gender = owner?.gender ? owner.gender : FEMALE
 

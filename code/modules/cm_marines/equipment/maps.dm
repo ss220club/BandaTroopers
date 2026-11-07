@@ -304,33 +304,15 @@ GLOBAL_LIST_INIT_TYPED(map_type_list, /obj/item/map, setup_all_maps())
 /obj/item/map/current_map/Initialize(mapload, ...)
 	. = ..()
 
-	var/datum/map_config/ground_map_config = SSmapping.configs[GROUND_MAP]
-	if(!ground_map_config) // SS220 EDIT: guard against missing map config during tests/bootstrapping
-		return
-
-	var/map_name = ground_map_config?.map_name
-	var/map_type = ground_map_config?.map_item_type
-
-	// SS220 EDIT - START: prefer JSON-configured map item type over legacy name registry
-	if(map_type)
-		var/obj/item/map/config_map = find_map_type_by_item_type(map_type)
-		var/created_config_map = FALSE
-		if(!config_map)
-			config_map = new map_type()
-			created_config_map = TRUE
-		apply_map_data(config_map)
-		if(created_config_map)
-			qdel(config_map)
-		return
-	// SS220 EDIT - END
-
-	var/obj/item/map/map = resolve_current_map_type(ground_map_config)
-	if(!map && should_suppress_missing_map_runtime(ground_map_config))
+	var/map_name = SSmapping.configs[GROUND_MAP].map_name
+	var/obj/item/map/map = GLOB.map_type_list[map_name]
+	if (!map && (map_name == MAP_RUNTIME || map_name == MAP_CHINOOK || (map_name in SHIP_MAP_NAMES)))
 		return // "Maps" we don't have maps for so we don't need to throw a runtime for (namely in unit_testing)
-	if(!map)
-		log_runtime("Unable to resolve current map item for [map_name || "null map_name"] (type: [ground_map_config?.map_item_type || "null"], config: [ground_map_config?.config_filename || "unknown"])")
-		return
-	apply_map_data(map)
+	name = map.name
+	desc = map.desc
+	desc_lore = map.desc_lore
+	html_link = map.html_link
+	color = map.color
 
 // Landmark - Used for mapping. Will spawn the appropriate map for each gamemode (LV map items will spawn when LV is the gamemode, etc)
 /obj/effect/landmark/map_item

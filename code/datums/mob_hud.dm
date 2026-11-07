@@ -26,9 +26,6 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, flatten_numeric_alist(alist(
 	MOB_HUD_HUNTER = new /datum/mob_hud/hunter_hud(),
 	MOB_HUD_HUNTER_CLAN = new /datum/mob_hud/hunter_clan(),
 	MOB_HUD_EXECUTE = new /datum/mob_hud/execute_hud(),
-	MOB_HUD_FACTION_UNSC = new /datum/mob_hud/faction/unsc(), // SS220 EDIT: HALO faction HUD
-	MOB_HUD_FACTION_COVENANT = new /datum/mob_hud/faction/covenant(), // SS220 EDIT: HALO Covenant faction HUD
-	MOB_HUD_VISR = new /datum/mob_hud/visr(), // SS220 EDIT: HALO VISR HUD
 	)))
 
 /datum/mob_hud
@@ -242,17 +239,6 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, flatten_numeric_alist(alist(
 
 /datum/mob_hud/faction/guard
 	faction_to_check = FACTION_UACG
-
-/datum/mob_hud/faction/fil
-	faction_to_check = FACTION_FIL
-
-/datum/mob_hud/faction/unsc
-	faction_to_check = FACTION_UNSC
-
-// SS220 EDIT - START - HALO Covenant faction HUD
-/datum/mob_hud/faction/covenant
-	faction_to_check = FACTION_COVENANT
-// SS220 EDIT - END
 
 /datum/mob_hud/faction/observer
 	hud_icons = list(FACTION_HUD, ORDER_HUD, HUNTER_CLAN, HOLOCARD_HUD)

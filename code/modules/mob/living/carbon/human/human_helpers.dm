@@ -170,11 +170,6 @@
 		body_size_icon = body_size
 		body_type_icon = body_type
 
-	if(isspeciessangheili(src) || isspeciesunggoy(src) || isspeciesruuhtian(src) || isspeciesspartan(src)) // SS220 EDIT: HALO limb icon handling
-		skin_color_icon = skin_color
-		body_size_icon = body_size
-		body_type_icon = body_type
-
 	for(var/obj/limb/L as anything in limbs)
 		// L.icon_name = get_limb_icon_name(species, body_size_icon, body_type_icon, gender, L.display_name, skin_color_icon)
 		var/limb_icon_key = L.icon_name || L.name // SS220 EDIT: localized damage overlays must resolve from canonical limb ids

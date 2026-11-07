@@ -10,11 +10,6 @@
 #define iszombie(A) (ishuman(A) && istype(A?:species, /datum/species/zombie))
 #define ismonkey(A) (ishuman(A) && istype(A?:species, /datum/species/monkey))
 #define isyautja(A) (ishuman(A) && istype(A?:species, /datum/species/yautja))
-#define issangheili(A) (ishuman(A) && istype(A?:species, /datum/species/sangheili)) // SS220 EDIT: HALO species helper
-#define isunggoy(A) (ishuman(A) && istype(A?:species, /datum/species/unggoy)) // SS220 EDIT: HALO species helper
-#define isruuhtian(A) (ishuman(A) && istype(A?:species, /datum/species/ruuhtian)) // SS220 EDIT: HALO species helper
-#define iscovenant(A)   (isunggoy(A) || issangheili(A) || isruuhtian(A)) // SS220 EDIT: PR #153 HALO covenant typecheck including ruuhtian
-#define isspartan(A) (ishuman(A) && istype(A?:species, /datum/species/spartan)) // SS220 EDIT: HALO species helper
 #define isresearcher(A) (ishuman(A) && A.job == "Researcher")
 #define isSEA(A) (ishuman(A) && A.job == "Senior Enlisted Advisor")
 #define issynth(A) (ishuman(A) && istype(A?:species, /datum/species/synthetic))
@@ -31,10 +26,6 @@
 #define isspeciesmonkey(A) (A.species?.group == SPECIES_MONKEY)
 #define isspeciesyautja(A) (A.species?.group == SPECIES_YAUTJA)
 #define isspeciessynth(A) (A.species?.group == SPECIES_SYNTHETIC)
-#define isspeciessangheili(A) (A.species?.group == SPECIES_SANGHEILI) // SS220 EDIT: HALO species helper
-#define isspeciesunggoy(A) (A.species?.group == SPECIES_UNGGOY) // SS220 EDIT: HALO species helper
-#define isspeciesruuhtian(A) (A.species?.group == SPECIES_RUUHTIAN) // SS220 EDIT: HALO species helper
-#define isspeciesspartan(A) (A.species?.group == SPECIES_SPARTAN) // SS220 EDIT: HALO species helper
 
 //Size checks for carbon to use instead of typechecks. (Hellhounds are deprecated)
 #define iscarbonsizexeno(A) (A.mob_size >= MOB_SIZE_XENO_VERY_SMALL)
