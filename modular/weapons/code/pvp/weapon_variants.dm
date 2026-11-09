@@ -1,5 +1,5 @@
 /obj/item/weapon/gun/pistol/heavy/pvp
-	name = "Desert Eagle (PvP)"
+	name = "Desert Eagle"
 	desc = "A powerful .50-caliber Desert Eagle from the BandaMarines arsenal."
 	icon = 'modular/weapons/icons/pvp/world/deagle.dmi'
 	icon_state = "deagle"
@@ -14,7 +14,7 @@
 	item_state_slots = list(WEAR_WAIST = "gun", WEAR_J_STORE = "m4a3")
 
 /obj/item/weapon/gun/revolver/mateba/pvp_m2006
-	name = "Spearhead 2006M autorevolver (PvP)"
+	name = "Spearhead 2006M autorevolver"
 	desc = "A recoil-operated .454 autorevolver with a modern attachment rail."
 	icon = 'modular/weapons/icons/pvp/world/m2006.dmi'
 	icon_state = "mateba_2006m"
@@ -52,7 +52,7 @@
 	gun.update_overlays(src, "stock")
 
 /obj/item/weapon/gun/smg/mp5/pvp_mp5a5
-	name = "MP5A5 submachinegun (PvP)"
+	name = "MP5A5 submachinegun"
 	desc = "A modernized MP5A5 with an integrated folding stock."
 	icon = 'modular/weapons/icons/pvp/world/mp5a5.dmi'
 	icon_state = "mp5_alt"
@@ -99,7 +99,7 @@
 	attachable_offset = list("muzzle_x" = 26, "muzzle_y" = 17, "rail_x" = 8, "rail_y" = 19, "under_x" = 19, "under_y" = 13, "stock_x" = 39, "stock_y" = 11)
 
 /obj/item/weapon/gun/rifle/m16/pvp_m16a5_tactical
-	name = "M16A5 tactical rifle (PvP)"
+	name = "M16A5 tactical rifle"
 	desc = "A modernized M16A5 with a tactical accessory setup."
 	icon = 'modular/weapons/icons/pvp/world/m16a5.dmi'
 	icon_state = "m16a5"
@@ -138,7 +138,7 @@
 	ammo_band_color = AMMO_BAND_COLOR_HIGH_VELOCITY
 
 /obj/item/weapon/gun/pistol/pvp_l54_gold
-	name = "gold L54 custom service pistol (PvP)"
+	name = "gold L54 custom service pistol"
 	desc = "A gold-alloy L54 with a compensated barrel and precision-tuned internals."
 	icon = 'modular/weapons/icons/pvp/world/l54_gold.dmi'
 	icon_state = "l54_custom"

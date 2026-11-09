@@ -19,4 +19,5 @@
 #include "code/ship_vendors.dm"
 #include "code/breacher_shotgun.dm"
 #include "code/ship_ammo.dm"
+#include "code/sniper_gear.dm"
 #include "code/ship_tests.dm"

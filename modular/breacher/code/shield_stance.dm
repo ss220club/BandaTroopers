@@ -75,6 +75,9 @@
 /obj/item/weapon/shield/riot/ballistic/iasf/attack_self(mob/user)
 	return toggle_breacher_stance(user)
 
+/obj/item/weapon/shield/riot/ballistic/twe/attack_self(mob/user)
+	return toggle_breacher_stance(user)
+
 /obj/item/weapon/shield/riot/dropped(mob/user)
 	if(stance_user)
 		end_breacher_stance()

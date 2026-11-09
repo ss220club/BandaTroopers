@@ -1,49 +1,49 @@
 /datum/equipment_preset/iasf/standard/ship
-	name = "IASF Turing Trooper"
+	name = "Turing Trooper"
 	assignment = JOB_IASF_TROOPER
 	rank = JOB_IASF_TROOPER
 	skills = /datum/skills/iasf/ship
 
 /datum/equipment_preset/iasf/medic/ship
-	name = "IASF Turing Medic"
+	name = "Turing Medic"
 	assignment = JOB_IASF_MEDIC
 	rank = JOB_IASF_MEDIC
 	skills = /datum/skills/iasf/ship/medic
 
 /datum/equipment_preset/iasf/machinegun/ship
-	name = "IASF Turing Gunner"
+	name = "Turing Gunner"
 	assignment = JOB_IASF_GUNNER
 	rank = JOB_IASF_GUNNER
 	skills = /datum/skills/iasf/ship/gunner
 
 /datum/equipment_preset/iasf/sniper/light/ship
-	name = "IASF Turing Sniper"
+	name = "Turing Sniper"
 	assignment = JOB_IASF_SNIPER
 	rank = JOB_IASF_SNIPER
 	skills = /datum/skills/iasf/ship
 
 /datum/equipment_preset/iasf/leader/lesser/ship
-	name = "IASF Turing Team Leader"
+	name = "Turing Team Leader"
 	assignment = JOB_IASF_TEAM
 	rank = JOB_IASF_TEAM
 	skills = /datum/skills/iasf/ship/leader
 
 /datum/equipment_preset/iasf/troopsergeant/ship
-	name = "IASF Turing Platoon Sergeant"
+	name = "Turing Platoon Sergeant"
 	assignment = JOB_IASF_SERGEANT
 	rank = JOB_IASF_SERGEANT
 	skills = /datum/skills/iasf/ship/commander
 
 /datum/equipment_preset/iasf/lieutenant/ship
-	name = "IASF Turing Officer"
+	name = "Turing Officer"
 	assignment = JOB_IASF_OFFICER
 	rank = JOB_IASF_OFFICER
 	skills = /datum/skills/iasf/ship/officer
 
 /datum/equipment_preset/iasf/engineer/ship
-	name = "IASF Turing Fire Support"
-	assignment = JOB_IASF_SUPPORT
-	rank = JOB_IASF_SUPPORT
+	name = "Turing Engineer"
+	assignment = JOB_IASF_ENGINEER
+	rank = JOB_IASF_ENGINEER
 	skills = /datum/skills/iasf/ship
 
 /obj/item/clothing/head/helmet/marine/veteran/royal_marine/breacher/iasf
@@ -52,6 +52,7 @@
 	item_icons = list(WEAR_HEAD = 'icons/mob/humans/onmob/clothing/head/hats_by_faction/TWE.dmi')
 
 /obj/item/clothing/suit/marine/veteran/royal_marine/heavy/iasf_breacher
+	parent_type = /obj/item/clothing/suit/storage/marine/m40/twe
 	name = "IASF Kestrel breacher vest"
 	icon = 'icons/obj/items/clothing/suits/suits_by_faction/TWE.dmi'
 	item_icons = list(WEAR_JACKET = 'icons/mob/humans/onmob/clothing/suits/suits_by_faction/TWE.dmi')
@@ -91,3 +92,33 @@
 	new_human.equip_to_slot_or_del(new /obj/item/clothing/shoes/marine/rmc/knife(new_human), WEAR_FEET)
 	new_human.equip_to_slot_or_del(new /obj/item/storage/pouch/firstaid/full/alternate(new_human), WEAR_L_STORE)
 	new_human.equip_to_slot_or_del(new /obj/item/weapon/shield/riot/ballistic/iasf(new_human), WEAR_L_HAND)
+
+/datum/equipment_preset/iasf/breacher/ship
+	name = "Turing Breacher"
+
+/datum/equipment_preset/iasf/breacher/ship/load_gear(mob/living/carbon/human/new_human)
+	return
+
+/datum/equipment_preset/iasf/standard/ship/load_gear(mob/living/carbon/human/new_human)
+	return
+
+/datum/equipment_preset/iasf/medic/ship/load_gear(mob/living/carbon/human/new_human)
+	return
+
+/datum/equipment_preset/iasf/machinegun/ship/load_gear(mob/living/carbon/human/new_human)
+	return
+
+/datum/equipment_preset/iasf/sniper/light/ship/load_gear(mob/living/carbon/human/new_human)
+	return
+
+/datum/equipment_preset/iasf/leader/lesser/ship/load_gear(mob/living/carbon/human/new_human)
+	return
+
+/datum/equipment_preset/iasf/troopsergeant/ship/load_gear(mob/living/carbon/human/new_human)
+	return
+
+/datum/equipment_preset/iasf/lieutenant/ship/load_gear(mob/living/carbon/human/new_human)
+	return
+
+/datum/equipment_preset/iasf/engineer/ship/load_gear(mob/living/carbon/human/new_human)
+	return

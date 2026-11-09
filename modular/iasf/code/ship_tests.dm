@@ -17,6 +17,8 @@
 			return Fail("Turing Base has no Gibraltar hangar port", __FILE__, __LINE__)
 		if(!SSshuttle.getShuttle(DROPSHIP_GIBRALTAR))
 			return Fail("Turing Base has no Gibraltar shuttle", __FILE__, __LINE__)
+		if(!locate(/obj/vehicle/multitile/tank/twe_tank/bastion))
+			return Fail("Turing Base has no M46 Bastion", __FILE__, __LINE__)
 	for(var/job_type in profile.role_mappings)
 		var/datum/job/registered_job = GLOB.RoleAuthority.roles_by_path[job_type]
 		if(!registered_job || registered_job.total_positions < 1 || registered_job.spawn_positions < 1)
@@ -46,7 +48,7 @@
 	qdel(profile)
 
 /datum/unit_test/iasf_turing_equipment/Run()
-	for(var/magazine_type as anything in list(/obj/item/ammo_magazine/rifle/rmc_f90/marksman/incendiary, /obj/item/ammo_magazine/rifle/rmc_f90/marksman/impact))
+	for(var/magazine_type as anything in list(/obj/item/ammo_magazine/rifle/rmc_f90/marksman/incendiary, /obj/item/ammo_magazine/rifle/rmc_f90/marksman/impact, /obj/item/ammo_magazine/rifle/rmc_f90/marksman/flak))
 		var/obj/item/ammo_magazine/rifle/rmc_f90/marksman/magazine = new magazine_type()
 		if(magazine.max_rounds != 60 || magazine.current_rounds != 60)
 			return Fail("[magazine_type] does not contain 60 rounds", __FILE__, __LINE__)
@@ -58,6 +60,22 @@
 		if(!(armor.icon_state in icon_states(armor.icon)))
 			return Fail("[armor_type] has no object sprite", __FILE__, __LINE__)
 		qdel(armor)
+	var/obj/item/storage/box/guncase/heavy/sniper/iasf/kit = new()
+	if(length(kit.contents) != 11)
+		return Fail("Turing sniper kit has incorrect item count", __FILE__, __LINE__)
+	var/incendiary = 0
+	var/impact = 0
+	var/flak = 0
+	for(var/obj/item/item in kit.contents)
+		if(istype(item, /obj/item/ammo_magazine/rifle/rmc_f90/marksman/incendiary))
+			incendiary++
+		else if(istype(item, /obj/item/ammo_magazine/rifle/rmc_f90/marksman/impact))
+			impact++
+		else if(istype(item, /obj/item/ammo_magazine/rifle/rmc_f90/marksman/flak))
+			flak++
+	if(incendiary != 3 || impact != 3 || flak != 3)
+		return Fail("Turing sniper kit has incorrect ammunition", __FILE__, __LINE__)
+	qdel(kit)
 
 /datum/unit_test/iasf_turing_power_and_comms/Run()
 	if(SSmapping?.configs?[SHIP_MAP]?.map_name != "Turing Base")

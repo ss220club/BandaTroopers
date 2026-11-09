@@ -21,7 +21,21 @@
 	bullet_light_color = COLOR_SOFT_RED
 
 /datum/ammo/bullet/rifle/f90/impact/on_hit_mob(mob/entity, obj/projectile/bullet)
-	slowdown(entity, bullet)
+	knockback(entity, bullet, max_range = INFINITY)
+
+/datum/ammo/bullet/rifle/f90/flak
+	name = "flak 5.5x50mm bullet"
+	damage = 24
+	penetration = 0
+	bonus_projectiles_amount = EXTRA_PROJECTILES_TIER_3
+	bonus_projectiles_type = /datum/ammo/bullet/rifle/f90/flak/spread
+
+/datum/ammo/bullet/rifle/f90/flak/spread
+	name = "5.5x50mm flak fragment"
+	damage = 12
+	scatter = SCATTER_AMOUNT_TIER_2
+	bonus_projectiles_amount = 0
+	bonus_projectiles_type = null
 
 /obj/item/ammo_magazine/rifle/rmc_f90/marksman/incendiary
 	name = "F903A1 incendiary marksman magazine (5.5x50mm)"
@@ -34,6 +48,11 @@
 	desc = "A 60-round impact-detonating magazine for the F903A1 marksman rifle."
 	default_ammo = /datum/ammo/bullet/rifle/f90/impact
 	ammo_band_color = AMMO_BAND_COLOR_IMPACT
+
+/obj/item/ammo_magazine/rifle/rmc_f90/marksman/flak
+	name = "F903A1 flak marksman magazine (5.5x50mm)"
+	default_ammo = /datum/ammo/bullet/rifle/f90/flak
+	ammo_band_color = AMMO_BAND_COLOR_HIGH_VELOCITY
 
 /obj/item/ammo_box/magazine/f90/marksman/incendiary
 	name = "magazine box (F903A1 Marksman incendiary x 10)"

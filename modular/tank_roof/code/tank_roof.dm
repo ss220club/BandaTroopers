@@ -18,21 +18,34 @@
 	set src in view(3)
 
 	var/mob/living/carbon/human/climber = usr
-	if(!istype(climber))
-		return
+	start_roof_climb(climber)
 
+/obj/vehicle/multitile/tank/attack_hand(mob/user)
+	for(var/entrance in entrances)
+		var/list/coordinates = entrances[entrance]
+		if(user.x - x == coordinates[1] && user.y - y == coordinates[2])
+			return ..()
+	var/mob/living/carbon/human/climber = user
+	if(istype(climber) && start_roof_climb(climber))
+		return
+	return ..()
+
+/obj/vehicle/multitile/tank/proc/start_roof_climb(mob/living/carbon/human/climber)
+	if(!istype(climber))
+		return FALSE
 	var/datum/component/tank_roof/roof = GetComponent(/datum/component/tank_roof)
 	if(!roof || !roof.can_mount(climber))
-		return
+		return FALSE
 
 	climber.visible_message(SPAN_NOTICE("[climber] begins climbing onto [src]."), SPAN_NOTICE("You begin climbing onto [src]."))
 	if(!do_after(climber, 2 SECONDS, INTERRUPT_ALL, BUSY_ICON_GENERIC))
-		return
+		return TRUE
 
 	if(QDELETED(src) || QDELETED(roof) || !roof.mount(climber))
-		return
+		return TRUE
 
 	climber.visible_message(SPAN_NOTICE("[climber] climbs onto [src]."), SPAN_NOTICE("You climb onto [src]."))
+	return TRUE
 
 /obj/vehicle/multitile/tank/get_projectile_hit_boolean(obj/projectile/projectile)
 	var/datum/component/tank_roof/roof = GetComponent(/datum/component/tank_roof)

@@ -1358,15 +1358,16 @@
 		sure that we don't have to do any extra calculations.
 		*/
 		playsound(src, drawSound, 7, TRUE)
-		var/image/gun_underlay = image(icon, current_gun.base_gun_icon)
+		var/underlay_icon_state = istype(current_gun, /obj/item/weapon/gun/pistol/pvp_l54_gold) ? "l54" : current_gun.base_gun_icon
+		var/image/gun_underlay = image(icon, underlay_icon_state)
 		if(gun_has_gamemode_skin)
 			switch(SSmapping.configs[GROUND_MAP].camouflage_type)
 				if("snow")
-					gun_underlay = image(icon, "s_" + current_gun.base_gun_icon)
+					gun_underlay = image(icon, "s_" + underlay_icon_state)
 				if("desert")
-					gun_underlay = image(icon, "d_" + current_gun.base_gun_icon)
+					gun_underlay = image(icon, "d_" + underlay_icon_state)
 				if("classic")
-					gun_underlay = image(icon, "c_" + current_gun.base_gun_icon)
+					gun_underlay = image(icon, "c_" + underlay_icon_state)
 		gun_underlay.pixel_x = holster_slots[slot]["icon_x"]
 		gun_underlay.pixel_y = holster_slots[slot]["icon_y"]
 		gun_underlay.color = current_gun.color
@@ -2607,6 +2608,7 @@
 		/obj/item/weapon/gun/flare,
 		/obj/item/mortar_shell,
 		/obj/item/storage/box/packet/rmc/mini,
+		/obj/item/storage/box/packet/rmc,
 		/obj/item/ammo_magazine/pistol,
 		/obj/item/ammo_magazine/revolver,
 		/obj/item/ammo_magazine/handful,
@@ -2614,6 +2616,7 @@
 	bypass_w_limit = list(
 		/obj/item/mortar_shell,
 		/obj/item/storage/box/packet/rmc/mini,
+		/obj/item/storage/box/packet/rmc,
 	)
 
 	//Keep a track of how many mortar shells are inside the belt.
@@ -2625,7 +2628,7 @@
 		if(!stop_messages)
 			to_chat(usr, SPAN_WARNING("[src] can't hold any more mortar shells."))
 		return FALSE
-	else if(shells >= MAXIMUM_MORTARSHELL_COUNT && istype(item, /obj/item/storage/box/packet/rmc/mini))
+	else if(shells >= MAXIMUM_MORTARSHELL_COUNT && istype(item, /obj/item/storage/box/packet/rmc))
 		if(!stop_messages)
 			to_chat(usr, SPAN_WARNING("[src] can't hold any more grenade packets."))
 		return FALSE
@@ -2634,21 +2637,21 @@
 	. = ..()
 	if(istype(item, /obj/item/mortar_shell))
 		shells++
-	else if(istype(item, /obj/item/storage/box/packet/rmc/mini))
+	else if(istype(item, /obj/item/storage/box/packet/rmc))
 		shells++
 
 /obj/item/storage/belt/gun/mortarbelt/rmc/remove_from_storage(obj/item/item as obj, atom/new_location)
 	. = ..()
 	if(istype(item, /obj/item/mortar_shell))
 		shells--
-	else if(istype(item, /obj/item/storage/box/packet/rmc/mini))
+	else if(istype(item, /obj/item/storage/box/packet/rmc))
 		shells--
 
 //If a magazine disintegrates due to acid or something else while in the belt, remove it from the count.
 /obj/item/storage/belt/gun/mortarbelt/rmc/on_stored_atom_del(atom/movable/item)
 	if(istype(item, /obj/item/mortar_shell))
 		shells--
-	else if(istype(item, /obj/item/storage/box/packet/rmc/mini))
+	else if(istype(item, /obj/item/storage/box/packet/rmc))
 		shells--
 
 /obj/item/storage/belt/gun/mortarbelt/rmc/full/fill_preset_inventory()

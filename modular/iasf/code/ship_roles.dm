@@ -81,7 +81,7 @@
 
 /datum/job/marine/engineer/ai/rmc/iasf
 	title = JOB_IASF_BREACHER
-	gear_preset = /datum/equipment_preset/iasf/breacher
+	gear_preset = /datum/equipment_preset/iasf/breacher/ship
 	supervisors = "the IASF team leader"
 	entry_message_body = "You are the team breacher. Carry your ballistic shield and shotgun and clear the entry on your team leader's order."
 
@@ -91,12 +91,12 @@
 	job = /datum/job/marine/engineer/ai/rmc/iasf
 
 /datum/job/marine/engineer/ai/rmcmortar/iasf
-	title = JOB_IASF_SUPPORT
+	title = JOB_IASF_ENGINEER
 	gear_preset = /datum/equipment_preset/iasf/engineer/ship
 	supervisors = "the IASF platoon sergeant"
-	entry_message_body = "Coordinate fire support with the platoon sergeant and support the teams."
+	entry_message_body = "Maintain the detachment's equipment and fortifications. Your engineering set is in the engineering vendor."
 
 /obj/effect/landmark/start/marine/engineer/rmcmortar/iasf
-	name = JOB_IASF_SUPPORT
+	name = JOB_IASF_ENGINEER
 	squad = SQUAD_IASF_TURING
 	job = /datum/job/marine/engineer/ai/rmcmortar/iasf

@@ -294,3 +294,12 @@
 	name = "\improper vp70 extended magazine (9x19mm)"
 	icon_state = "vp70_mag_ex"
 	max_rounds = 32
+
+/obj/structure/gun_rack/nsg/l23
+	name = "L23A1 pulse rifle rack"
+	desc = "A rack holding five L23A1 pulse rifles."
+	allowed_type = /obj/item/weapon/gun/rifle/nsg23/l23
+	populate_type = /obj/item/weapon/gun/rifle/nsg23/l23/iasf
+
+/obj/structure/gun_rack/nsg/l23/empty
+	initial_stored = 0

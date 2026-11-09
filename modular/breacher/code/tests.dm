@@ -8,7 +8,7 @@
 		/obj/item/clothing/gloves/marine/m40,
 		/obj/item/weapon/twohanded/breacher_hammer,
 		/obj/item/weapon/shield/riot/montage,
-		/obj/item/weapon/shield/riot/montage/twe,
+		/obj/item/weapon/shield/riot/ballistic/twe,
 		/obj/item/weapon/shield/riot/ballistic/iasf,
 		/obj/item/weapon/gun/rifle/xm52,
 		/obj/item/weapon/gun/rifle/xm52/iasf,
@@ -29,12 +29,17 @@
 		return Fail("TWE breacher armor has no stimulant action", __FILE__, __LINE__)
 	qdel(twe_armor)
 	var/obj/item/weapon/shield/riot/montage/uscm_shield = new()
-	var/obj/item/weapon/shield/riot/montage/twe/twe_shield = new()
+	var/obj/item/weapon/shield/riot/ballistic/twe/twe_shield = new()
 	var/obj/item/weapon/shield/riot/ballistic/iasf/iasf_shield = new()
 	if(twe_shield.passive_block != uscm_shield.passive_block || twe_shield.readied_block != uscm_shield.readied_block)
 		return Fail("TWE breacher shield protection differs from USCM", __FILE__, __LINE__)
 	if(iasf_shield.passive_block != uscm_shield.passive_block || iasf_shield.readied_block != uscm_shield.readied_block)
 		return Fail("IASF breacher shield protection differs from USCM", __FILE__, __LINE__)
+	for(var/obj/item/weapon/shield/riot/ballistic/shield in list(twe_shield, iasf_shield))
+		for(var/slot in list(WEAR_BACK, WEAR_L_HAND, WEAR_R_HAND))
+			var/icon_file = shield.item_icons[slot]
+			if(!(shield.get_icon_state(null, slot) in icon_states(icon_file)))
+				return Fail("[shield.type] has no on-mob sprite for [slot]", __FILE__, __LINE__)
 	qdel(uscm_shield)
 	qdel(twe_shield)
 	qdel(iasf_shield)
@@ -43,7 +48,7 @@
 	var/list/shield_types = list(
 		/obj/item/weapon/shield/riot/montage,
 		/obj/item/weapon/shield/riot/montage/marine,
-		/obj/item/weapon/shield/riot/montage/twe,
+		/obj/item/weapon/shield/riot/ballistic/twe,
 		/obj/item/weapon/shield/riot/ballistic/iasf,
 	)
 	for(var/shield_type as anything in shield_types)

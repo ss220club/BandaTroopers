@@ -69,5 +69,9 @@
 	desc = "A scoped F903A1 marksman rifle with a 60-round 5.5x50mm magazine."
 	start_automatic = FALSE
 
+/obj/item/weapon/gun/rifle/rmc_f90/scope/set_bullet_traits()
+	LAZYADD(traits_to_give, list(BULLET_TRAIT_ENTRY_ID("iff", /datum/element/bullet_trait_iff)))
+	AddComponent(/datum/component/iff_fire_prevention)
+
 /obj/item/weapon/gun/rifle/rmc_f90/shotgun
 	desc = "An F903A1/B rifle with an underbarrel shotgun. Uses 5.5x50mm ammunition."

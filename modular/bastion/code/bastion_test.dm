@@ -40,3 +40,31 @@
 	interior.create_interior(/datum/map_template/interior/bastion)
 	if(!interior.ready || !length(interior.entrance_markers))
 		return Fail("Bastion interior did not load with an entrance")
+
+/datum/unit_test/bastion_module_service/Run()
+	var/turf/test_turf = locate(run_loc_floor_bottom_left.x + 2, run_loc_floor_bottom_left.y + 2, run_loc_floor_bottom_left.z)
+	new /obj/effect/vehicle_spawner/bastion/armament_test(test_turf)
+	var/obj/vehicle/multitile/tank/twe_tank/bastion/armament_test/tank = locate(/obj/vehicle/multitile/tank/twe_tank/bastion/armament_test) in test_turf
+	if(!tank)
+		return Fail("M46 Bastion could not spawn", __FILE__, __LINE__)
+	var/obj/item/hardpoint/primary/aa_quadcannon/bastion/aa_gun = locate(/obj/item/hardpoint/primary/aa_quadcannon/bastion) in tank.hardpoints
+	if(!aa_gun)
+		return Fail("M46 Bastion has no serviceable AA gun", __FILE__, __LINE__)
+	var/old_module_health = aa_gun.health
+	var/old_hull_health = tank.health
+	tank.take_damage_type(20, "bullet")
+	if(aa_gun.health >= old_module_health || tank.health >= old_hull_health)
+		return Fail("M46 Bastion did not take module and hull damage", __FILE__, __LINE__)
+	tank.remove_hardpoint(aa_gun)
+	if(aa_gun.owner || aa_gun in tank.hardpoints)
+		return Fail("M46 Bastion AA gun could not be detached", __FILE__, __LINE__)
+	var/mob/living/carbon/human/repairer = allocate(/mob/living/carbon/human, test_turf)
+	var/obj/item/tool/weldingtool/experimental/welder = allocate(/obj/item/tool/weldingtool/experimental, repairer)
+	welder.toggle()
+	var/damaged_health = aa_gun.health
+	aa_gun.handle_repair(welder, repairer)
+	if(aa_gun.health <= damaged_health)
+		return Fail("M46 Bastion AA gun could not be repaired", __FILE__, __LINE__)
+	tank.add_hardpoint(aa_gun)
+	if(aa_gun.owner != tank || !(aa_gun in tank.hardpoints))
+		return Fail("M46 Bastion AA gun could not be reinstalled", __FILE__, __LINE__)

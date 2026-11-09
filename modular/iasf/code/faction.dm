@@ -16,13 +16,13 @@
 		if(JOB_IASF_MEDIC)
 			hud_icon_state = "medic"
 		if(JOB_IASF_BREACHER)
-			hud_icon_state = "engi"
+			hud_icon_state = "spec"
 		if(JOB_IASF_GUNNER)
 			hud_icon_state = "smartgunner"
 		if(JOB_IASF_SNIPER)
 			hud_icon_state = "sniper"
-		if(JOB_IASF_SUPPORT)
-			hud_icon_state = "spec"
+		if(JOB_IASF_ENGINEER)
+			hud_icon_state = "engi"
 		if(JOB_IASF_TEAM)
 			hud_icon_state = "teamleader_alt"
 		if(JOB_IASF_SERGEANT)

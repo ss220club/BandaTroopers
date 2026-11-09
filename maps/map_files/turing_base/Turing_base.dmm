@@ -654,7 +654,7 @@
 /turf/open/auto_turf/snow/brown_base/layer2,
 /area/turing/streets/west)
 "et" = (
-/obj/structure/gun_rack/nsg/unloaded,
+/obj/structure/gun_rack/nsg/l23,
 /turf/open/floor/prison/red/north,
 /area/turing/base/barracks)
 "eu" = (
@@ -5129,7 +5129,7 @@
 /turf/open/floor/prison/darkbrown2/southwest,
 /area/turing/base/engineering)
 "JN" = (
-/obj/structure/machinery/cm_vending/gear/mortar_stuff/iasf,
+/obj/structure/machinery/cm_vending/clothing/engi/iasf/engineer,
 /turf/open/floor/prison/red/north,
 /area/turing/base/barracks)
 "JO" = (
@@ -7651,6 +7651,11 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/prison/blue_plate,
 /area/turing/base/engineering)
+
+"za" = (
+/obj/effect/vehicle_spawner/bastion,
+/turf/open/floor/prison,
+/area/turing/base/garage)
 
 (1,1,1) = {"
 AV
@@ -10450,7 +10455,7 @@ Lx
 RT
 oQ
 Sq
-Kr
+za
 xN
 RT
 wR
