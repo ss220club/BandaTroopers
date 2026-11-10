@@ -22,11 +22,21 @@
 	var/obj/item/hardpoint/locomotion/treads/ridgeway/bastion/treads = locate(/obj/item/hardpoint/locomotion/treads/ridgeway/bastion) in tank.hardpoints
 	if(!turret || !main_gun || !aa_gun || !flamer || !treads)
 		return Fail("Bastion armament is incomplete")
-	if(tank.icon != 'icons/obj/vehicles/ridgeway.dmi' || !(tank.icon_state in icon_states(tank.icon)))
+	if(tank.icon != 'icons/obj/vehicles/bastion.dmi' || !(tank.icon_state in icon_states(tank.icon)))
 		return Fail("Bastion hull has no matching sprite")
 	for(var/obj/item/hardpoint/module in list(turret, main_gun, aa_gun, flamer, treads))
 		if(module.disp_icon != tank.icon || !("[module.disp_icon_state]_0" in icon_states(module.disp_icon)) || !("[module.disp_icon_state]_1" in icon_states(module.disp_icon)))
 			return Fail("[module.type] has mismatched or missing Bastion module sprites")
+		for(var/direction in list(NORTH, SOUTH, EAST, WEST))
+			var/list/offset = module.px_offsets["[direction]"]
+			if(length(offset) != 2 || offset[1] || offset[2])
+				return Fail("[module.type] is misaligned in direction [direction]")
+	if(!("damaged_frame" in icon_states(tank.icon)))
+		return Fail("Bastion damaged hull sprite is missing")
+	var/start_direction = turret.dir
+	turret.rotate(90)
+	if(turret.dir != turn(start_direction, 90) || main_gun.dir != turret.dir)
+		return Fail("Bastion cannon did not follow turret rotation")
 	if(main_gun.burst_amount != 2 || main_gun.gun_firemode != GUN_FIREMODE_BURSTFIRE)
 		return Fail("Bastion main gun does not fire two-shot bursts")
 	if(main_gun.burst_delay > 0.2 SECONDS || main_gun.extra_delay > 0.7 SECONDS)
