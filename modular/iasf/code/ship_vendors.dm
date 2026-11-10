@@ -107,8 +107,8 @@
 	return list(
 		list("SNIPER KIT", 0, null, null, null),
 		list("F903A1 sniper kit", 0, /obj/item/storage/box/guncase/heavy/sniper/iasf, MARINE_CAN_BUY_ESSENTIALS, VENDOR_ITEM_MANDATORY),
-		list("ROAF boonie", 0, /obj/item/clothing/head/beret/iasf/roaf_boonie, MARINE_CAN_BUY_HELMET, VENDOR_ITEM_REGULAR),
-		list("ROAF radio telephone pack", 0, /obj/item/storage/backpack/marine/satchel/rto/twe_net/iasf/sniper, MARINE_CAN_BUY_BACKPACK, VENDOR_ITEM_REGULAR),
+		list("Панама ИАСФ", 0, /obj/item/clothing/head/beret/iasf/roaf_boonie, MARINE_CAN_BUY_HELMET, VENDOR_ITEM_REGULAR),
+		list("Радиопак снайпера ИАСФ", 0, /obj/item/storage/backpack/marine/satchel/rto/twe_net/iasf/sniper, MARINE_CAN_BUY_BACKPACK, VENDOR_ITEM_REGULAR),
 	)
 
 /obj/structure/machinery/cm_vending/clothing/engi/iasf
@@ -121,6 +121,7 @@
 	return list(
 		list("BREACHER KIT", 0, null, null, null),
 		list("XM52 penetrator", 0, /obj/item/weapon/gun/rifle/xm52/iasf, MARINE_CAN_BUY_ESSENTIALS, VENDOR_ITEM_MANDATORY),
+		list("XM52 holster rig", 0, /obj/item/storage/belt/gun/xm52, MARINE_CAN_BUY_BELT, VENDOR_ITEM_REGULAR),
 		list("N45 battle hammer", 0, /obj/item/weapon/twohanded/breacher_hammer/iasf, MARINE_CAN_BUY_ATTACHMENT, VENDOR_ITEM_REGULAR),
 		list("Ballistic shield", 0, /obj/item/weapon/shield/riot/ballistic/iasf, MARINE_CAN_BUY_ATTACHMENT, VENDOR_ITEM_REGULAR),
 		list("Breacher helmet", 0, /obj/item/clothing/head/helmet/marine/veteran/royal_marine/breacher/iasf, MARINE_CAN_BUY_HELMET, VENDOR_ITEM_REGULAR),

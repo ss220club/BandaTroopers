@@ -102,13 +102,13 @@
 
 /obj/item/weapon/twohanded/breacher_hammer/iasf
 	name = "Turing Watch N45 battle hammer"
-	flags_item = NONE
-	force = MELEE_FORCE_TIER_8
+	flags_item = TWOHANDED
+	force = MELEE_FORCE_STRONG
 
 /obj/item/weapon/twohanded/breacher_hammer/twe
 	name = "TWE N45 battle hammer"
-	flags_item = NONE
-	force = MELEE_FORCE_TIER_8
+	flags_item = TWOHANDED
+	force = MELEE_FORCE_STRONG
 
 /obj/item/weapon/twohanded/breacher_hammer/iasf/attack(mob/target, mob/user)
 	if(!skillcheck(user, SKILL_SPEC_WEAPONS, SKILL_SPEC_ALL) && user.skills.get_skill_level(SKILL_SPEC_WEAPONS) != SKILL_SPEC_BREACHER)

@@ -123,7 +123,7 @@
 		magazines--
 
 /obj/item/storage/belt/gun/xm52/_item_insertion(obj/item/I, prevent_warning = FALSE, mob/user)
-	if(I.type == /obj/item/weapon/gun/rifle/xm52)
+	if(istype(I, /obj/item/weapon/gun/rifle/xm52))
 		if(!magneted_xm)
 			magneted_xm = I
 			magneted_xm.AddElement(/datum/element/drop_retrieval/xm52, src)

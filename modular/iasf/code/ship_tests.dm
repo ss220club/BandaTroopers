@@ -17,8 +17,6 @@
 			return Fail("Turing Base has no Gibraltar hangar port", __FILE__, __LINE__)
 		if(!SSshuttle.getShuttle(DROPSHIP_GIBRALTAR))
 			return Fail("Turing Base has no Gibraltar shuttle", __FILE__, __LINE__)
-		if(!locate(/obj/vehicle/multitile/tank/twe_tank/bastion))
-			return Fail("Turing Base has no M46 Bastion", __FILE__, __LINE__)
 	for(var/job_type in profile.role_mappings)
 		var/datum/job/registered_job = GLOB.RoleAuthority.roles_by_path[job_type]
 		if(!registered_job || registered_job.total_positions < 1 || registered_job.spawn_positions < 1)

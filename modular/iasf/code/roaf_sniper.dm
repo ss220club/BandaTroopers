@@ -1,13 +1,13 @@
 /obj/item/clothing/head/beret/iasf/roaf_boonie
-	name = "\improper Панама ROAF"
-	desc = "Полевая панама Королевских орбитальных воздушных сил."
+	name = "\improper Панама ИАСФ"
+	desc = "Полевая панама снайперов ИАСФ."
 	icon = 'modular/iasf/icons/roaf/head_obj.dmi'
 	item_icons = list(WEAR_HEAD = 'modular/iasf/icons/roaf/head_worn.dmi')
 	icon_state = "icon_hat"
 	item_state = "head_hat"
 
 /obj/item/storage/backpack/marine/satchel/rto/twe_net/iasf/sniper
-	name = "\improper ROAF sniper radio telephone pack"
+	name = "\improper Радиопак снайпера ИАСФ"
 	icon = 'modular/iasf/icons/roaf/pack_obj.dmi'
 	item_icons = list(
 		WEAR_BACK = 'modular/iasf/icons/roaf/pack_worn.dmi',

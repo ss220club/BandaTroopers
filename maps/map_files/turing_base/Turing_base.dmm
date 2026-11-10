@@ -7653,7 +7653,6 @@
 /area/turing/base/engineering)
 
 "za" = (
-/obj/effect/vehicle_spawner/bastion,
 /turf/open/floor/prison,
 /area/turing/base/garage)
 

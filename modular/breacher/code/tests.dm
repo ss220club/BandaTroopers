@@ -50,9 +50,15 @@
 		qdel(breacher_skills)
 	for(var/hammer_type as anything in list(/obj/item/weapon/twohanded/breacher_hammer/iasf, /obj/item/weapon/twohanded/breacher_hammer/twe))
 		var/obj/item/weapon/twohanded/breacher_hammer/hammer = new hammer_type()
-		if(hammer.flags_item & TWOHANDED)
-			return Fail("[hammer_type] still requires the shield hand", __FILE__, __LINE__)
+		if(!(hammer.flags_item & TWOHANDED) || hammer.force != MELEE_FORCE_STRONG)
+			return Fail("[hammer_type] does not require two hands", __FILE__, __LINE__)
 		qdel(hammer)
+	var/obj/item/storage/belt/gun/xm52/breacher_belt = new()
+	var/obj/item/weapon/gun/rifle/xm52/iasf/iasf_shotgun = new()
+	if(!breacher_belt.can_be_inserted(iasf_shotgun, null, TRUE))
+		return Fail("XM52 belt cannot carry the IASF breacher shotgun", __FILE__, __LINE__)
+	qdel(iasf_shotgun)
+	qdel(breacher_belt)
 
 /datum/unit_test/breacher_shield_stance/Run()
 	var/list/shield_types = list(
