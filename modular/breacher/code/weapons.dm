@@ -37,7 +37,7 @@
 	if(!isxeno(target))
 		return
 
-	if(flags_item & WIELDED)
+	if(flags_item & WIELDED || !(flags_item & TWOHANDED))
 		var/datum/effects/hammer_stacks/hammer_effect = locate() in target.effects_list
 		if(!hammer_effect)
 			hammer_effect = new /datum/effects/hammer_stacks(target)

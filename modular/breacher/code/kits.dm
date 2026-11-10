@@ -25,7 +25,7 @@
 	new /obj/item/clothing/suit/storage/marine/m40/twe(src)
 	new /obj/item/clothing/head/helmet/marine/m40/twe(src)
 	new /obj/item/clothing/gloves/marine/m40/twe(src)
-	new /obj/item/weapon/twohanded/breacher_hammer(src)
+	new /obj/item/weapon/twohanded/breacher_hammer/twe(src)
 	new /obj/item/weapon/shield/riot/ballistic/twe(src)
 	new /obj/item/weapon/gun/rifle/xm52(src)
 	new /obj/item/storage/belt/gun/xm52(src)

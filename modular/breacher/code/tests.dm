@@ -43,6 +43,16 @@
 	qdel(uscm_shield)
 	qdel(twe_shield)
 	qdel(iasf_shield)
+	for(var/skill_type as anything in list(/datum/skills/rmc/breacher, /datum/skills/iasf/ship/breacher))
+		var/datum/skills/breacher_skills = new skill_type()
+		if(breacher_skills.get_skill_level(SKILL_SPEC_WEAPONS) != SKILL_SPEC_BREACHER || breacher_skills.get_skill_level(SKILL_MELEE_WEAPONS) != SKILL_MELEE_SUPER)
+			return Fail("[skill_type] cannot use the breacher hammer or armor stimulant", __FILE__, __LINE__)
+		qdel(breacher_skills)
+	for(var/hammer_type as anything in list(/obj/item/weapon/twohanded/breacher_hammer/iasf, /obj/item/weapon/twohanded/breacher_hammer/twe))
+		var/obj/item/weapon/twohanded/breacher_hammer/hammer = new hammer_type()
+		if(hammer.flags_item & TWOHANDED)
+			return Fail("[hammer_type] still requires the shield hand", __FILE__, __LINE__)
+		qdel(hammer)
 
 /datum/unit_test/breacher_shield_stance/Run()
 	var/list/shield_types = list(

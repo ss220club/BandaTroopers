@@ -39,13 +39,13 @@
 
 /obj/item/weapon/shield/riot/ballistic/twe
 	name = "TWE FBS-B ballistic shield"
-	icon = 'modular/breacher/assets/icons/obj/items/breacher_spec.dmi'
-	icon_state = "marine_shield"
-	item_state = "marine_shield"
-	base_icon_state = "marine_shield"
+	icon = 'icons/obj/items/weapons/weapons.dmi'
+	icon_state = "ballisticshield"
+	item_state = "ballisticshield"
+	base_icon_state = "ballisticshield"
 	item_icons = list(
-		WEAR_L_HAND = 'modular/breacher/assets/icons/mob/humans/onmob/items_lefthand_1.dmi',
-		WEAR_R_HAND = 'modular/breacher/assets/icons/mob/humans/onmob/items_righthand_1.dmi',
+		WEAR_L_HAND = 'icons/mob/humans/onmob/items_lefthand_1.dmi',
+		WEAR_R_HAND = 'icons/mob/humans/onmob/items_righthand_1.dmi',
 		WEAR_BACK = 'modular/breacher/assets/icons/mob/humans/onmob/back.dmi',
 	)
 	item_state_slots = list(WEAR_BACK = "marine_shield")
@@ -53,13 +53,13 @@
 	readied_block = 100
 
 /obj/item/weapon/shield/riot/ballistic/iasf
-	icon = 'modular/breacher/assets/icons/obj/items/breacher_spec.dmi'
-	icon_state = "marine_shield"
-	item_state = "marine_shield"
-	base_icon_state = "marine_shield"
+	icon = 'icons/obj/items/weapons/weapons.dmi'
+	icon_state = "ballisticshield"
+	item_state = "ballisticshield"
+	base_icon_state = "ballisticshield"
 	item_icons = list(
-		WEAR_L_HAND = 'modular/breacher/assets/icons/mob/humans/onmob/items_lefthand_1.dmi',
-		WEAR_R_HAND = 'modular/breacher/assets/icons/mob/humans/onmob/items_righthand_1.dmi',
+		WEAR_L_HAND = 'icons/mob/humans/onmob/items_lefthand_1.dmi',
+		WEAR_R_HAND = 'icons/mob/humans/onmob/items_righthand_1.dmi',
 		WEAR_BACK = 'modular/breacher/assets/icons/mob/humans/onmob/back.dmi',
 	)
 	item_state_slots = list(WEAR_BACK = "marine_shield")
@@ -80,16 +80,16 @@
 
 /datum/skills/rmc/breacher/New()
 	. = ..()
-	skills = skills.Copy()
-	skills[SKILL_SPEC_WEAPONS] = SKILL_SPEC_BREACHER
+	set_skill(SKILL_SPEC_WEAPONS, SKILL_SPEC_BREACHER)
+	set_skill(SKILL_MELEE_WEAPONS, SKILL_MELEE_SUPER)
 
 /datum/skills/iasf/ship/breacher
 	name = "IASF Turing Breacher"
 
 /datum/skills/iasf/ship/breacher/New()
 	. = ..()
-	skills = skills.Copy()
-	skills[SKILL_SPEC_WEAPONS] = SKILL_SPEC_BREACHER
+	set_skill(SKILL_SPEC_WEAPONS, SKILL_SPEC_BREACHER)
+	set_skill(SKILL_MELEE_WEAPONS, SKILL_MELEE_SUPER)
 
 /datum/equipment_preset/uscm/rmc/mor
 	skills = /datum/skills/rmc/breacher
@@ -102,12 +102,19 @@
 
 /obj/item/weapon/twohanded/breacher_hammer/iasf
 	name = "Turing Watch N45 battle hammer"
+	flags_item = NONE
+	force = MELEE_FORCE_TIER_8
+
+/obj/item/weapon/twohanded/breacher_hammer/twe
+	name = "TWE N45 battle hammer"
+	flags_item = NONE
+	force = MELEE_FORCE_TIER_8
 
 /obj/item/weapon/twohanded/breacher_hammer/iasf/attack(mob/target, mob/user)
 	if(!skillcheck(user, SKILL_SPEC_WEAPONS, SKILL_SPEC_ALL) && user.skills.get_skill_level(SKILL_SPEC_WEAPONS) != SKILL_SPEC_BREACHER)
 		return ..()
 	. = ..()
-	if(!ishuman(target) || !(flags_item & WIELDED))
+	if(!ishuman(target) || (flags_item & TWOHANDED && !(flags_item & WIELDED)))
 		return
 	var/mob/living/carbon/human/victim = target
 	victim.apply_effect(3, WEAKEN)

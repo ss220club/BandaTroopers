@@ -1,4 +1,16 @@
 #if defined(UNIT_TESTS) || defined(SPACEMAN_DMM)
+/datum/unit_test/iasf_status_map/Run()
+	if(GLOB.twe_tacmap_status.allowed_flags != MINIMAP_FLAG_TWE)
+		return Fail("TWE tactical map has the wrong faction filter", __FILE__, __LINE__)
+	var/mob/living/carbon/human/iasf = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
+	iasf.faction = FACTION_IASF
+	if(!("<a href='byond://?MapView=1'>View Tactical Map</a>" in iasf.get_status_tab_items()))
+		return Fail("IASF has no Status tactical map link", __FILE__, __LINE__)
+	var/mob/living/carbon/human/twe = allocate(/mob/living/carbon/human, run_loc_floor_bottom_left)
+	twe.faction = FACTION_TWE
+	if(!("<a href='byond://?MapView=1'>View Tactical Map</a>" in twe.get_status_tab_items()))
+		return Fail("TWE has no Status tactical map link", __FILE__, __LINE__)
+
 /datum/unit_test/iasf_gm_squads/Run()
 	var/datum/human_squad_spawner_menu/menu = new()
 	var/list/data = menu.ui_static_data(null)
@@ -10,6 +22,33 @@
 		if(!GLOB.human_ai_squad_presets["[preset_type]"])
 			return Fail("[preset_type] is unavailable to Game Masters", __FILE__, __LINE__)
 	qdel(menu)
+
+/datum/unit_test/iasf_roaf_sniper_vendor/Run()
+	var/obj/structure/machinery/cm_vending/clothing/specialist/iasf/vendor = new()
+	var/list/products = vendor.get_listed_products(null)
+	var/has_hat = FALSE
+	var/has_pack = FALSE
+	for(var/list/product in products)
+		if(product[3] == /obj/item/clothing/head/beret/iasf/roaf_boonie && product[4] == MARINE_CAN_BUY_HELMET)
+			has_hat = TRUE
+		if(product[3] == /obj/item/storage/backpack/marine/satchel/rto/twe_net/iasf/sniper && product[4] == MARINE_CAN_BUY_BACKPACK)
+			has_pack = TRUE
+	if(!has_hat || !has_pack)
+		return Fail("IASF sniper vendor is missing ROAF equipment", __FILE__, __LINE__)
+	var/obj/item/clothing/head/beret/iasf/roaf_boonie/hat = new()
+	if(!(hat.icon_state in icon_states(hat.icon)) || !(hat.item_state in icon_states(hat.item_icons[WEAR_HEAD])))
+		return Fail("ROAF boonie has missing sprites", __FILE__, __LINE__)
+	var/obj/item/storage/backpack/marine/satchel/rto/twe_net/iasf/sniper/pack = new()
+	if(!(pack.icon_state in icon_states(pack.icon)) || !(pack.item_state in icon_states(pack.item_icons[WEAR_BACK])))
+		return Fail("ROAF radio pack has missing sprites", __FILE__, __LINE__)
+	if(!pack.GetComponent(/datum/component/phone) || !(FACTION_IASF in pack.networks_receive) || !(FACTION_TWE in pack.networks_transmit))
+		return Fail("ROAF radio pack lacks TWE/IASF phone access", __FILE__, __LINE__)
+	pack.phone_picked_up()
+	if(!(pack.icon_state in icon_states(pack.icon)))
+		return Fail("ROAF radio pack loses its sprite while the phone is open", __FILE__, __LINE__)
+	qdel(pack)
+	qdel(hat)
+	qdel(vendor)
 
 /datum/unit_test/iasf_radio_pack/Run()
 	var/turf/test_turf = locate(1, 1, 1)

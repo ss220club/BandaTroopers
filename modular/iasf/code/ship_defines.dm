@@ -6,5 +6,5 @@
 #define JOB_IASF_MEDIC "Turing Medic"
 #define JOB_IASF_GUNNER "Turing Gunner"
 #define JOB_IASF_SNIPER "Turing Sniper"
-#define JOB_IASF_BREACHER "Turing Breacher"
+#define JOB_IASF_BREACHER "Entry Breacher"
 #define JOB_IASF_ENGINEER "Turing Engineer"

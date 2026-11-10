@@ -94,7 +94,7 @@
 	new_human.equip_to_slot_or_del(new /obj/item/weapon/shield/riot/ballistic/iasf(new_human), WEAR_L_HAND)
 
 /datum/equipment_preset/iasf/breacher/ship
-	name = "Turing Breacher"
+	name = "Entry Breacher"
 
 /datum/equipment_preset/iasf/breacher/ship/load_gear(mob/living/carbon/human/new_human)
 	return
