@@ -1023,7 +1023,7 @@
 /area/turing/base/engineering)
 "gz" = (
 /obj/structure/surface/table/reinforced/black,
-/obj/structure/machinery/computer/overwatch/twe{
+/obj/structure/machinery/computer/overwatch/iasf{
 	pixel_x = -38;
 	pixel_y = 6
 	},
@@ -5774,7 +5774,6 @@
 	pixel_y = 13
 	},
 /obj/structure/curtain/blue,
-/obj/effect/landmark/start/marine/tl/rmc2ic/iasf/second,
 /obj/effect/landmark/start/marine/tl/rmc2ic/iasf,
 /obj/effect/landmark/late_join,
 /turf/open/floor/prison/bright_clean/southwest,
