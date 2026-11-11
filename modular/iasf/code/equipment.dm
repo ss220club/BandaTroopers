@@ -148,6 +148,8 @@
 	name = "\improper IASF Wireless Set No.207 Radio Telephone Pack"
 	networks_receive = list(FACTION_IASF, FACTION_TWE)
 	networks_transmit = list(FACTION_IASF, FACTION_TWE)
+	worn_accessible = TRUE
+	bag_open_time = 0
 
 /obj/item/storage/backpack/marine/satchel/rto/pmc_net
 	name = "\improper Wireless Set No.208 Radio Telephone Pack"

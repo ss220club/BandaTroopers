@@ -65,3 +65,32 @@
 	overlay_ammo_type = "_impact"
 	overlay_content = "_impact"
 	magazine_type = /obj/item/ammo_magazine/rifle/rmc_f90/marksman/impact
+
+/obj/item/ammo_magazine/smg/p90/twe/heap
+	name = "\improper FN-TWE P90 HEAP magazine (5.7×28mm)"
+	desc = "A 50-round high-explosive armor-piercing magazine for the FN-TWE P90."
+	default_ammo = /datum/ammo/bullet/smg/heap
+	ammo_band_color = AMMO_BAND_COLOR_HEAP
+
+/obj/item/ammo_box/magazine/p90/twe
+	parent_type = /obj/item/ammo_box/magazine
+	name = "magazine box (FN-TWE P90 AP x 12)"
+	icon_state = "base_fn"
+	flags_equip_slot = SLOT_BACK
+	overlay_gun_type = "_fnfp9000"
+	overlay_ammo_type = "_ap"
+	overlay_content = "_ap"
+	num_of_magazines = 12
+	magazine_type = /obj/item/ammo_magazine/smg/p90/twe
+
+/obj/item/ammo_box/magazine/p90/twe/empty
+	empty = TRUE
+
+/obj/item/ammo_box/magazine/p90/twe/heap
+	name = "magazine box (FN-TWE P90 HEAP x 12)"
+	overlay_ammo_type = "_heap"
+	overlay_content = "_heap"
+	magazine_type = /obj/item/ammo_magazine/smg/p90/twe/heap
+
+/obj/item/ammo_box/magazine/p90/twe/heap/empty
+	empty = TRUE

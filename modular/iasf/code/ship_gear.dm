@@ -1,48 +1,48 @@
 /datum/equipment_preset/iasf/standard/ship
 	name = "Turing Trooper"
-	assignment = JOB_IASF_TROOPER
+	assignment = "Trooper"
 	rank = JOB_IASF_TROOPER
 	skills = /datum/skills/iasf/ship
 
 /datum/equipment_preset/iasf/medic/ship
 	name = "Turing Medic"
-	assignment = JOB_IASF_MEDIC
+	assignment = "Medic"
 	rank = JOB_IASF_MEDIC
 	skills = /datum/skills/iasf/ship/medic
 
 /datum/equipment_preset/iasf/machinegun/ship
 	name = "Turing Gunner"
-	assignment = JOB_IASF_GUNNER
+	assignment = "Gunner"
 	rank = JOB_IASF_GUNNER
 	skills = /datum/skills/iasf/ship/gunner
 
 /datum/equipment_preset/iasf/sniper/light/ship
 	name = "Turing Sniper"
-	assignment = JOB_IASF_SNIPER
+	assignment = "Sniper"
 	rank = JOB_IASF_SNIPER
 	skills = /datum/skills/iasf/ship
 
 /datum/equipment_preset/iasf/leader/lesser/ship
 	name = "Turing Team Leader"
-	assignment = JOB_IASF_TEAM
+	assignment = "Team Leader"
 	rank = JOB_IASF_TEAM
 	skills = /datum/skills/iasf/ship/leader
 
 /datum/equipment_preset/iasf/troopsergeant/ship
 	name = "Turing Platoon Sergeant"
-	assignment = JOB_IASF_SERGEANT
+	assignment = "Platoon Sergeant"
 	rank = JOB_IASF_SERGEANT
 	skills = /datum/skills/iasf/ship/commander
 
 /datum/equipment_preset/iasf/lieutenant/ship
 	name = "Turing Officer"
-	assignment = JOB_IASF_OFFICER
+	assignment = "Officer"
 	rank = JOB_IASF_OFFICER
 	skills = /datum/skills/iasf/ship/officer
 
 /datum/equipment_preset/iasf/engineer/ship
 	name = "Turing Engineer"
-	assignment = JOB_IASF_ENGINEER
+	assignment = "Engineer"
 	rank = JOB_IASF_ENGINEER
 	skills = /datum/skills/iasf/ship
 
@@ -61,6 +61,12 @@
 	armor_melee = CLOTHING_ARMOR_HIGH
 	armor_bullet = CLOTHING_ARMOR_HIGH
 	armor_bomb = CLOTHING_ARMOR_MEDIUMHIGH
+	valid_accessory_slots = list(ACCESSORY_SLOT_MEDAL, ACCESSORY_SLOT_PONCHO, ACCESSORY_SLOT_GASMASK, ACCESSORY_SLOT_M3UTILITY, ACCESSORY_SLOT_PLATE, ACCESSORY_SLOT_PLATE2)
+	restricted_accessory_slots = list(ACCESSORY_SLOT_M3UTILITY, ACCESSORY_SLOT_PLATE, ACCESSORY_SLOT_PLATE2)
+
+/obj/item/clothing/suit/storage/marine/veteran/royal_marine/light/iasf
+	valid_accessory_slots = list(ACCESSORY_SLOT_MEDAL, ACCESSORY_SLOT_PONCHO, ACCESSORY_SLOT_GASMASK, ACCESSORY_SLOT_M3UTILITY, ACCESSORY_SLOT_PLATE, ACCESSORY_SLOT_PLATE2)
+	restricted_accessory_slots = list(ACCESSORY_SLOT_M3UTILITY, ACCESSORY_SLOT_PLATE, ACCESSORY_SLOT_PLATE2)
 
 /obj/item/weapon/shield/riot/ballistic/iasf
 	name = "IASF ballistic shield"

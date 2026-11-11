@@ -35,8 +35,8 @@
 
 /obj/structure/machinery/cm_vending/sorted/uniform_supply/squad_prep/iasf
 	parent_type = /obj/structure/machinery/cm_vending/sorted/uniform_supply/squad_prep/rmc
-	name = "Turing Watch uniform vendor"
-	desc = "Uniforms and field equipment for Turing Watch."
+	name = "\improper WeyTech Surplus Uniform Vendor"
+	desc = "An automated supply rack hooked up to a small storage of standard RMC uniforms."
 	req_access = list(ACCESS_TWE_COMMANDO)
 
 /obj/structure/machinery/cm_vending/sorted/uniform_supply/squad_prep/iasf/populate_product_list(scale)
@@ -64,8 +64,8 @@
 
 /obj/structure/machinery/cm_vending/sorted/cargo_guns/squad/iasf
 	parent_type = /obj/structure/machinery/cm_vending/sorted/cargo_guns/squad/rmc
-	name = "Turing Watch equipment vendor"
-	desc = "Royal Marine utilities and Turing Watch armament."
+	name = "\improper WeyTech Automated Utilities Section Vendor"
+	desc = "An automated supply rack hooked up to a small storage of various utilities and tools."
 	req_access = list(ACCESS_TWE_COMMANDO)
 
 /obj/structure/machinery/cm_vending/sorted/cargo_guns/squad/iasf/populate_product_list(scale)
@@ -75,16 +75,12 @@
 		if(product[3] == /obj/item/weapon/gun/pistol/vp70/unloaded || product[3] == /obj/item/ammo_magazine/pistol/vp70)
 			listed_products.Cut(i, i + 1)
 	listed_products += list(
-		list("TURING WATCH RIFLES", -1, null, null),
-		list("F903 rifle", round(scale * 6), /obj/item/weapon/gun/rifle/rmc_f90, VENDOR_ITEM_REGULAR),
-		list("F903 magazine box", round(scale * 8), /obj/item/ammo_box/magazine/f90, VENDOR_ITEM_REGULAR),
-		list("F903 AP magazine box", round(scale * 4), /obj/item/ammo_box/magazine/f90/ap, VENDOR_ITEM_REGULAR),
-		list("L54 pistol", round(scale * 6), /obj/item/weapon/gun/pistol/l54, VENDOR_ITEM_REGULAR),
-		list("L54 magazine", round(scale * 12), /obj/item/ammo_magazine/pistol/l54, VENDOR_ITEM_REGULAR),
+		list("FN-TWE P90 AP magazine box", round(scale * 3), /obj/item/ammo_box/magazine/p90/twe, VENDOR_ITEM_REGULAR),
+		list("FN-TWE P90 HEAP magazine box", round(scale * 3), /obj/item/ammo_box/magazine/p90/twe/heap, VENDOR_ITEM_REGULAR),
 	)
 
 /obj/structure/machinery/cm_vending/clothing/medic/iasf
-	name = "Turing Watch medical vendor"
+	name = "\improper WeyTech Section Medical Equipment Rack"
 	req_access = list(ACCESS_TWE_COMMANDO)
 	vendor_role = list(JOB_IASF_MEDIC)
 	vendor_theme = VENDOR_THEME_COMPANY
@@ -93,12 +89,12 @@
 	return GLOB.cm_vending_clothing_rmc_medic
 
 /obj/structure/machinery/cm_vending/gear/medic_chemical/rmc/iasf
-	name = "Turing Watch medical chemical rack"
+	name = "\improper WeyTech Section Medical Chemical Rack"
 	req_access = list(ACCESS_TWE_COMMANDO)
 	vendor_role = list(JOB_IASF_MEDIC)
 
 /obj/structure/machinery/cm_vending/clothing/specialist/iasf
-	name = "Turing Watch sniper vendor"
+	name = "\improper WeyTech Section Marksman Equipment Rack"
 	req_access = list(ACCESS_TWE_COMMANDO)
 	vendor_role = list(JOB_IASF_SNIPER)
 	vendor_theme = VENDOR_THEME_COMPANY
@@ -107,12 +103,13 @@
 	return list(
 		list("SNIPER KIT", 0, null, null, null),
 		list("F903A1 sniper kit", 0, /obj/item/storage/box/guncase/heavy/sniper/iasf, MARINE_CAN_BUY_ESSENTIALS, VENDOR_ITEM_MANDATORY),
+		list("Reconnaissance vest", 0, /obj/item/clothing/suit/storage/marine/veteran/royal_marine/light/iasf/sniper, MARINE_CAN_BUY_ARMOR, VENDOR_ITEM_REGULAR),
 		list("Панама ИАСФ", 0, /obj/item/clothing/head/beret/iasf/roaf_boonie, MARINE_CAN_BUY_HELMET, VENDOR_ITEM_REGULAR),
 		list("Радиопак снайпера ИАСФ", 0, /obj/item/storage/backpack/marine/satchel/rto/twe_net/iasf/sniper, MARINE_CAN_BUY_BACKPACK, VENDOR_ITEM_REGULAR),
 	)
 
 /obj/structure/machinery/cm_vending/clothing/engi/iasf
-	name = "Turing Watch breacher vendor"
+	name = "\improper WeyTech Section Breacher Equipment Rack"
 	req_access = list(ACCESS_TWE_COMMANDO)
 	vendor_role = list(JOB_IASF_BREACHER)
 	vendor_theme = VENDOR_THEME_COMPANY
@@ -131,11 +128,10 @@
 	)
 
 /obj/structure/machinery/cm_vending/clothing/engi/iasf/engineer
-	name = "Turing Watch engineering vendor"
+	name = "\improper WeyTech Section Engineering Equipment Rack"
 	vendor_role = list(JOB_IASF_ENGINEER)
 
 /obj/structure/machinery/cm_vending/clothing/engi/iasf/engineer/get_listed_products(mob/user)
 	return GLOB.cm_vending_clothing_rmc_engi
 
 /obj/structure/machinery/cm_vending/sorted/marine_food/rmc/iasf
-	name = "Turing Watch ration vendor"
