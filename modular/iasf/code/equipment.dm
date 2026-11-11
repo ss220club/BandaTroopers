@@ -81,6 +81,8 @@
 	frequency = IASF_FREQ
 	has_hud = TRUE
 	hud_type = list(MOB_HUD_FACTION_TWE, MOB_HUD_FACTION_IASF, MOB_HUD_FACTION_WY)
+	inbuilt_tracking_options = list("Officer" = TRACKER_PLTCO, "SL" = TRACKER_SL, "FTL" = TRACKER_FTL)
+	locate_setting = TRACKER_SL
 
 /obj/item/clothing/glasses/night/m42_hms/rmc
 	hud_type = list(MOB_HUD_FACTION_TWE, MOB_HUD_FACTION_WY, MOB_HUD_FACTION_IASF)
@@ -148,6 +150,8 @@
 	name = "\improper IASF Wireless Set No.207 Radio Telephone Pack"
 	networks_receive = list(FACTION_IASF, FACTION_TWE)
 	networks_transmit = list(FACTION_IASF, FACTION_TWE)
+	worn_accessible = TRUE
+	bag_open_time = 0
 
 /obj/item/storage/backpack/marine/satchel/rto/pmc_net
 	name = "\improper Wireless Set No.208 Radio Telephone Pack"
@@ -303,3 +307,9 @@
 
 /obj/structure/gun_rack/nsg/l23/empty
 	initial_stored = 0
+
+/obj/structure/gun_rack/nsg/two
+	name = "two-rifle NSG rack"
+	desc = "An NSG rack with room for two L23A1 pulse rifles."
+	max_stored = 2
+	initial_stored = 2

@@ -5,6 +5,7 @@
 	item_icons = list(WEAR_HEAD = 'modular/iasf/icons/roaf/head_worn.dmi')
 	icon_state = "icon_hat"
 	item_state = "head_hat"
+	item_state_slots = list(WEAR_HEAD = "head_hat")
 
 /obj/item/storage/backpack/marine/satchel/rto/twe_net/iasf/sniper
 	name = "\improper Радиопак снайпера ИАСФ"
@@ -29,8 +30,3 @@
 
 /obj/item/storage/backpack/marine/satchel/rto/twe_net/iasf/sniper/phone_stopped_ringing()
 	icon_state = initial(icon_state)
-
-/obj/structure/closet/secure_closet/marine_personal/iasf/sniper/spawn_gear()
-	. = ..()
-	new /obj/item/clothing/head/beret/iasf/roaf_boonie(src)
-	new /obj/item/storage/backpack/marine/satchel/rto/twe_net/iasf/sniper(src)

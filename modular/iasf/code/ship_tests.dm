@@ -30,7 +30,8 @@
 			return Fail("[job_type] has no IASF preset", __FILE__, __LINE__)
 		var/preset_type = job.gear_preset
 		var/datum/equipment_preset/preset = new preset_type()
-		if(preset.origin_override != ORIGIN_TWE || preset.assignment != job.title)
+		var/expected_assignment = findtext(job.title, "Turing ") == 1 ? copytext(job.title, 8) : job.title
+		if(preset.origin_override != ORIGIN_TWE || preset.assignment != expected_assignment)
 			return Fail("[job_type] has incorrect origin or assignment", __FILE__, __LINE__)
 		var/skill_type = preset.skills
 		var/datum/skills/skillset = new skill_type()
@@ -59,12 +60,14 @@
 			return Fail("[armor_type] has no object sprite", __FILE__, __LINE__)
 		qdel(armor)
 	var/obj/item/storage/box/guncase/heavy/sniper/iasf/kit = new()
-	if(length(kit.contents) != 11)
+	if(length(kit.contents) != 10)
 		return Fail("Turing sniper kit has incorrect item count", __FILE__, __LINE__)
 	var/incendiary = 0
 	var/impact = 0
 	var/flak = 0
 	for(var/obj/item/item in kit.contents)
+		if(istype(item, /obj/item/clothing/suit))
+			return Fail("Sniper armor is still inside the rifle kit", __FILE__, __LINE__)
 		if(istype(item, /obj/item/ammo_magazine/rifle/rmc_f90/marksman/incendiary))
 			incendiary++
 		else if(istype(item, /obj/item/ammo_magazine/rifle/rmc_f90/marksman/impact))
@@ -74,6 +77,41 @@
 	if(incendiary != 3 || impact != 3 || flak != 3)
 		return Fail("Turing sniper kit has incorrect ammunition", __FILE__, __LINE__)
 	qdel(kit)
+
+/datum/unit_test/iasf_armor_accessories/Run()
+	for(var/armor_type as anything in list(/obj/item/clothing/suit/storage/marine/veteran/royal_marine/light/iasf, /obj/item/clothing/suit/storage/marine/veteran/royal_marine/light/iasf/sniper, /obj/item/clothing/suit/marine/veteran/royal_marine/heavy/iasf_breacher))
+		var/obj/item/clothing/armor = new armor_type()
+		var/obj/item/clothing/accessory/health/ceramic_plate/twe/plate = new()
+		var/obj/item/clothing/accessory/storage/webbing/m3/uppmags/rmc/webbing = new()
+		if(!armor.can_attach_accessory(plate) || !armor.can_attach_accessory(webbing))
+			return Fail("[armor_type] does not accept TWE plates and webbing", __FILE__, __LINE__)
+		armor.attach_accessory(null, plate, TRUE)
+		armor.attach_accessory(null, webbing, TRUE)
+		if(!(plate in armor.accessories) || !(webbing in armor.accessories) || plate.loc != armor || webbing.loc != armor)
+			return Fail("[armor_type] did not retain attached TWE plate and RMC webbing", __FILE__, __LINE__)
+		qdel(armor)
+
+/datum/unit_test/iasf_headset_tracking/Run()
+	var/obj/item/device/radio/headset/almayer/marine/solardevils/rmc/iasf/headset = new()
+	var/list/options = headset.tracking_options
+	if(length(options) != 3 || options["Officer"] != TRACKER_PLTCO || options["SL"] != TRACKER_SL || options["FTL"] != TRACKER_FTL)
+		return Fail("IASF headset must have exactly Officer, SL and FTL tracker choices", __FILE__, __LINE__)
+	for(var/target in list(TRACKER_PLTCO, TRACKER_SL, TRACKER_FTL))
+		if(!headset.set_tracker_target(target) || headset.locate_setting != target)
+			return Fail("IASF headset cannot track [target]", __FILE__, __LINE__)
+	qdel(headset)
+
+/datum/unit_test/iasf_p90_magazine_boxes/Run()
+	for(var/box_type as anything in list(/obj/item/ammo_box/magazine/p90/twe, /obj/item/ammo_box/magazine/p90/twe/heap))
+		var/obj/item/ammo_box/magazine/p90/twe/box = new box_type()
+		if(length(box.contents) != 12)
+			return Fail("[box_type] does not contain twelve magazines", __FILE__, __LINE__)
+		if(!(box.icon_state in icon_states(box.icon)) || !("base_type[box.overlay_ammo_type]" in icon_states(box.text_markings_icon)))
+			return Fail("[box_type] has missing box sprite states", __FILE__, __LINE__)
+		for(var/obj/item/ammo_magazine/smg/p90/twe/magazine in box.contents)
+			if(!istype(magazine, box.magazine_type) || magazine.gun_type != /obj/item/weapon/gun/smg/p90/twe || magazine.current_rounds != 50)
+				return Fail("[box_type] contains incompatible or empty magazines", __FILE__, __LINE__)
+		qdel(box)
 
 /datum/unit_test/iasf_turing_power_and_comms/Run()
 	if(SSmapping?.configs?[SHIP_MAP]?.map_name != "Turing Base")

@@ -22,8 +22,8 @@
 
 /datum/job/marine/tl/ai/rmc2ic/iasf
 	title = JOB_IASF_TEAM
-	total_positions = 2
-	spawn_positions = 2
+	total_positions = 1
+	spawn_positions = 1
 	gear_preset = /datum/equipment_preset/iasf/leader/lesser/ship
 	supervisors = "the IASF platoon sergeant"
 	entry_message_body = "Lead your fire team under the platoon sergeant and take command of the team when needed."

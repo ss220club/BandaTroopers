@@ -1,11 +1,10 @@
 /obj/item/storage/box/guncase/heavy/sniper/iasf
 	name = "Turing Watch F903A1 sniper kit"
-	desc = "A case containing an F903A1 marksman rifle, specialist magazines, and a reconnaissance vest."
-	storage_slots = 11
+	desc = "A case containing an F903A1 marksman rifle and specialist magazines."
+	storage_slots = 10
 	can_hold = list(
 		/obj/item/weapon/gun/rifle/rmc_f90/scope,
 		/obj/item/ammo_magazine/rifle/rmc_f90/marksman,
-		/obj/item/clothing/suit/storage/marine/veteran/royal_marine/light/iasf/sniper,
 	)
 
 /obj/item/storage/box/guncase/heavy/sniper/iasf/fill_preset_inventory()
@@ -14,7 +13,6 @@
 		new /obj/item/ammo_magazine/rifle/rmc_f90/marksman/incendiary(src)
 		new /obj/item/ammo_magazine/rifle/rmc_f90/marksman/impact(src)
 		new /obj/item/ammo_magazine/rifle/rmc_f90/marksman/flak(src)
-	new /obj/item/clothing/suit/storage/marine/veteran/royal_marine/light/iasf/sniper(src)
 
 /obj/item/clothing/suit/storage/marine/veteran/royal_marine/light/iasf/sniper
 	name = "Turing Watch reconnaissance vest"
