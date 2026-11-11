@@ -61,6 +61,7 @@
 			if(/obj/item/clothing/suit/marine/veteran/royal_marine)
 				product[1] = "Goshawk light armor"
 				product[3] = /obj/item/clothing/suit/storage/marine/veteran/royal_marine/light/iasf
+	listed_products += list(list("Kestrel armoured cuirass", round(scale * 3), /obj/item/clothing/suit/marine/veteran/royal_marine, VENDOR_ITEM_REGULAR))
 
 /obj/structure/machinery/cm_vending/sorted/cargo_guns/squad/iasf
 	parent_type = /obj/structure/machinery/cm_vending/sorted/cargo_guns/squad/rmc
