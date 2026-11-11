@@ -267,6 +267,8 @@
 					monkey_types += /mob/living/carbon/human/monkey
 				if("neaera")
 					monkey_types += /mob/living/carbon/human/neaera
+				if("neaera_alt") // SS220 EDIT: Fire Colony's pink Neaera survivor wildlife
+					monkey_types += /mob/living/carbon/human/neaera_alt
 				if("stok")
 					monkey_types += /mob/living/carbon/human/stok
 				if("yiren")

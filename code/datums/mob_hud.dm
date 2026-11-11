@@ -19,6 +19,7 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, flatten_numeric_alist(alist(
 	MOB_HUD_FACTION_WY = new /datum/mob_hud/faction/wy(),
 	MOB_HUD_FACTION_TWE = new /datum/mob_hud/faction/twe(),
 	MOB_HUD_FACTION_IASF = new /datum/mob_hud/faction/iasf(),
+	MOB_HUD_FACTION_LB = new /datum/mob_hud/faction/lasalle_bionational(), // SS220 EDIT: Fire Colony survivor HUD
 	MOB_HUD_FACTION_CLF = new /datum/mob_hud/faction/clf(),
 	MOB_HUD_FACTION_PMC = new /datum/mob_hud/faction/pmc(),
 	MOB_HUD_FACTION_MARSHAL = new /datum/mob_hud/faction/cmb(),

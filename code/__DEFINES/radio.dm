@@ -64,6 +64,7 @@
 #define RADIO_CHANNEL_UPP_RCN "UPP Recon"
 //WY Comms
 #define RADIO_CHANNEL_WY "WY"
+#define RADIO_CHANNEL_LASALLE_BIONATIONAL "Lasalle Bionational" // SS220 EDIT: Fire Colony survivor radio
 #define RADIO_CHANNEL_PMC_GEN "WY PMC"
 #define RADIO_CHANNEL_PMC_CMD "PMC Command"
 #define RADIO_CHANNEL_PMC_MED "PMC Med"

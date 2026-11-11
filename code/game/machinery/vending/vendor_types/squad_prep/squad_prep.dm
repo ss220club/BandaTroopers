@@ -867,6 +867,9 @@
 		list("Armored Militia Cowl", 2, /obj/item/clothing/head/militia, VENDOR_ITEM_REGULAR),
 		list("Armored Bucket", 2, /obj/item/clothing/head/militia/bucket, VENDOR_ITEM_RECOMMENDED),
 		list("CLF Reinforced Helmet", 1, /obj/item/clothing/head/helmet/marine/veteran/ua_riot/clf, VENDOR_ITEM_REGULAR),
+		list("CLF Wet Ops Helmet", 2, /obj/item/clothing/head/helmet/marine/veteran/clf, VENDOR_ITEM_REGULAR),
+		list("CLF Wet Ops Riot Helmet", 2, /obj/item/clothing/head/helmet/marine/veteran/clf/riot, VENDOR_ITEM_REGULAR),
+		list("CLF Wet Ops Heavy Helmet", 2, /obj/item/clothing/head/helmet/marine/veteran/clf/heavy, VENDOR_ITEM_REGULAR),
 
 		list("ARMOR", -1, null, null),
 		list("Colonial Militia Hauberk", round(scale * 10), /obj/item/clothing/suit/storage/militia, VENDOR_ITEM_RECOMMENDED),

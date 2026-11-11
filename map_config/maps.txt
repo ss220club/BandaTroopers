@@ -69,6 +69,27 @@ endmap
 map lv759_hybrisa_prospera_repaired
 endmap
 
+map suburb_lv759
+endmap
+
+map bigred_multiz
+endmap
+
+map navalis_platform_13
+endmap
+
+map navalis_platform_13_singlez
+endmap
+
+map tyrargo_rift
+endmap
+
+map white_antre_research_facility
+endmap
+
+map fire_colony
+endmap
+
 map new_varadero
 endmap
 

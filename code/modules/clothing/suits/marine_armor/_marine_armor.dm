@@ -138,9 +138,9 @@
 	armor_overlays["lamp"] = null
 	if(flags_marine_armor & ARMOR_LAMP_OVERLAY)
 		if(flags_marine_armor & ARMOR_LAMP_ON)
-			I = image('icons/obj/items/clothing/cm_suits.dmi', src, "lamp-on")
+			I = image('icons/obj/items/clothing/cm_suits.dmi', src, "[lamp_icon]-on") // SS220 EDIT: Fire Colony armor lamp state
 		else
-			I = image('icons/obj/items/clothing/cm_suits.dmi', src, "lamp-off")
+			I = image('icons/obj/items/clothing/cm_suits.dmi', src, "[lamp_icon]-off") // SS220 EDIT: Fire Colony armor lamp state
 		armor_overlays["lamp"] = I
 		overlays += I
 	else armor_overlays["lamp"] = null
@@ -190,12 +190,16 @@
 		return
 	set_light_range(initial(light_range))
 	set_light_power(floor(initial(light_power) * 0.5))
+	if(lamp_light_color)
+		set_light_color(lamp_light_color) // SS220 EDIT: Fire Colony armor lamp color
 	set_light_on(toggle_on)
 	flags_marine_armor ^= ARMOR_LAMP_ON
 
 	light_holder.set_light_flags(LIGHT_ATTACHED)
 	light_holder.set_light_range(initial(light_range))
 	light_holder.set_light_power(initial(light_power))
+	if(lamp_light_color)
+		light_holder.set_light_color(lamp_light_color) // SS220 EDIT: Fire Colony armor lamp color
 	light_holder.set_light_on(toggle_on)
 
 	if(!toggle_on)

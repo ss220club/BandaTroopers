@@ -727,6 +727,7 @@ SUBSYSTEM_DEF(minimaps)
 	/// by default the ground map - this picks the first level matching the trait. if it exists
 	var/targeted_ztrait = ZTRAIT_GROUND
 	var/atom/owner
+	var/list/viewer_levels = list()
 
 	/// tacmap holder for holding the minimap
 	var/datum/tacmap_holder/map_holder
@@ -771,8 +772,62 @@ SUBSYSTEM_DEF(minimaps)
 
 /datum/tacmap/Destroy()
 	map_holder = null
+	viewer_levels = null
 	owner = null
 	return ..()
+
+/datum/tacmap/proc/can_change_level(mob/user)
+	return TRUE
+
+/datum/tacmap/drawing/can_change_level(mob/user)
+	return TRUE // SS220 EDIT: all tactical-map viewers may inspect available ground levels; drawing still uses can_draw().
+
+/datum/tacmap/drawing/status_tab_view/can_change_level(mob/user)
+	return FALSE
+
+/datum/tacmap/proc/get_viewer_holder(mob/user)
+	var/list/levels = SSmapping.levels_by_trait(targeted_ztrait)
+	if(!length(levels))
+		return null
+	var/index = viewer_levels[user]
+	if(!index || index > length(levels))
+		index = 1
+	return SSminimaps.fetch_tacmap_datum(levels[index], allowed_flags)
+
+/datum/tacmap/ui_data(mob/user)
+	var/list/data = list()
+	var/list/levels = SSmapping.levels_by_trait(targeted_ztrait)
+	var/can_view = can_change_level(user)
+	var/index = viewer_levels[user] || 1
+	data["mapRef"] = can_view ? get_viewer_holder(user)?.map_ref : null
+	data["canChangeZ"] = can_view && length(levels) > 1
+	data["currentLevel"] = index
+	data["levelCount"] = length(levels)
+	return data
+
+/datum/tacmap/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
+	. = ..()
+	if(.)
+		return
+	if(action != "changeZ")
+		return FALSE
+	var/mob/user = ui.user
+	if(!can_change_level(user))
+		return FALSE
+	var/list/levels = SSmapping.levels_by_trait(targeted_ztrait)
+	if(length(levels) < 2)
+		return FALSE
+	var/amount = text2num(params["amount"])
+	if(amount != 1 && amount != -1)
+		return FALSE
+	var/current = viewer_levels[user] || 1
+	var/next_level = current + amount
+	if(next_level < 1 || next_level > length(levels))
+		return FALSE
+	viewer_levels[user] = next_level
+	var/datum/tacmap_holder/holder = get_viewer_holder(user)
+	user.client?.register_map_obj(holder.map)
+	return TRUE
 
 /datum/tacmap/drawing/Destroy()
 	new_current_map = null
@@ -810,7 +865,7 @@ SUBSYSTEM_DEF(minimaps)
 	old_map = get_tacmap_data_png(faction)
 	current_svg = get_tacmap_data_svg(faction)
 
-	var/use_live_map = skillcheck(user, SKILL_LEADERSHIP, SKILL_LEAD_NOVICE) || is_xeno
+	var/use_live_map = TRUE // SS220 EDIT: all viewers need a registered map for multi-z navigation.
 
 	if(use_live_map && !map_holder)
 		var/level = SSmapping.levels_by_trait(targeted_ztrait)
@@ -835,14 +890,14 @@ SUBSYSTEM_DEF(minimaps)
 		if(use_live_map)
 			tacmap_ready_time = SSminimaps.next_fire + 2 SECONDS
 			addtimer(CALLBACK(src, PROC_REF(on_tacmap_fire), faction), SSminimaps.next_fire - world.time + 1 SECONDS)
-			user.client.register_map_obj(map_holder.map)
+			user.client.register_map_obj(get_viewer_holder(user).map)
 			RegisterSignal(user.mind, COMSIG_MIND_TRANSFERRED, PROC_REF(on_mind_transferred))
 
 		ui = new(user, src, "TacticalMap")
 		ui.open()
 
 /datum/tacmap/drawing/ui_data(mob/user)
-	var/list/data = list()
+	var/list/data = ..()
 
 	data["newCanvasFlatImage"] = new_current_map?.flat_tacmap
 	data["oldCanvasFlatImage"] = old_map?.flat_tacmap
@@ -889,7 +944,7 @@ SUBSYSTEM_DEF(minimaps)
 	var/faction = is_xeno ? xeno.hivenumber : user.faction
 
 	data["isxeno"] = is_xeno
-	data["canViewTacmap"] = is_xeno
+	data["canViewTacmap"] = is_xeno || (faction in FACTION_LIST_HUMANOID) // SS220 EDIT: expose level switching to all faction viewers.
 	data["canViewCanvas"] = (faction in FACTION_LIST_HUMANOID) || faction == XENO_HIVE_NORMAL
 
 	if(can_draw(faction, user))
@@ -924,6 +979,7 @@ SUBSYSTEM_DEF(minimaps)
 
 /datum/tacmap/ui_close(mob/user)
 	UnregisterSignal(user.mind, COMSIG_MIND_TRANSFERRED)
+	viewer_levels -= user
 
 /datum/tacmap/drawing/ui_close(mob/user)
 	. = ..()
@@ -1056,7 +1112,13 @@ SUBSYSTEM_DEF(minimaps)
 // This gets removed when the player changes bodies (i.e. xeno evolution), so re-register it when that happens.
 /datum/tacmap/proc/on_mind_transferred(datum/mind/source, mob/previous_body)
 	SIGNAL_HANDLER
-	source.current.client.register_map_obj(map_holder.map)
+	var/level = viewer_levels[previous_body]
+	if(level)
+		viewer_levels[source.current] = level
+		viewer_levels -= previous_body
+	var/datum/tacmap_holder/holder = get_viewer_holder(source.current)
+	if(holder)
+		source.current.client.register_map_obj(holder.map)
 
 /datum/tacmap_holder
 	var/map_ref

@@ -1,0 +1,35 @@
+{
+    "map_name": "Suburb LV-759 Hybrisa Prospera",
+    "short_name": "Suburb Hybrisa",
+    "map_path": "map_files/Suburb_lv759",
+    "map_file": "Suburb_lv759.dmm",
+
+    "weather_holder": "/datum/weather_ss_map_holder/lv759_hybrisa_prospera",
+    "defcon_triggers": [
+        3750,
+        2600,
+        1450,
+        580,
+        0.0
+    ],
+    "survivor_message": "A city in flames. You were among the few survivors of the initial invasion. A catastrophic containment breach destroyed the once-thriving world of LV-759, home to a major Weyland-Yutani trading and industrial colony known as Hybris Prospera. By sheer force of will or cunning, you managed to escape the aliens' relentless onslaught... yet the nightmare remains.",
+    "announce_text": "An automated distress signal has been received from the Weyland-Yutani colony of Hybris Prospera, a massive, city-like settlement renowned for its vast wealth, extensive mining operations, and thriving trade. Recently purchased outright from the ITM, this former colony is now a key asset for Weyland-Yutani, with a sprawling urban center home to thousands of residents and numerous smaller outlying colonies under its control. ###SHIPNAME### has been dispatched to investigate the situation.",
+	"monkey_types": [
+        "monkey"
+    ],
+    "traits": [{ "Ground": true }],
+    "xvx_hives": {
+        "xeno_hive_alpha": 0,
+        "xeno_hive_bravo": 0,
+        "xeno_hive_charlie": 0,
+        "xeno_hive_delta": 0
+    },
+    "camouflage": "urban",
+	"gamemodes": [
+        "Distress Signal",
+        "Hunter Games",
+        "Hive Wars",
+        "Faction Clash",
+        "Infection"
+    ]
+}
