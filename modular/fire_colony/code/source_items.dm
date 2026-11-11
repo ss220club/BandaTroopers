@@ -341,6 +341,7 @@
 		WEAR_L_HAND = 'icons/mob/humans/onmob/inhands/clothing/masks_lefthand.dmi',
 		WEAR_R_HAND = 'icons/mob/humans/onmob/inhands/clothing/masks_righthand.dmi',
 	)
+	item_state_slots = list(WEAR_L_HAND = "gas_alt", WEAR_R_HAND = "gas_alt")
 
 
 /obj/item/clothing/shoes/leather/fancy
