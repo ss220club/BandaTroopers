@@ -26,6 +26,8 @@
 
 /turf
 	icon = 'icons/turf/floors/floors.dmi'
+	// Keep a lower level on its open-space holder's filtered plane.
+	vis_flags = VIS_INHERIT_PLANE
 	var/intact_tile = 1 //used by floors to distinguish floor with/without a floortile(e.g. plating).
 	var/can_bloody = TRUE //Can blood spawn on this turf?
 	var/list/linked_pylons
