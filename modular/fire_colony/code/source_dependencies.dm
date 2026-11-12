@@ -96,6 +96,11 @@
 	desc = "A modified SA120-pattern bayonet issued to various Lasalle Bionational security forces. It features a redesigned composite grip and a gold-tinted, high corrosion-resistant blade intended for use in extreme environments."
 	icon_state = "lb_bayonet"
 	item_state = "lb_bayonet"
+	item_icons = list(
+		WEAR_FACE = 'icons/mob/humans/onmob/mask.dmi',
+		WEAR_L_HAND = 'icons/mob/humans/onmob/items_lefthand_0.dmi',
+		WEAR_R_HAND = 'icons/mob/humans/onmob/items_righthand_0.dmi'
+	)
 	attach_icon = "lb_bayonet_a"
 	unacidable = TRUE
 
