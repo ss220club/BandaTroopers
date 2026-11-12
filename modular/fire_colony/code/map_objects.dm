@@ -1728,6 +1728,7 @@
 
 // From source/pr203:code/game/objects/structures/signs.dm
 /obj/structure/sign/calendar/ua
+	icon = 'icons/obj/structures/props/decals.dmi'
 	icon_state = "calendar_ua"
 	desc = "Classic office decoration and a place to stare at maniacally, has a vertically placed UA flag and some army symbolics."
 	calendar_faction = FACTION_MARINE
@@ -1875,6 +1876,9 @@
 	debris = list(/obj/item/frame/rack)
 
 // From source/pr203:code/game/objects/structures/temple_rubble.dm
+/obj/effect/hunter/ancient_temple
+	icon = 'icons/effects/32x32-hunter_effects.dmi'
+
 /obj/effect/hunter/ancient_temple/colorable_rubble/rubble
 	icon_state = "c_rubble0"
 

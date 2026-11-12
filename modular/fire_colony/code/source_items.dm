@@ -317,6 +317,7 @@
 /obj/item/clothing/head/helmet/marine/veteran/pmc/corporate/lasalle_security
 	name = "\improper Lasalle Bionational security helmet"
 	desc = "A full face helmet worn by Lasalle Bionatonal corporate security assets."
+	contained_sprite = FALSE
 	icon = 'icons/obj/items/clothing/hats/hats_by_faction/LASALLE.dmi'
 	item_icons = list(
 		WEAR_HEAD = 'icons/mob/humans/onmob/clothing/head/hats_by_faction/LASALLE.dmi'
@@ -506,6 +507,7 @@
 /obj/item/clothing/suit/storage/marine/veteran/pmc/light/corporate/lasalle_security
 	name = "\improper M1 pattern corporate security armor"
 	desc = "A basic vest with a Lasalle Bionational logo on the right breast. This is commonly worn by low-level guards protecting Lasalle Bionational facilities."
+	contained_sprite = FALSE
 	icon = 'icons/obj/items/clothing/suits/suits_by_faction/LASALLE.dmi'
 	item_icons = list(
 		WEAR_JACKET = 'icons/mob/humans/onmob/clothing/suits/suits_by_faction/LASALLE.dmi'
@@ -593,6 +595,7 @@
 /obj/item/clothing/under/marine/veteran/pmc/corporate/lasalle_security
 	name = "\improper Lasalle Bionational corporate security uniform"
 	desc = "An armored uniform worn by Lasalle Bionational corporate security members."
+	contained_sprite = FALSE
 	icon_state = "lasalle_security_uniform"
 	worn_state = "lasalle_security_uniform"
 	icon = 'icons/obj/items/clothing/uniforms/uniforms_by_faction/LASALLE.dmi'

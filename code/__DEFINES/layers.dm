@@ -225,6 +225,13 @@
 /// NEVER HAVE ANYTHING BELOW THIS PLANE ADJUST IF YOU NEED MORE SPACE
 #define LOWEST_EVER_PLANE -200
 
+// SS220 EDIT - START
+// Planes for looking through a multiz opening; lower levels render beneath FLOOR_PLANE.
+#define OPEN_SPACE_PLANE_END -20
+#define OPEN_SPACE_PLANE_START -9
+#define OPENSPACE_BACKDROP_PLANE -8
+// SS220 EDIT - END
+
 /// Floor plane, self explanatory. Used for Ambient Occlusion filter
 #define FLOOR_PLANE -7
 /// Game Plane, where most of the game objects reside

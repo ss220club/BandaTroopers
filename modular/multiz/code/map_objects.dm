@@ -22,6 +22,7 @@
 	name = "Corpse - Colonist"
 
 /datum/equipment_preset/corpse/colonist/burst
+	name = "Corpse - Burst Colonist"
 	xenovictim = TRUE
 
 /datum/equipment_preset/corpse/colonist/random
@@ -37,6 +38,7 @@
 	qdel(preset)
 
 /datum/equipment_preset/corpse/colonist/random/burst
+	name = "Corpse - Burst Random Colonist"
 	xenovictim = TRUE
 
 /datum/equipment_preset/corpse/engineer

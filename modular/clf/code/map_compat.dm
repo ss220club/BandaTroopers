@@ -79,6 +79,7 @@
 	name = "open space"
 	icon = 'icons/turf/floors/floors.dmi'
 	icon_state = "transparent"
+	plane = OPEN_SPACE_PLANE_START
 	density = FALSE
 	opacity = FALSE
 	baseturfs = /turf/open_space
@@ -90,11 +91,18 @@
 /turf/open_space/LateInitialize()
 	. = ..()
 	var/turf/below = SSmapping.get_turf_below(src)
-	if(below)
-		vis_contents += below
+	var/z_offset = 0
+	while(below && z_offset <= OPEN_SPACE_PLANE_START - OPEN_SPACE_PLANE_END)
+		new /obj/vis_contents_holder(src, below, z_offset)
+		if(!istype(below, /turf/open_space))
+			break
+		below = SSmapping.get_turf_below(below)
+		z_offset++
 
 /turf/open_space/Entered(atom/movable/entered_movable, atom/old_loc)
 	. = ..()
+	if(istype(entered_movable, /mob/hologram/look_up))
+		return
 	var/turf/below = SSmapping.get_turf_below(src)
 	while(istype(below, /turf/open_space))
 		below = SSmapping.get_turf_below(below)
