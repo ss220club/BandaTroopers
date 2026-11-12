@@ -6,4 +6,4 @@
 	worn_state = "army_uniform"
 	icon = 'modular/multiz/icons/army_uniform.dmi'
 	item_icons = list(WEAR_BODY = 'modular/multiz/icons/army_uniform_worn.dmi')
-	flags_atom = NO_NAME_OVERRIDE
+	flags_atom = NO_NAME_OVERRIDE|NO_SNOW_TYPE

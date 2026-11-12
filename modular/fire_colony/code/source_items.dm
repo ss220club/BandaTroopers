@@ -664,6 +664,7 @@
 /obj/item/clothing/under/marine/veteran/lb_merc
 	name = "\improper HIG combat jumpsuit"
 	desc = "A fitted black combat jumpsuit designed for Lasalle Bionational - Hazard Intervention Group operators. It bears the insignia of Lasalle Bionational."
+	flags_atom = NO_NAME_OVERRIDE|NO_SNOW_TYPE
 
 	icon = 'icons/obj/items/clothing/uniforms/uniforms_by_faction/LASALLE.dmi'
 	item_icons = list(
