@@ -1,7 +1,11 @@
-// The XM46A keeps its fire control and attachments while using PMC M41A handling.
-/obj/item/weapon/gun/rifle/m46c
+// Corporate XM46A variant. The original M46C remains USCM equipment.
+/obj/item/weapon/gun/rifle/m46c/pmc
+	name = "\improper XM46A PMC pulse rifle"
+	desc = "A black Weyland-Yutani XM46A with a corporate firing lock and a PN 30mm underslung grenade launcher. Accepts M41A MK1 and MK2 magazines."
 	icon = 'modular/weapons/icons/wy/xm46a_black_inventory.dmi'
 	icon_state = "xm46a"
+	current_mag = /obj/item/ammo_magazine/rifle/ap
+	starting_attachment_types = list(/obj/item/attachable/attached_gun/grenade/mk1, /obj/item/attachable/stock/rifle/collapsible)
 	item_icons = list(
 		WEAR_L_HAND = 'modular/weapons/icons/wy/xm46a_black_lefthand.dmi',
 		WEAR_R_HAND = 'modular/weapons/icons/wy/xm46a_black_righthand.dmi',
@@ -36,8 +40,7 @@
 		/obj/item/ammo_magazine/rifle/m41aMK1/tracer,
 	)
 
-/obj/item/weapon/gun/rifle/m46c/set_gun_config_values()
-	..()
+/obj/item/weapon/gun/rifle/m46c/pmc/set_gun_config_values()
 	set_fire_delay(FIRE_DELAY_TIER_LMG)
 	set_burst_amount(BURST_AMOUNT_TIER_2)
 	set_burst_delay(FIRE_DELAY_TIER_12)

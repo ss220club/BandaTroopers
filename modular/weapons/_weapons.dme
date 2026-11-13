@@ -8,7 +8,6 @@
 #include "code/f90_equipment.dm"
 #include "code/wy_heavy_cases.dm"
 #include "code/xm46a_pmc.dm"
-#include "code/wy_equipment_tests.dm"
 #include "code/nsg23_balance.dm"
 #include "code/f90_equipment_tests.dm"
 #include "code/rpg/disposable_rpg_prop.dm"
