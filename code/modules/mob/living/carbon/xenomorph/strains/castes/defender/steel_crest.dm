@@ -6,8 +6,10 @@
 
 	actions_to_remove = list(
 		/datum/action/xeno_action/activable/headbutt,
+		/datum/action/xeno_action/activable/headbutt/ai,
 		/datum/action/xeno_action/activable/fortify,
 		/datum/action/xeno_action/onclick/tail_sweep,
+		/datum/action/xeno_action/onclick/tail_sweep/ai,
 	)
 	actions_to_add = list(
 		/datum/action/xeno_action/activable/headbutt/steel_crest,

@@ -1,5 +1,5 @@
 
-/// Created by /datum/game_master when middle clicking on a /obj/structure/pipes/vents
+/// Created by /datum/xeno_ai_spawner_menu when middle clicking on a /obj/structure/pipes/vents
 /datum/game_master_submenu/ambush/vents
 	tgui_menu_title = "Vent Control"
 

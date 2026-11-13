@@ -138,6 +138,7 @@ GLOBAL_LIST_INIT(admin_verbs_minor_event, list(
 	/client/proc/enable_event_mob_verbs,
 	/client/proc/force_hijack,
 	/datum/admins/proc/force_predator_round, //Force spawns a predator round.
+	/datum/admins/proc/force_pathogen_round, // SS220 EDIT: expose pathogen round admin action
 	/client/proc/adjust_predator_round,
 	/client/proc/cmd_admin_world_narrate, /*sends text to all players with no padding*/
 	/client/proc/cmd_admin_ground_narrate,
@@ -363,6 +364,7 @@ GLOBAL_LIST_INIT(roundstart_mod_verbs, list(
 		add_verb(src, /client/proc/togglebuildmodeself)
 		add_verb(src, /client/proc/toggle_game_master)
 		add_verb(src, /client/proc/open_resin_panel)
+		add_verb(src, /client/proc/open_xeno_ai_spawner_panel) // SS220 EDIT: expose pathogen AI spawner
 		add_verb(src, /client/proc/open_sound_panel)
 		add_verb(src, /client/proc/toggle_join_xeno)
 		add_verb(src, /client/proc/admin_marine_announcement)
@@ -423,6 +425,7 @@ GLOBAL_LIST_INIT(roundstart_mod_verbs, list(
 		/client/proc/togglebuildmodeself,
 		/client/proc/toggle_game_master,
 		/client/proc/open_resin_panel,
+		/client/proc/open_xeno_ai_spawner_panel, // SS220 EDIT: expose pathogen AI spawner
 		/client/proc/open_sound_panel,
 		/client/proc/toggle_join_xeno,
 		/client/proc/game_master_rename_platoon,

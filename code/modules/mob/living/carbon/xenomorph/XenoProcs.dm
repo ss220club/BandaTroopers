@@ -25,12 +25,13 @@
 /proc/xeno_maptext(text = "", title_text = "", hivenumber = XENO_HIVE_NORMAL)
 	if(text == "" || !hivenumber)
 		return //Logic
+	var/text_sound = hivenumber == XENO_HIVE_PATHOGEN ? 'sound/pathogen_creatures/pathogen_distant_roar.ogg' : 'sound/voice/alien_distantroar_3.ogg' // SS220 EDIT: pathogen map alert sound
 
 	if(SSticker.mode && length(SSticker.mode.xenomorphs)) //Send to only xenos in our gamemode list. This is faster than scanning all mobs
 		for(var/datum/mind/living in SSticker.mode.xenomorphs)
 			var/mob/living/carbon/xenomorph/xeno = living.current
 			if(istype(xeno) && !xeno.stat && xeno.client && xeno.hivenumber == hivenumber) //Only living and connected xenos
-				playsound_client(xeno.client, 'sound/voice/alien_distantroar_3.ogg', xeno.loc, 25, FALSE)
+				playsound_client(xeno.client, text_sound, xeno.loc, 25, FALSE)
 				xeno.play_screen_text("<span class='langchat_notification' style=text-align:center valign='top'><u>[title_text]</u></span><br>" + text, /atom/movable/screen/text/screen_text/command_order, "#b491c8") // SS220 Fonts
 
 /proc/xeno_message_all(message = null, size = 3)
@@ -314,7 +315,7 @@
 
 	if (pounceAction.freeze_self)
 		if(pounceAction.freeze_play_sound)
-			playsound(loc, rand(0, 100) < 95 ? 'sound/voice/alien_pounce.ogg' : 'sound/voice/alien_pounce2.ogg', 25, 1)
+			playsound(loc, is_pathogen_creature(src) ? "pathogen_pounce" : (rand(0, 100) < 95 ? 'sound/voice/alien_pounce.ogg' : 'sound/voice/alien_pounce2.ogg'), 25, 1) // SS220 EDIT: pathogen pounce sound
 		ADD_TRAIT(src, TRAIT_IMMOBILIZED, TRAIT_SOURCE_ABILITY("Pounce"))
 		pounceAction.freeze_timer_id = addtimer(CALLBACK(src, PROC_REF(unfreeze_pounce)), pounceAction.freeze_time, TIMER_STOPPABLE)
 	pounceAction.additional_effects(M)
@@ -424,6 +425,10 @@
 			if(!silent)
 				to_chat(src, SPAN_WARNING("There's already an egg."))
 			return
+		if(istype(O, /obj/effect/pathogen/spore_sac))
+			if(!silent)
+				to_chat(src, SPAN_WARNING("There's a spore sac in the way!"))
+			return // SS220 EDIT: prevent resin overlap with spore sacs
 		if(istype(O, /obj/structure/mineral_door) || istype(O, /obj/effect/alien/resin))
 			has_obstacle = TRUE
 			break
@@ -499,7 +504,7 @@
 	if(!hive)
 		return
 	var/mob/living/carbon/xenomorph/queen/Q = hive.living_xeno_queen
-	if(!Q || !Q.ovipositor || hive_pos == NORMAL_XENO || !Q.current_aura || Q.loc.z != loc.z) //We are no longer a leader, or the Queen attached to us has dropped from her ovi, disabled her pheromones or even died
+	if(!Q || (!hive.allow_no_queen_actions && !Q.ovipositor) || hive_pos == NORMAL_XENO || !Q.current_aura || !SSmapping.same_z_map(Q.loc.z, loc.z)) // SS220 EDIT: support pathogen and linked map levels
 		leader_aura_strength = 0
 		leader_current_aura = ""
 		to_chat(src, SPAN_XENOWARNING("Our pheromones wane. The Queen is no longer granting us her pheromones."))

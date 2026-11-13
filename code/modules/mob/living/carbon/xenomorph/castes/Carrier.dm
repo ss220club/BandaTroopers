@@ -98,6 +98,8 @@
 	var/eggs_max = 0
 	var/laid_egg = 0
 
+	ai_ability_delay = 3 SECONDS
+
 /mob/living/carbon/xenomorph/carrier/proc/update_hugger_overlays()
 	if(!hugger_overlays_icon)
 		return

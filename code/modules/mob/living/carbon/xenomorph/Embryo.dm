@@ -27,8 +27,13 @@
 		if(iscarbon(affected_mob))
 			var/mob/living/carbon/affected_carbon = affected_mob
 			affected_carbon.med_hud_set_status()
+		update_icon() // SS220 EDIT: display pathogen embryo species
 	else
 		return INITIALIZE_HINT_QDEL
+
+/obj/item/alien_embryo/update_icon() // SS220 EDIT: pathogen embryo appearance
+	if(flags_embryo & FLAG_EMBRYO_PATHOGEN)
+		icon = (isyautja(affected_mob) || (flags_embryo & FLAG_EMBRYO_PREDATOR)) ? 'icons/mob/pathogen/aberration_bloodburster.dmi' : 'icons/mob/pathogen/bloodburster.dmi'
 
 /obj/item/alien_embryo/Destroy()
 	if(affected_mob)
@@ -265,7 +270,12 @@
 	var/custom_xeno_type = get_custom_xeno_type() // SS220 EDIT: modular embryos may mature into custom xenomorphs
 
 	if(isyautja(affected_mob) || (flags_embryo & FLAG_EMBRYO_PREDATOR))
-		new_xeno = new /mob/living/carbon/xenomorph/larva/predalien(affected_mob)
+		// SS220 EDIT - START: Pathogen infection produces an aberrant bloodburster in predators.
+		if(flags_embryo & FLAG_EMBRYO_PATHOGEN)
+			new_xeno = new /mob/living/carbon/xenomorph/bloodburster/aberrant(affected_mob)
+		else
+			new_xeno = new /mob/living/carbon/xenomorph/larva/predalien(affected_mob)
+		// SS220 EDIT - END
 		yautja_announcement(SPAN_YAUTJABOLDBIG("WARNING!\n\nAn abomination has been detected at [get_area_name(new_xeno)]. It is a stain upon our purity and is unfit for life. Exterminate it immediately.\n\nHeavy Armory unlocked."))
 		SEND_GLOBAL_SIGNAL(COMSIG_GLOB_YAUTJA_ARMORY_OPENED)
 	else if(custom_xeno_type)

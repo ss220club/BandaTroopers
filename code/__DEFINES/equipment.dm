@@ -145,6 +145,8 @@
 #define ALLOWCPR (1<<7)
 /// Helmet does not fall off when blocking a decapitation
 #define FULL_DECAP_PROTECTION (1<<8)
+/// Protection from pathogen spores without changing existing equipment flags.
+#define SPOREPROOF (1<<14)
 
 //HELMET AND MASK======================================================================================
 

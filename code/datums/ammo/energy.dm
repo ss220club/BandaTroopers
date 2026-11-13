@@ -289,7 +289,7 @@
 		log_attack("[key_name(M)] was stunned by a plasma immobilizer from [key_name(P.firer)] at [get_area(P)]")
 		if (isyautja(M))
 			stun_time -= 2
-		if(ispredalien(M))
+		if(ispredalien(M) || isaberration(M))
 			continue
 		to_chat(M, SPAN_DANGER("A powerful electric shock ripples through your body, freezing you in place!"))
 		M.apply_effect(stun_time, STUN)

@@ -118,6 +118,7 @@
 #define LEAPING (1<<4)
 #define PASSEMOTES (1<<5) //holders inside of mob that need to see emotes.
 #define CANROOT (1<<6)
+#define INCORPOREAL (1<<7)
 #define GODMODE (1<<12)
 #define FAKEDEATH (1<<13) //Replaces stuff like changeling.changeling_fakedeath
 //#define DISFIGURED (1<<14) //unused
@@ -357,6 +358,8 @@ GLOBAL_LIST_INIT(default_xeno_onmob_icons, list(
 #define SPECIES_SYNTHETIC "Synthetic"
 #define SPECIES_MONKEY "Monkey"
 #define SPECIES_ZOMBIE "Zombie"
+#define SPECIES_PATHO_WALKER "Pathogen Walker"
+#define SPECIES_YAUTJA_MUTANT "Yautja Mutant"
 #define SPECIES_SANGHEILI "Sangheili" // SS220 EDIT: HALO species id
 #define SPECIES_UNGGOY "Unggoy" // SS220 EDIT: HALO species id
 

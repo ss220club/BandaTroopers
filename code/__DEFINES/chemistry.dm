@@ -97,6 +97,8 @@
 #define PLASMA_EGG "eggplasma"
 #define PLASMA_NEUROTOXIN "neurotoxinplasma"
 #define PLASMA_ROYAL "royalplasma"
+#define BLOOD_BLIGHT "blightfluid"
+#define BLOOD_BLIGHT_ADV "strongblightfluid"
 
 // Flags for Reagent
 
@@ -120,6 +122,7 @@
 //Negative
 #define PROPERTY_HYPOXEMIC "hypoxemic"
 #define PROPERTY_TOXIC "toxic"
+#define PROPERTY_MYCOTAINTED "mycotainted"
 #define PROPERTY_CORROSIVE "corrosive"
 #define PROPERTY_BIOCIDIC "biocidic"
 #define PROPERTY_HEMOLYTIC "hemolytic"
@@ -133,6 +136,8 @@
 #define PROPERTY_CARDIOTOXIC "cardiotoxic"
 #define PROPERTY_NEUROTOXIC "neurotoxic"
 #define PROPERTY_HYPERMETABOLIC "hypermetabolic"
+#define PROPERTY_MYCOTOXIC "mycotoxic"
+#define PROPERTY_MYCOTAINTED "mycotainted"
 //Neutral
 #define PROPERTY_NUTRITIOUS "nutritious"
 #define PROPERTY_KETOGENIC "ketogenic"

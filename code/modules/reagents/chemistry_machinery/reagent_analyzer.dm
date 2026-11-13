@@ -104,6 +104,13 @@
 					P.trigger()
 				else
 					return
+			var/datum/chem_property/prop_myco = S.get_property(PROPERTY_MYCOTAINTED)
+			if(prop_myco)
+				if(!GLOB.chemical_data.myco_discovered && GLOB.chemical_data.reached_x_access)
+					prop_myco.trigger()
+					GLOB.chemical_data.myco_discovered = TRUE
+				else
+					return
 
 			GLOB.chemical_data.complete_chemical(S)
 	else

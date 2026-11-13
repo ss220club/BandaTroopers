@@ -26,6 +26,7 @@
 	ability_primacy = XENO_PRIMARY_ACTION_1
 	action_type = XENO_ACTION_CLICK
 	xeno_cooldown = 8 SECONDS
+	var/cross_map_heal = FALSE
 
 /datum/action/xeno_action/activable/expand_weeds
 	name = "Expand Weeds (50)"

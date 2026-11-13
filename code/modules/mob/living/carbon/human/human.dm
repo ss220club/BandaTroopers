@@ -1317,6 +1317,8 @@
 	if(wear_mask && wear_mask.vision_impair)
 		tint_level += wear_mask.vision_impair
 
+	if(in_spore_cloud())
+		tint_level += VISION_IMPAIR_STRONG
 	if(tint_level > VISION_IMPAIR_STRONG)
 		tint_level = VISION_IMPAIR_STRONG
 

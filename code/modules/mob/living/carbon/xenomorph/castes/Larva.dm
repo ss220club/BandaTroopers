@@ -165,6 +165,11 @@
 	if(!GLOB.hive_datum[hivenumber] || isnull(atom))
 		return
 
+	if(hivenumber == XENO_HIVE_PATHOGEN)
+		var/mob/living/carbon/xenomorph/bloodburster/bloodburster = new(atom)
+		bloodburster.set_hive_and_update(hivenumber)
+		return bloodburster
+
 	var/mob/living/carbon/xenomorph/larva/larva = new /mob/living/carbon/xenomorph/larva(atom)
 
 	larva.set_hive_and_update(hivenumber)

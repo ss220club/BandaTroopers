@@ -107,9 +107,10 @@
 	var/obj/structure/tunnel/T
 	var/i = 0
 	var/turf/t
+	var/hivenumber = GLOB.pathogen_round ? XENO_HIVE_PATHOGEN : XENO_HIVE_NORMAL
 	while(length(GLOB.xeno_tunnels) && i++ < 3)
 		t = get_turf(pick_n_take(GLOB.xeno_tunnels))
-		T = new(t)
+		T = new(t, hivenumber)
 		T.id = "hole[i]"
 	return TRUE
 
@@ -279,7 +280,10 @@
 			if(!hive.xeno_queen_timer)
 				continue
 
-			if(!hive.living_xeno_queen && hive.xeno_queen_timer < world.time)
+			if(hive.hivenumber == XENO_HIVE_PATHOGEN)
+				if(!hive.get_caste_count(PATHOGEN_CREATURE_ARCHON) && hive.xeno_queen_timer < world.time)
+					xeno_message("The Confluence is ready for a new Archon to evolve!", 3, hive.hivenumber)
+			else if(!hive.living_xeno_queen && hive.xeno_queen_timer < world.time)
 				xeno_message("The Hive is ready for a new Queen to evolve.", 3, hive.hivenumber)
 
 		// Automated bioscan / Queen Mother message
@@ -312,7 +316,7 @@
 			for(var/hivenumber in GLOB.hive_datum)
 				hive = GLOB.hive_datum[hivenumber]
 				hive.evolution_without_ovipositor = FALSE
-				if(hive.living_xeno_queen && !hive.living_xeno_queen.ovipositor)
+				if(!hive.allow_no_queen_evo && hive.living_xeno_queen && !hive.living_xeno_queen.ovipositor)
 					to_chat(hive.living_xeno_queen, SPAN_XENODANGER("It is time to settle down and let your children grow."))
 			evolution_ovipositor_threshold = TRUE
 			msg_admin_niche("Xenomorphs now require the queen's ovipositor for evolution progress.")

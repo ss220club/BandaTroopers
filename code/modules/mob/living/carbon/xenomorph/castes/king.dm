@@ -1,4 +1,4 @@
-/datum/caste_datum/king
+/datum/caste_datum/king // huh
 	caste_type = XENO_CASTE_KING
 	caste_desc = "The end of the line."
 	tier = 4
@@ -62,6 +62,8 @@
 	icon_xeno = 'icons/mob/xenos/king.dmi'
 
 	bubble_icon = "alienroyal"
+
+	ai_ability_delay = 2 SECONDS
 
 /mob/living/carbon/xenomorph/king/Destroy()
 	UnregisterSignal(src, COMSIG_MOVABLE_PRE_MOVE)

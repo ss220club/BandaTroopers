@@ -814,6 +814,22 @@ INITIALIZE_IMMEDIATE(/turf/closed/wall/indestructible/splashscreen)
 	walltype = WALL_THICKRESIN
 	unacidable = TRUE
 
+/turf/closed/wall/resin/pathogen
+	name = "mycelial wall"
+	desc = "Weird mycelium solidified into a wall."
+	icon = 'icons/mob/pathogen/pathogen_structures.dmi'
+	icon_state = "mycelium"
+	walltype = WALL_PATHOGEN
+	hivenumber = XENO_HIVE_PATHOGEN
+
+/turf/closed/wall/resin/thick/pathogen
+	name = "thick mycelial wall"
+	desc = "Weird mycelium solidified into a thick wall."
+	icon = 'icons/mob/pathogen/pathogen_structures.dmi'
+	icon_state = "thickmycelium"
+	walltype = WALL_PATHOGEN_THICK
+	hivenumber = XENO_HIVE_PATHOGEN
+
 /turf/closed/wall/resin/tutorial
 	name = "tutorial resin wall"
 	desc = "Weird slime solidified into a wall. Remarkably resilient."
@@ -843,6 +859,20 @@ INITIALIZE_IMMEDIATE(/turf/closed/wall/indestructible/splashscreen)
 	..()
 	if (PF)
 		PF.flags_can_pass_all = PASS_GLASS
+
+/turf/closed/wall/resin/membrane/pathogen
+	name = "mycelial membrane"
+	desc = "Weird mycelium translucent enough to let light pass through."
+	icon = 'icons/mob/pathogen/pathogen_structures.dmi'
+	hivenumber = XENO_HIVE_PATHOGEN
+
+/turf/closed/wall/resin/membrane/pathogen/thick
+	name = "thick mycelial membrane"
+	desc = "Weird thick mycelium just translucent enough to let light pass through."
+	damage_cap = HEALTH_WALL_XENO_MEMBRANE_THICK
+	icon_state = "thickmembrane"
+	walltype = WALL_THICKMEMBRANE
+	alpha = 210
 
 /datum/movable_wall_group
 	var/list/obj/structure/alien/movable_wall/walls

@@ -69,6 +69,18 @@
 		return
 	return locate(T.x, T.y, T.z + offset)
 
+/// Whether two z levels belong to the same connected map.
+/datum/controller/subsystem/mapping/proc/same_z_map(z1, z2)
+	if(z1 == z2)
+		return TRUE
+	var/diff = z2 - z1
+	var/direction = diff > 0 ? ZTRAIT_UP : ZTRAIT_DOWN
+	for(var/step in 1 to abs(diff))
+		if(!level_trait(z1, direction))
+			return FALSE
+		z1 += diff > 0 ? 1 : -1
+	return TRUE
+
 // Prefer not to use this one too often
 /datum/controller/subsystem/mapping/proc/get_station_center()
 	var/station_z = levels_by_trait(ZTRAIT_STATION)[1]

@@ -19,6 +19,8 @@
 
 	var/castes_available = caste.evolves_to.Copy()
 
+	castes_available -= hive.blacklisted_castes
+
 	for(var/caste in castes_available)
 		if(GLOB.xeno_datum_list[caste].minimum_evolve_time > ROUND_TIME)
 			castes_available -= caste
@@ -38,10 +40,20 @@
 	if(!castepick) //Changed my mind
 		return
 
+	if(castepick in hive.blacklisted_castes)
+		to_chat(src, SPAN_WARNING("The Hive cannot support this caste!"))
+		return
+
 	var/datum/caste_datum/caste_datum = GLOB.xeno_datum_list[castepick]
 	if(caste_datum && caste_datum.minimum_evolve_time > ROUND_TIME)
 		to_chat(src, SPAN_WARNING("The Hive cannot support this caste yet! ([floor((caste_datum.minimum_evolve_time - ROUND_TIME) / 10)] seconds remaining)"))
 		return
+
+	if(hive.restricted_castes && (castepick in hive.restricted_castes))
+		var/max_num = hive.restricted_castes[castepick]
+		if(hive.get_caste_count(castepick) >= max_num)
+			to_chat(src, SPAN_WARNING("The Hive has reached capacity for this caste!"))
+			return
 
 	if(!evolve_checks())
 		return

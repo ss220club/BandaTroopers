@@ -762,7 +762,7 @@
 		var/datum/action/A = Z
 		A.update_button_icon()
 
-/mob/living/carbon/xenomorph/queen/proc/queen_gut(atom/target)
+/mob/living/carbon/xenomorph/proc/xeno_gut(atom/target)
 	if(!iscarbon(target))
 		return FALSE
 

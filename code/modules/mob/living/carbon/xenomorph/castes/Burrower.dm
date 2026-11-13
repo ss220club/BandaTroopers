@@ -64,8 +64,8 @@
 		/datum/action/xeno_action/onclick/build_tunnel,
 		/datum/action/xeno_action/onclick/plant_weeds, //first macro
 		/datum/action/xeno_action/onclick/place_trap, //second macro
-		/datum/action/xeno_action/activable/burrow, //third macro
-		/datum/action/xeno_action/onclick/tremor, //fourth macro
+		/datum/action/xeno_action/activable/burrow/ai, //third macro
+		/datum/action/xeno_action/onclick/tremor/ai, //fourth macro
 		/datum/action/xeno_action/active_toggle/toggle_meson_vision,
 		/datum/action/xeno_action/onclick/tacmap,
 		)
@@ -82,6 +82,8 @@
 	weed_food_icon = 'icons/mob/xenos/weeds_64x64.dmi'
 	weed_food_states = list("Burrower_1","Burrower_2","Burrower_3")
 	weed_food_states_flipped = list("Burrower_1","Burrower_2","Burrower_3")
+
+	ai_ability_delay = 3 SECONDS
 
 /mob/living/carbon/xenomorph/burrower/ex_act(severity)
 	if(HAS_TRAIT(src, TRAIT_ABILITY_BURROWED))
@@ -105,3 +107,67 @@
 
 /datum/behavior_delegate/burrower_base
 	name = "Base Burrower Behavior Delegate"
+
+/mob/living/carbon/xenomorph/burrower/init_movement_handler()
+	return new /datum/xeno_ai_movement/burrower(src)
+
+// Moving would cancel digging in, and there is nowhere to go while burrowed anyway.
+/datum/xeno_ai_movement/burrower
+
+/datum/xeno_ai_movement/burrower/ai_move_idle(delta_time)
+	if(parent.action_busy || HAS_TRAIT(parent, TRAIT_ABILITY_BURROWED))
+		return
+	return ..()
+
+/datum/xeno_ai_movement/burrower/ai_move_target(delta_time)
+	if(parent.action_busy || HAS_TRAIT(parent, TRAIT_ABILITY_BURROWED))
+		return
+	return ..()
+
+// Digs in, tunnels under the target and knocks it down when coming up.
+/datum/action/xeno_action/activable/burrow/ai
+	default_ai_action = TRUE
+	ai_prob_chance = 40
+
+	/// Closer than this we just walk up to the target
+	var/ai_min_ambush_range = 4
+	/// Tunneling takes a second per tile, so the target would be long gone from further away
+	var/ai_max_ambush_range = 8
+	var/ai_ambush_cooldown_time = 20 SECONDS
+	COOLDOWN_DECLARE(ai_ambush_cooldown)
+
+/datum/action/xeno_action/activable/burrow/ai/process_ai(mob/living/carbon/xenomorph/parent, delta_time)
+	if(HAS_TRAIT(parent, TRAIT_ABILITY_BURROWED))
+		// Using it again while tunneling would stop the tunnel.
+		if(!parent.tunnel && !parent.used_tunnel)
+			use_ability_async(get_turf(parent.current_target))
+		return
+
+	if(!ishuman(parent.current_target) || parent.used_burrow || parent.action_busy || !COOLDOWN_FINISHED(src, ai_ambush_cooldown))
+		return
+
+	var/distance = get_dist(parent, parent.current_target)
+	if(distance < ai_min_ambush_range || distance > ai_max_ambush_range || !DT_PROB(ai_prob_chance, delta_time))
+		return
+
+	COOLDOWN_START(src, ai_ambush_cooldown, ai_ambush_cooldown_time)
+	parent.start_ai_ability_delay()
+	use_ability_async(parent.current_target)
+
+/datum/action/xeno_action/onclick/tremor/ai
+	default_ai_action = TRUE
+	ai_prob_chance = 50
+	plasma_cost = 100 // Spent by tremor() itself
+
+	/// How far tremor() knocks marines down
+	var/ai_tremor_range = 3
+
+/datum/action/xeno_action/onclick/tremor/ai/process_ai(mob/living/carbon/xenomorph/parent, delta_time)
+	if(parent.used_tremor || parent.plasma_stored < plasma_cost || HAS_TRAIT(parent, TRAIT_ABILITY_BURROWED) || !DT_PROB(ai_prob_chance, delta_time))
+		return
+
+	if(parent.count_ai_targets_in_range(ai_tremor_range) < 2)
+		return
+
+	parent.start_ai_ability_delay()
+	use_ability_async()

@@ -71,6 +71,9 @@
 // SS220 EDIT - START: support modular embryo subtypes
 /datum/game_master_submenu/infest/proc/setup_embryo()
 	var/selected_embryo_typepath = xeno_races_get_embryo_type(selected_embryo_type)
+	// SS220 EDIT: Pathogen infestations must create the pathogen embryo.
+	if(selected_hive == XENO_HIVE_PATHOGEN)
+		selected_embryo_typepath = /obj/item/alien_embryo/bloodburster
 	var/obj/item/alien_embryo/infesting_embryo
 	for(var/obj/item/alien_embryo/embryo in referenced_atom) //if this hive's embryo already exists, reuse it; otherwise clear it out
 		if(!infesting_embryo && embryo.hivenumber == selected_hive && embryo.type == selected_embryo_typepath)
@@ -85,6 +88,9 @@
 		var/mob/living/carbon/human/infested_host = referenced_atom
 		infested_host.species?.larva_impregnated(infesting_embryo) //Yautja handling
 
+	if(selected_hive == XENO_HIVE_PATHOGEN)
+		infesting_embryo.flags_embryo |= FLAG_EMBRYO_PATHOGEN // SS220 EDIT: convert reused embryos as well
+
 	infesting_embryo.stage = embryo_stage
 // SS220 EDIT - END
 
@@ -96,6 +102,10 @@
 /datum/game_master_submenu/infest/proc/force_burst()
 	var/selected_embryo_typepath = xeno_races_get_embryo_type(selected_embryo_type)
 	var/selected_xeno_typepath = xeno_races_get_embryo_xeno_type(selected_embryo_type)
+	// SS220 EDIT: Force burst uses a bloodburster, including aberrant predator hosts.
+	if(selected_hive == XENO_HIVE_PATHOGEN)
+		selected_embryo_typepath = /obj/item/alien_embryo/bloodburster
+		selected_xeno_typepath = isyautja(referenced_atom) ? /mob/living/carbon/xenomorph/bloodburster/aberrant : /mob/living/carbon/xenomorph/bloodburster
 	var/mob/living/carbon/xenomorph/infesting_xeno
 	for(var/mob/living/carbon/xenomorph/existing_xeno in referenced_atom) //if this hive's selected xeno already exists, use it
 		if(!infesting_xeno && existing_xeno.hivenumber == selected_hive && istype(existing_xeno, selected_xeno_typepath))

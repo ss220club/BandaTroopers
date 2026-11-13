@@ -56,6 +56,10 @@
 	if(!DT_PROB(ai_prob_chance, delta_time) || get_dist(X, X.current_target) >= distance - 1 || HAS_TRAIT(X, TRAIT_CHARGING) || X.action_busy)
 		return
 
+	// It roots us in place for the windup, which is not worth it for a single target.
+	if(X.count_ai_targets_in_range(distance - 1) < 2)
+		return
+
 	use_ability_async()
 
 /datum/action/xeno_action/onclick/crusher_shield
@@ -68,6 +72,23 @@
 	plasma_cost = 50
 	xeno_cooldown = 26 SECONDS
 	var/shield_amount = 200
+
+	default_ai_action = TRUE
+	ai_prob_chance = 30
+
+/datum/action/xeno_action/onclick/crusher_shield/process_ai(mob/living/carbon/xenomorph/X, delta_time)
+	if(!DT_PROB(ai_prob_chance, delta_time) || X.action_busy)
+		return
+
+	// It only lasts a few seconds, so only right before taking hits: up close or while charging into a group.
+	if(get_dist(X, X.current_target) > 3 && !HAS_TRAIT(X, TRAIT_CHARGING))
+		return
+
+	use_ability_async()
+
+/datum/action/xeno_action/onclick/crusher_shield/pathogen
+	button_icon_state = "template_pathogen"
+	icon_file = 'icons/mob/hud/actions_pathogen.dmi'
 
 /datum/action/xeno_action/activable/fling/charger
 	name = "Headbutt"
@@ -148,6 +169,28 @@
 
 	var/list/possible_charge_dirs = list()
 
+	for(var/turf/potential_charge_turf as anything in get_ai_charge_groups(processing_xeno))
+		if((abs(potential_charge_turf.x - processing_xeno.x) > 1) && (abs(potential_charge_turf.y - processing_xeno.y) > 1))
+			continue
+
+		var/cardinal_dir_to_potential_charge_turf = get_cardinal_dir(processing_xeno, potential_charge_turf)
+
+		if(!is_ai_charge_path_clear(processing_xeno, xeno_turf, cardinal_dir_to_potential_charge_turf))
+			continue
+
+		possible_charge_dirs += cardinal_dir_to_potential_charge_turf
+
+	if(!length(possible_charge_dirs))
+		return
+
+	charge_dir = pick(possible_charge_dirs)
+
+	last_charge_move = world.time
+	use_ability_async()
+
+/// Returns the middle turfs of the groups of targets worth charging into.
+/datum/action/xeno_action/onclick/charger_charge/proc/get_ai_charge_groups(mob/living/carbon/xenomorph/processing_xeno)
+	. = list()
 	for(var/mob/living/carbon/base_checked_carbon as anything in GLOB.alive_mob_list)
 		var/distance_between_base_carbon_and_xeno = get_dist(processing_xeno, base_checked_carbon)
 
@@ -178,47 +221,31 @@
 		var/x_middle = round(secondary_x_sum / secondary_count)
 		var/y_middle = round(secondary_y_sum / secondary_count)
 
-		if((abs(x_middle - processing_xeno.x) > 1) && (abs(y_middle - processing_xeno.y) > 1))
-			continue
-
 		var/turf/potential_charge_turf = locate(x_middle, y_middle, processing_xeno.z)
 
-		var/distance_between_potential_charge_turf_and_xeno = get_dist(potential_charge_turf, processing_xeno)
-
-		if(distance_between_potential_charge_turf_and_xeno < MINIMUM_CHARGE_DISTANCE)
+		if(get_dist(potential_charge_turf, processing_xeno) < MINIMUM_CHARGE_DISTANCE)
 			continue
 
-		var/cardinal_dir_to_potential_charge_turf = get_cardinal_dir(processing_xeno, potential_charge_turf)
+		. |= potential_charge_turf
 
-		var/list/turf/turfs_to_check = get_line(xeno_turf, get_angle_target_turf(xeno_turf, cardinal_dir_to_potential_charge_turf, MINIMUM_CHARGE_DISTANCE), FALSE)
+/// Whether the first few turfs of a charge from start_turf in charge_direction are free to run through.
+/datum/action/xeno_action/onclick/charger_charge/proc/is_ai_charge_path_clear(mob/living/carbon/xenomorph/processing_xeno, turf/start_turf, charge_direction)
+	var/list/turf/turfs_to_check = get_line(start_turf, get_ranged_target_turf(start_turf, charge_direction, MINIMUM_CHARGE_DISTANCE), FALSE)
 
-		var/blocked = FALSE
-		var/turf/previous_turf = xeno_turf
+	var/turf/previous_turf = start_turf
 
-		for(var/turf/checked_turf in turfs_to_check)
-			var/list/ignore = list()
+	for(var/turf/checked_turf in turfs_to_check)
+		var/list/ignore = list(processing_xeno)
 
-			for(var/mob/mob_blocker in checked_turf)
-				ignore += mob_blocker
+		for(var/mob/mob_blocker in checked_turf)
+			ignore += mob_blocker
 
-			if(LinkBlocked(processing_xeno, previous_turf, checked_turf, ignore))
-				blocked = TRUE
-				break
+		if(LinkBlocked(processing_xeno, previous_turf, checked_turf, ignore))
+			return FALSE
 
-			previous_turf = checked_turf
+		previous_turf = checked_turf
 
-		if(blocked)
-			continue
-
-		possible_charge_dirs += cardinal_dir_to_potential_charge_turf
-
-	if(!length(possible_charge_dirs))
-		return
-
-	charge_dir = pick(possible_charge_dirs)
-
-	last_charge_move = world.time
-	use_ability_async()
+	return TRUE
 
 #undef MIN_TARGETS_TO_CHARGE
 #undef FLOCK_SCAN_RADIUS

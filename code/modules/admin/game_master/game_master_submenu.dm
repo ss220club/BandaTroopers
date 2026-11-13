@@ -1,6 +1,6 @@
 
 
-/// Called by /datum/game_master and handles various submenus and unique interactions with atoms
+/// Called by /datum/xeno_ai_spawner_menu and handles various submenus and unique interactions with atoms
 /datum/game_master_submenu
 
 	/// The atom this submenu is interacting with

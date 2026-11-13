@@ -85,7 +85,7 @@
 		XENO_STRUCTURE_PYLON = 2,
 	)
 
-	var/global/list/hive_structure_types = list(
+	var/list/hive_structure_types = list(
 		XENO_STRUCTURE_CORE = /datum/construction_template/xenomorph/core,
 		XENO_STRUCTURE_CLUSTER = /datum/construction_template/xenomorph/cluster,
 		XENO_STRUCTURE_EGGMORPH = /datum/construction_template/xenomorph/eggmorph,
@@ -93,6 +93,10 @@
 	)
 
 	var/list/list/hive_structures = list() //Stringref list of structures that have been built
+	/// Castes this hive disallows.
+	var/list/blacklisted_castes = ALL_PATHOGEN_CREATURES
+	/// Castes limited to a fixed number of players.
+	var/list/restricted_castes
 	var/list/list/hive_constructions = list() //Stringref list of structures that are being built
 
 	var/datum/hive_status_ui/hive_ui
@@ -1440,3 +1444,13 @@
 	name = "Attack"
 	desc = "Attack the enemy here!"
 	icon_state = "attack"
+
+/// Count members of a particular caste in this hive.
+/datum/hive_status/proc/get_caste_count(caste_to_check)
+	if(!caste_to_check)
+		return 0
+	var/count = 0
+	for(var/mob/living/carbon/xenomorph/xeno as anything in totalXenos)
+		if(xeno.caste_type == caste_to_check)
+			count++
+	return count

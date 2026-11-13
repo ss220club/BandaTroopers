@@ -120,7 +120,7 @@
 			break
 	to_chat(X, SPAN_NOTICE("We will now spit [X.ammo.name] ([X.ammo.spit_cost] plasma)."))
 	button.overlays.Cut()
-	button.overlays += image('icons/mob/hud/actions_xeno.dmi', button, "shift_spit_[X.ammo.icon_state]")
+	button.overlays += image(icon_file, button, "shift_spit_[X.ammo.icon_state]") // SS220 EDIT: pathogen spit icon file
 	return ..()
 
 /datum/action/xeno_action/onclick/regurgitate/use_ability(atom/A)

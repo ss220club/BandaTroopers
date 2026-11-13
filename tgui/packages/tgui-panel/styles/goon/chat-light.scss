@@ -1266,6 +1266,15 @@ h2.alert {
   font-size: 140%;
 }
 
+.effinghighdanger {
+  color: hsl(0, 100%, 50%);
+  font-weight: bold;
+  font-size: 200%;
+
+  /*Animation*/
+  animation: glitch 0.5s infinite;
+}
+
 .xenohighdanger {
   color: #2a623d;
   font-weight: bold;

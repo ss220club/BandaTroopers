@@ -73,7 +73,7 @@
 	..(message, speaking, verb, null, null, message_range, null)
 
 /mob/living/carbon/xenomorph/say_understands(mob/other, datum/language/speaking = null)
-	if(isxeno(other) && can_understand_xeno_speech(speaking)) // SS220 EDIT: modular xeno languages may opt out of shared xeno understanding
+	if(isxeno(other) && is_pathogen_creature(src) == is_pathogen_creature(other) && can_understand_xeno_speech(speaking)) // SS220 EDIT: keep pathogen speech within its race
 		return TRUE
 	return ..()
 
@@ -127,7 +127,7 @@
 						var/mob/hologram/queen/queen_eye = client?.eye
 						if(istype(queen_eye))
 							track += " (<a href='byond://?src=\ref[S];track=\ref[queen_eye]'>E</a>)"
-					if((xeno && xeno.is_hive_ruler()) || hive.leading_cult_sl == src)
+					if((xeno && (xeno.is_hive_ruler() || ismatriarch(xeno) || isarchon(xeno))) || hive.leading_cult_sl == src)
 						broadcast_tier = "royal"
 					else if(istype(xeno) && IS_XENO_LEADER(xeno))
 						broadcast_tier = "leader"
@@ -140,7 +140,7 @@
 					overwatch_insert = " (<a href='byond://?src=\ref[S];[overwatch_target]=\ref[src];[overwatch_src]=\ref[S]'>watch</a>)"
 
 				var/broadcast_tier = "normal"
-				if((xeno && xeno.is_hive_ruler()) || hive.leading_cult_sl == src)
+				if((xeno && (xeno.is_hive_ruler() || ismatriarch(xeno) || isarchon(xeno))) || hive.leading_cult_sl == src)
 					broadcast_tier = "royal"
 				else if(istype(xeno) && IS_XENO_LEADER(xeno))
 					broadcast_tier = "leader"
@@ -150,6 +150,13 @@
 				S.show_message(rendered, SHOW_MESSAGE_AUDIBLE)
 
 /mob/living/carbon/proc/get_hivemind_render(hivenumber, tier, message, tracker)
+	if(hivenumber == XENO_HIVE_PATHOGEN) // SS220 EDIT: pathogen hivemind formatting
+		var/pathogen_message = "[LANGUAGE_PATHOGEN_MIND], [tracker] clicks, <span class='normal'>'[message]'</span>"
+		if(tier == "royal")
+			return SPAN_PATHOGEN_QUEEN(pathogen_message)
+		if(tier == "leader")
+			return SPAN_PATHOGEN_LEADER(pathogen_message)
+		return SPAN_PATHOGEN(pathogen_message)
 	var/normal_message = "Hivemind, [tracker] hisses, <span class='normal'>'[message]'</span>" // SS220 EDIT: shared render hook for modular hivemind flavors
 	var/leader_message = "Hivemind, Leader [tracker] hisses, <span class='normal'>'[message]'</span>"
 

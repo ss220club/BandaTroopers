@@ -326,6 +326,9 @@
 	if(!wound_icon_holder)
 		return
 
+	if(caste?.pathogen_creature) // Pathogen creatures keep their wounds in the caste icon file
+		wound_icon_holder.icon = icon
+
 	var/health_threshold
 	health_threshold = max(ceil((health * 4) / (maxHealth)), 0) //From 0 to 4, in 25% chunks
 	if(health > HEALTH_THRESHOLD_DEAD)

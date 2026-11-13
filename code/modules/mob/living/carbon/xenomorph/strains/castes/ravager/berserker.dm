@@ -6,8 +6,11 @@
 
 	actions_to_remove = list(
 		/datum/action/xeno_action/onclick/empower,
+		/datum/action/xeno_action/onclick/empower/ai,
 		/datum/action/xeno_action/activable/pounce/charge,
+		/datum/action/xeno_action/activable/pounce/charge/ai,
 		/datum/action/xeno_action/activable/scissor_cut,
+		/datum/action/xeno_action/activable/scissor_cut/ai,
 	)
 	actions_to_add = list(
 		/datum/action/xeno_action/onclick/apprehend,

@@ -211,6 +211,8 @@
 /mob/living/carbon/xenomorph/get_blood_id()
 	if(special_blood)
 		return special_blood
+	if(caste.pathogen_creature)
+		return caste.royal_caste ? BLOOD_BLIGHT_ADV : BLOOD_BLIGHT // SS220 EDIT: pathogen blood reagents
 	if(caste.royal_caste)
 		return "xenobloodroyal"
 	else

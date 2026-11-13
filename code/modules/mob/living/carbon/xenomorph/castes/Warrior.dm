@@ -49,9 +49,9 @@
 		/datum/action/xeno_action/onclick/regurgitate,
 		/datum/action/xeno_action/watch_xeno,
 		/datum/action/xeno_action/activable/tail_stab,
-		/datum/action/xeno_action/activable/warrior_punch,
-		/datum/action/xeno_action/activable/lunge,
-		/datum/action/xeno_action/activable/fling,
+		/datum/action/xeno_action/activable/warrior_punch/ai,
+		/datum/action/xeno_action/activable/lunge/ai,
+		/datum/action/xeno_action/activable/fling/ai,
 		/datum/action/xeno_action/onclick/tacmap,
 	)
 
@@ -65,6 +65,19 @@
 	weed_food_states_flipped = list("Warrior_1","Warrior_2","Warrior_3")
 
 	var/lunging = FALSE // whether or not the warrior is currently lunging (holding) a target
+
+	ai_ability_delay = 3 SECONDS
+
+/mob/living/carbon/xenomorph/warrior/process_ai(delta_time)
+	if(pulling)
+		// Lunge leaves us holding the target. The grab is only worth anything while it stuns, after that we would just drag the target around.
+		if(!lunging || pulling != current_target)
+			stop_pulling()
+		// The grab sits in the active hand, clicking the target with it would not slash.
+		else if(get_active_hand())
+			swap_hand()
+
+	return ..()
 
 /mob/living/carbon/xenomorph/warrior/throw_item(atom/target)
 	toggle_throw_mode(THROW_MODE_OFF)
@@ -243,3 +256,39 @@
 	limb.droplimb(0, 0, initial(name))
 
 	return TRUE
+
+/datum/action/xeno_action/activable/warrior_punch/ai
+	default_ai_action = TRUE
+	ai_prob_chance = 60
+
+/datum/action/xeno_action/activable/warrior_punch/ai/process_ai(mob/living/carbon/xenomorph/parent, delta_time)
+	return DT_PROB(ai_prob_chance, delta_time) && parent.Adjacent(parent.current_target) && use_ability_async(parent.current_target)
+
+/datum/action/xeno_action/activable/lunge/ai
+	default_ai_action = TRUE
+	ai_prob_chance = 60
+
+/datum/action/xeno_action/activable/lunge/ai/process_ai(mob/living/carbon/xenomorph/parent, delta_time)
+	if(!ishuman(parent.current_target) || parent.pulling || parent.action_busy)
+		return
+
+	// Up close we can just walk, and the lunge is a throw, so anything dense on the way stops it short.
+	var/distance = get_dist(parent, parent.current_target)
+	if(distance < 2 || distance > grab_range || check_for_obstacles_projectile(parent, parent.current_target))
+		return
+
+	return DT_PROB(ai_prob_chance, delta_time) && use_ability_async(parent.current_target)
+
+/datum/action/xeno_action/activable/fling/ai
+	default_ai_action = TRUE
+	ai_prob_chance = 40
+
+/datum/action/xeno_action/activable/fling/ai/process_ai(mob/living/carbon/xenomorph/parent, delta_time)
+	if(!DT_PROB(ai_prob_chance, delta_time) || !parent.Adjacent(parent.current_target))
+		return
+
+	// Flinging away our only target would just make us chase it.
+	if(parent.count_ai_targets_in_range(2) < 2)
+		return
+
+	use_ability_async(parent.current_target)

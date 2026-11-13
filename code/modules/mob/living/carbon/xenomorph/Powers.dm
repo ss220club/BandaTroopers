@@ -47,6 +47,9 @@
 			if(WR.type == /turf/closed/wall/resin)
 				WR.ChangeTurf(/turf/closed/wall/resin/thick)
 				total_resin_cost = XENO_THICKEN_WALL_COST
+			else if(WR.type == /turf/closed/wall/resin/pathogen)
+				WR.ChangeTurf(/turf/closed/wall/resin/thick/pathogen)
+				total_resin_cost = XENO_THICKEN_WALL_COST
 			else if(WR.type == /turf/closed/wall/resin/membrane)
 				WR.ChangeTurf(/turf/closed/wall/resin/membrane/thick)
 				total_resin_cost = XENO_THICKEN_MEMBRANE_COST
@@ -68,7 +71,10 @@
 			if(DR.hardness == 1.5) //non thickened
 				var/oldloc = DR.loc
 				qdel(DR)
-				new /obj/structure/mineral_door/resin/thick (oldloc, DR.hivenumber)
+				if(DR.hivenumber == XENO_HIVE_PATHOGEN)
+					new /obj/structure/mineral_door/resin/pathogen/thick (oldloc, DR.hivenumber)
+				else
+					new /obj/structure/mineral_door/resin/thick (oldloc, DR.hivenumber)
 				total_resin_cost = XENO_THICKEN_DOOR_COST
 			else
 				to_chat(src, SPAN_XENOWARNING("[DR] can't be made thicker."))

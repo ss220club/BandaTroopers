@@ -76,6 +76,7 @@
 	weed_food_states_flipped = list("Praetorian_1","Praetorian_2","Praetorian_3")
 	ai_range = 24
 	forced_retarget_time = (3 SECONDS)
+	ai_ability_delay = 3 SECONDS
 
 /datum/behavior_delegate/praetorian_base
 	name = "Base Praetorian Behavior Delegate"

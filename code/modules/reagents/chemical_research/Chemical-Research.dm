@@ -8,6 +8,7 @@ GLOBAL_DATUM_INIT(chemical_data, /datum/chemical_data, new)
 	var/clearance_x_access = FALSE
 	var/reached_x_access = FALSE
 	var/has_new_properties = FALSE
+	var/myco_discovered = FALSE
 	var/research_allocation_amount = 5
 	var/list/research_documents = list()
 	var/list/research_publications = list()

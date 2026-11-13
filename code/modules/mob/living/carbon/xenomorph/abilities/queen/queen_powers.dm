@@ -263,7 +263,7 @@
 		to_chat(X, SPAN_WARNING("You must select a valid turf to heal around."))
 		return
 
-	if(X.loc.z != T.loc.z)
+	if(!cross_map_heal && !SSmapping.same_z_map(X.loc.z, T.loc.z)) // SS220 EDIT: strengthened pathogen overmind can heal across maps.
 		to_chat(X, SPAN_XENOWARNING("You are too far away to do this here."))
 		return
 

@@ -236,6 +236,8 @@
 		return
 	if(HAS_TRAIT(L, TRAIT_ABILITY_BURROWED))
 		return
+	if(L.status_flags & INCORPOREAL)
+		return // SS220 EDIT: incorporeal pathogen does not trip mines
 	L.visible_message(SPAN_DANGER("[icon2html(src, viewers(src))] The [name] clicks as you see [L] [detonation_flavor]"), \
 	SPAN_DANGER("[icon2html(src, L)] The [name] clicks as you [detonation_flavor]"), \
 	SPAN_DANGER("You hear a click."))

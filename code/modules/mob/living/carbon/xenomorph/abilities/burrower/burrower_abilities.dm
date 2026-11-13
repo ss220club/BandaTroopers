@@ -30,6 +30,10 @@
 	action_type = XENO_ACTION_CLICK
 	ability_primacy = XENO_PRIMARY_ACTION_4
 
+/datum/action/xeno_action/onclick/build_tunnel/pathogen
+	button_icon_state = "template_pathogen"
+	icon_file = 'icons/mob/hud/actions_pathogen.dmi'
+
 /datum/action/xeno_action/onclick/tremor/use_ability()
 	var/mob/living/carbon/xenomorph/X = owner
 	X.tremor()
