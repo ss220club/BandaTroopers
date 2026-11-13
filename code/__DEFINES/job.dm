@@ -346,11 +346,15 @@ GLOBAL_LIST_INIT(job_command_roles, JOB_COMMAND_ROLES_LIST)
 #define JOB_PMCPLAT_MEDIC "Medical Specialist"
 
 ///------ PMC SMALL ==== ///
-#define JOB_PMCPLAT_SMALL_LEADER "Strike Operations Leader"
-#define JOB_PMCPLAT_SMALL_FTL "Strike Team Leader"
-#define JOB_PMCPLAT_SMALL_SG "Strike Heavy Weapons Specialist"
-#define JOB_PMCPLAT_SMALL_STANDARD "Strike Tactical Unit"
-#define JOB_PMCPLAT_SMALL_MEDIC "Strike Medical Specialist"
+// SS220 EDIT - START: Azure-16 Commando role names and engineer
+#define JOB_PMCPLAT_SMALL_LEADER "Commando Operations Leader"
+#define JOB_PMCPLAT_SMALL_FTL "Commando Team Leader"
+#define JOB_PMCPLAT_SMALL_SG "Commando Heavy Weapons Specialist"
+#define JOB_PMCPLAT_SMALL_STANDARD "Commando Tactical Unit"
+#define JOB_PMCPLAT_SMALL_MEDIC "Commando Medical Unit"
+#define JOB_PMCPLAT_SMALL_ENGINEER "Commando Corporate Engineer"
+#define JOB_PMCPLAT_SMALL_DOGCATCHER "Commando Dog Catcher" // SS220 EDIT: Azure-16 dog catcher
+// SS220 EDIT - END
 
 
 //---- Contractors ----//

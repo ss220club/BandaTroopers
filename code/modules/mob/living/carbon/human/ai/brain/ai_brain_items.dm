@@ -247,6 +247,7 @@
 
 	if(uniform && isclothing(tied_human.w_uniform))
 		appraise_uniform()
+	ensure_hig_issued_primary() // SS220 EDIT: HIG bots use the main gun issued to suit storage
 
 /datum/human_ai_brain/proc/appraise_belt()
 	if(isgun(tied_human.belt) && (tied_human.belt != primary_weapon))

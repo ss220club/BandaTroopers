@@ -114,7 +114,9 @@ GLOBAL_LIST_INIT(platoon_to_jobs, list(/datum/squad/marine/alpha = list(/datum/j
 		/datum/job/marine/standard/ai/pmc/small =  JOB_SQUAD_MARINE,\
 		/datum/job/marine/medic/ai/pmc/small = JOB_SQUAD_MEDIC,\
 		/datum/job/marine/smartgunner/ai/pmc/small = JOB_SQUAD_SMARTGUN,\
-		/datum/job/marine/leader/ai/pmc/small = JOB_SQUAD_LEADER),\
+		/datum/job/marine/leader/ai/pmc/small = JOB_SQUAD_LEADER,\
+		/datum/job/marine/engineer/ai/pmc/small = JOB_SQUAD_ENGI,\
+		/datum/job/marine/standard/ai/pmc/small/dogcatcher = JOB_SQUAD_MARINE /* SS220 EDIT: Azure-16 specialist roles */),\
 		/datum/squad/marine/upp/forecon = list(/datum/job/marine/standard/ai/upp/forecon = JOB_SQUAD_MARINE,\
 		/datum/job/marine/standard/ai/rto/upp/forecon = JOB_SQUAD_RTO,\
 		/datum/job/marine/leader/ai/upp/forecon = JOB_SQUAD_LEADER,\

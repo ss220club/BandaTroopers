@@ -348,6 +348,12 @@
 			return /datum/equipment_preset/pmc/standard
 		if(JOB_PMCPLAT_SMALL_MEDIC)
 			return /datum/equipment_preset/pmc/medic
+		// SS220 EDIT - START: Azure-16 specialist preview equipment
+		if(JOB_PMCPLAT_SMALL_ENGINEER)
+			return /datum/equipment_preset/pmc/technician
+		if(JOB_PMCPLAT_SMALL_DOGCATCHER)
+			return /datum/equipment_preset/pmc/commando/dogcatcher
+		// SS220 EDIT - END
 //RMC Troop
 		if(JOB_TWE_RMC_RIFLEMAN)
 			return /datum/equipment_preset/royal_marine/standard

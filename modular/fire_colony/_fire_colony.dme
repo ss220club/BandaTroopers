@@ -30,6 +30,7 @@
 #include "code\weather_events.dm"
 #include "code\survivors.dm"
 #include "code\lasalle_survivors.dm"
+#include "code\hig_ai.dm"
 #include "code\survivor_weapons.dm"
 #include "code\source_items.dm"
 #include "code\source_dependencies.dm"

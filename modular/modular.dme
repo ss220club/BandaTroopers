@@ -19,6 +19,7 @@
 #include "squads/_squads.dme"
 #include "world_edit/_world_edit.dme"
 #include "weapons/_weapons.dme"
+#include "pmc_commandos/_pmc_commandos.dme"
 #include "iasf/_iasf.dme"
 #include "breacher/_breacher.dme"
 #include "clf/_clf.dme"
