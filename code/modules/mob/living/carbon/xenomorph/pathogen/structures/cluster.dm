@@ -41,7 +41,7 @@
 	SSminimaps.add_marker(src, z, get_minimap_flag_for_faction(linked_hive?.hivenumber), "patho_cluster", 'icons/mob/pathogen/neo_blips.dmi')
 
 
-/obj/effect/alien/weeds/node/pylon
+/obj/effect/alien/weeds/node/pylon/cluster/pathogen // SS220 EDIT: confine pathogen hive defaults to pathogen clusters, not all pylons.
 	hivenumber = XENO_HIVE_PATHOGEN
 
 /obj/effect/alien/resin/special/pylon/pathogen

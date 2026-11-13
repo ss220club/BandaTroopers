@@ -2,6 +2,7 @@
 #include "code/support.dm"
 #include "code/pathogen_pr207_actions.dm"
 #include "code/pathogen_pr207_map_spawns.dm"
+#include "code/pathogen_pr207_weeds.dm"
 #ifdef UNIT_TESTS
 #include "code/unit_tests/pathogen_port.dm"
 #endif
