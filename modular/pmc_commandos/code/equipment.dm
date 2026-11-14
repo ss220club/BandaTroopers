@@ -17,6 +17,41 @@
 	name = "Commando backpack field revival kit"
 	w_class = SIZE_MEDIUM
 
+// The PMC key also supplies W-Y; neither key exposes Almayer's marine channels.
+/obj/item/device/radio/headset/distress/pmc/commando
+	desc = "W-Y Commando headset with Commando, PMC, W-Y and colony channels."
+	initial_keys = list(/obj/item/device/encryptionkey/commando, /obj/item/device/encryptionkey/pmc, /obj/item/device/encryptionkey/colony)
+	maximum_keys = 3
+	minimap_type = MINIMAP_FLAG_PMC
+
+/obj/item/device/radio/headset/distress/pmc/commando/leader
+	initial_keys = list(/obj/item/device/encryptionkey/commando, /obj/item/device/encryptionkey/pmc, /obj/item/device/encryptionkey/colony)
+
+/mob/living/carbon/human/proc/has_worn_commando_headset()
+	return istype(wear_l_ear, /obj/item/device/radio/headset/distress/pmc/commando) || istype(wear_r_ear, /obj/item/device/radio/headset/distress/pmc/commando)
+
+GLOBAL_DATUM_INIT(pmc_tacmap_status, /datum/tacmap/drawing/status_tab_view/pmc, new)
+
+/datum/tacmap/drawing/status_tab_view/pmc/New()
+	. = ..()
+	allowed_flags = MINIMAP_FLAG_PMC
+
+// Keep the W-Y storage rules and use the existing black W-Y belt artwork.
+/obj/item/storage/belt/grenade/wy/onyx_commando
+	name = "W-Y Commando grenade belt"
+	icon_state = "wy_ammobelt"
+	has_gamemode_skin = FALSE
+	item_state_slots = list(
+		WEAR_WAIST = "wy_ammobelt",
+		WEAR_L_HAND = "marinebelt",
+		WEAR_R_HAND = "marinebelt"
+	)
+
+/obj/item/storage/pouch/explosive/onyx_commando
+	name = "W-Y Commando grenade pouch"
+	color = "#555555"
+	has_gamemode_skin = FALSE
+
 /obj/structure/closet/secure_closet/onyx_commando_gunner
 	name = "Azure-16 heavy weapons specialist locker"
 	req_access = list(ACCESS_PMC_GUNNER)

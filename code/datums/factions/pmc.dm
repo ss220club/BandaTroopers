@@ -51,7 +51,11 @@
 			hud_icon_state = "commando_sg"
 		if(JOB_WY_COMMANDO_DOGCATHER)
 			hud_icon_state = "commando_dogcatcher"
-	if(hud_icon_state)
+	// SS220 EDIT: Azure-16 draws its existing Commando role glyphs from the modular PMC squad.
+	var/image/onyx_commando_icon = get_onyx_commando_hud_image(H, _role)
+	if(onyx_commando_icon)
+		holder.overlays += onyx_commando_icon
+	else if(hud_icon_state)
 		holder.overlays += image(override_icon_file ? override_icon_file : base_icon_file, H, "pmc_[hud_icon_state]")
 
 
@@ -69,8 +73,8 @@
 			H.langchat_styles = initial(H.langchat_styles)
 		H.langchat_color = H.assigned_squad.chat_color
 
-		if(!hud_icon_state) hud_icon_state = H.rank_fallback
-		if(hud_icon_state)
+		if(!hud_icon_state && !onyx_commando_icon) hud_icon_state = H.rank_fallback
+		if(hud_icon_state && !onyx_commando_icon) // SS220 EDIT: do not cover Azure-16 Commando glyphs with generic squad ranks
 			var/image/IMG = image('icons/mob/hud/marine_hud.dmi', H, "hudsquad")
 			if(squad_clr)
 				IMG.color = squad_clr

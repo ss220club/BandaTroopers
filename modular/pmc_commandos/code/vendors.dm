@@ -12,14 +12,19 @@
 		if(product[1] == "MASK")
 			commando_products += list(list("W-Y Large Auto-Injector Pouch", round(scale * 12), /obj/item/storage/pouch/autoinjector/full/wy/large, VENDOR_ITEM_REGULAR))
 			commando_products += list(list("Commando Large Medical Pouch", round(scale * 12), /obj/item/storage/pouch/medical/socmed/commando, VENDOR_ITEM_REGULAR))
+		if(product[1] == "POUCHES")
+			commando_products += list(list("Black W-Y Grenade Pouch", round(scale * 10), /obj/item/storage/pouch/explosive/onyx_commando, VENDOR_ITEM_REGULAR))
+			commando_products += list(list("W-Y Sidearm Holster Pouch", round(scale * 10), /obj/item/storage/pouch/pistol/wy, VENDOR_ITEM_REGULAR))
 		var/product_type = product[3]
 		if(ispath(product_type, /obj/item/storage/pouch) && product_type != /obj/item/storage/pouch/general/large && product_type != /obj/item/storage/pouch/magazine/pistol/large && product_type != /obj/item/storage/pouch/magazine/large/wy && product_type != /obj/item/storage/pouch/tools/tactical)
 			continue
 		if(product_type == /obj/item/clothing/suit/marine/veteran/pmc/light)
 			continue
+		if(ispath(product_type, /obj/item/clothing/accessory/pmcpads))
+			continue
 		if(current_section == "WEBBINGS" && product_type == /obj/item/clothing/accessory/storage/webbing/m3/shotgun)
 			continue
-		if(product_type && current_section == "BELTS" && product_type != /obj/item/storage/belt/marine/wy && product_type != /obj/item/storage/belt/shotgun/wy && product_type != /obj/item/storage/belt/gun/m4a3/wy && product_type != /obj/item/storage/backpack/general_belt/wy)
+		if(product_type && current_section == "BELTS" && product_type != /obj/item/storage/belt/marine/wy && product_type != /obj/item/storage/belt/grenade && product_type != /obj/item/storage/belt/shotgun/wy && product_type != /obj/item/storage/belt/gun/m4a3/wy && product_type != /obj/item/storage/backpack/general_belt/wy)
 			continue
 		if(product_type == /obj/item/prop/helmetgarb/rmc_platemask || product_type == /obj/item/prop/helmetgarb/rmc_goggles)
 			continue
@@ -55,6 +60,12 @@
 				product[3] = /obj/item/storage/pouch/tools/tactical/full
 			if(/obj/item/clothing/accessory/storage/smallpouch/wy)
 				product[1] = "W-Y Leg Pouch"
+			if(/obj/item/clothing/accessory/storage/webbing/m3/uppmags/pmc)
+				product[1] = "W-Y PMC Magazine Webbing"
+				product[3] = /obj/item/clothing/accessory/storage/webbing/m3/mag/pmc
+			if(/obj/item/storage/belt/grenade)
+				product[1] = "Black W-Y Commando Grenade Belt"
+				product[3] = /obj/item/storage/belt/grenade/wy/onyx_commando
 			if(/obj/item/storage/pouch/magazine/large/wy, /obj/item/storage/pouch/general/large)
 				product[2] = round(scale * 15)
 		commando_products += list(product)

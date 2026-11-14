@@ -1,4 +1,22 @@
 // The Azure-16 platoon uses Commando credentials and training without changing other PMC squads.
+/datum/faction/pmc/proc/get_onyx_commando_hud_image(mob/living/carbon/human/human, role_title)
+	var/icon_state
+	switch(role_title)
+		if(JOB_PMCPLAT_SMALL_STANDARD, JOB_PMCPLAT_SMALL_ENGINEER, JOB_PMCPLAT_SMALL_MEDIC)
+			icon_state = "commando_gun"
+		if(JOB_PMCPLAT_SMALL_LEADER, JOB_PMCPLAT_SMALL_FTL)
+			icon_state = "commando_leader"
+		if(JOB_PMCPLAT_SMALL_SG)
+			icon_state = "commando_sg"
+		if(JOB_PMCPLAT_SMALL_DOGCATCHER)
+			icon_state = "commando_dogcatcher"
+	if(!icon_state)
+		return null
+	var/image/role_icon = image(base_icon_file, human, "pmc_[icon_state]")
+	if(role_title == JOB_PMCPLAT_SMALL_MEDIC || role_title == JOB_PMCPLAT_SMALL_FTL)
+		role_icon.filters += outline_filter(1, "#FFD700", OUTLINE_SHARP)
+	return role_icon
+
 /datum/equipment_preset/uscm/pmc/onyx_commando
 	name = "Commando Tactical Unit"
 	assignment = JOB_PMCPLAT_SMALL_STANDARD
