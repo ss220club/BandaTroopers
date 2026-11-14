@@ -6,6 +6,7 @@
 	idtype = /obj/item/card/id/pmc/commando
 	paygrades = list(PAY_SHORT_WY_COM = JOB_PLAYTIME_TIER_0)
 	skills = /datum/skills/pmc/commando
+	minimap_icon = "pmc_gun"
 	languages = list(LANGUAGE_ENGLISH, LANGUAGE_TSL)
 
 /datum/equipment_preset/uscm/pmc/onyx_commando/engineer
@@ -14,7 +15,7 @@
 	rank = JOB_PMCPLAT_SMALL_ENGINEER
 	role_comm_title = "ENG"
 	access = list(ACCESS_WY_GENERAL, ACCESS_WY_ENGINEERING)
-	skills = /datum/skills/pmc/engineer
+	skills = /datum/skills/pmc/engineer/onyx_commando
 
 /datum/equipment_preset/uscm/pmc/onyx_commando/dogcatcher
 	name = "Commando Dog Catcher"
@@ -23,6 +24,7 @@
 	role_comm_title = "DOG"
 	paygrades = list(PAY_SHORT_WY_DOG = JOB_PLAYTIME_TIER_0)
 	skills = /datum/skills/pmc/commando/dogcatcher
+	minimap_icon = "dogcather"
 
 /datum/equipment_preset/uscm/pmc/sl/onyx_commando
 	name = "Commando Operations Leader"
@@ -31,6 +33,7 @@
 	idtype = /obj/item/card/id/pmc/commando
 	paygrades = list(PAY_SHORT_WY_COMLD = JOB_PLAYTIME_TIER_0)
 	skills = /datum/skills/pmc/commando/leader
+	minimap_icon = "pmc_ld"
 	languages = list(LANGUAGE_ENGLISH, LANGUAGE_TSL)
 
 /datum/equipment_preset/uscm/pmc/tl/onyx_commando
@@ -40,7 +43,13 @@
 	idtype = /obj/item/card/id/pmc/commando
 	paygrades = list(PAY_SHORT_WY_COMLD = JOB_PLAYTIME_TIER_0)
 	skills = /datum/skills/pmc/commando/leader
+	minimap_icon = "pmc_ld"
 	languages = list(LANGUAGE_ENGLISH, LANGUAGE_TSL)
+
+/datum/equipment_preset/uscm/pmc/tl/onyx_commando/get_minimap_icon(mob/living/carbon/human/user)
+	var/image/marker = ..()
+	marker.filters += outline_filter(1, "#FFD700", OUTLINE_SHARP)
+	return marker
 
 /datum/equipment_preset/uscm/pmc/sg/onyx_commando
 	name = "Commando Heavy Weapons Specialist"
@@ -49,6 +58,7 @@
 	idtype = /obj/item/card/id/pmc/commando
 	paygrades = list(PAY_SHORT_WY_GUN = JOB_PLAYTIME_TIER_0)
 	skills = /datum/skills/pmc/commando/gunner
+	minimap_icon = "pmc_sg"
 	languages = list(LANGUAGE_ENGLISH, LANGUAGE_TSL)
 
 /datum/equipment_preset/uscm/pmc/med/onyx_commando
@@ -57,7 +67,13 @@
 	rank = JOB_PMCPLAT_SMALL_MEDIC
 	idtype = /obj/item/card/id/pmc/commando
 	paygrades = list(PAY_SHORT_WY_COM = JOB_PLAYTIME_TIER_0)
+	skills = /datum/skills/pmc/medic/onyx_commando
 	languages = list(LANGUAGE_ENGLISH, LANGUAGE_TSL)
+
+/datum/equipment_preset/uscm/pmc/med/onyx_commando/get_minimap_icon(mob/living/carbon/human/user)
+	var/image/marker = ..()
+	marker.filters += outline_filter(1, "#FFD700", OUTLINE_SHARP)
+	return marker
 
 /datum/job/marine/standard/ai/pmc/small
 	gear_preset = /datum/equipment_preset/uscm/pmc/onyx_commando

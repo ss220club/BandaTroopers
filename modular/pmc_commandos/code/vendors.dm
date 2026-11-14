@@ -9,15 +9,15 @@
 	for(var/list/product as anything in listed_products)
 		if(isnull(product[3]))
 			current_section = product[1]
-		if(product[1] == "WEBBINGS")
-			commando_products += list(list("W-Y Commando Gunner Helmet", round(scale * 4), /obj/item/clothing/head/helmet/marine/veteran/pmc/enclosed/commando/sg, VENDOR_ITEM_REGULAR))
 		if(product[1] == "MASK")
 			commando_products += list(list("W-Y Large Auto-Injector Pouch", round(scale * 12), /obj/item/storage/pouch/autoinjector/full/wy/large, VENDOR_ITEM_REGULAR))
 			commando_products += list(list("Commando Large Medical Pouch", round(scale * 12), /obj/item/storage/pouch/medical/socmed/commando, VENDOR_ITEM_REGULAR))
 		var/product_type = product[3]
-		if(ispath(product_type, /obj/item/storage/pouch) && product_type != /obj/item/storage/pouch/general/large && product_type != /obj/item/storage/pouch/magazine/pistol/large && product_type != /obj/item/storage/pouch/magazine/large/wy)
+		if(ispath(product_type, /obj/item/storage/pouch) && product_type != /obj/item/storage/pouch/general/large && product_type != /obj/item/storage/pouch/magazine/pistol/large && product_type != /obj/item/storage/pouch/magazine/large/wy && product_type != /obj/item/storage/pouch/tools/tactical)
 			continue
 		if(product_type == /obj/item/clothing/accessory/storage/smallpouch/wy)
+			continue
+		if(product_type == /obj/item/clothing/suit/marine/veteran/pmc/light)
 			continue
 		if((current_section == "BACKPACK" || current_section == "RESTRICTED BACKPACKS") && ispath(product_type, /obj/item/storage/backpack) && product_type != /obj/item/storage/backpack/pmc/backpack)
 			continue
@@ -42,12 +42,13 @@
 			if(/obj/item/clothing/suit/marine/veteran/pmc)
 				product[1] = "MY7 Commando Armor"
 				product[3] = /obj/item/clothing/suit/marine/veteran/pmc/commando
-			if(/obj/item/clothing/suit/marine/veteran/pmc/light)
-				product[1] = "MY7 Commando Gunner Armor"
-				product[3] = /obj/item/clothing/suit/marine/veteran/pmc/smartgun/commando
 			if(/obj/item/storage/backpack/pmc/backpack)
 				product[1] = "Commando Combat Backpack"
 				product[3] = /obj/item/storage/backpack/pmc/backpack/commando
+			if(/obj/item/storage/pouch/tools/tactical)
+				product[1] = "Tactical Engineering Tools Pouch"
+				product[2] = round(scale * 12)
+				product[3] = /obj/item/storage/pouch/tools/tactical/full
 			if(/obj/item/storage/pouch/magazine/large/wy, /obj/item/storage/pouch/general/large)
 				product[2] = round(scale * 15)
 		commando_products += list(product)
@@ -74,7 +75,6 @@
 		commando.marine_buyable_categories["onyx_engineer_sentry"] = 2
 		commando.marine_buyable_categories["onyx_engineer_materials"] = 1
 		commando.marine_buyable_categories["onyx_leader_supplies"] = 1
-		commando.marine_buyable_categories["onyx_gunner_smartgun"] = 1
 
 /obj/structure/machinery/cm_vending/gear/onyx_commando/leader
 	name = "Azure-16 Commando Operations Leader Vendor"
@@ -85,6 +85,7 @@
 	initialize_commando_choices(user)
 	return list(
 		list("LEADER ARMOR AND GEAR", 0, null, null, null),
+		list("Commando Leader Fatigues", 0, /obj/item/clothing/under/marine/veteran/pmc/leader/commando/leader, MARINE_CAN_BUY_UNIFORM, VENDOR_ITEM_MANDATORY),
 		list("Commando Leader Armor", 0, /obj/item/clothing/suit/marine/veteran/pmc/commando/leader, MARINE_CAN_BUY_ARMOR, VENDOR_ITEM_MANDATORY),
 		list("Commando Leader Helmet", 0, /obj/item/clothing/head/helmet/marine/veteran/pmc/enclosed/commando/leader, MARINE_CAN_BUY_HELMET, VENDOR_ITEM_MANDATORY),
 		list("Commando Leader Gloves", 0, /obj/item/clothing/gloves/marine/veteran/pmc/commando/leader, MARINE_CAN_BUY_GLOVES, VENDOR_ITEM_MANDATORY),
@@ -94,7 +95,7 @@
 		list("Black PMC M46C with two AP magazines", 0, list(/obj/item/weapon/gun/rifle/m46c/pmc, /obj/item/ammo_magazine/rifle/ap, /obj/item/ammo_magazine/rifle/ap), "onyx_leader_rifle", VENDOR_ITEM_MANDATORY),
 		list("SIDEARM (CHOOSE ONE)", 0, null, null, null),
 		list("VP78M6", 0, /obj/item/weapon/gun/pistol/vp78m6, "onyx_leader_sidearm", VENDOR_ITEM_RECOMMENDED),
-		list("Commando Mateba", 0, /obj/item/weapon/gun/revolver/mateba/engraved/tactical, "onyx_leader_sidearm", VENDOR_ITEM_RECOMMENDED),
+		list("Commando Mateba with ammunition belt", 0, /obj/item/storage/belt/gun/mateba/commando/full, "onyx_leader_sidearm", VENDOR_ITEM_RECOMMENDED),
 	)
 
 /obj/structure/machinery/cm_vending/gear/onyx_commando/engineer
@@ -118,25 +119,17 @@
 		list("Metal, Plasteel and Sandbags", 0, list(/obj/item/stack/sheet/metal/large_stack, /obj/item/stack/sheet/plasteel/medium_stack, /obj/item/stack/sandbags_empty/half), "onyx_engineer_materials", VENDOR_ITEM_MANDATORY),
 	)
 
-/obj/structure/machinery/cm_vending/gear/onyx_commando/gunner
-	name = "Azure-16 Heavy Weapons Equipment Vendor"
-	vendor_role = list(JOB_PMCPLAT_SMALL_SG)
-	req_access = list(ACCESS_PMC_GUNNER)
-
-/obj/structure/machinery/cm_vending/gear/onyx_commando/gunner/get_listed_products(mob/user)
-	initialize_commando_choices(user)
-	return list(
-		list("COMMANDO SMARTGUNNER EQUIPMENT", 0, null, null, null),
-		list("MY7 Commando Gunner Armor", 0, /obj/item/clothing/suit/marine/veteran/pmc/smartgun/commando, MARINE_CAN_BUY_ARMOR, VENDOR_ITEM_MANDATORY),
-		list("W-Y Mk17 Commando Gunner Helmet", 0, /obj/item/clothing/head/helmet/marine/veteran/pmc/enclosed/commando/sg, MARINE_CAN_BUY_HELMET, VENDOR_ITEM_MANDATORY),
-		list("L56A2D Commando Smartgun Kit", 0, list(/obj/item/weapon/gun/smartgun/l56a2/elite, /obj/item/storage/belt/gun/smartgunner/commando/full, /obj/item/storage/pouch/magazine/large/pmc_sg/commando), "onyx_gunner_smartgun", VENDOR_ITEM_MANDATORY),
-	)
-
 /obj/structure/machinery/cm_vending/clothing/medic/pmc/onyx_commando
 	name = "Azure-16 Commando Medical Vendor"
 	squad_tag = SQUAD_PMCPLT_SMALL
 
 /obj/structure/machinery/cm_vending/clothing/medic/pmc/onyx_commando/get_listed_products(mob/user)
+	if(ishuman(user))
+		var/mob/living/carbon/human/commando = user
+		if(islist(commando.marine_buyable_categories))
+			if(!("onyx_med_bruise" in commando.marine_buyable_categories))
+				commando.marine_buyable_categories["onyx_med_bruise"] = 5
+				commando.marine_buyable_categories["onyx_med_ointment"] = 5
 	return list(
 		list("COMMANDO MEDICAL EQUIPMENT", 0, null, null, null),
 		list("MY7 Commando Armor", 0, /obj/item/clothing/suit/marine/veteran/pmc/commando, MARINE_CAN_BUY_ARMOR, VENDOR_ITEM_MANDATORY),
@@ -144,9 +137,7 @@
 		list("Commando Combat Backpack", 0, /obj/item/storage/backpack/pmc/backpack/commando, MARINE_CAN_BUY_BACKPACK, VENDOR_ITEM_MANDATORY),
 		list("Commando Socmed Pouch", 0, /obj/item/storage/pouch/medical/socmed/commando, MARINE_CAN_BUY_POUCH, VENDOR_ITEM_RECOMMENDED),
 		list("W-Y Large Auto-Injector Pouch", 0, /obj/item/storage/pouch/autoinjector/full/wy/large, MARINE_CAN_BUY_POUCH, VENDOR_ITEM_RECOMMENDED),
-		list("Elite Commando Surgical Kit", 0, /obj/item/storage/surgical_case/elite/commando, MARINE_CAN_BUY_KIT, VENDOR_ITEM_MANDATORY),
-		list("Commando Backpack Field Revival Kit", 0, /obj/item/storage/firstaid/whiteout/medical/commando/backpack, null, VENDOR_ITEM_RECOMMENDED),
-		list("Nano Splint", 0, /obj/item/stack/medical/splint/nano, null, VENDOR_ITEM_RECOMMENDED),
-		list("Upgraded Bruise Pack", 0, /obj/item/stack/medical/advanced/bruise_pack/upgraded, null, VENDOR_ITEM_RECOMMENDED),
-		list("Upgraded Ointment", 0, /obj/item/stack/medical/advanced/ointment/upgraded, null, VENDOR_ITEM_RECOMMENDED),
+		list("W-Y Medical Belt (Full)", 0, /obj/item/storage/belt/medical/lifesaver/wy/full, MARINE_CAN_BUY_BELT, VENDOR_ITEM_RECOMMENDED),
+		list("Upgraded Bruise Pack", 0, /obj/item/stack/medical/advanced/bruise_pack/upgraded, "onyx_med_bruise", VENDOR_ITEM_RECOMMENDED),
+		list("Upgraded Ointment", 0, /obj/item/stack/medical/advanced/ointment/upgraded, "onyx_med_ointment", VENDOR_ITEM_RECOMMENDED),
 	)

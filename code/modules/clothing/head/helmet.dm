@@ -1263,8 +1263,8 @@ GLOBAL_LIST_INIT(allowed_helmet_items, list(
 	name = "\improper W-Y Mk17 Commando helmet"
 	desc = "A standard enclosed helmet utilized by Weyland-Yutani Commandos."
 	icon_state = "commando_helmet"
-	// SS220 EDIT: CM-PVE #1287 Gas Mask Vision — vision impair + scope allowance for enclosed helmets
-	vision_impair = VISION_IMPAIR_MED
+	// SS220 EDIT: Commando helmets have unobstructed vision, including the SG and leader variants.
+	vision_impair = VISION_IMPAIR_NONE
 	ignore_zoom_tint = TRUE
 	flags_armor_protection = BODY_FLAG_HEAD|BODY_FLAG_FACE|BODY_FLAG_EYES
 	armor_melee = CLOTHING_ARMOR_HIGH

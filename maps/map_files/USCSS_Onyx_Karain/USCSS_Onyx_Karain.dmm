@@ -5199,11 +5199,11 @@
 /turf/open/floor/corsat/green/east,
 /area/firefly/cryo_cell)
 "aoj" = (
-/obj/structure/closet/secure_closet/marine_personal/pmc/smartgunner,
+/obj/structure/closet/secure_closet/marine_personal/pmc/onyx_commando/gunner,
 /turf/open/floor/corsat/plate,
 /area/firefly/cryo_cell)
 "aok" = (
-/obj/structure/closet/secure_closet/marine_personal/pmc/rifleman,
+/obj/structure/closet/secure_closet/marine_personal/pmc/onyx_commando/rifleman,
 /turf/open/floor/corsat/plate,
 /area/firefly/cryo_cell)
 "aol" = (
@@ -8228,7 +8228,7 @@
 /turf/open/floor/corsat/arrow_east,
 /area/firefly/supply)
 "avE" = (
-/obj/structure/closet/secure_closet/marine_personal/pmc/rifleman,
+/obj/structure/closet/secure_closet/marine_personal/pmc/onyx_commando/rifleman,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/corsat/plate,
 /area/firefly/cryo_cell)
@@ -8835,7 +8835,7 @@
 /turf/open/floor/corsat/squares,
 /area/firefly/hangar)
 "awX" = (
-/obj/structure/closet/secure_closet/marine_personal/pmc/squad_leader,
+/obj/structure/closet/secure_closet/marine_personal/pmc/onyx_commando/team_leader,
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/corsat/plate,
 /area/firefly/cryo_cell)
@@ -9081,7 +9081,7 @@
 /turf/open/floor/corsat/plate,
 /area/firefly/cryo_cell)
 "axD" = (
-/obj/structure/closet/secure_closet/marine_personal/pmc/platoon_leader,
+/obj/structure/closet/secure_closet/marine_personal/pmc/onyx_commando/operations_leader,
 /turf/open/floor/corsat/plate,
 /area/firefly/cryo_cell)
 "axE" = (
@@ -9267,24 +9267,8 @@
 /turf/open/floor/hangar_airlock/outer/frame43,
 /area/space)
 "ayf" = (
-/obj/structure/closet/secure_closet{
-	name = "heavy weapons specialist locker";
-	req_access_txt = "208;217"
-	},
-/obj/item/weapon/gun/smartgun/dirty,
-/obj/item/smartgun_battery,
-/obj/item/clothing/suit/marine/veteran/pmc/smartgun,
-/obj/item/clothing/head/helmet/marine/veteran/pmc/gunner,
-/obj/item/clothing/glasses/night/m56_goggles/no_nightvision,
+/obj/structure/closet/secure_closet/onyx_commando_gunner,
 /obj/effect/decal/cleanable/dirt,
-/obj/item/ammo_magazine/smartgun,
-/obj/item/ammo_magazine/smartgun,
-/obj/item/ammo_magazine/smartgun,
-/obj/item/ammo_magazine/smartgun,
-/obj/item/ammo_magazine/smartgun,
-/obj/item/ammo_magazine/smartgun,
-/obj/item/storage/belt/marine/smartgunner,
-/obj/item/smartgun_battery,
 /turf/open/floor/corsat/cargo,
 /area/firefly/squad_omega)
 "ayg" = (
@@ -9902,7 +9886,7 @@
 /area/firefly/supply)
 "aUO" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/structure/closet/secure_closet/marine_personal/pmc/corpsman,
+/obj/structure/closet/secure_closet/marine_personal/pmc/onyx_commando/medic,
 /turf/open/floor/corsat/plate,
 /area/firefly/cryo_cell)
 "aUZ" = (
@@ -16095,7 +16079,7 @@
 /area/firefly/cafeteria)
 "hAk" = (
 /obj/effect/decal/cleanable/dirt,
-/obj/structure/closet/secure_closet/marine_personal/pmc/rifleman,
+/obj/structure/closet/secure_closet/marine_personal/pmc/onyx_commando/rifleman,
 /turf/open/floor/corsat/plate,
 /area/firefly/cryo_cell)
 "hAn" = (
@@ -20640,7 +20624,7 @@
 /turf/open/floor/corsat/squares,
 /area/firefly/briefing)
 "mHM" = (
-/obj/structure/closet/secure_closet/marine_personal/pmc/squad_leader,
+/obj/structure/closet/secure_closet/marine_personal/pmc/onyx_commando/dogcatcher,
 /turf/open/floor/corsat/plate,
 /area/firefly/cryo_cell)
 "mIE" = (
@@ -30600,17 +30584,14 @@
 /obj/effect/decal/cleanable/dirt,
 /turf/open/floor/corsat/purple/north,
 /area/firefly/medical)
-"zzY" = (
-/obj/structure/closet/onyx_dogcatcher,
-/obj/structure/sign/poster/safety{
-	pixel_x = -24;
-	pixel_y = 30
-	},
-/obj/structure/pipes/standard/simple/hidden/supply{
-	dir = 4
-	},
-/turf/open/floor/corsat/squares,
-/area/firefly/briefing)
+"zzD" = (
+/obj/structure/closet/secure_closet/onyx_dogcatcher,
+/turf/open/floor/corsat/cargo,
+/area/firefly/squad_omega)
+"zzI" = (
+/obj/structure/closet/secure_closet/marine_personal/pmc/onyx_commando/engineer,
+/turf/open/floor/corsat/plate,
+/area/firefly/cryo_cell)
 "zzX" = (
 /obj/effect/landmark/start/marine/pmc/small/dogcatcher,
 /obj/effect/decal/warning_stripes{
@@ -30624,10 +30605,6 @@
 /area/firefly/cryo_cell)
 "zzZ" = (
 /obj/structure/machinery/cm_vending/gear/onyx_commando/engineer,
-/turf/open/floor/corsat/squares,
-/area/firefly/briefing)
-"zzW" = (
-/obj/structure/machinery/cm_vending/gear/onyx_commando/gunner,
 /turf/open/floor/corsat/squares,
 /area/firefly/briefing)
 "ybz" = (
@@ -36519,7 +36496,7 @@ aoE
 anL
 avE
 adA
-aoj
+zzI
 aKv
 adW
 anL
@@ -42671,7 +42648,7 @@ aeg
 axl
 axe
 ayf
-alC
+zzD
 axb
 awt
 awt
@@ -44125,7 +44102,7 @@ asx
 aei
 snQ
 aev
-zzW
+rNE
 sQd
 zzZ
 aev
@@ -44133,7 +44110,7 @@ rNE
 sQd
 rNE
 aev
-zzY
+siC
 aei
 mST
 aod
