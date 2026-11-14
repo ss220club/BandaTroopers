@@ -51,8 +51,8 @@
 #define HUNGER_FACTOR 0.05
 
 // Nutrition levels
-#define NUTRITION_MAX 550
-#define NUTRITION_HIGH 540
+#define NUTRITION_MAX 760
+#define NUTRITION_HIGH 750
 #define NUTRITION_NORMAL 400
 #define NUTRITION_LOW 250
 #define NUTRITION_VERYLOW 50
@@ -97,6 +97,8 @@
 #define PLASMA_EGG "eggplasma"
 #define PLASMA_NEUROTOXIN "neurotoxinplasma"
 #define PLASMA_ROYAL "royalplasma"
+#define BLOOD_BLIGHT "blightfluid"
+#define BLOOD_BLIGHT_ADV "strongblightfluid"
 
 // Flags for Reagent
 
@@ -120,6 +122,7 @@
 //Negative
 #define PROPERTY_HYPOXEMIC "hypoxemic"
 #define PROPERTY_TOXIC "toxic"
+#define PROPERTY_MYCOTAINTED "mycotainted"
 #define PROPERTY_CORROSIVE "corrosive"
 #define PROPERTY_BIOCIDIC "biocidic"
 #define PROPERTY_HEMOLYTIC "hemolytic"
@@ -133,6 +136,8 @@
 #define PROPERTY_CARDIOTOXIC "cardiotoxic"
 #define PROPERTY_NEUROTOXIC "neurotoxic"
 #define PROPERTY_HYPERMETABOLIC "hypermetabolic"
+#define PROPERTY_MYCOTOXIC "mycotoxic"
+#define PROPERTY_MYCOTAINTED "mycotainted"
 //Neutral
 #define PROPERTY_NUTRITIOUS "nutritious"
 #define PROPERTY_KETOGENIC "ketogenic"

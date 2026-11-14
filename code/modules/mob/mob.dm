@@ -53,6 +53,8 @@
 /mob/Initialize()
 	if(!faction_group)
 		faction_group = list(faction)
+	// Mobs seen through a multiz opening share the filtered plane.
+	vis_flags |= VIS_INHERIT_PLANE
 
 	GLOB.last_mob_gid++
 	gid = GLOB.last_mob_gid

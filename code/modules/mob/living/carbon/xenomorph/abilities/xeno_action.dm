@@ -276,6 +276,8 @@
 	if(!cooldown_to_apply)
 		return
 
+	X.start_ai_ability_delay()
+
 	cooldown_to_apply = cooldown_to_apply * (1 - clamp(X.cooldown_reduction_percentage, 0, 0.5))
 
 	// Add a unique timer

@@ -8,6 +8,7 @@
 #define ishumansynth_strict(A)   (ishuman(A) && (istype(A?:species, /datum/species/human) || istype(A?:species, /datum/species/synthetic)))
 
 #define iszombie(A) (ishuman(A) && istype(A?:species, /datum/species/zombie))
+#define iswalker(A) (ishuman(A) && istype(A?:species, /datum/species/pathogen_walker))
 #define ismonkey(A) (ishuman(A) && istype(A?:species, /datum/species/monkey))
 #define isyautja(A) (ishuman(A) && istype(A?:species, /datum/species/yautja))
 #define issangheili(A) (ishuman(A) && istype(A?:species, /datum/species/sangheili)) // SS220 EDIT: HALO species helper

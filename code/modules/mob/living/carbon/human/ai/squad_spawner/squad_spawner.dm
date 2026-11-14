@@ -103,7 +103,7 @@ GLOBAL_LIST_EMPTY(human_ai_squad_presets)
 	set name = "Human AI Squad Spawner Panel"
 	set category = "Game Master.HumanAI"
 
-	if(!check_rights(R_DEBUG))
+	if(!check_rights(R_DEBUG|R_ADMIN))
 		return
 
 	if(!SSticker.mode)

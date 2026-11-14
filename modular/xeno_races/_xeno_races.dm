@@ -11,23 +11,37 @@
 		XENO_CASTE_BODYBURSTER = /mob/living/carbon/xenomorph/bodyburster,
 		XENO_CASTE_LANKY = /mob/living/carbon/xenomorph/lanky,
 		PATHOGEN_CREATURE_BURSTER = /mob/living/carbon/xenomorph/bloodburster,
+		PATHOGEN_CREATURE_ABER_BURSTER = /mob/living/carbon/xenomorph/bloodburster/aberrant,
 		PATHOGEN_CREATURE_SPRINTER = /mob/living/carbon/xenomorph/sprinter,
+		PATHOGEN_CREATURE_NEOPHYTE = /mob/living/carbon/xenomorph/neophyte,
 		PATHOGEN_CREATURE_POPPER = /mob/living/carbon/xenomorph/popper,
 		PATHOGEN_CREATURE_NEOMORPH = /mob/living/carbon/xenomorph/neomorph,
 		PATHOGEN_CREATURE_BLIGHT = /mob/living/carbon/xenomorph/blight,
+		PATHOGEN_CREATURE_CONDITOR = /mob/living/carbon/xenomorph/conditor,
 		PATHOGEN_CREATURE_BRUTE = /mob/living/carbon/xenomorph/brute,
 		PATHOGEN_CREATURE_VENATOR = /mob/living/carbon/xenomorph/venator,
+		PATHOGEN_CREATURE_HARBINGER = /mob/living/carbon/xenomorph/harbinger,
+		PATHOGEN_CREATURE_MATRIARCH = /mob/living/carbon/xenomorph/matriarch,
+		PATHOGEN_CREATURE_ABERRATION = /mob/living/carbon/xenomorph/aberration,
+		PATHOGEN_CREATURE_ARCHON = /mob/living/carbon/xenomorph/archon,
 	)
 	GLOB.xeno_race_ai_spawnables = list(
 		XENO_CASTE_BODYBURSTER,
 		XENO_CASTE_LANKY,
 		PATHOGEN_CREATURE_BURSTER,
+		PATHOGEN_CREATURE_ABER_BURSTER,
 		PATHOGEN_CREATURE_SPRINTER,
+		PATHOGEN_CREATURE_NEOPHYTE,
 		PATHOGEN_CREATURE_POPPER,
 		PATHOGEN_CREATURE_NEOMORPH,
 		PATHOGEN_CREATURE_BLIGHT,
+		PATHOGEN_CREATURE_CONDITOR,
 		PATHOGEN_CREATURE_BRUTE,
 		PATHOGEN_CREATURE_VENATOR,
+		PATHOGEN_CREATURE_HARBINGER,
+		PATHOGEN_CREATURE_MATRIARCH,
+		PATHOGEN_CREATURE_ABERRATION,
+		PATHOGEN_CREATURE_ARCHON,
 	)
 
 	if(islist(GLOB.pp_transformables))
@@ -88,11 +102,24 @@
 				color = "purple"
 			)
 		)
+		GLOB.pp_transformables["Pathogen Tier 1"] += list(list(name = PATHOGEN_CREATURE_NEOPHYTE, key = /mob/living/carbon/xenomorph/neophyte, color = "purple"))
+		GLOB.pp_transformables["Pathogen Tier 3"] += list(
+			list(name = PATHOGEN_CREATURE_CONDITOR, key = /mob/living/carbon/xenomorph/conditor, color = "purple"),
+			list(name = PATHOGEN_CREATURE_HARBINGER, key = /mob/living/carbon/xenomorph/harbinger, color = "purple")
+		)
+		GLOB.pp_transformables["Pathogen Exotic"] = list(
+			list(name = PATHOGEN_CREATURE_ABER_BURSTER, key = /mob/living/carbon/xenomorph/bloodburster/aberrant, color = "purple"),
+			list(name = PATHOGEN_CREATURE_ABERRATION, key = /mob/living/carbon/xenomorph/aberration, color = "purple"),
+			list(name = PATHOGEN_CREATURE_MATRIARCH, key = /mob/living/carbon/xenomorph/matriarch, color = "purple"),
+			list(name = PATHOGEN_CREATURE_ARCHON, key = /mob/living/carbon/xenomorph/archon, color = "purple")
+		)
 
 	var/datum/hive_status/main_hive = GLOB.hive_datum[XENO_HIVE_NORMAL]
 	if(main_hive?.evolution_menu_images)
+		var/list/pathogen_radial_states = icon_states('modular/xeno_races/icons/mob/xenos/pathogen_pr207_radial.dmi')
 		for(var/caste_name in ALL_PATHOGEN_CREATURES)
-			main_hive.evolution_menu_images[caste_name] = image('modular/xeno_races/icons/mob/xenos/radial_xenos.dmi', caste_name)
+			var/radial_state = (caste_name in pathogen_radial_states) ? caste_name : "template"
+			main_hive.evolution_menu_images[caste_name] = image('modular/xeno_races/icons/mob/xenos/pathogen_pr207_radial.dmi', radial_state)
 
 	var/datum/hive_status/pathogen/pathogen_hive = GLOB.hive_datum[XENO_HIVE_PATHOGEN]
 	if(pathogen_hive)

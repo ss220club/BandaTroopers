@@ -8,6 +8,10 @@
 		if(!I)
 			to_chat(H, SPAN_NOTICE("You are not holding anything to equip."))
 			return
+		if(H.body_position == LYING_DOWN && !H.can_use_hands_lying())
+			return
+		if(!H.wounded_action_delay() || H.get_active_hand() != I)
+			return
 		if(!H.equip_to_appropriate_slot(I, 0))
 			to_chat(H, SPAN_DANGER("You are unable to equip that."))
 
@@ -21,10 +25,10 @@
 
 
 /mob/living/carbon/human/proc/has_limb(org_name)
-	// SS220 EDIT - START: resolve limb presence through the canonical limb lookup instead of raw list iteration
-	var/obj/limb/target_limb = get_limb(org_name)
-	return istype(target_limb) && !(target_limb.status & LIMB_DESTROYED)
-	// SS220 EDIT - END
+	for(var/X in limbs)
+		var/obj/limb/E = X
+		if(E.name == org_name)
+			return !(E.status & LIMB_DESTROYED)
 
 /mob/living/carbon/human/proc/has_limb_for_slot(slot)
 	switch(slot)
@@ -388,7 +392,11 @@
 
 		if(WEAR_IN_HELMET)
 			var/obj/item/clothing/head/helmet/marine/helmet = head
+			var/obj/item/clothing/head/helmet/upp/helmetupp = head
 			if(istype(helmet) && helmet.pockets.storage_slots)
+				helmet.pockets.attempt_item_insertion(equipping_item, disable_warning, src)
+				helmet.update_icon()
+			if(istype(helmetupp) && helmet.pockets.storage_slots)
 				helmet.pockets.attempt_item_insertion(equipping_item, disable_warning, src)
 				helmet.update_icon()
 

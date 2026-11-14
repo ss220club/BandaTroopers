@@ -1,0 +1,5 @@
+#include "code/small_platoon.dm"
+#include "code/vendors.dm"
+#include "code/gun_rack.dm"
+#include "code/equipment.dm"
+#include "code/weapons.dm"

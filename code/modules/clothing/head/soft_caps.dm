@@ -124,7 +124,7 @@
 	min_cold_protection_temperature = ICE_PLANET_MIN_COLD_PROT
 	flags_inventory = BLOCKSHARPOBJ
 	flags_inv_hide = NO_FLAGS
-	flags_atom = FPRINT
+	flags_atom = FPRINT|NO_SNOW_TYPE
 
 /obj/item/clothing/head/soft/sec/corp
 	name = "corporate security cap"

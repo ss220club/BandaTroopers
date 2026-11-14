@@ -83,6 +83,7 @@
 
 	ai_range = 24
 	forced_retarget_time = (3 SECONDS)
+	ai_ability_delay = 3 SECONDS
 
 /mob/living/carbon/xenomorph/crusher/init_movement_handler()
 	return new /datum/xeno_ai_movement/crusher(src)

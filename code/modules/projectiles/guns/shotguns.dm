@@ -1406,6 +1406,12 @@ can cause issues with ammo types getting mixed up during the burst.
 	icon = 'icons/obj/items/weapons/guns/guns_by_faction/colony.dmi'
 	icon_state = "hg3712"
 	item_state = "hg3712"
+	item_icons = list(
+		WEAR_L_HAND = 'icons/mob/humans/onmob/items_lefthand_1.dmi',
+		WEAR_R_HAND = 'icons/mob/humans/onmob/items_righthand_1.dmi',
+		WEAR_BACK = 'icons/mob/humans/onmob/back.dmi',
+		WEAR_J_STORE = 'icons/mob/humans/onmob/suit_slot.dmi'
+	)
 	fire_sound = 'sound/weapons/gun_shotgun_small.ogg'
 	current_mag = /obj/item/ammo_magazine/internal/shotgun/cmb
 	attachable_allowed = list(

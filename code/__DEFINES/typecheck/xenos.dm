@@ -31,6 +31,15 @@
 #define islizard(A) (istype(A, /mob/living/carbon/xenomorph/giant_lizard)) // SS220 EDIT: PR1271 - Itsy Bitsy Buggers
 
 #define isxeno_builder(A) (isdrone(A) || ishivelord(A) || iscarrier(A) || isburrower(A) || isqueen(A))
+#define isbloodburster(A) (istype(A, /mob/living/carbon/xenomorph/bloodburster))
+#define isneomorph(A) (istype(A, /mob/living/carbon/xenomorph/neomorph))
+#define isneophyte(A) (istype(A, /mob/living/carbon/xenomorph/neophyte))
+#define isconditor(A) (istype(A, /mob/living/carbon/xenomorph/conditor))
+#define ispopper(A) (istype(A, /mob/living/carbon/xenomorph/popper))
+#define ismatriarch(A) (istype(A, /mob/living/carbon/xenomorph/matriarch))
+#define isarchon(A) (istype(A, /mob/living/carbon/xenomorph/archon))
+#define is_pathogen_overmind(A) (istype(A, /mob/living/carbon/xenomorph/overmind))
+#define isaberration(A) (istype(A, /mob/living/carbon/xenomorph/aberration))
 #define isspider(A) (isspiderguard(A) || isspidernurse(A) || isspiderhunter(A)) // SS220 EDIT: PR1271 - Itsy Bitsy Buggers
 
 /// Returns true/false based on if the xenomorph can harm the passed carbon mob.

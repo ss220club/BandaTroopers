@@ -149,6 +149,20 @@
 		SENTRY_CATEGORY_IFF = FACTION_UPP,
 	)
 
+/obj/structure/machinery/defenses/planted_flag/clf
+	name = "CLF planted flag"
+	desc = "A planted flag with the iconic CLF flag plastered all over it, you feel a burst of energy by its mere sight."
+	icon = 'icons/obj/structures/machinery/defenses/clf_defenses.dmi'
+	disassemble_time = 5 SECONDS
+	health = 300
+	health_max = 300
+	area_range = 12
+	handheld_type = /obj/item/defenses/handheld/planted_flag/clf
+	defense_type = "CLF"
+	selected_categories = list(
+		SENTRY_CATEGORY_IFF = FACTION_CLF,
+	)
+
 /obj/item/storage/backpack/jima
 	name = "JIMA frame mount"
 	icon = 'icons/obj/items/clothing/backpacks.dmi'

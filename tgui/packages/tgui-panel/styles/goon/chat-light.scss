@@ -404,6 +404,10 @@ em {
   color: #0000ff;
 }
 
+.iasfradio {
+  color: #174ca7;
+}
+
 .greenteamradio {
   color: #00ff00;
 }
@@ -1260,6 +1264,15 @@ h2.alert {
   color: #ff0000;
   font-weight: bold;
   font-size: 140%;
+}
+
+.effinghighdanger {
+  color: hsl(0, 100%, 50%);
+  font-weight: bold;
+  font-size: 200%;
+
+  /*Animation*/
+  animation: glitch 0.5s infinite;
 }
 
 .xenohighdanger {

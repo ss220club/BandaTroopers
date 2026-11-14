@@ -64,6 +64,30 @@
 	message_admins("[key_name_admin(usr)] has [(predator_round.flags_round_type & MODE_PREDATOR) ? "allowed predators to spawn" : "prevented predators from spawning"].")
 	SEND_GLOBAL_SIGNAL(COMSIG_GLOB_PREDATOR_ROUND_TOGGLED)
 
+/datum/admins/proc/force_pathogen_round()
+	set name = "Toggle Pathogen Round"
+	set desc = "Force-toggle a pathogen round for the round type."
+	set category = "Server.Round"
+	var/infestation_mode = FALSE
+	for(var/datum/game_mode/mode_type as anything in config.gamemode_cache)
+		if(initial(mode_type.config_tag) != GLOB.master_mode)
+			continue
+		infestation_mode = initial(mode_type.flags_round_type) & MODE_INFESTATION
+		break
+	if(!infestation_mode)
+		to_chat(usr, SPAN_WARNING("You cannot toggle Pathogen round when the mode is not distress."))
+		return FALSE
+	if(SSticker.current_state > GAME_STATE_PREGAME)
+		to_chat(usr, SPAN_WARNING("You cannot toggle Pathogen when the round has already started."))
+		return FALSE
+	if(tgui_alert(usr, "Are you sure you want to force-toggle a Pathogen round? Pathogen is currently [GLOB.pathogen_round ? "ENABLED" : "DISABLED"].", "Toggle Pathogen Round", list("Yes", "No")) != "Yes")
+		return FALSE
+	GLOB.pathogen_round = !GLOB.pathogen_round
+	var/datum/hive_status/hive = GLOB.hive_datum[XENO_HIVE_PATHOGEN]
+	hive.latejoin_burrowed = GLOB.pathogen_round
+	message_admins("[key_name_admin(usr)] has [GLOB.pathogen_round ? "made it a pathogen round" : "made it a normal round"].")
+	return TRUE
+
 /client/proc/free_slot()
 	set name = "Free Job Slots"
 	set category = "Server.Round"

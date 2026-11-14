@@ -135,7 +135,9 @@ GLOBAL_VAR_INIT(radio_communication_clarity, 100)
 	current_submenus = list()
 
 	game_master_phone = new(null)
-	game_master_phone.AddComponent(/datum/component/phone/virtual, "Game Master", "white", "Company Command", null, PHONE_DND_ON, list(FACTION_MARINE, FACTION_UPP, FACTION_COLONIST, FACTION_WY), list(FACTION_MARINE, FACTION_UPP, FACTION_COLONIST, FACTION_WY), null, using_client)
+	// SS220 EDIT - START
+	game_master_phone.AddComponent(/datum/component/phone/virtual/game_master, "Game Master", "white", "Company Command", null, PHONE_DND_ON, list(FACTION_MARINE, FACTION_UPP, FACTION_COLONIST, FACTION_WY, FACTION_TWE, FACTION_IASF, FACTION_PMC), list(FACTION_MARINE, FACTION_UPP, FACTION_COLONIST, FACTION_WY, FACTION_TWE, FACTION_IASF, FACTION_PMC), null, using_client)
+	// SS220 EDIT - END
 
 	game_master_client.click_intercept = src
 
@@ -203,6 +205,10 @@ GLOBAL_VAR_INIT(radio_communication_clarity, 100)
 	switch(action)
 
 		//Spawn Section
+		if("open_human_squad_spawner")
+			ui.user.client?.open_human_squad_spawner_panel()
+			return TRUE
+
 		if("set_xeno_spawns")
 			var/new_number = text2num(params["value"])
 			if(!new_number)

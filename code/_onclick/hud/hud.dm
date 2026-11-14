@@ -78,11 +78,20 @@
 	mymob = owner
 	hide_actions_toggle = new
 
-	for(var/mytype in subtypesof(/atom/movable/screen/plane_master)- /atom/movable/screen/plane_master/rendering_plate)
+	// SS220 EDIT - START
+	// Open-space masters need one instance for each visible lower level.
+	for(var/mytype in subtypesof(/atom/movable/screen/plane_master)- /atom/movable/screen/plane_master/rendering_plate - /atom/movable/screen/plane_master/open_space)
 		var/atom/movable/screen/plane_master/instance = new mytype()
 		plane_masters["[instance.plane]"] = instance
 		if(owner.client)
 			instance.backdrop(mymob)
+
+	for(var/z_offset in 0 to OPEN_SPACE_PLANE_START - OPEN_SPACE_PLANE_END)
+		var/atom/movable/screen/plane_master/open_space/instance = new(null, z_offset)
+		plane_masters["[instance.plane]"] = instance
+		if(owner.client)
+			instance.backdrop(mymob)
+	// SS220 EDIT - END
 
 	for(var/mytype in subtypesof(/atom/movable/plane_master_controller))
 		var/atom/movable/plane_master_controller/controller_instance = new mytype(null,src)

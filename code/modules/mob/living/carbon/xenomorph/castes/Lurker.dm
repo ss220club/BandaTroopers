@@ -69,6 +69,7 @@
 	weed_food_states_flipped = list("Drone_1","Drone_2","Drone_3")
 
 	forced_retarget_time = (2 SECONDS)
+	ai_ability_delay = 3 SECONDS
 	var/pull_direction
 
 /mob/living/carbon/xenomorph/lurker/launch_towards(datum/launch_metadata/LM)

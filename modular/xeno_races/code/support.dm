@@ -2,7 +2,22 @@ GLOBAL_LIST_EMPTY(xeno_race_caste_mobs)
 GLOBAL_LIST_EMPTY(xeno_race_ai_spawnables)
 
 GLOBAL_LIST_INIT(resin_build_order_pathogen_overmind, list(
+	/datum/resin_construction/resin_turf/wall/pathogen/overmind,
+	/datum/resin_construction/resin_turf/membrane/pathogen/overmind,
+	/datum/resin_construction/resin_obj/door/pathogen/overmind,
 	/datum/resin_construction/resin_obj/popper_cocoon
+))
+
+GLOBAL_LIST_INIT(resin_build_order_pathogen_base, list(
+	/datum/resin_construction/resin_turf/wall/pathogen,
+	/datum/resin_construction/resin_turf/membrane/pathogen,
+	/datum/resin_construction/resin_obj/door/pathogen
+))
+
+GLOBAL_LIST_INIT(resin_build_order_pathogen_better, list(
+	/datum/resin_construction/resin_turf/wall/pathogen/thick,
+	/datum/resin_construction/resin_turf/membrane/pathogen/thick,
+	/datum/resin_construction/resin_obj/door/pathogen/thick
 ))
 
 GLOBAL_VAR_INIT(overmind_cancel, FALSE)
@@ -52,11 +67,6 @@ GLOBAL_VAR_INIT(overmind_cancel, FALSE)
 		return TRUE
 	return ..()
 
-/mob/living/carbon/xenomorph/give_modular_abilities()
-	if(give_blight_core())
-		return TRUE
-	return ..()
-
 /mob/living/carbon/xenomorph/get_weed_type()
 	if(hivenumber == XENO_HIVE_PATHOGEN)
 		return /obj/effect/alien/weeds/pathogen
@@ -68,7 +78,10 @@ GLOBAL_VAR_INIT(overmind_cancel, FALSE)
 	return ..()
 
 /datum/hive_status/pathogen
-	name = "Pathogen Confluence"
+	name = FACTION_PATHOGEN
+	var/max_poppers = 8
+	var/matriarch_enabled = FALSE
+	var/last_overmind
 	reporting_id = "pathogen"
 	hivenumber = XENO_HIVE_PATHOGEN
 	prefix = ""
@@ -80,6 +93,7 @@ GLOBAL_VAR_INIT(overmind_cancel, FALSE)
 	allow_no_queen_actions = TRUE
 	allow_queen_evolve = FALSE
 	allow_no_queen_evo = TRUE
+	queen_leader_limit = 5
 
 	destruction_allowed = NORMAL_XENO
 
@@ -91,19 +105,45 @@ GLOBAL_VAR_INIT(overmind_cancel, FALSE)
 		/datum/caste_datum/pathogen/blight = 4,
 		/datum/caste_datum/pathogen/brute = 1,
 		/datum/caste_datum/pathogen/venator = 2,
+		/datum/caste_datum/pathogen/conditor = 2,
 	)
+
+	restricted_castes = list(
+		PATHOGEN_CREATURE_ARCHON = 1,
+		PATHOGEN_CREATURE_HARBINGER = 2,
+	)
+	blacklisted_castes = ALL_XENO_CASTES
 
 	hive_structures_limit = list(
 		PATHOGEN_STRUCTURE_CORE = 1,
-		PATHOGEN_STRUCTURE_COCOON = 3,
+		PATHOGEN_STRUCTURE_COCOON = 6,
+		PATHOGEN_STRUCTURE_CLUSTER = 8,
+		PATHOGEN_STRUCTURE_PYLON = 2,
+		PATHOGEN_STRUCTURE_RECOVERY = 6,
+		PATHOGEN_STRUCTURE_PLASMA = 3,
+		PATHOGEN_STRUCTURE_SPORECASTER = 3,
+		PATHOGEN_STRUCTURE_FOGGER = 3,
 	)
+
+	hive_structure_types = list(
+		PATHOGEN_STRUCTURE_CORE = /datum/construction_template/xenomorph/pathogen_core,
+		PATHOGEN_STRUCTURE_CLUSTER = /datum/construction_template/xenomorph/pathogen_cluster,
+		PATHOGEN_STRUCTURE_RECOVERY = /datum/construction_template/xenomorph/patho_recovery,
+		PATHOGEN_STRUCTURE_PLASMA = /datum/construction_template/xenomorph/patho_plasma,
+		PATHOGEN_STRUCTURE_SPORECASTER = /datum/construction_template/xenomorph/sporecaster,
+		PATHOGEN_STRUCTURE_FOGGER = /datum/construction_template/xenomorph/fogger
+	)
+
+/datum/hive_status/pathogen/New()
+	. = ..()
+	blacklisted_castes -= ALL_PATHOGEN_CREATURES
 
 /datum/hive_status/pathogen/get_xeno_counts()
 	var/list/xeno_counts = list(
-		list(PATHOGEN_CREATURE_BURSTER = 0, PATHOGEN_CREATURE_POPPER = 0),
-		list(PATHOGEN_CREATURE_SPRINTER = 0),
+		list(PATHOGEN_CREATURE_BURSTER = 0, PATHOGEN_CREATURE_POPPER = 0, PATHOGEN_CREATURE_ARCHON = 0),
+		list(PATHOGEN_CREATURE_NEOPHYTE = 0, PATHOGEN_CREATURE_SPRINTER = 0),
 		list(PATHOGEN_CREATURE_NEOMORPH = 0, PATHOGEN_CREATURE_BLIGHT = 0),
-		list(PATHOGEN_CREATURE_BRUTE = 0, PATHOGEN_CREATURE_VENATOR = 0)
+		list(PATHOGEN_CREATURE_CONDITOR = 0, PATHOGEN_CREATURE_BRUTE = 0, PATHOGEN_CREATURE_VENATOR = 0, PATHOGEN_CREATURE_HARBINGER = 0)
 	)
 
 	for(var/mob/living/carbon/xenomorph/xeno as anything in totalXenos)

@@ -267,6 +267,8 @@
 	var/entry_is_abstract = initial(E.abstract_type) == entry_type
 	if(entry_is_abstract)
 		CRASH("Tried to retrieve an abstract config_entry: [entry_type]")
+	if(!entries_by_type)
+		return initial(E.config_entry_value) // SS220 EDIT: allow config reads before InitEntries
 	E = entries_by_type[entry_type]
 	if(!E)
 		CRASH("Missing config entry for [entry_type]!")

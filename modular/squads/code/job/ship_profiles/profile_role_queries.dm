@@ -206,15 +206,11 @@
 	return TRUE
 
 /datum/authority/branch/role/proc/get_modular_job_pref_to_gear_preset(job_title)
-	var/platoon_type = get_halo_platoon_type_for_job(job_title)
-	if(!platoon_type)
-		return null
-
 	var/canonical_role = get_job_preference_bucket_key(job_title)
 	if(!canonical_role)
 		return null
 
-	var/datum/modular_ship_platoon_profile/halo/profile = get_halo_ship_platoon_profile_datum(platoon_type)
+	var/datum/modular_ship_platoon_profile/profile = get_ship_platoon_profile_datum(get_active_ship_platoon_type())
 	if(!profile)
 		return null
 

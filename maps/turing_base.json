@@ -1,0 +1,12 @@
+{
+    "map_name": "Turing Base",
+    "map_path": "map_files/turing_base",
+    "map_file": "Turing_base.dmm",
+    "webmap_url": "GoldenArrow",
+    "traits": [
+        {
+            "Marine Main Ship": true
+        }
+    ],
+    "platoon": "/datum/squad/marine/iasf"
+}

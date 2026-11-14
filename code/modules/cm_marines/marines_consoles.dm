@@ -755,6 +755,9 @@
 	faction = FACTION_YAUTJA
 	crewmonitor_type = /datum/crewmonitor/yautja
 
+/obj/structure/machinery/computer/crew/alt/clf
+	faction = FACTION_CLF
+
 /obj/structure/machinery/computer/crew/upp
 	faction = FACTION_UPP
 
@@ -1141,6 +1144,15 @@ GLOBAL_LIST_EMPTY_TYPED(crewmonitor, /datum/crewmonitor)
 				JOB_UPP_ENGI = 63,
 				JOB_UPP = 64,
 				JOB_UPP_CONSCRIPT = 65,
+
+				// SS220 EDIT - START
+				JOB_SQUAD_TEAM_LEADER_FORECON_UPP = 60,
+				JOB_SQUAD_LEADER_FORECON_UPP = 61,
+				JOB_SQUAD_MEDIC_FORECON_UPP = 62,
+				JOB_SQUAD_RTO_FORECON_UPP = 63,
+				JOB_SQUAD_MARINE_FORECON_UPP = 64,
+				JOB_SQUAD_SMARTGUN_FORECON_UPP = 65,
+				// SS220 EDIT - END
 
 				// ANYTHING ELSE = UNKNOWN_JOB_ID, Unknowns/custom jobs will appear after civilians, and before stowaways
 				JOB_STOWAWAY = 999,

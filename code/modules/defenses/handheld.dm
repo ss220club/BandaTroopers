@@ -182,6 +182,13 @@
 	defense_type = /obj/structure/machinery/defenses/sentry/upp/light
 	deployment_time = 2 SECONDS
 
+/obj/item/defenses/handheld/sentry/clf
+	name = "handheld UA 520-C sentry gun"
+	desc = "A compact version of the UPPA defenses. Designed for quick deployment of the associated type in the field."
+	icon = 'icons/obj/structures/machinery/defenses/clf_defenses.dmi'
+	icon_state = "Normal uac_sentry_handheld"
+	defense_type = /obj/structure/machinery/defenses/sentry/clf
+
 // FLAMER BASE AND UPGRADES
 /obj/item/defenses/handheld/sentry/flamer
 	name = "handheld UA 42-F sentry flamer"
@@ -364,3 +371,10 @@
 	deployment_time = 5 SECONDS
 	defense_type = /obj/structure/machinery/defenses/planted_flag/upp
 
+/obj/item/defenses/handheld/planted_flag/clf
+	name = "handheld CLF planted flag"
+	desc = "A compact version of the CLF defenses. Designed for deployment in the field."
+	icon = 'icons/obj/structures/machinery/defenses/clf_defenses.dmi'
+	icon_state = "CLF planted_flag_handheld"
+	deployment_time = 5 SECONDS
+	defense_type = /obj/structure/machinery/defenses/planted_flag/clf

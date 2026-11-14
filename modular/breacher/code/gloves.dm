@@ -1,0 +1,15 @@
+/obj/item/clothing/gloves/marine/m40
+	name = "\improper M40 Breacher gloves"
+	desc = "A pair of plated, but nimble, gloves."
+	icon = 'modular/breacher/assets/icons/obj/items/clothing/gloves.dmi'
+	item_icons = list(WEAR_HANDS = 'modular/breacher/assets/icons/mob/humans/onmob/hands.dmi')
+	icon_state = "breacher"
+	armor_melee = CLOTHING_ARMOR_HIGH
+	armor_bullet = CLOTHING_ARMOR_MEDIUM
+	armor_laser = CLOTHING_ARMOR_LOW
+	armor_energy = CLOTHING_ARMOR_NONE
+	armor_bomb = CLOTHING_ARMOR_MEDIUMLOW
+	armor_bio = CLOTHING_ARMOR_MEDIUM
+	armor_rad = CLOTHING_ARMOR_LOW
+	armor_internaldamage = CLOTHING_ARMOR_MEDIUM
+	flags_item = MOB_LOCK_ON_EQUIP|NO_CRYO_STORE

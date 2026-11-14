@@ -37,6 +37,9 @@ interface TacMapProps {
   canvasCooldown: any;
   exportedTacMapImage: any;
   tacmapReady: boolean;
+  canChangeZ: boolean;
+  currentLevel: number;
+  levelCount: number;
 }
 
 const PAGES = [
@@ -148,6 +151,27 @@ export const TacticalMap = (props) => {
                       );
                     })}
                   </Tabs>
+                  {data.canChangeZ && pageIndex === 0 && (
+                    <Stack align="center" justify="center" mt="5px">
+                      <Stack.Item>
+                        <Button
+                          icon="arrow-down"
+                          disabled={data.currentLevel <= 1}
+                          onClick={() => act('changeZ', { amount: -1 })}
+                        />
+                      </Stack.Item>
+                      <Stack.Item>
+                        Level {data.currentLevel} / {data.levelCount}
+                      </Stack.Item>
+                      <Stack.Item>
+                        <Button
+                          icon="arrow-up"
+                          disabled={data.currentLevel >= data.levelCount}
+                          onClick={() => act('changeZ', { amount: 1 })}
+                        />
+                      </Stack.Item>
+                    </Stack>
+                  )}
                 </Stack.Item>
               </Stack>
             </Section>

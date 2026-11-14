@@ -213,6 +213,9 @@ GLOBAL_LIST_INIT_TYPED(map_type_list, /obj/item/map, setup_all_maps())
 		MAP_ICE_COLONY_V3 = new /obj/item/map/ice_colony_map_v3(),
 		MAP_WHISKEY_OUTPOST = new /obj/item/map/whiskey_outpost_map(),
 		MAP_BIG_RED = new /obj/item/map/big_red_map(),
+		MAP_FIRE_COLONY = new /obj/item/map/fire_colony(), // SS220 EDIT: Fire Colony map
+		MAP_TYRARGO_RIFT = new /obj/item/map/tyrargo_rift(), // SS220 EDIT: PR #82 multiz map
+		MAP_WHITE_ANTRE_RESEARCH_FACILITY = new /obj/item/map/white_antre_map(), // SS220 EDIT: PR #82 multiz map
 		MAP_PRISON_STATION = new /obj/item/map/FOP_map(),
 		MAP_PRISON_STATION_V3 = new /obj/item/map/FOP_map_v3(),
 		MAP_DESERT_DAM = new /obj/item/map/desert_dam(),

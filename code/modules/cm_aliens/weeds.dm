@@ -217,6 +217,7 @@
 	if(!istype(U))
 		return
 
+	var/weed_type = get_spread_weed_type(/obj/effect/alien/weeds) // SS220 EDIT: preserve the hive's weed subtype when spreading.
 	var/list/weeds = list()
 	for(var/dirn in GLOB.cardinals)
 		var/turf/T = get_step(src, dirn)
@@ -248,16 +249,17 @@
 
 		if(!istype(T, /turf/closed/wall/resin) && T.density)
 			if(istype(T, /turf/closed/wall))
-				weeds.Add(new /obj/effect/alien/weeds/weedwall(T, node))
+				var/wall_weed_type = get_spread_weed_type(/obj/effect/alien/weeds/weedwall) // SS220 EDIT: preserve the hive's wall weed subtype.
+				weeds.Add(new wall_weed_type(T, node))
 				continue
 			else if( istype(T, /turf/closed))
-				weeds.Add(new /obj/effect/alien/weeds(T, node, TRUE, FALSE))
+				weeds.Add(new weed_type(T, node, TRUE, FALSE)) // SS220 EDIT: preserve the hive's weed subtype on closed turfs.
 				continue
 
 		if(!weed_expand_objects(T, dirn))
 			continue
 
-		var/obj/effect/alien/weeds/new_weed = new(T, node)
+		var/obj/effect/alien/weeds/new_weed = new weed_type(T, node) // SS220 EDIT: preserve the hive's weed subtype on floors.
 		weeds += new_weed
 
 		if(old_fruit)
@@ -288,10 +290,12 @@
 				return FALSE
 
 		if(istype(O, /obj/structure/window/framed))
-			new /obj/effect/alien/weeds/weedwall/window(T, parent)
+			var/window_weed_type = get_spread_weed_type(/obj/effect/alien/weeds/weedwall/window) // SS220 EDIT: use matching window weed subtype.
+			new window_weed_type(T, parent)
 			return FALSE
 		else if(istype(O, /obj/structure/window_frame))
-			new /obj/effect/alien/weeds/weedwall/frame(T, parent)
+			var/frame_weed_type = get_spread_weed_type(/obj/effect/alien/weeds/weedwall/frame) // SS220 EDIT: use matching frame weed subtype.
+			new frame_weed_type(T, parent)
 			return FALSE
 		else if(istype(O, /obj/structure/machinery/door) && O.density && (!(O.flags_atom & ON_BORDER) || O.dir != direction))
 			return FALSE

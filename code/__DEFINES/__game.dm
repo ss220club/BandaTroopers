@@ -23,6 +23,9 @@
 #define MAP_LV_624 "LV-624"
 #define MAP_LV_624_REPAIRED "LV-624 Repaired"
 #define MAP_BIG_RED "Solaris Ridge"
+#define MAP_FIRE_COLONY "LV-376 Charon's Crucible" // SS220 EDIT: Fire Colony map
+#define MAP_TYRARGO_RIFT "Tyrargo Rift" // SS220 EDIT: PR #82 multiz map
+#define MAP_WHITE_ANTRE_RESEARCH_FACILITY "White Antre Research Facility" // SS220 EDIT: PR #82 multiz map
 #define MAP_PRISON_STATION "Fiorina Cellblocks"
 #define MAP_PRISON_STATION_V3 "Fiorina Science Annex"
 #define MAP_WHISKEY_OUTPOST "Whiskey Outpost" // Unused
@@ -385,6 +388,8 @@
 #define WALL_MEMBRANE "membrane"
 #define WALL_THICKMEMBRANE "thickmembrane"
 #define WALL_BONE_RESIN "bone_resin"
+#define WALL_PATHOGEN "mycelium"
+#define WALL_PATHOGEN_THICK "thickmycelium"
 #define WALL_CAVE "cavewall"
 #define WALL_WOOD "wood"
 #define WALL_GOLD "gold"

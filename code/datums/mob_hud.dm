@@ -18,6 +18,8 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, flatten_numeric_alist(alist(
 	MOB_HUD_FACTION_UPP = new /datum/mob_hud/faction/upp(),
 	MOB_HUD_FACTION_WY = new /datum/mob_hud/faction/wy(),
 	MOB_HUD_FACTION_TWE = new /datum/mob_hud/faction/twe(),
+	MOB_HUD_FACTION_IASF = new /datum/mob_hud/faction/iasf(),
+	MOB_HUD_FACTION_LB = new /datum/mob_hud/faction/lasalle_bionational(), // SS220 EDIT: Fire Colony survivor HUD
 	MOB_HUD_FACTION_CLF = new /datum/mob_hud/faction/clf(),
 	MOB_HUD_FACTION_PMC = new /datum/mob_hud/faction/pmc(),
 	MOB_HUD_FACTION_MARSHAL = new /datum/mob_hud/faction/cmb(),
@@ -26,6 +28,7 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, flatten_numeric_alist(alist(
 	MOB_HUD_HUNTER = new /datum/mob_hud/hunter_hud(),
 	MOB_HUD_HUNTER_CLAN = new /datum/mob_hud/hunter_clan(),
 	MOB_HUD_EXECUTE = new /datum/mob_hud/execute_hud(),
+	MOB_HUD_MYCOTOXIN = new /datum/mob_hud/pathogen_myco(),
 	MOB_HUD_FACTION_UNSC = new /datum/mob_hud/faction/unsc(), // SS220 EDIT: HALO faction HUD
 	MOB_HUD_FACTION_COVENANT = new /datum/mob_hud/faction/covenant(), // SS220 EDIT: HALO Covenant faction HUD
 	MOB_HUD_VISR = new /datum/mob_hud/visr(), // SS220 EDIT: HALO VISR HUD
@@ -178,6 +181,9 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, flatten_numeric_alist(alist(
 /datum/mob_hud/xeno_infection
 	hud_icons = list(STATUS_HUD_XENO_INFECTION, STATUS_HUD_XENO_CULTIST)
 
+/datum/mob_hud/pathogen_myco
+	hud_icons = list(STATUS_HUD_MYCO)
+
 
 
 //Xeno status hud, for xenos
@@ -230,6 +236,9 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, flatten_numeric_alist(alist(
 
 /datum/mob_hud/faction/twe
 	faction_to_check = FACTION_TWE
+
+/datum/mob_hud/faction/iasf
+	faction_to_check = FACTION_IASF
 
 /datum/mob_hud/faction/clf
 	faction_to_check = FACTION_CLF
@@ -318,6 +327,9 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, flatten_numeric_alist(alist(
 		execute_hud = FALSE
 		var/datum/mob_hud/execute = GLOB.huds[MOB_HUD_EXECUTE]
 		execute.remove_hud_from(src, src)
+	if(is_pathogen_creature(src))
+		var/datum/mob_hud/myco = GLOB.huds[MOB_HUD_MYCOTOXIN]
+		myco.remove_hud_from(src, src)
 
 
 
@@ -429,15 +441,18 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, flatten_numeric_alist(alist(
 	holder2.overlays.Cut()
 	var/image/holder3 = hud_list[STATUS_HUD_XENO_INFECTION]
 	var/image/holder4 = hud_list[STATUS_HUD_XENO_CULTIST]
+	var/image/holder5 = hud_list[STATUS_HUD_MYCO]
 
 	holder2.color = null
 	holder3.color = null
 	holder4.color = null
+	holder5.color = null
 
 	holder2.alpha = alpha
 	holder3.alpha = alpha
 
 	holder4.icon_state = "hudblank"
+	holder5.icon_state = "hudblank"
 
 	if(species && species.flags & IS_SYNTHETIC)
 		holder3.icon_state = "hudsynth" // xenos have less awareness of synth status
@@ -465,7 +480,9 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, flatten_numeric_alist(alist(
 			revive_enabled = check_tod() && is_revivable()
 
 		var/holder2_set = 0
-		if(hivenumber)
+		if(iswalker(src))
+			holder4.icon_state = "hudalien_walker"
+		else if(hivenumber)
 			holder4.icon_state = "hudalien"
 
 			if(GLOB.hive_datum[hivenumber])
@@ -506,12 +523,15 @@ GLOBAL_LIST_INIT_TYPED(huds, /datum/mob_hud, flatten_numeric_alist(alist(
 							holder2.icon_state = "huddeaddnr"
 							holder3.icon_state = "huddead"
 							holder2_set = 1
+						if(world.time > timeofdeath + revive_grace_period - 1 MINUTES)
+							holder5.icon_state = "hudalien_mycoready"
 						return
 					else if(!G.client)
 						holder.overlays += image('icons/mob/hud/hud.dmi', "hudnoclient")
 						holder2.overlays += image('icons/mob/hud/hud.dmi', "hudnoclient")
 				if(world.time > timeofdeath + revive_grace_period - 1 MINUTES)
 					holder.icon_state = "huddeadalmost"
+					holder5.icon_state = "hudalien_mycoready"
 					if(!holder2_set)
 						holder2.icon_state = "huddeadalmost"
 						holder3.icon_state = "huddead"

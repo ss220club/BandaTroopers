@@ -3,3 +3,5 @@
 #include "code/modules/mob/living/carbon/human/ai/brain/human_ai_localization_core.dm"
 #include "code/modules/mob/living/carbon/human/ai/brain/human_ai_localization_general.dm"
 #include "code/modules/mob/living/carbon/human/ai/brain/human_ai_localization_halo.dm"
+#include "code/modules/mob/living/carbon/human/warcry.dm"
+#include "code/modules/mob/living/carbon/human/warcry_tests.dm"

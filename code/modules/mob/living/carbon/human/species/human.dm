@@ -99,8 +99,6 @@
 /datum/species/human/hero
 	name = "Human Hero"
 	name_plural = "Human Heroes"
-	brute_mod = 0.5
-	burn_mod = 0.5
 	unarmed_type = /datum/unarmed_attack/punch/strong
 	pain_type = /datum/pain/human_hero
 	darksight = 5
@@ -110,15 +108,7 @@
 	heat_level_1 = 390
 	heat_level_2 = 480
 	heat_level_3 = 1100
-	knock_down_reduction = 2
-	stun_reduction = 2
-	weed_slowdown_mult = 0.5
-
-/datum/species/human/hero/handle_post_spawn(mob/living/carbon/human/H)
-	H.universal_understand = TRUE
-	H.status_flags |= NO_PERMANENT_DAMAGE //John Wick doesn't get internal bleeding from a grazing gunshot
-	H.status_flags &= ~STATUS_FLAGS_DEBILITATE
-	return ..()
+	total_health = 150
 
 //Various horrors that spawn in and haunt the living.
 /datum/species/human/spook

@@ -177,9 +177,21 @@
 
 	/// variable for attempting to pry a door to not spam prying
 	var/attempting_pry = FALSE
+	var/infectious = TRUE
+	var/no_harm_faction = null
+
+/obj/item/weapon/zombie_claws/no_infect
+	infectious = FALSE
+
+/obj/item/weapon/zombie_claws/no_infect/pathogen
+	no_harm_faction = FACTION_PATHOGEN
 
 /obj/item/weapon/zombie_claws/attack(mob/living/target, mob/living/carbon/human/user)
 	if(iszombie(target))
+		to_chat(user, SPAN_XENOWARNING("You cannot harm [target]!"))
+		return FALSE
+	if(no_harm_faction && (target.faction == no_harm_faction))
+		to_chat(user, SPAN_XENOWARNING("You cannot harm [target]!"))
 		return FALSE
 
 	. = ..()
@@ -189,11 +201,14 @@
 	if(user.on_fire)
 		target.apply_armoured_damage(rand(3,16), ARMOR_MELEE, BURN, null, 25)
 
-	if(ishuman_strict(target))
+	if(infectious && ishuman_strict(target))
 		var/mob/living/carbon/human/human = target
 
 		if(locate(/datum/disease/black_goo) in human.viruses)
 			to_chat(user, SPAN_XENOWARNING("<b>You sense your target is infected.</b>"))
+
+	target.Daze(4)
+	target.Slow(2)
 
 /obj/item/weapon/zombie_claws/afterattack(obj/possible_door as obj, mob/user as mob, proximity)
 	if(attempting_pry)
@@ -295,6 +310,12 @@
 	darkness_view = 7
 	flags_item = NODROP|DELONDROP|ITEM_ABSTRACT
 	lighting_alpha = LIGHTING_PLANE_ALPHA_MOSTLY_INVISIBLE
+
+/obj/item/clothing/glasses/zombie_eyes/pathogen
+	name = "pathogen walker eyes"
+	/// A very cheap way to track revives
+	var/revive_tracker = 0
+	var/max_revives = 4
 
 /obj/item/clothing/head/helmet/zombie
 	name = "thick armoured skin"

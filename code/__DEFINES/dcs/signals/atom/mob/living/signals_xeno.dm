@@ -91,5 +91,8 @@
 /// From /datum/action/xeno_action/activable/pounce/use_ability()
 #define COMSIG_XENO_USED_POUNCE "xeno_used_pounce"
 
+#define COMSIG_XENOMORPH_CORE_RETURN "xenomorph_core_return"
+#define COMSIG_XENOMORPH_HIVEMIND_CHANGE_FORM "xenomorph_hivemind_change_form"
+#define COMSIG_XENOMORPH_HIVEMIND_TELEPORT "xeno_hivemind_teleport"
 /// From /mob/living/carbon/xenomorph/proc/handle_ai_shot()
 #define COMSIG_XENO_HANDLE_AI_SHOT "xeno_handle_ai_shot"

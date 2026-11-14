@@ -3,16 +3,16 @@
 	caste_desc = "A carrier of huggies."
 	tier = 2
 
-	melee_damage_lower = XENO_DAMAGE_TIER_2
-	melee_damage_upper = XENO_DAMAGE_TIER_4
+	melee_damage_lower = XENO_DAMAGE_TIER_REAPER
+	melee_damage_upper = XENO_DAMAGE_TIER_REAPER
 	melee_vehicle_damage = XENO_DAMAGE_TIER_3
 	max_health = XENO_HEALTH_TIER_9
 	plasma_gain = XENO_PLASMA_GAIN_TIER_6
 	plasma_max = XENO_PLASMA_TIER_5
 	xeno_explosion_resistance = XENO_EXPLOSIVE_ARMOR_TIER_2
-	armor_deflection = XENO_NO_ARMOR
+	armor_deflection = XENO_ARMOR_FACTOR_CRUSHER
 	evasion = XENO_EVASION_NONE
-	speed = XENO_SPEED_TIER_4
+	speed = XENO_SPEED_QUEEN
 
 	available_strains = list(/datum/xeno_strain/eggsac)
 	behavior_delegate_type = /datum/behavior_delegate/carrier_base
@@ -97,6 +97,8 @@
 	var/huggers_max = 0
 	var/eggs_max = 0
 	var/laid_egg = 0
+
+	ai_ability_delay = 3 SECONDS
 
 /mob/living/carbon/xenomorph/carrier/proc/update_hugger_overlays()
 	if(!hugger_overlays_icon)

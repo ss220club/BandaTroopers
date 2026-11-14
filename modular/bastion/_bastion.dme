@@ -1,0 +1,5 @@
+#include "code/bastion.dm"
+
+#ifdef UNIT_TESTS
+#include "code/bastion_test.dm"
+#endif

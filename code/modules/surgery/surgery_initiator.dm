@@ -36,6 +36,10 @@
 	if(user.action_busy) //already doing an action
 		return FALSE
 
+	if(target == user && HAS_TRAIT(user, TRAIT_WOUNDED_DOWN))
+		to_chat(user, SPAN_WARNING("You're too weak to operate on yourself!"))
+		return TRUE
+
 	for(var/datum/surgery/surgeryloop as anything in GLOB.surgeries_by_zone_and_depth[target_zone][target.incision_depths[target_zone]])
 		//Skill check.
 		if((target.mob_flags & EASY_SURGERY) ? !skillcheck(user, SKILL_SURGERY, SKILL_SURGERY_NOVICE) : !skillcheck(user, SKILL_SURGERY, surgeryloop.required_surgery_skill))

@@ -48,7 +48,7 @@
 		/datum/action/xeno_action/activable/corrosive_acid/weak,
 		/datum/action/xeno_action/activable/slowing_spit/ai, //first macro
 		/datum/action/xeno_action/activable/scattered_spit/ai, //second macro
-		/datum/action/xeno_action/onclick/paralyzing_slash, //third macro
+		/datum/action/xeno_action/onclick/paralyzing_slash/ai, //third macro
 		/datum/action/xeno_action/onclick/tacmap,
 	)
 	inherent_verbs = list(
@@ -63,6 +63,8 @@
 	weed_food_states_flipped = list("Drone_1","Drone_2","Drone_3")
 	var/linger_range = 5
 	var/linger_deviation = 1
+
+	ai_ability_delay = 3 SECONDS
 
 /datum/behavior_delegate/sentinel_base
 	name = "Base Sentinel Behavior Delegate"
@@ -124,6 +126,14 @@
 
 /datum/action/xeno_action/activable/scattered_spit/ai/process_ai(mob/living/carbon/xenomorph/parent, delta_time)
 	return DT_PROB(ai_prob_chance, delta_time) && (get_dist(parent, parent.current_target) <= 3) && !check_for_obstacles_projectile(parent, parent.current_target, GLOB.ammo_list[/datum/ammo/xeno/toxin/shotgun]) && use_ability_async(parent.current_target)
+
+/datum/action/xeno_action/onclick/paralyzing_slash/ai
+	default_ai_action = TRUE
+	ai_prob_chance = 60
+
+/datum/action/xeno_action/onclick/paralyzing_slash/ai/process_ai(mob/living/carbon/xenomorph/parent, delta_time)
+	// The buff only lasts a few seconds, so only once we are about to slash somebody.
+	return DT_PROB(ai_prob_chance, delta_time) && ishuman(parent.current_target) && parent.Adjacent(parent.current_target) && use_ability_async()
 
 /mob/living/carbon/xenomorph/sentinel/init_movement_handler()
 	var/datum/xeno_ai_movement/linger/linger_movement = new(src)

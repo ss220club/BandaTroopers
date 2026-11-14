@@ -1,5 +1,5 @@
 
-/// Created by /datum/game_master when middle clicking on a /obj/structure/tunnel
+/// Created by /datum/xeno_ai_spawner_menu when middle clicking on a /obj/structure/tunnel
 /datum/game_master_submenu/ambush/tunnels
 	tgui_menu_title = "Tunnel Control"
 

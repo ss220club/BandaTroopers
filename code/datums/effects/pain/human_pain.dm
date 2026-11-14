@@ -2,6 +2,9 @@
 	var/pain_message = ""
 	var/emote_message = null
 	var/do_once = TRUE
+	/// Chance per process to cry out in pain
+	var/scream_chance = 0
+	COOLDOWN_DECLARE(scream_cooldown)
 
 /datum/effects/pain/human/process_mob()
 	. = ..()
@@ -14,6 +17,12 @@
 
 	if(emote_message && (duration % 60 == 0))
 		affected_mob.emote("me", 1, pick(emote_message), FALSE)
+
+	if(scream_chance && ishuman(affected_mob) && COOLDOWN_FINISHED(src, scream_cooldown) && prob(scream_chance))
+		var/mob/living/carbon/human/screaming_human = affected_mob
+		if(screaming_human.stat == CONSCIOUS && screaming_human.pain?.feels_pain)
+			screaming_human.emote("pain")
+			COOLDOWN_START(src, scream_cooldown, 10 SECONDS)
 
 	return TRUE
 
@@ -50,6 +59,7 @@
 /datum/effects/pain/human/severe
 	pain_message = "You feel like you could die any moment now!"
 	emote_message = list("is having trouble keeping their eyes open.")
+	scream_chance = 5
 
 /datum/effects/pain/human/severe/process_mob()
 	. = ..()
@@ -75,6 +85,7 @@
 /datum/effects/pain/human/horrible
 	pain_message = "You feel like you could die any moment now!"
 	emote_message = list("is having trouble standing.")
+	scream_chance = 10
 
 /datum/effects/pain/human/horrible/process_mob()
 	. = ..()
@@ -85,10 +96,21 @@
 	affected_mob.EyeBlur(2)
 	if(affected_mob.pain && affected_mob.pain.feels_pain)
 		affected_mob.TalkStutter(2)
-	if((affected_mob.status_flags & CANKNOCKOUT))
+	// Conscious but down: players can crawl and slowly use things, AI lies stunned
+	if((affected_mob.status_flags & CANKNOCKOUT) && (affected_mob.mob_flags & AI_CONTROLLED))
 		affected_mob.KnockDown(2)
 		affected_mob.Stun(2)
+		REMOVE_TRAIT(affected_mob, TRAIT_WOUNDED_DOWN, PAIN_TRAIT)
+	else if((affected_mob.status_flags & CANKNOCKOUT))
+		ADD_TRAIT(affected_mob, TRAIT_WOUNDED_DOWN, PAIN_TRAIT)
+	else
+		REMOVE_TRAIT(affected_mob, TRAIT_WOUNDED_DOWN, PAIN_TRAIT)
 	if(!affected_mob.reagents || !affected_mob.reagents.has_reagent("inaprovaline"))
 		affected_mob.apply_damage(0.5, OXY)
 
 	return TRUE
+
+/datum/effects/pain/human/horrible/Destroy()
+	if(affected_atom)
+		REMOVE_TRAIT(affected_atom, TRAIT_WOUNDED_DOWN, PAIN_TRAIT)
+	return ..()

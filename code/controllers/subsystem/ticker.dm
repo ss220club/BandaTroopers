@@ -78,7 +78,7 @@ SUBSYSTEM_DEF(ticker)
 /datum/controller/subsystem/ticker/fire(resumed = FALSE)
 	switch(current_state)
 		if(GAME_STATE_STARTUP)
-			if(Master.initializations_finished_with_no_players_logged_in && !length(GLOB.clients))
+			if(Master.initializations_finished_with_no_players_logged_in && !length(GLOB.clients) && !(world.params && world.params["run_tests"]))
 				return
 			if(isnull(start_at))
 				start_at = time_left || world.time + (CONFIG_GET(number/lobby_countdown) * 10)

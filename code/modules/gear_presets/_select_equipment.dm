@@ -312,7 +312,10 @@
 	ID.registered_name = new_human.real_name
 	ID.registered_ref = WEAKREF(new_human)
 	ID.registered_gid = new_human.gid
-	ID.blood_type = new_human.blood_type
+	if(new_human.get_blood_type() in GLOB.blood_type_choices)
+		ID.blood_type = new_human.blood_type
+	else
+		ID.blood_type = null
 	ID.paygrade = load_rank(new_human, mob_client) || ID.paygrade
 	var/datum/money_account/acct = create_account(new_human.real_name, rand(30, 50), GLOB.paygrades[ID.paygrade])
 	ID.associated_account_number = acct.account_number
@@ -1763,29 +1766,37 @@ GLOBAL_LIST_INIT(rebel_ua_pistols, list(
 			uniform.roll_suit_sleeves(new_human)
 	new_human.equip_to_slot_or_del(uniform, WEAR_BODY)
 
+// SS220 EDIT - START
 /datum/equipment_preset/proc/add_canc_rifle(mob/living/carbon/human/new_human)
 	if(!istype(new_human))
 		return
-	var/random_canc_rifle = rand(1,5)
+	var/random_canc_rifle = rand(1,10)
 	switch(random_canc_rifle)
-		if(1, 2, 3)
+		if(1, 2, 3, 4, 5)
 			new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/rifle/lw317(new_human), WEAR_J_STORE)
 			new_human.equip_to_slot_or_del(new /obj/item/storage/belt/marine/upp, WEAR_WAIST)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/lw317, WEAR_IN_BELT)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/lw317, WEAR_IN_BELT)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/lw317, WEAR_IN_BELT)
-		if(4)
-			new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/rifle/mar40/carbine, WEAR_J_STORE)
+		if(6, 7)
+			new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/rifle/mar40(new_human), WEAR_J_STORE)
 			new_human.equip_to_slot_or_del(new /obj/item/storage/belt/marine/upp, WEAR_WAIST)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/mar40, WEAR_IN_BELT)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/mar40, WEAR_IN_BELT)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/mar40, WEAR_IN_BELT)
-		if(5)
-			new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/rifle/mar40, WEAR_J_STORE)
+		if(8, 9)
+			new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/rifle/mar40/carbine(new_human), WEAR_J_STORE)
 			new_human.equip_to_slot_or_del(new /obj/item/storage/belt/marine/upp, WEAR_WAIST)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/mar40, WEAR_IN_BELT)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/mar40, WEAR_IN_BELT)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/mar40, WEAR_IN_BELT)
+		if(10)
+			new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/rifle/type71/carbine, WEAR_J_STORE)
+			new_human.equip_to_slot_or_del(new /obj/item/storage/belt/marine/upp, WEAR_WAIST)
+			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/type71, WEAR_IN_BELT)
+			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/type71, WEAR_IN_BELT)
+			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/type71, WEAR_IN_BELT)
+// SS220 EDIT - END
 
 /datum/equipment_preset/proc/add_canc_rifle_pouch(mob/living/carbon/human/new_human)
 	if(!istype(new_human))
@@ -1860,29 +1871,37 @@ GLOBAL_LIST_INIT(rebel_ua_pistols, list(
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/smg/pps43, WEAR_IN_R_STORE)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/smg/pps43, WEAR_IN_R_STORE)
 
+// SS220 EDIT - START
 /datum/equipment_preset/proc/add_canc_rifle_newblood(mob/living/carbon/human/new_human)
 	if(!istype(new_human))
 		return
-	var/random_canc_rifle_newblood = rand(1,11)
+	var/random_canc_rifle_newblood = rand(1,6)
 	switch(random_canc_rifle_newblood)
-		if(1,2,3,4,5)
+		if(1, 2)
 			new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/rifle/mar40, WEAR_J_STORE)
 			new_human.equip_to_slot_or_del(new /obj/item/storage/belt/marine/upp, WEAR_WAIST)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/mar40, WEAR_IN_BELT)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/mar40, WEAR_IN_BELT)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/mar40, WEAR_IN_BELT)
-		if(6,7,8,9,10)
+		if(3, 4)
 			new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/rifle/mar40/carbine, WEAR_J_STORE)
 			new_human.equip_to_slot_or_del(new /obj/item/storage/belt/marine/upp, WEAR_WAIST)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/mar40, WEAR_IN_BELT)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/mar40, WEAR_IN_BELT)
 			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/rifle/mar40, WEAR_IN_BELT)
-		if(11)
-			new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/smg/ppsh, WEAR_J_STORE)
+		if(5)
+			new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/smg/bizon, WEAR_J_STORE)
 			new_human.equip_to_slot_or_del(new /obj/item/storage/belt/marine/upp, WEAR_WAIST)
-			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/smg/ppsh, WEAR_IN_BELT)
-			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/smg/ppsh, WEAR_IN_BELT)
-			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/smg/ppsh, WEAR_IN_BELT)
+			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/smg/bizon, WEAR_IN_BELT)
+			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/smg/bizon, WEAR_IN_BELT)
+			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/smg/bizon, WEAR_IN_BELT)
+		if(6)
+			new_human.equip_to_slot_or_del(new /obj/item/weapon/gun/smg/pps43, WEAR_J_STORE)
+			new_human.equip_to_slot_or_del(new /obj/item/storage/belt/marine/upp, WEAR_WAIST)
+			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/smg/pps43, WEAR_IN_BELT)
+			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/smg/pps43, WEAR_IN_BELT)
+			new_human.equip_to_slot_or_del(new /obj/item/ammo_magazine/smg/pps43, WEAR_IN_BELT)
+// SS220 EDIT - END
 
 /datum/equipment_preset/proc/add_rebel_upp_helmet(mob/living/carbon/human/new_human)
 	if(!istype(new_human))

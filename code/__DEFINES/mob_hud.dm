@@ -30,6 +30,7 @@
 #define HUNTER_CLAN "25" //Displays a colored icon to represent ingame Hunter Clans
 #define HUNTER_HUD "26" //Displays various statuses on mobs for Hunters to identify targets
 #define HOLOCARD_HUD "27" //Displays the holocards set by medical personnel
+#define STATUS_HUD_MYCO "33" // Mycotoxin level visible to pathogen creatures
 
 //data HUD (medhud, sechud) defines
 #define MOB_HUD_SECURITY_BASIC 1
@@ -58,6 +59,9 @@
 #define MOB_HUD_FACTION_UNSC 24 // SS220 EDIT: HALO UNSC faction HUD slot
 #define MOB_HUD_FACTION_COVENANT 25 // SS220 EDIT: HALO Covenant faction HUD slot
 #define MOB_HUD_VISR 26 // SS220 EDIT: HALO VISR HUD
+#define MOB_HUD_FACTION_IASF 27
+#define MOB_HUD_FACTION_LB 28 // SS220 EDIT: Fire Colony Lasalle survivor HUD
+#define MOB_HUD_MYCOTOXIN 29
 
 //for SL/FTL/LZ targeting on locator huds
 #define TRACKER_SL "track_sl"

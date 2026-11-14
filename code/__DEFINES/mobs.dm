@@ -4,6 +4,13 @@
 #define HEALTH_THRESHOLD_DEAD -200
 #define HEALTH_THRESHOLD_CRIT -50
 
+/// do_after() duration multiplier for a mob with TRAIT_WOUNDED_DOWN
+#define WOUNDED_ACTION_DELAY_MULT 2
+/// Delay before a mob with TRAIT_WOUNDED_DOWN interacts with an adjacent atom, before WOUNDED_ACTION_DELAY_MULT is applied
+#define WOUNDED_INTERACTION_DELAY (0.5 SECONDS)
+/// Same as WOUNDED_INTERACTION_DELAY, when the wounded mob uses something on themselves (an autoinjector, a pill)
+#define WOUNDED_SELF_INTERACTION_DELAY (2 SECONDS)
+
 //Some mob defines below
 #define AI_CAMERA_LUMINOSITY 6
 
@@ -111,6 +118,7 @@
 #define LEAPING (1<<4)
 #define PASSEMOTES (1<<5) //holders inside of mob that need to see emotes.
 #define CANROOT (1<<6)
+#define INCORPOREAL (1<<7)
 #define GODMODE (1<<12)
 #define FAKEDEATH (1<<13) //Replaces stuff like changeling.changeling_fakedeath
 //#define DISFIGURED (1<<14) //unused
@@ -350,6 +358,8 @@ GLOBAL_LIST_INIT(default_xeno_onmob_icons, list(
 #define SPECIES_SYNTHETIC "Synthetic"
 #define SPECIES_MONKEY "Monkey"
 #define SPECIES_ZOMBIE "Zombie"
+#define SPECIES_PATHO_WALKER "Pathogen Walker"
+#define SPECIES_YAUTJA_MUTANT "Yautja Mutant"
 #define SPECIES_SANGHEILI "Sangheili" // SS220 EDIT: HALO species id
 #define SPECIES_UNGGOY "Unggoy" // SS220 EDIT: HALO species id
 

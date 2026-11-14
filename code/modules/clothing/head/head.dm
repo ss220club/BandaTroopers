@@ -114,6 +114,10 @@
 	name = "Black Beret"
 	icon_state = "beret_black"
 
+/obj/item/clothing/head/beret/cm/clf
+	name = "\improper Colonial Liberation Front beret"
+	desc = "A repurposed captured police beret, with a CLF insignia mounted on place where police cockade would usually sit."
+	icon_state = "CLF_beret"
 
 /obj/item/clothing/head/headband
 	name = "headband"
@@ -242,9 +246,17 @@
 						/obj/item/clothing/glasses/mgoggles/orange/prescription = HAT_GARB_RELAY_ICON_STATE,
 						/obj/item/clothing/glasses/mgoggles/green = HAT_GARB_RELAY_ICON_STATE,
 						/obj/item/clothing/glasses/mgoggles/green/prescription = HAT_GARB_RELAY_ICON_STATE,
+						// SS220 EDIT - START
+						/obj/item/clothing/glasses/mgoggles/upp = HAT_GARB_RELAY_ICON_STATE,
+						/obj/item/clothing/glasses/mgoggles/upp/prescription = HAT_GARB_RELAY_ICON_STATE,
+						// SS220 EDIT - END
 						/obj/item/prop/helmetgarb/helmet_nvg = HAT_GARB_RELAY_ICON_STATE,
 						/obj/item/prop/helmetgarb/helmet_nvg/cosmetic = HAT_GARB_RELAY_ICON_STATE,
 						/obj/item/prop/helmetgarb/helmet_nvg/marsoc = HAT_GARB_RELAY_ICON_STATE,
+						// SS220 EDIT - START
+						/obj/item/prop/helmetgarb/helmet_nvg/upp = HAT_GARB_RELAY_ICON_STATE,
+						/obj/item/prop/helmetgarb/helmet_nvg/upp/frogmen = HAT_GARB_RELAY_ICON_STATE,
+						// SS220 EDIT - END
 						/obj/item/clothing/head/headband = "hat_headbandgreen",
 						/obj/item/clothing/head/headband/tan = "hat_headbandtan",
 						/obj/item/clothing/head/headband/red = "hat_headbandred",
@@ -782,6 +794,16 @@
 	min_cold_protection_temperature = ICE_PLANET_MIN_COLD_PROT
 	flags_inventory = BLOCKSHARPOBJ
 	flags_inv_hide = HIDEEARS|HIDETOPHAIR
+
+/obj/item/clothing/head/militia/brown
+	name = "\improper armored militia hood"
+	desc = "A large hood in service with some militias, modified for full obscurity on the frontier. Offers some head protection due to the study fibers utilized in production."
+	icon_state = "coordinator_hood"
+
+/obj/item/clothing/head/militia/brown/coordinator
+	name = "\improper coordinator hood"
+	desc = "A militia hood issued to unit coordinators. Built for survivability while overseeing operations, relaying orders, and maintaining control in chaotic frontier engagements."
+	icon_state = "coordinator_hood_armored"
 
 /obj/item/clothing/head/militia/bucket
 	name = "bucket"

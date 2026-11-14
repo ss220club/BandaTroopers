@@ -762,6 +762,9 @@ GLOBAL_DATUM(action_purple_power_up, /image)
 	if(!istype(busy_user))
 		return FALSE
 
+	if(HAS_TRAIT(busy_user, TRAIT_WOUNDED_DOWN))
+		delay *= WOUNDED_ACTION_DELAY_MULT
+
 	// This var will only be used for checks that require target to be living.
 	var/mob/living/T = target
 	var/target_is_mob = FALSE

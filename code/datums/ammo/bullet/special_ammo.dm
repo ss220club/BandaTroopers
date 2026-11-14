@@ -184,7 +184,7 @@
 	return
 
 /datum/ammo/bullet/minigun
-	name = "minigun bullet"
+	name = "minigun HEAP bullet"
 	headshot_state = HEADSHOT_OVERLAY_MEDIUM
 
 	icon_state = "bullet_red"
@@ -194,8 +194,8 @@
 	accuracy_var_low = PROJECTILE_VARIANCE_TIER_6
 	accuracy_var_high = PROJECTILE_VARIANCE_TIER_6
 	accurate_range = 12
-	damage = 35
-	penetration = ARMOR_PENETRATION_TIER_6
+	damage = 80
+	penetration = ARMOR_PENETRATION_TIER_8
 	shell_casing = /obj/effect/decal/ammo_casing/cartridge
 
 /datum/ammo/bullet/minigun/New()

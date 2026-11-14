@@ -36,6 +36,8 @@
 	var/flags_obj = NO_FLAGS
 	/// set when a player uses a pen on a renamable object
 	var/renamedByPlayer = FALSE
+	// Objects seen through a multiz opening inherit the lower turf's plane.
+	vis_flags = VIS_INHERIT_PLANE
 
 
 /obj/Initialize(mapload, ...)

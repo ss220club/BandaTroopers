@@ -40,6 +40,11 @@ export const GameMasterSpawningPanel = (props, context) => {
     <Section title="Spawning">
       <Stack direction="column">
         <Stack.Item>
+          <Button onClick={() => act('open_human_squad_spawner')}>
+            Human Squads (including IASF)
+          </Button>
+        </Stack.Item>
+        <Stack.Item>
           <Stack>
             <Stack.Item>
               <Button.Input

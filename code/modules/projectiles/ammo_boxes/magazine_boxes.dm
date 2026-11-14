@@ -338,6 +338,9 @@
 /obj/item/ammo_box/magazine/M16/ap/empty
 	empty = TRUE
 
+/obj/item/ammo_box/magazine/M16/pve
+	magazine_type = /obj/item/ammo_magazine/rifle/m16/extended/pve
+
 //-----------------------M4A3 Pistol Mag Box-----------------------
 
 /obj/item/ammo_box/magazine/m4a3
@@ -437,6 +440,29 @@
 	magazine_type = /obj/item/ammo_magazine/pistol/vp70
 
 /obj/item/ammo_box/magazine/vp70/empty
+	empty = TRUE
+
+/obj/item/ammo_box/magazine/vp70/extended
+	name = "magazine box (Ext VP70 x 12)"
+	overlay_ammo_type = "_ext"
+	num_of_magazines = 12
+	magazine_type = /obj/item/ammo_magazine/pistol/vp70/extended
+
+/obj/item/ammo_box/magazine/vp70/extended/empty
+	empty = TRUE
+
+
+/obj/item/ammo_box/magazine/automag
+	name = "magazine box (VP70 x 16)"
+	icon_state = "base_ar10"
+	flags_equip_slot = SLOT_BACK
+	overlay_ammo_type = "_reg"
+	overlay_gun_type = "_m44"
+	overlay_content = "_reg"
+	num_of_magazines = 16
+	magazine_type = /obj/item/ammo_magazine/pistol/highpower/automag
+
+/obj/item/ammo_box/magazine/automag/empty
 	empty = TRUE
 
 //-----------------------VP78 Pistol Mag Box-----------------------

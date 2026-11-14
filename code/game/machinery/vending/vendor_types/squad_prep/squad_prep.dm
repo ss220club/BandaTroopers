@@ -100,6 +100,7 @@
 /obj/structure/machinery/cm_vending/sorted/uniform_supply/squad_prep/populate_product_list(scale)
 	listed_products = list(
 		list("STANDARD EQUIPMENT", -1, null, null, null),
+		list("Night Vision", floor(scale *15), /obj/item/device/helmet_visor/night_vision, VENDOR_ITEM_REGULAR),
 		list("Marine Combat Boots", floor(scale * 15), /obj/item/clothing/shoes/marine/knife, VENDOR_ITEM_REGULAR),
 		list("Marine Uniform, Camo Conforming", floor(scale * 15), /obj/item/clothing/under/marine, VENDOR_ITEM_REGULAR),
 		list("Marine Uniform, Jungle BDU", floor(scale * 15), /obj/item/clothing/under/marine/standard, VENDOR_ITEM_REGULAR),
@@ -138,7 +139,7 @@
 		list("M3 Pattern Gorget", round(scale * 15), /obj/item/clothing/accessory/pads/neckguard, VENDOR_ITEM_REGULAR),
 
 		list("BACKPACK", -1, null, null, null),
-		list("Lightweight IMP Backpack", floor(scale * 15), /obj/item/storage/backpack/marine, VENDOR_ITEM_REGULAR),
+		list("Lightweight IMP Backpack", floor(scale * 15), /obj/item/storage/backpack/marine/imp, VENDOR_ITEM_REGULAR),
 		list("Technician Backpack", floor(scale * 15), /obj/item/storage/backpack/marine/tech, VENDOR_ITEM_REGULAR),
 		list("USCM Satchel", floor(scale * 15), /obj/item/storage/backpack/marine/satchel, VENDOR_ITEM_REGULAR),
 		list("USCM Technical Satchel", floor(scale * 15), /obj/item/storage/backpack/marine/satchel/tech, VENDOR_ITEM_REGULAR),
@@ -235,6 +236,9 @@
 
 		list("WEBBINGS", -1, null, null),
 		list("Type 90 Pattern Magazine Webbing", round(scale * 10), /obj/item/clothing/accessory/storage/webbing/m3/uppmags, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - START
+		list("Type 82 Pattern Grenade Webbing", round(scale * 10), /obj/item/clothing/accessory/storage/webbing/m3/m40/upp, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - END
 		list("Type 78 Pattern Small Pouch Webbing", round(scale * 10), /obj/item/clothing/accessory/storage/webbing/m3/uppsmall, VENDOR_ITEM_REGULAR),
 		list("Type 77 Pattern Pouch Webbing", round(scale * 10), /obj/item/clothing/accessory/storage/webbing/m3/uppgeneral, VENDOR_ITEM_REGULAR),
 		list("Drop Pouch", round(max(1,(scale * 2))), /obj/item/clothing/accessory/storage/droppouch/upp, VENDOR_ITEM_REGULAR),
@@ -253,13 +257,18 @@
 
 		list("BACKPACK", -1, null, null, null),
 		list("UPP Satchel", round(scale * 15), /obj/item/storage/backpack/lightpack/upp, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - START
+		list("UPP Backpack", round(scale * 15), /obj/item/storage/backpack/marine/upp, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - END
 
 		list("RESTRICTED BACKPACKS", -1, null, null),
 		list("Radio Telephone Backpack", round(max(1,(scale * 0.5))), /obj/item/storage/backpack/marine/satchel/rto, VENDOR_ITEM_REGULAR),
 
 		list("BELTS", -1, null, null),
 		list("Type 41 Pattern Ammo Load Rig", round(scale * 15), /obj/item/storage/belt/marine/upp, VENDOR_ITEM_REGULAR),
-		list("M276 Pattern M40 Grenade Rig", round(scale * 10), /obj/item/storage/belt/grenade, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - START
+		list("Type 39 Pattern Grenade Rig", round(scale * 10), /obj/item/storage/belt/grenade/upp, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - END
 		list("Type 47 Pattern General Pistol Holster Rig", round(scale * 15), /obj/item/storage/belt/gun/type47, VENDOR_ITEM_REGULAR),
 		list("M276 Pattern M82F Holster Rig", round(scale * 5), /obj/item/storage/belt/gun/flaregun, VENDOR_ITEM_REGULAR),
 		list("Type 48 General Utility Pouch", round(scale * 15), /obj/item/storage/backpack/general_belt/upp, VENDOR_ITEM_REGULAR),
@@ -318,6 +327,9 @@
 
 		list("WEBBINGS", -1, null, null),
 		list("Type 90 Pattern Magazine Webbing", 2, /obj/item/clothing/accessory/storage/webbing/m3/uppmags, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - START
+		list("Type 82 Pattern Grenade Webbing", 2, /obj/item/clothing/accessory/storage/webbing/m3/m40/upp, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - END
 		list("Type 78 Pattern Small Pouch Webbing", 2, /obj/item/clothing/accessory/storage/webbing/m3/uppsmall, VENDOR_ITEM_REGULAR),
 		list("Type 77 Pattern Pouch Webbing", 2, /obj/item/clothing/accessory/storage/webbing/m3/uppgeneral, VENDOR_ITEM_REGULAR),
 		list("Drop Pouch", 2, /obj/item/clothing/accessory/storage/droppouch/upp, VENDOR_ITEM_REGULAR),
@@ -325,22 +337,32 @@
 		list("Shoulder Holster", round(max(1,(scale * 0.5))), /obj/item/clothing/accessory/storage/holster, VENDOR_ITEM_REGULAR),
 
 		list("ARMOR", -1, null, null),
-		list("6B85-02 Pattern Vest", round(scale * 10), /obj/item/clothing/suit/marine/faction/UPP/para, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - START
+		list("6B85-02 Pattern Vest", round(scale * 10), /obj/item/clothing/suit/marine/faction/UPP/recon, VENDOR_ITEM_REGULAR),
+		list("6B90 Leg Guards", round(scale * 10), /obj/item/clothing/accessory/upppads/legs, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - END
 		list("6B90 Arm Plates", round(scale * 10), /obj/item/clothing/accessory/upppads, VENDOR_ITEM_REGULAR),
 
 		list("BACKPACK", -1, null, null, null),
 		list("UPP Satchel", round(scale * 15), /obj/item/storage/backpack/lightpack/upp, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - START
+		list("UPP Backpack", round(scale * 15), /obj/item/storage/backpack/marine/upp, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - END
 
 		list("BELTS", -1, null, null),
 		list("Type 41 Pattern Ammo Load Rig", round(scale * 15), /obj/item/storage/belt/marine/upp, VENDOR_ITEM_REGULAR),
-		list("M276 Pattern M40 Grenade Rig", round(scale * 10), /obj/item/storage/belt/grenade, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - START
+		list("Type 39 Pattern Grenade Rig", round(scale * 10), /obj/item/storage/belt/grenade/upp, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - END
 		list("Type 47 Pattern General Pistol Holster Rig", round(scale * 15), /obj/item/storage/belt/gun/type47, VENDOR_ITEM_REGULAR),
 		list("M276 Pattern M82F Holster Rig", round(scale * 5), /obj/item/storage/belt/gun/flaregun, VENDOR_ITEM_REGULAR),
 		list("Type 48 General Utility Pouch", round(scale * 15), /obj/item/storage/backpack/general_belt/upp, VENDOR_ITEM_REGULAR),
 
 		list("POUCHES", -1, null, null, null),
 		list("First-Aid Pouch", floor(scale * 15), /obj/item/storage/pouch/firstaid, VENDOR_ITEM_REGULAR),
-		list("Flare Pouch (Full)", floor(scale * 15), /obj/item/storage/pouch/flare/full, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - START
+		list("Flare Pouch (Full)", floor(scale * 15), /obj/item/storage/pouch/flare/upp/full, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - END
 		list("Magazine Pouch", floor(scale * 15), /obj/item/storage/pouch/magazine, VENDOR_ITEM_REGULAR),
 		list("Shotgun Shell Pouch", round(scale * 15), /obj/item/storage/pouch/shotgun, VENDOR_ITEM_REGULAR),
 		list("Medium General Pouch", floor(scale * 15), /obj/item/storage/pouch/general/medium, VENDOR_ITEM_REGULAR),
@@ -358,6 +380,10 @@
 
 		list("MASK", -1, null, null, null),
 		list("ShMB/4 Gas Mask", round(scale * 10), /obj/item/clothing/mask/gas/military/upp, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - START
+		list("Heat Absorbent Coif - Tan", round(scale * 5), /obj/item/clothing/mask/rebreather/scarf/tan, VENDOR_ITEM_REGULAR),
+		list("Heat Absorbent Coif - Black", round(scale * 5), /obj/item/clothing/mask/rebreather/scarf, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - END
 		list("Tactical Wrap - Tan", round(scale * 5), /obj/item/clothing/mask/rebreather/scarf/tacticalmask/tan, VENDOR_ITEM_REGULAR),
 		list("Tactical Wrap - Black", round(scale * 5), /obj/item/clothing/mask/rebreather/scarf/tacticalmask/black, VENDOR_ITEM_REGULAR),
 		list("Tactical Wrap - Grey", floor(scale * 5), /obj/item/clothing/mask/rebreather/scarf/tacticalmask, VENDOR_ITEM_REGULAR),
@@ -376,7 +402,9 @@
 		list("Headband, Brown", round(scale * 5), /obj/item/clothing/head/headband/brown, VENDOR_ITEM_REGULAR),
 		list("Headband, Gray", round(scale * 5), /obj/item/clothing/head/headband/brown, VENDOR_ITEM_REGULAR),
 		list("Headband, Red", round(scale * 5), /obj/item/clothing/head/headband/red, VENDOR_ITEM_REGULAR),
-		list("Headband, Green", round(scale * 5), /obj/item/clothing/head/headband, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - START
+		list("Headband, Green", round(scale * 5), /obj/item/clothing/head/headband/echo, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - END
 		list("Headband, Tan", round(scale * 5), /obj/item/clothing/head/headband/tan, VENDOR_ITEM_REGULAR),
 
 
@@ -385,6 +413,9 @@
 		list("Prescription ballistic goggles", round(scale * 10), /obj/item/clothing/glasses/mgoggles/upp/prescription, VENDOR_ITEM_REGULAR),
 		list("Firearm Lubricant", round(scale * 15), /obj/item/prop/helmetgarb/gunoil, VENDOR_ITEM_REGULAR),
 		list("UPP Airborne Reconnaissance Shoulder Patch", round(scale * 15), /obj/item/clothing/accessory/patch/upp/airborne, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - START
+		list("UPP 'Rozbójnik' Group Shoulder Patch", round(scale * 15), /obj/item/clothing/accessory/patch/upp/recon, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - END
 		list("UPPAC Shoulder Patch", round(scale * 15), /obj/item/clothing/accessory/patch/upp, VENDOR_ITEM_REGULAR),
 		list("Bedroll", round(scale * 20), /obj/item/roller/bedroll, VENDOR_ITEM_REGULAR),
 		list("Canteen", round(scale * 20), /obj/item/reagent_container/food/drinks/flask/canteen, VENDOR_ITEM_REGULAR),
@@ -437,7 +468,7 @@
 		list("TWE Heavy-Duty Rucksack", round(scale * 5), /obj/item/storage/backpack/rmc/heavy, VENDOR_ITEM_REGULAR),
 
 		list("RESTRICTED BACKPACKS", -1, null, null),
-		list("Radio Telephone Backpack", round(max(1,(scale * 0.5))), /obj/item/storage/backpack/marine/satchel/rto, VENDOR_ITEM_REGULAR),
+		list("Radio Telephone Backpack", round(max(1,(scale * 0.5))), /obj/item/storage/backpack/marine/satchel/rto/pmc_net, VENDOR_ITEM_REGULAR),
 
 		list("BELTS", -1, null, null),
 		list("WY-TM402 Pattern Ammo Load Rig", round(scale * 15), /obj/item/storage/belt/marine/wy, VENDOR_ITEM_REGULAR),
@@ -594,7 +625,7 @@
 		list("M3 Pattern Kneepads", round(scale * 10), /obj/item/clothing/accessory/pads/kneepads/standard, VENDOR_ITEM_REGULAR),
 
 		list("BACKPACK", -1, null, null, null),
-		list("Lightweight IMP Backpack", round(scale * 15), /obj/item/storage/backpack/marine/standard, VENDOR_ITEM_REGULAR),
+		list("Lightweight IMP Backpack", round(scale * 15), /obj/item/storage/backpack/marine/imp, VENDOR_ITEM_REGULAR),
 		list("USCM Satchel", round(scale * 15), /obj/item/storage/backpack/marine/satchel, VENDOR_ITEM_REGULAR),
 		list("USCM Technical Satchel", floor(scale * 15), /obj/item/storage/backpack/marine/satchel/tech, VENDOR_ITEM_REGULAR),
 
@@ -647,7 +678,9 @@
 		list("Headband, Brown", round(scale * 5), /obj/item/clothing/head/headband/brown, VENDOR_ITEM_REGULAR),
 		list("Headband, Gray", round(scale * 5), /obj/item/clothing/head/headband/brown, VENDOR_ITEM_REGULAR),
 		list("Headband, Red", round(scale * 5), /obj/item/clothing/head/headband/red, VENDOR_ITEM_REGULAR),
-		list("Headband, Green", round(scale * 5), /obj/item/clothing/head/headband, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - START
+		list("Headband, Green", round(scale * 5), /obj/item/clothing/head/headband/echo, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - END
 		list("Headband, Tan", round(scale * 5), /obj/item/clothing/head/headband/tan, VENDOR_ITEM_REGULAR),
 
 		list("MISCELLANEOUS", -1, null, null, null),
@@ -803,6 +836,80 @@
 		list("TWE Shoulder Patch", round(scale * 15), /obj/item/clothing/accessory/patch/twe, VENDOR_ITEM_REGULAR),
 		)
 
+/obj/structure/machinery/cm_vending/sorted/uniform_supply/squad_prep/clf
+	name = "\improper WeyTech Surplus Uniform Vendor"
+	desc = "An automated supply rack hooked up to a small storage of standard RMC uniforms."
+	icon_state = "clf_gear"
+	req_access = list(ACCESS_CLF_GENERAL)
+	req_one_access = list()
+	listed_products = list()
+	hackable = TRUE
+	vendor_theme = VENDOR_THEME_CLF
+
+/obj/structure/machinery/cm_vending/sorted/uniform_supply/squad_prep/clf/populate_product_list(scale)
+	listed_products = list(
+		list("STANDARD EQUIPMENT", -1, null, null, null),
+		list("Beret", round(scale * 10), /obj/item/clothing/head/beret/cm/clf, VENDOR_ITEM_REGULAR),
+		list("CLF Headband", round(scale * 10), /obj/item/clothing/head/headband/rebel, VENDOR_ITEM_REGULAR),
+		list("USCM Utility Cap", round(scale * 10), /obj/item/clothing/head/cmcap, VENDOR_ITEM_REGULAR),
+		list("UPP UL2 Cap", round(scale * 10), /obj/item/clothing/head/uppcap, VENDOR_ITEM_REGULAR),
+		list("Radio Headset", round(scale * 10), /obj/item/device/radio/headset/almayer/marine/solardevils/clf, VENDOR_ITEM_REGULAR),
+		list("Colonial Liberation Front Uniform", round(scale * 10), /obj/item/clothing/under/colonist/clf, VENDOR_ITEM_REGULAR),
+		list("Fingerless Combat Gloves", round(scale * 10), /obj/item/clothing/gloves/marine/fingerless, VENDOR_ITEM_REGULAR),
+		list("Combat Boots, Black", round(scale * 10), /obj/item/clothing/shoes/marine/civilian/knife, VENDOR_ITEM_REGULAR),
+
+		list("WEBBINGS", -1, null, null),
+		list("M3 Pattern Webbing", 2, /obj/item/clothing/accessory/storage/webbing/m3, VENDOR_ITEM_REGULAR),
+		list("M3 Pattern Magazine Webbing", 2, /obj/item/clothing/accessory/storage/webbing/m3/mag, VENDOR_ITEM_REGULAR),
+		list("M3 Pattern Small Pouch Webbing", 2, /obj/item/clothing/accessory/storage/webbing/m3/small, VENDOR_ITEM_REGULAR),
+
+		list("HELMET", -1, null, null),
+		list("Armored Militia Cowl", 2, /obj/item/clothing/head/militia, VENDOR_ITEM_REGULAR),
+		list("Armored Bucket", 2, /obj/item/clothing/head/militia/bucket, VENDOR_ITEM_RECOMMENDED),
+		list("CLF Reinforced Helmet", 1, /obj/item/clothing/head/helmet/marine/veteran/ua_riot/clf, VENDOR_ITEM_REGULAR),
+		list("CLF Wet Ops Helmet", 2, /obj/item/clothing/head/helmet/marine/veteran/clf, VENDOR_ITEM_REGULAR),
+		list("CLF Wet Ops Riot Helmet", 2, /obj/item/clothing/head/helmet/marine/veteran/clf/riot, VENDOR_ITEM_REGULAR),
+		list("CLF Wet Ops Heavy Helmet", 2, /obj/item/clothing/head/helmet/marine/veteran/clf/heavy, VENDOR_ITEM_REGULAR),
+
+		list("ARMOR", -1, null, null),
+		list("Colonial Militia Hauberk", round(scale * 10), /obj/item/clothing/suit/storage/militia, VENDOR_ITEM_RECOMMENDED),
+		list("Colonial Militia Partial Hauberk", round(scale * 10), /obj/item/clothing/suit/storage/militia/partial, VENDOR_ITEM_REGULAR),
+		list("Colonial Militia Vest", round(scale * 10), /obj/item/clothing/suit/storage/militia/vest, VENDOR_ITEM_REGULAR),
+		list("Colonial Militia Brace", round(scale * 10), /obj/item/clothing/suit/storage/militia/brace, VENDOR_ITEM_REGULAR),
+		list("CLF-WP Raincover", round(scale * 10), /obj/item/clothing/suit/storage/jacket/marine/rmc/service/clf_wy/raincover, VENDOR_ITEM_REGULAR),
+		list("CLF Repainted Body Armor", round(scale * 5), /obj/item/clothing/suit/storage/marine/veteran/ua_riot/clf, VENDOR_ITEM_REGULAR),
+		list("CLF Hunter Rig", round(scale * 5), /obj/item/clothing/suit/storage/marine/veteran/ua_riot/clf/jacket, VENDOR_ITEM_REGULAR),
+
+		list("BACKPACK", -1, null, null, null),
+		list("Ammo Rack", round(scale * 5), /obj/item/storage/backpack/marine/ammo_rack, VENDOR_ITEM_REGULAR),
+		list("Standard Backpack", round(scale * 10), /obj/item/storage/backpack, VENDOR_ITEM_REGULAR),
+		list("Lightweight Combat Pack", round(scale * 5), /obj/item/storage/backpack/lightpack/five_slot, VENDOR_ITEM_REGULAR),
+
+		list("BELTS", -1, null, null),
+		list("M276 Pattern Ammo Load Rig", round(scale * 10), /obj/item/storage/belt/marine, VENDOR_ITEM_RECOMMENDED),
+		list("Type 48 General Utility Pouch", round(scale * 10), /obj/item/storage/backpack/general_belt/upp, VENDOR_ITEM_REGULAR),
+		list("M276 Pattern General Pistol Holster Rig", round(scale * 10), /obj/item/storage/belt/gun/m4a3, VENDOR_ITEM_REGULAR),
+
+		list("POUCHES", -1, null, null, null),
+		list("Flare Pouch (Full)", floor(scale * 5), /obj/item/storage/pouch/flare/rmc/full, VENDOR_ITEM_REGULAR),
+		list("Large Magazine Pouch", floor(scale * 5), /obj/item/storage/pouch/magazine/large, VENDOR_ITEM_REGULAR),
+		list("Large General Pouch", floor(scale * 5), /obj/item/storage/pouch/general/large, VENDOR_ITEM_REGULAR),
+		list("Large Pistol Magazine Pouch", floor(scale * 5), /obj/item/storage/pouch/magazine/pistol/large, VENDOR_ITEM_REGULAR),
+		list("Pistol Pouch", floor(scale * 5), /obj/item/storage/pouch/pistol, VENDOR_ITEM_REGULAR),
+		list("Explosive Pouch", floor(scale * 2), /obj/item/storage/pouch/explosive, VENDOR_ITEM_REGULAR),
+		list("Sling Pouch", floor(scale * 2), /obj/item/storage/pouch/sling, VENDOR_ITEM_REGULAR),
+
+		list("MASK", -1, null, null, null),
+		list("Gasmask", round(scale * 15), /obj/item/clothing/mask/gas, VENDOR_ITEM_REGULAR),
+
+		list("MISCELLANEOUS", -1, null, null, null),
+		list("Ballistic goggles", round(scale * 10), /obj/item/clothing/glasses/mgoggles/upp, VENDOR_ITEM_REGULAR),
+		list("Prescription ballistic goggles", round(scale * 10), /obj/item/clothing/glasses/mgoggles/upp/prescription, VENDOR_ITEM_REGULAR),
+		list("Firearm Lubricant", round(scale * 15), /obj/item/prop/helmetgarb/gunoil, VENDOR_ITEM_REGULAR),
+		list("Colonial Liberation Front Shoulder Patch", round(scale * 15), /obj/item/clothing/accessory/patch/clf_patch, VENDOR_ITEM_REGULAR),
+		list("Bedroll", round(scale * 20), /obj/item/roller/bedroll, VENDOR_ITEM_REGULAR),
+		list("Canteen", round(scale * 20), /obj/item/reagent_container/food/drinks/flask/canteen, VENDOR_ITEM_REGULAR),
+		)
 
 //--------------SQUAD SPECIFIC VERSIONS--------------
 //Those vendors aren't being used i will make them us the main vendor a parent to avoid having four different
@@ -933,7 +1040,7 @@
 		list("Plastic Explosives", round(scale * 2), /obj/item/explosive/plastic, VENDOR_ITEM_REGULAR),
 		list("Breaching Charge", round(scale * 2), /obj/item/explosive/plastic/breaching_charge, VENDOR_ITEM_REGULAR),
 		list("RPG M83A2-C", floor(scale * 2.5), /obj/item/prop/folded_anti_tank_sadar/common, VENDOR_ITEM_REGULAR), // SS220 EDIT - RPG WEAPON
-		
+
 		list("FLARE AND LIGHT", -1, null, null),
 		list("Combat Flashlight", round(scale * 5), /obj/item/device/flashlight/combat, VENDOR_ITEM_REGULAR),
 		list("Box of Flashlight", round(scale * 1), /obj/item/ammo_box/magazine/misc/flashlight, VENDOR_ITEM_REGULAR),
@@ -1007,6 +1114,9 @@
 		list("SIDEARMS", -1, null, null),
 		list("NP92 Standard Pistol", round(scale * 2), /obj/item/weapon/gun/pistol/np92/unloaded, VENDOR_ITEM_REGULAR),
 		list("Type 73 Service Pistol", round(scale * 2), /obj/item/weapon/gun/pistol/t73/unloaded, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - START
+		list("M82F Flare Gun", round(scale * 3), /obj/item/weapon/gun/flare, VENDOR_ITEM_REGULAR),
+		// SS220 EDIT - END
 
 		list("MISCELLANEOUS", -1, null, null),
 		list("Extinguisher", round(scale * 5), /obj/item/tool/extinguisher, VENDOR_ITEM_REGULAR),
@@ -1281,6 +1391,53 @@
 		list("Fairbairn-Sykes Fighting Knife", round(scale * 25), /obj/item/weapon/knife/marine/sas, VENDOR_ITEM_REGULAR),
 		)
 
+/obj/structure/machinery/cm_vending/sorted/cargo_guns/squad/clf
+	name = "\improper WeyTech Automated Utilities Section Vendor"
+	desc = "An automated supply rack hooked up to a small storage of various utilities and tools. Can be accessed by any Royal Marine."
+	req_access = list(ACCESS_CLF_GENERAL)
+	req_one_access = list()
+	listed_products = list()
+	hackable = TRUE
+	vendor_theme = VENDOR_THEME_CLF
+
+/obj/structure/machinery/cm_vending/sorted/cargo_guns/squad/clf/populate_product_list(scale)
+	listed_products = list(
+		list("FOOD", -1, null, null),
+		list("Wrapped Makeshift Meal", round(scale * 5), /obj/item/mre_food_packet/clf, VENDOR_ITEM_REGULAR),
+
+		list("MEDICAL", -1, null, null),
+		list("Gauze", round(scale * 10), /obj/item/stack/medical/bruise_pack, VENDOR_ITEM_REGULAR),
+		list("Ointment", round(scale * 10), /obj/item/stack/medical/ointment, VENDOR_ITEM_REGULAR),
+		list("Trauma Treatment Pack", round(scale * 15), /obj/item/stack/medical/advanced/bruise_pack, VENDOR_ITEM_REGULAR),
+		list("Burn Treatment Pack", round(scale * 15), /obj/item/stack/medical/advanced/ointment, VENDOR_ITEM_REGULAR),
+		list("Splints", round(scale * 15), /obj/item/stack/medical/splint, VENDOR_ITEM_REGULAR),
+		list("Emergency Autoinjector", round(scale * 15), /obj/item/reagent_container/hypospray/autoinjector/emergency, VENDOR_ITEM_REGULAR),
+		list("Bicaridine Autoinjector", round(scale * 15), /obj/item/reagent_container/hypospray/autoinjector/bicaridine, VENDOR_ITEM_REGULAR),
+		list("Kelotane Autoinjector", round(scale * 15), /obj/item/reagent_container/hypospray/autoinjector/kelotane, VENDOR_ITEM_REGULAR),
+		list("Tricordrazine Autoinjector", round(scale * 15), /obj/item/reagent_container/hypospray/autoinjector/tricord, VENDOR_ITEM_REGULAR),
+		list("Tramadol Injector", round(scale * 15), /obj/item/reagent_container/hypospray/autoinjector/tramadol, VENDOR_ITEM_REGULAR),
+
+		list("EXPLOSIVES", -1, null, null),
+		list("Plastic Explosives", round(scale * 1), /obj/item/explosive/plastic, VENDOR_ITEM_REGULAR),
+		list("Breaching Charge", round(scale * 1), /obj/item/explosive/plastic/breaching_charge, VENDOR_ITEM_REGULAR),
+
+		list("FLARE AND LIGHT", -1, null, null),
+		list("Combat Flashlight", round(scale * 10), /obj/item/device/flashlight/combat, VENDOR_ITEM_REGULAR),
+		list("R52 Marking Flare Pack", round(scale * 10), /obj/item/storage/box/flare/upp, VENDOR_ITEM_REGULAR),
+
+		list("SIDEARMS", -1, null, null),
+		list("HG 44 'Automag' Pistol", round(scale * 2), /obj/item/weapon/gun/pistol/highpower/automag/unloaded, VENDOR_ITEM_REGULAR),
+
+		list("MISCELLANEOUS", -1, null, null),
+		list("Fire Extinguisher (Portable)", round(scale * 2), /obj/item/tool/extinguisher/mini, VENDOR_ITEM_REGULAR),
+		list("Roller Bed", round(scale * 2), /obj/item/roller, VENDOR_ITEM_REGULAR),
+		list("Machete Scabbard (Full)", round(scale * 5), /obj/item/storage/large_holster/machete/full, VENDOR_ITEM_REGULAR),
+		list("2155 Pattern Entrenching Tool", round(scale * 2), /obj/item/tool/shovel/etool/rmc/folded, VENDOR_ITEM_REGULAR),
+		list("Binoculars", round(scale * 2), /obj/item/device/binoculars/civ, VENDOR_ITEM_REGULAR),
+		list("Rail Flashlight", round(scale * 5), /obj/item/attachable/flashlight, VENDOR_ITEM_REGULAR),
+		list("Two-point Sling", round(scale * 2), /obj/item/attachable/sling, VENDOR_ITEM_REGULAR),
+		list("KA-BAR Utility Knife", round(scale * 25), /obj/item/weapon/knife/marine/kabar, VENDOR_ITEM_REGULAR),
+		)
 
 //--------------SQUAD ATTACHMENTS VENDOR--------------
 

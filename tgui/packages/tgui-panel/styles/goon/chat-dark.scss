@@ -383,6 +383,10 @@ em {
   color: #3434fd;
 }
 
+.iasfradio {
+  color: #438dff;
+}
+
 .greenteamradio {
   color: #34fd34;
 }
@@ -1229,6 +1233,15 @@ em {
   color: #ff3838;
   font-weight: bold;
   font-size: 140%;
+}
+
+.effinghighdanger {
+  color: hsl(0, 100%, 61%);
+  font-weight: bold;
+  font-size: 200%;
+
+  /*Animation*/
+  animation: glitch 0.5s infinite;
 }
 
 .xenohighdanger {

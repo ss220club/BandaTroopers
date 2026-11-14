@@ -3272,6 +3272,12 @@
 	},
 /turf/open/space/basic,
 /area/space)
+"gx" = (
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame25,
+/area/hms_brynhild/hangar)
 "gy" = (
 /turf/open/floor/almayer/empty/golden_arrow,
 /area/hms_brynhild/cargo_shuttle/upper)
@@ -5302,6 +5308,12 @@
 	},
 /turf/open/floor/elevatorshaft,
 /area/hms_brynhild/lower_hangar)
+"kB" = (
+/obj/structure/machinery/landinglight/ds1{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame17,
+/area/hms_brynhild/hangar)
 "kC" = (
 /obj/structure/cable/heavyduty{
 	icon_state = "1-2"
@@ -5560,6 +5572,12 @@
 	},
 /turf/open/floor/prison/floor_plate,
 /area/hms_brynhild/lower_hangar)
+"le" = (
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame9,
+/area/hms_brynhild/hangar)
 "lf" = (
 /obj/structure/pipes/vents/scrubber{
 	dir = 8
@@ -6527,6 +6545,12 @@
 /obj/item/device/defibrillator/upgraded,
 /turf/open/floor/prison/floor_plate,
 /area/hms_brynhild/medical)
+"ne" = (
+/obj/structure/machinery/landinglight/ds1/delaytwo{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "nf" = (
 /obj/structure/roof/cargocrane_tracks/cross{
 	pixel_y = 14
@@ -6870,6 +6894,19 @@
 /obj/structure/pipes/standard/simple/hidden/supply,
 /turf/open/floor/prison/bright_clean,
 /area/hms_brynhild/cryo_cells)
+"nP" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 4
+	},
+/obj/structure/machinery/floodlight/landing/floor{
+	color = "#dae2ff";
+	light_color = "#dae2ff"
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "nQ" = (
 /obj/structure/machinery/power/apc/almayer/south,
 /obj/structure/cable/heavyduty,
@@ -6931,6 +6968,12 @@
 /obj/structure/pipes/standard/manifold/hidden/supply,
 /turf/open/floor/plating/plating_catwalk/prison,
 /area/hms_brynhild/lower_hangar)
+"nX" = (
+/obj/structure/machinery/landinglight/ds1{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "nY" = (
 /obj/structure/platform_decoration{
 	dir = 1
@@ -6946,6 +6989,12 @@
 	},
 /turf/open/floor/prison,
 /area/hms_brynhild/lower_hangar)
+"nZ" = (
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "oa" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "NE-out";
@@ -7031,6 +7080,15 @@
 	},
 /turf/open/floor/prison,
 /area/hms_brynhild/lower_hangar)
+"oi" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1/delaytwo{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "oj" = (
 /obj/vehicle/powerloader/ft{
 	dir = 4
@@ -7377,6 +7435,12 @@
 	},
 /turf/open/floor/plating/plating_catwalk/prison,
 /area/hms_brynhild/lower_hangar)
+"oV" = (
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "oW" = (
 /obj/structure/sign/safety/bulkhead_door{
 	pixel_y = 27
@@ -8056,6 +8120,16 @@
 	},
 /turf/open/floor/plating/plating_catwalk/prison,
 /area/hms_brynhild/lower_hangar)
+"qo" = (
+/obj/structure/machinery/landinglight/ds1{
+	dir = 4
+	},
+/obj/structure/machinery/floodlight/landing/floor{
+	color = "#dae2ff";
+	light_color = "#dae2ff"
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "qp" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "NW-out";
@@ -8124,6 +8198,15 @@
 "qw" = (
 /obj/structure/pipes/standard/simple/hidden/supply,
 /turf/open/floor/strata/multi_tiles/southeast,
+/area/hms_brynhild/hangar)
+"qx" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
 /area/hms_brynhild/hangar)
 "qy" = (
 /turf/open/floor/prison,
@@ -8211,6 +8294,15 @@
 	},
 /turf/open/floor/almayer/pod_landing_floor,
 /area/hms_brynhild/motor_pool)
+"qH" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "qI" = (
 /obj/structure/barricade/handrail/type_b{
 	dir = 8
@@ -8252,6 +8344,16 @@
 	},
 /turf/open/floor/prison/bright_clean,
 /area/hms_brynhild/lower_hangar)
+"qN" = (
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 4
+	},
+/obj/structure/machinery/floodlight/landing/floor{
+	color = "#dae2ff";
+	light_color = "#dae2ff"
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "qO" = (
 /obj/structure/machinery/light/double/blue{
 	dir = 4;
@@ -8426,6 +8528,15 @@
 	},
 /turf/open/floor/prison,
 /area/hms_brynhild/lower_cargo)
+"ri" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame9,
+/area/hms_brynhild/hangar)
 "rj" = (
 /obj/structure/machinery/light/small/red{
 	dir = 4
@@ -8511,6 +8622,15 @@
 	},
 /turf/closed/wall/almayer/aicore/white/hull,
 /area/hms_brynhild/dorms)
+"rr" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1{
+	dir = 4
+	},
+/turf/open/floor/hangar_airlock/inner/frame17,
+/area/hms_brynhild/hangar)
 "rs" = (
 /obj/structure/platform_decoration{
 	dir = 8
@@ -8594,6 +8714,17 @@
 	},
 /turf/open/floor/prison/bright_clean,
 /area/hms_brynhild/armoury_station)
+"rz" = (
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 4
+	},
+/obj/item/prop/almayer/comp_open{
+	pixel_x = -2;
+	pixel_y = 9
+	},
+/obj/structure/surface/table/reinforced/black,
+/turf/open/floor/hangar_airlock/inner/frame25,
+/area/hms_brynhild/hangar)
 "rA" = (
 /obj/structure/roof/cargocrane_tracks/horizontal{
 	pixel_y = 14
@@ -9126,6 +9257,9 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/lower_cargo)
+"sA" = (
+/turf/open/floor/hangar_airlock/inner/frame35,
+/area/hms_brynhild/hangar)
 "sB" = (
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
@@ -9711,6 +9845,9 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/cryo_cells)
+"tH" = (
+/turf/open/floor/hangar_airlock/inner/frame25,
+/area/hms_brynhild/hangar)
 "tI" = (
 /obj/structure/closet/emcloset/legacy,
 /turf/open/floor/prison/bright_clean,
@@ -9919,6 +10056,9 @@
 	},
 /turf/open/floor/kutjevo/fake_wood,
 /area/hms_brynhild/dorms)
+"ug" = (
+/turf/open/floor/hangar_airlock/inner/frame17,
+/area/hms_brynhild/hangar)
 "uh" = (
 /obj/structure/cable/heavyduty{
 	icon_state = "1-2"
@@ -10023,6 +10163,9 @@
 	},
 /turf/open/floor/prison,
 /area/hms_brynhild/hangar)
+"us" = (
+/turf/open/floor/hangar_airlock/inner/frame9,
+/area/hms_brynhild/hangar)
 "ut" = (
 /turf/open/floor/prison,
 /area/hms_brynhild/dorms)
@@ -10030,6 +10173,9 @@
 /obj/structure/surface/table/reinforced/almayer_B,
 /turf/open/floor/kutjevo/fake_wood,
 /area/hms_brynhild/canteen)
+"uv" = (
+/turf/open/floor/hangar_airlock/inner/frame40,
+/area/hms_brynhild/hangar)
 "uw" = (
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
@@ -10098,6 +10244,12 @@
 	},
 /turf/open/floor/plating/plating_catwalk/prison,
 /area/hms_brynhild/cryo_cells)
+"uD" = (
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 1
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "uE" = (
 /obj/effect/decal/siding{
 	icon_state = "siding2"
@@ -10131,6 +10283,12 @@
 	},
 /turf/open/floor/prison/floor_plate,
 /area/hms_brynhild/medical)
+"uI" = (
+/turf/open/floor/hangar_airlock/inner/frame30,
+/area/hms_brynhild/hangar)
+"uJ" = (
+/turf/open/floor/hangar_airlock/inner/frame21,
+/area/hms_brynhild/hangar)
 "uK" = (
 /obj/structure/bed{
 	can_buckle = 0
@@ -10156,6 +10314,9 @@
 	},
 /turf/open/floor/almayer/edge/southeast,
 /area/hms_brynhild/dorms)
+"uL" = (
+/turf/open/floor/hangar_airlock/inner/frame13,
+/area/hms_brynhild/hangar)
 "uM" = (
 /obj/structure/surface/table/reinforced/prison{
 	color = "#ffe6e6"
@@ -10204,6 +10365,9 @@
 	},
 /turf/open/floor/plating/plating_catwalk/prison,
 /area/hms_brynhild/armoury_station)
+"uP" = (
+/turf/open/floor/hangar_airlock/inner/frame33,
+/area/hms_brynhild/hangar)
 "uQ" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "cargo"
@@ -10288,6 +10452,16 @@
 	},
 /turf/open/floor/prison,
 /area/hms_brynhild/hangar)
+"va" = (
+/obj/structure/machinery/landinglight/ds1,
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
+"vb" = (
+/obj/structure/machinery/landinglight/ds1/delaytwo{
+	dir = 1
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "vc" = (
 /obj/structure/prop/almayer/cannon_cable_connector{
 	desc = "A connector for the large cables.";
@@ -10323,6 +10497,13 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/dorms)
+"vg" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1/delaythree,
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "vh" = (
 /obj/structure/ship_ammo/heavygun{
 	pixel_x = 0;
@@ -10334,6 +10515,15 @@
 	},
 /turf/open/floor/plating/plating_catwalk/prison,
 /area/hms_brynhild/hangar)
+"vi" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 1
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "vj" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "S"
@@ -10344,6 +10534,10 @@
 	},
 /turf/open/floor/kutjevo/tan/plate,
 /area/hms_brynhild/cryo_cells)
+"vk" = (
+/obj/structure/machinery/landinglight/ds1/delaytwo,
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "vl" = (
 /obj/effect/landmark/start/marine/leader/rmc,
 /obj/effect/landmark/late_join,
@@ -10361,6 +10555,22 @@
 	},
 /turf/open/floor/almayer/dark_sterile,
 /area/hms_brynhild/medical)
+"vn" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1{
+	dir = 1
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
+"vo" = (
+/turf/open/floor/hangar_airlock/inner/frame11,
+/area/hms_brynhild/hangar)
+"vp" = (
+/obj/structure/machinery/landinglight/ds1/delayone,
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "vq" = (
 /obj/structure/platform_decoration{
 	dir = 4
@@ -10389,6 +10599,26 @@
 /obj/item/weapon/gun/smg/nailgun,
 /turf/open/floor/prison/floor_plate,
 /area/hms_brynhild/supply)
+"vu" = (
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 1
+	},
+/obj/structure/machinery/floodlight/landing/floor{
+	color = "#dae2ff";
+	light_color = "#dae2ff"
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
+"vv" = (
+/turf/open/floor/hangar_airlock/inner/frame5,
+/area/hms_brynhild/hangar)
+"vw" = (
+/obj/docking_port/stationary/marine_dropship/golden_arrow_hangar{
+	roundstart_template = /datum/map_template/shuttle/gibraltar;
+	name = "Port Hangar Bay"
+	},
+/turf/open/floor/hangar_airlock/inner/frame5,
+/area/hms_brynhild/hangar)
 "vx" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "cargo_arrow";
@@ -10418,6 +10648,18 @@
 	dir = 1
 	},
 /turf/open/floor/prison/floor_plate,
+/area/hms_brynhild/hangar)
+"vA" = (
+/obj/structure/machinery/landinglight/ds1,
+/obj/structure/machinery/floodlight/landing/floor{
+	color = "#dae2ff";
+	light_color = "#dae2ff"
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
+"vB" = (
+/obj/structure/machinery/landinglight/ds1/delaythree,
+/turf/open/floor/hangar_airlock/inner/frame49,
 /area/hms_brynhild/hangar)
 "vC" = (
 /obj/structure/machinery/power/apc/almayer/west,
@@ -10467,6 +10709,25 @@
 	},
 /turf/open/floor/prison/bright_clean,
 /area/hms_brynhild/supply)
+"vG" = (
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 1
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
+"vH" = (
+/obj/structure/machinery/landinglight/ds1{
+	dir = 1
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
+"vI" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1/delayone,
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "vJ" = (
 /obj/structure/cable/heavyduty{
 	icon_state = "4-8"
@@ -10505,15 +10766,36 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/motor_pool)
+"vM" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1,
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "vN" = (
 /turf/open/floor/prison/bright_clean,
 /area/hms_brynhild/supply)
+"vO" = (
+/obj/effect/decal/cleanable/liquid_fuel,
+/turf/open/floor/hangar_airlock/inner/frame25,
+/area/hms_brynhild/hangar)
 "vP" = (
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
 	},
 /obj/structure/dropship_equipment/weapon/rocket_pod,
 /turf/open/floor/prison/floor_marked,
+/area/hms_brynhild/hangar)
+"vQ" = (
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 8
+	},
+/obj/structure/prop/almayer/cannon_cables{
+	name = "Cables"
+	},
+/obj/effect/decal/cleanable/liquid_fuel,
+/turf/open/floor/hangar_airlock/inner/frame25,
 /area/hms_brynhild/hangar)
 "vR" = (
 /obj/effect/decal/warning_stripes{
@@ -10542,6 +10824,20 @@
 	},
 /turf/open/floor/prison/bright_clean,
 /area/hms_brynhild/canteen)
+"vU" = (
+/obj/structure/machinery/landinglight/ds1{
+	dir = 8
+	},
+/obj/structure/machinery/prop{
+	density = 1;
+	icon_state = "pipe_d";
+	name = "refueling pump";
+	desc = "A pump used for refueling the dropship.";
+	pixel_y = -5;
+	layer = 2.7
+	},
+/turf/open/floor/hangar_airlock/inner/frame17,
+/area/hms_brynhild/hangar)
 "vV" = (
 /obj/structure/stairs/perspective{
 	color = "#6e6e6e"
@@ -10560,6 +10856,12 @@
 	},
 /turf/open/floor/prison/bright_clean,
 /area/hms_brynhild/prep_hallway)
+"vX" = (
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame9,
+/area/hms_brynhild/hangar)
 "vY" = (
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
@@ -10569,6 +10871,25 @@
 	light_color = "#dae2ff"
 	},
 /turf/open/floor/prison,
+/area/hms_brynhild/hangar)
+"vZ" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1/delaytwo{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
+"wa" = (
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 8
+	},
+/obj/structure/machinery/floodlight/landing/floor{
+	color = "#dae2ff";
+	light_color = "#dae2ff"
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
 /area/hms_brynhild/hangar)
 "wb" = (
 /obj/effect/decal/warning_stripes{
@@ -10597,6 +10918,12 @@
 	},
 /turf/open/floor/almayer/pod_landing_floor,
 /area/hms_brynhild/armoury_station)
+"we" = (
+/obj/structure/machinery/landinglight/ds1{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "wf" = (
 /turf/open/floor/almayer_hull/outerhull_dir/southwest,
 /area/space)
@@ -10641,6 +10968,15 @@
 	},
 /turf/open/floor/prison,
 /area/hms_brynhild/supply)
+"wj" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "wk" = (
 /obj/structure/largecrate/random/secure,
 /obj/effect/decal/cleanable/dirt{
@@ -10657,12 +10993,66 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/Docking)
+"wm" = (
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
+"wn" = (
+/obj/structure/machinery/landinglight/ds1{
+	dir = 8
+	},
+/obj/structure/machinery/floodlight/landing/floor{
+	color = "#dae2ff";
+	light_color = "#dae2ff"
+	},
+/obj/structure/machinery/camera/autoname/golden_arrow{
+	dir = 8;
+	network = list("Brynhild")
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "wo" = (
 /obj/structure/machinery/door/poddoor/railing{
 	dir = 4
 	},
 /turf/open/floor/prison/floor_plate,
 /area/hms_brynhild/lower_hangar)
+"wp" = (
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
+"wq" = (
+/obj/structure/machinery/landinglight/ds1/delaytwo{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
+"wr" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
+"ws" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 8
+	},
+/obj/structure/machinery/floodlight/landing/floor{
+	color = "#dae2ff";
+	light_color = "#dae2ff"
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "wt" = (
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
@@ -10681,6 +11071,15 @@
 	},
 /turf/open/floor/prison,
 /area/hms_brynhild/hangar)
+"wv" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1/delaythree{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame9,
+/area/hms_brynhild/hangar)
 "ww" = (
 /obj/structure/platform{
 	dir = 4;
@@ -10689,6 +11088,15 @@
 /obj/structure/platform,
 /turf/open/floor/elevatorshaft,
 /area/hms_brynhild/lower_hangar)
+"wx" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/machinery/landinglight/ds1{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame17,
+/area/hms_brynhild/hangar)
 "wy" = (
 /obj/structure/cable/heavyduty{
 	icon_state = "2-8"
@@ -10708,6 +11116,12 @@
 	},
 /turf/open/floor/plating/plating_catwalk/prison,
 /area/hms_brynhild/cryo_cells)
+"wA" = (
+/obj/structure/machinery/landinglight/ds1/delayone{
+	dir = 8
+	},
+/turf/open/floor/hangar_airlock/inner/frame25,
+/area/hms_brynhild/hangar)
 "wB" = (
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
@@ -10739,6 +11153,22 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/lower_cargo)
+"wE" = (
+/obj/docking_port/stationary/marine_dropship/airlock/inner{
+	name = "Port Hangar Bay";
+	id = "golden arrow lz";
+	roundstart_template = /datum/map_template/shuttle/gibraltar;
+	dropship_airlock_id = "ship-hms_brynhild-85-32"
+	},
+/turf/open/floor/hangar_airlock/inner/frame5,
+/area/hms_brynhild/hangar)
+"wF" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 1;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame49,
+/area/space)
 "wG" = (
 /obj/structure/machinery/door/firedoor/border_only/almayer{
 	dir = 2
@@ -10783,6 +11213,9 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/prep_hallway)
+"wL" = (
+/turf/open/floor/hangar_airlock/outer/frame49,
+/area/space)
 "wM" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "cargo_arrow";
@@ -10864,6 +11297,12 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/prep_hallway)
+"wV" = (
+/obj/effect/hangar_airlock/half_tile{
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame49,
+/area/space)
 "wW" = (
 /obj/structure/cargo_container/horizontal/blue/middle{
 	pixel_x = 17;
@@ -10874,6 +11313,13 @@
 	},
 /turf/open/floor/prison,
 /area/hms_brynhild/hangar)
+"wX" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 1;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame43,
+/area/space)
 "wY" = (
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
@@ -10899,6 +11345,9 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/hangar)
+"xa" = (
+/turf/open/floor/hangar_airlock/outer/frame43,
+/area/space)
 "xb" = (
 /obj/structure/cable/heavyduty{
 	icon_state = "4-8"
@@ -10920,6 +11369,23 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/engineering)
+"xd" = (
+/obj/effect/hangar_airlock/half_tile{
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame43,
+/area/space)
+"xe" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 1;
+	layer = 2
+	},
+/obj/effect/hangar_airlock/half_tile{
+	dir = 1;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame35,
+/area/space)
 "xf" = (
 /obj/structure/largecrate/random/case/small,
 /obj/effect/decal/cleanable/dirt{
@@ -10957,6 +11423,9 @@
 	},
 /turf/open/floor/prison/bright_clean,
 /area/hms_brynhild/prep_hallway)
+"xj" = (
+/turf/open/floor/hangar_airlock/outer/frame35,
+/area/space)
 "xk" = (
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
@@ -10970,6 +11439,12 @@
 "xl" = (
 /turf/open/floor/kutjevo/tan/alt_edge,
 /area/hms_brynhild/colour_office)
+"xm" = (
+/obj/effect/hangar_airlock/half_tile{
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame35,
+/area/space)
 "xn" = (
 /obj/structure/surface/table/reinforced/prison{
 	color = "#ffe6e6"
@@ -10985,12 +11460,18 @@
 	},
 /turf/open/floor/kutjevo/fake_wood,
 /area/hms_brynhild/canteen)
+"xo" = (
+/turf/open/floor/hangar_airlock/outer/frame27,
+/area/space)
 "xp" = (
 /obj/structure/machinery/landinglight/ds1{
 	dir = 1
 	},
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/hangar)
+"xq" = (
+/turf/open/floor/hangar_airlock/outer/frame19,
+/area/space)
 "xr" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "cargo_arrow";
@@ -11021,6 +11502,12 @@
 	},
 /turf/open/floor/almayer/pod_landing_floor,
 /area/hms_brynhild/hangar)
+"xu" = (
+/turf/open/floor/hangar_airlock/outer/frame11,
+/area/space)
+"xv" = (
+/turf/open/floor/hangar_airlock/outer/frame4,
+/area/space)
 "xw" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "E";
@@ -11092,6 +11579,17 @@
 	},
 /turf/open/floor/prison,
 /area/hms_brynhild/synthcloset)
+"xE" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 4;
+	layer = 2
+	},
+/obj/effect/hangar_airlock/half_tile{
+	dir = 4;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame35,
+/area/space)
 "xF" = (
 /obj/effect/decal/cleanable/dirt{
 	layer = 2.52
@@ -11101,6 +11599,13 @@
 	},
 /turf/open/floor/plating/plating_catwalk/prison,
 /area/hms_brynhild/cryo_cells)
+"xG" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 8;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame35,
+/area/space)
 "xH" = (
 /obj/structure/surface/table/reinforced/black,
 /turf/open/floor/prison/bright_clean,
@@ -11169,6 +11674,20 @@
 	},
 /turf/open/floor/prison,
 /area/hms_brynhild/hangar)
+"xR" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 4;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame43,
+/area/space)
+"xS" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 8;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame43,
+/area/space)
 "xT" = (
 /obj/structure/surface/table/reinforced/almayer_B,
 /obj/item/storage/box/mre/twe{
@@ -11203,6 +11722,13 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/prep_hallway)
+"xW" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 4;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame49,
+/area/space)
 "xX" = (
 /obj/effect/decal/warning_stripes{
 	icon_state = "N";
@@ -11213,6 +11739,13 @@
 "xY" = (
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/armoury)
+"xZ" = (
+/obj/effect/hangar_airlock/half_tile{
+	dir = 8;
+	layer = 2
+	},
+/turf/open/floor/hangar_airlock/outer/frame49,
+/area/space)
 "ya" = (
 /obj/structure/cable/heavyduty{
 	icon_state = "1-2"
@@ -11233,6 +11766,23 @@
 	},
 /turf/open/floor/plating/plating_catwalk/prison,
 /area/hms_brynhild/cryo_cells)
+"yd" = (
+/obj/docking_port/stationary/marine_dropship/airlock/outer{
+	name = "Port Hangar Bay approach";
+	id = "golden arrow lz-outer";
+	dropship_airlock_id = "ship-hms_brynhild-85-32"
+	},
+/turf/open/floor/hangar_airlock/outer/frame4,
+/area/space)
+"ye" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/turf/open/floor/hangar_airlock/inner/frame25,
+/area/hms_brynhild/hangar)
+"yf" = (
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "yg" = (
 /turf/closed/wall/almayer/aicore/white/reinforced,
 /area/hms_brynhild/motor_pool)
@@ -11282,6 +11832,19 @@
 "ym" = (
 /turf/closed/wall/almayer/aicore/white/hull,
 /area/hms_brynhild/engineering)
+"yn" = (
+/obj/structure/machinery/floodlight/landing/floor{
+	color = "#dae2ff";
+	light_color = "#dae2ff"
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
+"yo" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/turf/open/floor/hangar_airlock/inner/frame49,
+/area/hms_brynhild/hangar)
 "yp" = (
 /obj/structure/janitorialcart/brown,
 /obj/structure/cable/heavyduty{
@@ -11297,6 +11860,12 @@
 /obj/structure/pipes/standard/simple/hidden/supply,
 /turf/open/floor/almayer/dark_sterile,
 /area/hms_brynhild/medical)
+"yr" = (
+/obj/effect/decal/siding{
+	icon_state = "siding10"
+	},
+/turf/open/floor/hangar_airlock/inner/frame35,
+/area/hms_brynhild/hangar)
 "ys" = (
 /obj/structure/platform{
 	dir = 8;
@@ -11304,6 +11873,15 @@
 	},
 /turf/open/floor/prison,
 /area/hms_brynhild/supply)
+"yt" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/effect/decal/siding{
+	icon_state = "siding8"
+	},
+/turf/open/floor/hangar_airlock/inner/frame25,
+/area/hms_brynhild/hangar)
 "yu" = (
 /obj/structure/closet/secure_closet/marine_personal/rmc/troop_commander,
 /obj/structure/machinery/light/double/blue{
@@ -11322,8 +11900,47 @@
 	},
 /turf/open/floor/prison/bright_clean,
 /area/hms_brynhild/prep_hallway)
+"yw" = (
+/obj/effect/decal/siding{
+	icon_state = "siding8"
+	},
+/turf/open/floor/hangar_airlock/inner/frame17,
+/area/hms_brynhild/hangar)
+"yx" = (
+/obj/effect/decal/siding{
+	icon_state = "siding8"
+	},
+/turf/open/floor/hangar_airlock/inner/frame9,
+/area/hms_brynhild/hangar)
+"yy" = (
+/obj/effect/decal/siding{
+	icon_state = "siding8"
+	},
+/turf/open/floor/hangar_airlock/inner/frame40,
+/area/hms_brynhild/hangar)
 "yz" = (
 /turf/closed/wall/almayer/aicore/white/reinforced,
+/area/hms_brynhild/hangar)
+"yA" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/effect/decal/siding{
+	icon_state = "siding8"
+	},
+/turf/open/floor/hangar_airlock/inner/frame9,
+/area/hms_brynhild/hangar)
+"yB" = (
+/obj/effect/decal/siding{
+	icon_state = "siding8"
+	},
+/turf/open/floor/hangar_airlock/inner/frame25,
+/area/hms_brynhild/hangar)
+"yC" = (
+/obj/effect/decal/siding{
+	icon_state = "siding9"
+	},
+/turf/open/floor/hangar_airlock/inner/frame35,
 /area/hms_brynhild/hangar)
 "yD" = (
 /obj/structure/sink{
@@ -11342,6 +11959,19 @@
 	},
 /turf/open/floor/prison/bright_clean,
 /area/hms_brynhild/colour_office)
+"yF" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/effect/decal/siding{
+	icon_state = "siding2"
+	},
+/turf/open/floor/hangar_airlock/inner/frame40,
+/area/hms_brynhild/hangar)
+"yG" = (
+/obj/effect/decal/siding,
+/turf/open/floor/hangar_airlock/inner/frame40,
+/area/hms_brynhild/hangar)
 "yH" = (
 /obj/structure/platform,
 /obj/effect/decal/cleanable/dirt{
@@ -11349,6 +11979,35 @@
 	},
 /turf/open/floor/prison,
 /area/hms_brynhild/supply)
+"yI" = (
+/obj/effect/decal/siding{
+	icon_state = "siding2"
+	},
+/turf/open/floor/hangar_airlock/inner/frame40,
+/area/hms_brynhild/hangar)
+"yJ" = (
+/obj/docking_port/stationary/marine_dropship/golden_arrow_hangar{
+	name = "Starboard Hangar Bay";
+	id = "golden arrow lz2";
+	roundstart_template = null
+	},
+/turf/open/floor/hangar_airlock/inner/frame5,
+/area/hms_brynhild/hangar)
+"yK" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/effect/decal/siding{
+	icon_state = "siding6"
+	},
+/turf/open/floor/hangar_airlock/inner/frame35,
+/area/hms_brynhild/hangar)
+"yL" = (
+/obj/effect/decal/siding{
+	icon_state = "siding4"
+	},
+/turf/open/floor/hangar_airlock/inner/frame25,
+/area/hms_brynhild/hangar)
 "yM" = (
 /obj/structure/largecrate/random/case/double,
 /obj/effect/decal/cleanable/dirt{
@@ -11441,6 +12100,12 @@
 /obj/structure/pipes/standard/simple/hidden/supply,
 /turf/open/floor/plating/plating_catwalk/prison,
 /area/hms_brynhild/cryo_cells)
+"yU" = (
+/obj/effect/decal/siding{
+	icon_state = "siding4"
+	},
+/turf/open/floor/hangar_airlock/inner/frame17,
+/area/hms_brynhild/hangar)
 "yV" = (
 /obj/structure/largecrate/random/case/double{
 	pixel_x = 11;
@@ -11469,9 +12134,36 @@
 	},
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/hangar)
+"yY" = (
+/obj/effect/decal/siding{
+	icon_state = "siding4"
+	},
+/turf/open/floor/hangar_airlock/inner/frame9,
+/area/hms_brynhild/hangar)
+"yZ" = (
+/obj/effect/decal/siding{
+	icon_state = "siding4"
+	},
+/turf/open/floor/hangar_airlock/inner/frame40,
+/area/hms_brynhild/hangar)
+"za" = (
+/obj/effect/decal/siding{
+	icon_state = "siding5"
+	},
+/turf/open/floor/hangar_airlock/inner/frame35,
+/area/hms_brynhild/hangar)
 "zb" = (
 /obj/structure/barricade/handrail/type_b,
 /turf/open/floor/prison,
+/area/hms_brynhild/hangar)
+"zc" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/obj/structure/prop/almayer/cannon_cables{
+	name = "Cables"
+	},
+/turf/open/floor/hangar_airlock/inner/frame25,
 /area/hms_brynhild/hangar)
 "zd" = (
 /obj/effect/decal/warning_stripes{
@@ -11531,6 +12223,18 @@
 	},
 /turf/open/floor/corsat,
 /area/hms_brynhild/supply)
+"zh" = (
+/obj/structure/machinery/prop{
+	density = 1;
+	icon_state = "pipe_d";
+	name = "refueling pump";
+	desc = "A pump used for refueling the dropship.";
+	pixel_y = -5;
+	layer = 2.7
+	},
+/obj/effect/decal/cleanable/liquid_fuel,
+/turf/open/floor/hangar_airlock/inner/frame17,
+/area/hms_brynhild/hangar)
 "zi" = (
 /obj/structure/roof/cargocrane_tracks/cross{
 	pixel_y = 14
@@ -11543,6 +12247,12 @@
 "zk" = (
 /turf/open/floor/almayer/plate,
 /area/hms_brynhild/Docking)
+"zl" = (
+/obj/effect/decal/cleanable/dirt{
+	layer = 2.52
+	},
+/turf/open/floor/hangar_airlock/inner/frame17,
+/area/hms_brynhild/hangar)
 "zm" = (
 /turf/closed/wall/almayer/aicore/white/hull,
 /area/hms_brynhild/canteen)
@@ -11571,6 +12281,23 @@
 	},
 /turf/open/floor/prison/bright_clean,
 /area/hms_brynhild/prep_hallway)
+"zq" = (
+/obj/docking_port/stationary/marine_dropship/airlock/inner{
+	name = "Starboard Hangar Bay";
+	id = "golden arrow lz2";
+	roundstart_template = null;
+	dropship_airlock_id = "ship-hms_brynhild-102-32"
+	},
+/turf/open/floor/hangar_airlock/inner/frame5,
+/area/hms_brynhild/hangar)
+"zr" = (
+/obj/docking_port/stationary/marine_dropship/airlock/outer{
+	name = "Starboard Hangar Bay approach";
+	id = "golden arrow lz2-outer";
+	dropship_airlock_id = "ship-hms_brynhild-102-32"
+	},
+/turf/open/floor/hangar_airlock/outer/frame4,
+/area/space)
 "zs" = (
 /obj/structure/prop/almayer/computers/mission_planning_system{
 	pixel_x = 9;
@@ -21941,6 +22668,25 @@ BP
 BP
 BP
 BP
+wV
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wF
 BP
 BP
 BP
@@ -21954,44 +22700,25 @@ BP
 BP
 BP
 BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
+wV
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wF
 BP
 BP
 BP
@@ -22082,6 +22809,27 @@ BP
 BP
 BP
 BP
+xd
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+wX
 BP
 BP
 BP
@@ -22093,48 +22841,27 @@ BP
 BP
 BP
 BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
+xd
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+wX
 BP
 BP
 BP
@@ -22223,6 +22950,29 @@ BP
 BP
 BP
 BP
+xm
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xe
 BP
 BP
 BP
@@ -22232,52 +22982,29 @@ BP
 BP
 BP
 BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
+xm
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xe
 BP
 BP
 BP
@@ -22365,6 +23092,29 @@ BP
 BP
 BP
 BP
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
 BP
 BP
 BP
@@ -22374,52 +23124,29 @@ BP
 BP
 BP
 BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
 BP
 BP
 BP
@@ -22507,6 +23234,29 @@ BP
 BP
 BP
 BP
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
 BP
 BP
 BP
@@ -22516,52 +23266,29 @@ BP
 BP
 BP
 BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
 BP
 BP
 BP
@@ -22649,6 +23376,29 @@ BP
 BP
 BP
 BP
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
 BP
 BP
 BP
@@ -22658,52 +23408,29 @@ BP
 BP
 BP
 BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
 BP
 PK
 Tg
@@ -22791,6 +23518,29 @@ BP
 BP
 BP
 BP
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+zr
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
 BP
 BP
 BP
@@ -22800,52 +23550,29 @@ BP
 BP
 BP
 BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+yd
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
+xv
 BP
 PK
 jV
@@ -22933,6 +23660,29 @@ BP
 BP
 BP
 BP
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
 BP
 BP
 BP
@@ -22942,52 +23692,29 @@ BP
 BP
 BP
 BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
+xu
 BP
 PK
 MY
@@ -23075,6 +23802,29 @@ BP
 BP
 BP
 BP
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
 BP
 BP
 BP
@@ -23084,52 +23834,29 @@ BP
 BP
 BP
 BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
+xq
 BP
 PK
 NL
@@ -23217,6 +23944,29 @@ BP
 BP
 BP
 BP
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
 BP
 BP
 BP
@@ -23226,52 +23976,29 @@ BP
 BP
 BP
 BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
+xo
 BP
 PK
 MY
@@ -23359,6 +24086,29 @@ BP
 BP
 BP
 BP
+xG
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xE
 BP
 BP
 BP
@@ -23368,52 +24118,29 @@ BP
 BP
 BP
 BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
+xG
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xj
+xE
 BP
 PK
 jV
@@ -23502,6 +24229,27 @@ BP
 BP
 BP
 BP
+xS
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xR
 BP
 BP
 BP
@@ -23513,48 +24261,27 @@ BP
 BP
 BP
 BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
+xS
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xa
+xR
 BP
 BP
 PK
@@ -23645,6 +24372,25 @@ BP
 BP
 BP
 BP
+xZ
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+xW
 BP
 BP
 BP
@@ -23658,44 +24404,25 @@ BP
 BP
 BP
 BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
-BP
+xZ
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+wL
+xW
 BP
 BP
 BP
@@ -31943,25 +32670,25 @@ bC
 wu
 uN
 et
-Ir
-HX
-ew
-kr
-JR
-qT
-ew
-kr
-wh
-EV
-FI
-kr
-mg
-qT
-Bm
-et
-mg
-qT
-FI
+rz
+rr
+ri
+oi
+qN
+nX
+qH
+oi
+qx
+qo
+oV
+oi
+nZ
+nX
+nP
+ne
+le
+kB
+gx
 sg
 Df
 wu
@@ -32084,27 +32811,27 @@ GF
 mX
 zJ
 mi
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
+sA
+tH
+ug
+us
+uv
+uv
+uv
+uv
+uv
+uv
+uv
+uv
+uv
+uv
+uv
+uv
+uv
+us
+ug
+tH
+sA
 xp
 zJ
 mX
@@ -32225,29 +32952,29 @@ Ao
 uw
 mX
 zJ
-fE
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-Ip
+va
+uv
+uI
+uJ
+uL
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uL
+uJ
+uI
+uv
+uD
 zJ
 mX
 zJ
@@ -32367,29 +33094,29 @@ gm
 Ng
 Zy
 zJ
-Al
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-RF
+vg
+uv
+uI
+uJ
+uL
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+uL
+uJ
+uI
+uv
+vb
 zJ
 bN
 Ng
@@ -32509,29 +33236,29 @@ VU
 zJ
 pY
 zJ
-rY
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-zA
+vk
+uv
+uI
+uJ
+uL
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+uL
+uJ
+uI
+uv
+vi
 zJ
 pY
 zJ
@@ -32651,29 +33378,29 @@ VU
 zJ
 fn
 zb
-mi
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-dg
+vp
+uv
+uI
+uJ
+uL
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+uL
+uJ
+uI
+uv
+vn
 zJ
 fn
 zJ
@@ -32793,29 +33520,29 @@ VU
 vD
 PZ
 SS
-Ke
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-zS
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-Hf
+vA
+uv
+uI
+uJ
+uL
+vv
+vv
+vv
+vv
+vv
+vv
+wE
+vv
+vv
+vv
+vv
+vv
+vv
+uL
+uJ
+uI
+uv
+vu
 zJ
 md
 vD
@@ -32935,29 +33662,29 @@ ii
 BX
 ea
 SS
-pv
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-RF
+vB
+uv
+uI
+uJ
+uL
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+uL
+uJ
+uI
+uv
+vb
 zJ
 fn
 zJ
@@ -33077,29 +33804,29 @@ VU
 zJ
 Qh
 zJ
-rY
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-To
+vk
+uv
+uI
+uJ
+uL
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+uL
+uJ
+uI
+uv
+vG
 zJ
 Qh
 zJ
@@ -33219,29 +33946,29 @@ An
 Ng
 Zy
 zJ
-xM
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-xp
+vI
+uv
+uI
+uJ
+uL
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+uL
+uJ
+uI
+uv
+vH
 zJ
 bN
 Ng
@@ -33361,29 +34088,29 @@ gz
 zJ
 mX
 zJ
-Pw
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-xp
+vM
+uv
+uI
+uJ
+uL
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uL
+uJ
+uI
+uv
+vH
 zJ
 mX
 zJ
@@ -33504,27 +34231,27 @@ zJ
 mX
 zJ
 pv
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-YF
-HT
+sA
+tH
+ug
+us
+uv
+uv
+uv
+uv
+uv
+uv
+uv
+uv
+uv
+uv
+uv
+uv
+uv
+us
+ug
+vO
+sA
 ij
 zJ
 mX
@@ -33647,25 +34374,25 @@ mX
 zJ
 Ns
 lP
-iV
-Ik
-Tf
-lP
-hY
-cj
-Tf
-lP
-iV
-lv
-CZ
-JL
-kh
-cj
-zz
-JL
-iV
-WK
-Ki
+wA
+wx
+wv
+wq
+ws
+we
+wr
+wq
+wp
+wn
+wm
+vZ
+wj
+we
+wa
+vZ
+vX
+vU
+vQ
 Eo
 qp
 zJ
@@ -34357,25 +35084,25 @@ mX
 zJ
 Xn
 er
-in
-er
-er
-er
-Xn
-in
-er
-er
-er
-Xn
-er
-in
-in
-in
-Xn
-er
-er
-er
-in
+ye
+ug
+us
+yf
+yn
+yo
+yf
+yf
+yf
+yn
+yf
+yo
+yo
+yo
+yn
+yf
+us
+ug
+ye
 er
 Xn
 zJ
@@ -34498,27 +35225,27 @@ zJ
 mX
 zJ
 er
-ok
-LA
-LA
-tt
-LA
-LA
-LA
-LA
-LA
-LA
-LA
-LA
-LA
-LA
-LA
-LA
-LA
-LA
-LA
-tt
-pN
+yC
+yB
+yw
+yA
+yy
+yy
+yy
+yy
+yy
+yy
+yy
+yy
+yy
+yy
+yy
+yy
+yy
+yx
+yw
+yt
+yr
 er
 zJ
 mX
@@ -34639,29 +35366,29 @@ gz
 zJ
 mX
 zJ
-in
-GQ
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-DB
-er
+yo
+yG
+uI
+uJ
+uL
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uL
+uJ
+uI
+yF
+yf
 zJ
 mX
 zJ
@@ -34781,29 +35508,29 @@ in
 Ng
 Zy
 zJ
-in
-GQ
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-DB
-er
+yo
+yG
+uI
+uJ
+uL
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+uL
+uJ
+uI
+yF
+yf
 zJ
 bN
 Ng
@@ -34923,29 +35650,29 @@ IL
 uw
 pY
 zJ
-in
-GQ
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-uE
-in
+yo
+yG
+uI
+uJ
+uL
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+uL
+uJ
+uI
+yI
+yo
 zJ
 pY
 zJ
@@ -35065,29 +35792,29 @@ VU
 wH
 cU
 zb
-er
-GQ
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-uE
-er
+yf
+yG
+uI
+uJ
+uL
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+uL
+uJ
+uI
+yI
+yf
 zJ
 fn
 zJ
@@ -35207,29 +35934,29 @@ VU
 vD
 DY
 zb
-Xn
-GQ
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-qm
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-uE
-Xn
+yn
+yG
+uI
+uJ
+uL
+vv
+vv
+vv
+vv
+vv
+vv
+zq
+vv
+vv
+vv
+vv
+vv
+vv
+uL
+uJ
+uI
+yI
+yn
 zJ
 md
 vD
@@ -35349,29 +36076,29 @@ wM
 jd
 DY
 zb
-er
-GQ
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-uE
-er
+yf
+yG
+uI
+uJ
+uL
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+vo
+uL
+uJ
+uI
+yI
+yf
 zJ
 fn
 zJ
@@ -35491,29 +36218,29 @@ VU
 zJ
 Qh
 zJ
-er
-GQ
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-uE
-er
+yf
+yG
+uI
+uJ
+uL
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+ug
+uL
+uJ
+uI
+yI
+yf
 zJ
 Qh
 zJ
@@ -35633,29 +36360,29 @@ oW
 Ng
 Zy
 zJ
-er
-GQ
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-uE
-in
+yf
+yG
+uI
+uJ
+uL
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+tH
+uL
+uJ
+uI
+yI
+yo
 zJ
 bN
 Xo
@@ -35775,29 +36502,29 @@ gm
 uw
 mX
 zJ
-er
-GQ
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-HT
-DB
-er
+yf
+yG
+uI
+uJ
+uL
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uP
+uL
+uJ
+uI
+yF
+yf
 zJ
 mX
 zJ
@@ -35918,27 +36645,27 @@ xs
 DL
 zJ
 er
-jm
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-zB
-rp
+za
+yL
+yU
+yY
+yZ
+yZ
+yZ
+yZ
+yZ
+yZ
+yZ
+yZ
+yZ
+yZ
+yZ
+yZ
+yZ
+yY
+yU
+yL
+yK
 Ih
 zJ
 mX
@@ -36061,25 +36788,25 @@ ZH
 mY
 iK
 er
-in
-in
-er
-in
-Xn
-er
-er
-er
-er
-Xn
-er
-er
-in
-er
-Xn
-er
-er
-qc
-Yt
+ye
+zl
+us
+yo
+yn
+yf
+yf
+yf
+yf
+yn
+yf
+yf
+yo
+yf
+yn
+yf
+us
+zh
+zc
 vc
 bW
 QI

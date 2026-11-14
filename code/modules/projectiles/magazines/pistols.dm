@@ -340,8 +340,31 @@
 /obj/item/ammo_magazine/pistol/highpower/automag
 	name = "\improper HG 44 'Automag' magazine (.44)"
 	icon_state = "highpower_b"
+	caliber = ".44"
 	max_rounds = 13
 	default_ammo = /datum/ammo/bullet/revolver
+	ammo_band_icon = "+highpower_b_tip"
+	ammo_band_icon_empty = "empty"
+
+/obj/item/ammo_magazine/pistol/highpower/automag/heavy
+	name = "\improper HG 44 'Automag' heavy magazine (.44)"
+	default_ammo = /datum/ammo/bullet/revolver/marksman
+	ammo_band_color = REVOLVER_TIP_COLOR_HEAVY
+
+/obj/item/ammo_magazine/pistol/highpower/automag/incendiary
+	name = "\improper HG 44 'Automag' incendiary magazine (.44)"
+	default_ammo = /datum/ammo/bullet/revolver/incendiary
+	ammo_band_color = REVOLVER_TIP_COLOR_INCENDIARY
+
+/obj/item/ammo_magazine/pistol/highpower/automag/toxin
+	name = "\improper HG 44 'Automag' toxin magazine (.44)"
+	default_ammo = /datum/ammo/bullet/revolver/marksman/toxin
+	ammo_band_color = REVOLVER_TIP_COLOR_AP
+
+/obj/item/ammo_magazine/pistol/highpower/automag/penetrating
+	name = "\improper  HG 44 'Automag' wall-penetrating magazine (.44)"
+	default_ammo = /datum/ammo/bullet/revolver/penetrating
+	ammo_band_color = REVOLVER_TIP_COLOR_PENETRATING
 
 //-------------------------------------------------------
 /*

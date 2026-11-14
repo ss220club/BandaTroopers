@@ -51,6 +51,7 @@
 
 		announcement_helper(message, title, targets, sound(get_sfx("queen"),wait = 0,volume = 50), GLOB.tts_announcers[TTS_QUEEN_MOTHER_ANNOUNCER_KEY]) // SS220 EDIT: queen announcements resolve through the announcer registry
 	else
+		var/announcement_sound = hivenumber == XENO_HIVE_PATHOGEN ? sound('sound/pathogen_creatures/announce_screech.ogg', wait = 0, volume = 50) : sound(get_sfx("queen"), wait = 0, volume = 50) // SS220 EDIT: pathogen announcement sound
 		for(var/mob/M in targets)
 			if(isobserver(M))
 				continue
@@ -58,7 +59,7 @@
 			if(!istype(X) || !X.ally_of_hivenumber(hivenumber)) //additionally filter out those of wrong hive
 				targets.Remove(X)
 
-		announcement_helper(message, title, targets, sound(get_sfx("queen"),wait = 0,volume = 50), GLOB.tts_announcers[TTS_QUEEN_MOTHER_ANNOUNCER_KEY]) // SS220 EDIT: queen announcements resolve through the announcer registry
+		announcement_helper(message, title, targets, announcement_sound, GLOB.tts_announcers[TTS_QUEEN_MOTHER_ANNOUNCER_KEY]) // SS220 EDIT: pathogen announcement sound with existing announcer registry
 
 
 //general marine announcement

@@ -103,5 +103,20 @@
 	squad = SQUAD_RMC
 	job = /datum/job/marine/engineer/ai/rmcmortar
 
+/datum/job/marine/engineer/ai/clf
+	total_positions = 1
+	spawn_positions = 1
+	title = JOB_SQUAD_ENGI_CLF
+	flags_startup_parameters = ROLE_ADD_TO_DEFAULT|ROLE_ADD_TO_SQUAD
+	gear_preset = /datum/equipment_preset/uscm/clf/eng
+	job_options = null
+	supervisors = "the cell leader and cell command"
+	entry_message_body = "You are an experienced engineer in your cell. Having rich experience as an engineer from the colony, as well as extensive combat experience, you bring a lot of benefits to your cell. <br> You are also responsible for communications both on the planet during operations and on your home ship."
+
+/obj/effect/landmark/start/marine/engineer/clf
+	name = JOB_SQUAD_ENGI_CLF
+	squad = SQUAD_CLF
+	job = /datum/job/marine/engineer/ai/clf
+
 #undef LCPL_VARIANT
 #undef PFC_VARIANT
