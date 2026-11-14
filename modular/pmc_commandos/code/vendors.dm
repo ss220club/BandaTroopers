@@ -15,9 +15,13 @@
 		var/product_type = product[3]
 		if(ispath(product_type, /obj/item/storage/pouch) && product_type != /obj/item/storage/pouch/general/large && product_type != /obj/item/storage/pouch/magazine/pistol/large && product_type != /obj/item/storage/pouch/magazine/large/wy && product_type != /obj/item/storage/pouch/tools/tactical)
 			continue
-		if(product_type == /obj/item/clothing/accessory/storage/smallpouch/wy)
-			continue
 		if(product_type == /obj/item/clothing/suit/marine/veteran/pmc/light)
+			continue
+		if(current_section == "WEBBINGS" && product_type == /obj/item/clothing/accessory/storage/webbing/m3/shotgun)
+			continue
+		if(product_type && current_section == "BELTS" && product_type != /obj/item/storage/belt/marine/wy && product_type != /obj/item/storage/belt/shotgun/wy && product_type != /obj/item/storage/belt/gun/m4a3/wy && product_type != /obj/item/storage/backpack/general_belt/wy)
+			continue
+		if(product_type == /obj/item/prop/helmetgarb/rmc_platemask || product_type == /obj/item/prop/helmetgarb/rmc_goggles)
 			continue
 		if((current_section == "BACKPACK" || current_section == "RESTRICTED BACKPACKS") && ispath(product_type, /obj/item/storage/backpack) && product_type != /obj/item/storage/backpack/pmc/backpack)
 			continue
@@ -49,6 +53,8 @@
 				product[1] = "Tactical Engineering Tools Pouch"
 				product[2] = round(scale * 12)
 				product[3] = /obj/item/storage/pouch/tools/tactical/full
+			if(/obj/item/clothing/accessory/storage/smallpouch/wy)
+				product[1] = "W-Y Leg Pouch"
 			if(/obj/item/storage/pouch/magazine/large/wy, /obj/item/storage/pouch/general/large)
 				product[2] = round(scale * 15)
 		commando_products += list(product)
