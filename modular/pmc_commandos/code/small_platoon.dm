@@ -2,8 +2,12 @@
 /datum/faction/pmc/proc/get_onyx_commando_hud_image(mob/living/carbon/human/human, role_title)
 	var/icon_state
 	switch(role_title)
-		if(JOB_PMCPLAT_SMALL_STANDARD, JOB_PMCPLAT_SMALL_ENGINEER, JOB_PMCPLAT_SMALL_MEDIC)
+		if(JOB_PMCPLAT_SMALL_STANDARD)
 			icon_state = "commando_gun"
+		if(JOB_PMCPLAT_SMALL_ENGINEER)
+			icon_state = "commando_engineer"
+		if(JOB_PMCPLAT_SMALL_MEDIC)
+			icon_state = "commando_medic"
 		if(JOB_PMCPLAT_SMALL_LEADER, JOB_PMCPLAT_SMALL_FTL)
 			icon_state = "commando_leader"
 		if(JOB_PMCPLAT_SMALL_SG)
@@ -13,7 +17,7 @@
 	if(!icon_state)
 		return null
 	var/image/role_icon = image(base_icon_file, human, "pmc_[icon_state]")
-	if(role_title == JOB_PMCPLAT_SMALL_MEDIC || role_title == JOB_PMCPLAT_SMALL_FTL)
+	if(role_title == JOB_PMCPLAT_SMALL_FTL)
 		role_icon.filters += outline_filter(1, "#FFD700", OUTLINE_SHARP)
 	return role_icon
 
